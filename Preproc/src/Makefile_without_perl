@@ -1,4 +1,4 @@
-# $Revision: 1.7 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $ */
+# $Revision: 1.7 $$Date$$Author$ */
 #*****************************************************************************
 #
 # DESCRIPTION: Verilog::Preproc:  Example make for standalone C++ preprocessor
@@ -7,7 +7,7 @@
 #
 #*****************************************************************************
 #
-# Copyright 2000-2004 by Wilson Snyder.  This program is free software;
+# Copyright 2000-2005 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
 #

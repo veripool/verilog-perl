@@ -1,10 +1,10 @@
 #!/usr/bin/perl -w
 # vrename - Rename Verilog signals across multiple files
-# $Revision: 1.51 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $
+# $Revision: 1.51 $$Date$$Author$
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ################ Introduction ################
 #
-# Copyright 2000-2004 by Wilson Snyder.  This program is free software;
+# Copyright 2000-2005 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
 # 
@@ -133,7 +133,7 @@ sub nop{}
 
 sub usage {
     print "Version: $VERSION\n";
-    print 'Id: $Revision: 1.51 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $ ', "\n";
+    print 'Id: $Revision: 1.51 $$Date$$Author$ ', "\n";
     $SIG{__WARN__} = \&nop;	#pod2text isn't clean.
     pod2text($0);
     exit (1);
@@ -141,7 +141,7 @@ sub usage {
 
 sub version {
     print "Version: $VERSION\n";
-    print '$Revision: 1.51 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $ ', "\n";
+    print '$Revision: 1.51 $$Date$$Author$ ', "\n";
     exit (1);
 }
 
@@ -670,7 +670,7 @@ Include a cross reference of where the signals are used.
 The latest version is available from CPAN and from
 L<http://www.veripool.com/verilog-perl.html>.
 
-Copyright 2000-2004 by Wilson Snyder.  This package is free software; you
+Copyright 2000-2005 by Wilson Snyder.  This package is free software; you
 can redistribute it and/or modify it under the terms of either the GNU
 Lesser General Public License or the Perl Artistic License.
 

@@ -1,7 +1,7 @@
-# $Revision: 1.11 $$Date: 2004/12/08 22:21:06 $$Author: wsnyder $
+# $Revision: 1.11 $$Date$$Author$
 # DESCRIPTION: Perl ExtUtils: Type 'perl Makefile.PL' to create a Makefile for this package
 #
-# Copyright 2000-2004 by Wilson Snyder.  This program is free software;
+# Copyright 2000-2005 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
 

@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
 # vppp - Preprocess Verilog
-# $Id: vppp,v 1.8 2004/12/09 14:48:43 wsnyder Exp $
+# $Id$
 ######################################################################
 #
-# Copyright 2000-2004 by Wilson Snyder <wsnyder@wsnyder.org>.  This
+# Copyright 2000-2005 by Wilson Snyder <wsnyder@wsnyder.org>.  This
 # program is free software; you can redistribute it and/or modify it under
 # the terms of either the GNU Lesser General Public License or the Perl
 # Artistic License.
@@ -92,7 +92,7 @@ exit (0);
 ######################################################################
 
 sub usage {
-    print 'Version: $Id: vppp,v 1.8 2004/12/09 14:48:43 wsnyder Exp $ '."\n";
+    print 'Version: $Id$ '."\n";
     $SIG{__WARN__} = sub{};	#pod2text isn't clean.
     pod2text($0);
     exit (1);
@@ -234,7 +234,7 @@ This will report an error when encountered, like C++'s #error.
 The latest version is available from CPAN and from
 L<http://www.veripool.com/verilog-perl.html>.
 
-Copyright 2000-2004 by Wilson Snyder.  This package is free software; you
+Copyright 2000-2005 by Wilson Snyder.  This package is free software; you
 can redistribute it and/or modify it under the terms of either the GNU
 Lesser General Public License or the Perl Artistic License.
 

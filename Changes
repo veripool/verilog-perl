@@ -2,7 +2,7 @@ Revision history for Perl extension Verilog::Language.
 
 The contributors that suggested a given feature are shown in [].
 
-* Verilog::Language 2.310 *****
+* Verilog::Language 2.310 2005/01/24
 
 **	NEWS is now renamed Changes, to support CPAN indexing. [Offer Kaye]
 
@@ -270,7 +270,7 @@ $Revision: 1.3 $$Date$$Author$
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
 
-Copyright 2001-2004 by Wilson Snyder.  This program is free software;
+Copyright 2001-2005 by Wilson Snyder.  This program is free software;
 you can redistribute it and/or modify it under the terms of either the GNU
 General Public License or the Perl Artistic License.
 

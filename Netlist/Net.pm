@@ -1,9 +1,9 @@
 # Verilog - Verilog Perl Interface
-# $Revision: 1.39 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $
+# $Revision: 1.39 $$Date$$Author$
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #
-# Copyright 2000-2004 by Wilson Snyder.  This program is free software;
+# Copyright 2000-2005 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
 # 
@@ -244,7 +244,7 @@ Prints debugging information for this net, and all pins driving the net.
 The latest version is available from CPAN and from
 L<http://www.veripool.com/verilog-perl.html>.
 
-Copyright 2000-2004 by Wilson Snyder.  This package is free software; you
+Copyright 2000-2005 by Wilson Snyder.  This package is free software; you
 can redistribute it and/or modify it under the terms of either the GNU
 Lesser General Public License or the Perl Artistic License.
 

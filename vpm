@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
 # vpm - Preprocess Verilog signals
-# $Revision: 1.74 $$Date: 2004/12/09 14:48:43 $$Author: wsnyder $
+# $Revision: 1.74 $$Date$$Author$
 ######################################################################
 #
-# Copyright 2000-2004 by Wilson Snyder.  This program is free software;
+# Copyright 2000-2005 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
 # 
@@ -146,7 +146,7 @@ exit (0);
 ######################################################################
 
 sub usage {
-    print 'Version: $Revision: 1.74 $$Date: 2004/12/09 14:48:43 $$Author: wsnyder $ ';
+    print 'Version: $Revision: 1.74 $$Date$$Author$ ';
     print "\n";
     $SIG{__WARN__} = sub{};	#pod2text isn't clean.
     pod2text($0);
@@ -1285,7 +1285,7 @@ Report a warning message in standard form.
 The latest version is available from CPAN and from
 L<http://www.veripool.com/verilog-perl.html>.
 
-Copyright 2000-2004 by Wilson Snyder.  This package is free software; you
+Copyright 2000-2005 by Wilson Snyder.  This package is free software; you
 can redistribute it and/or modify it under the terms of either the GNU
 Lesser General Public License or the Perl Artistic License.
 
