@@ -46,9 +46,13 @@ appropriate:
 
 =over 4
 
-=item $self->module ( $keyword, $name, $symbol_list, $in_celldefine )
+=item $self->module ( $keyword, $name, ignored, $in_celldefine )
 
 This method is called when a module is defined.
+
+=item $self->port ( $name )
+
+This method is called when a module port is defined.
 
 =item $self->task ( $keyword, $name )
 
@@ -161,7 +165,7 @@ sub module {
     my $self = shift;
     my $keyword = shift;
     my $name = shift;
-    my $symbol_list = shift;
+    shift;  # Ignored
     my $in_celldefine = shift;
 }
 
@@ -196,6 +200,11 @@ sub pin {
     my $name = shift;
     my $conn = shift;
     my $number = shift;
+}
+
+sub port {
+    my $self = shift;
+    my $name = shift;
 }
 
 sub attribute {
@@ -239,6 +248,7 @@ sub reset {
     $self->{in_celldefine} = 0;
     $self->{in_vector} = 0;
     $self->{in_param_assign} = 0;
+    $self->{in_ports} = 0;
     $self->{possibly_in_param_assign} = 0;
     $self->{pin_name} = undef;
 
@@ -312,11 +322,15 @@ sub symbol {
     my $token = shift;	# What token was parsed
 
     if ($self->{in_preproc_line} != $self->line()) {
-	if ($self->{in_vector} == 1) {
+	if ($self->{in_vector}) {
 	    $self->{last_vectors} = $self->{last_vectors} . $token;
-	} elsif ($self->{in_param_assign} == 1) {
+	} elsif ($self->{in_param_assign}) {
 	    $self->{last_param} = $self->{last_param} . $token;
 	} else {
+	    if ($self->{in_ports}) {
+		print " Gotaport $token\n"    if $Debug;
+		$self->port ($token);
+	    }
 	    push @{$self->{last_symbols}}, $token;
 	}
     } else {
@@ -362,7 +376,7 @@ sub operator {
 	    $self->{in_vector} = 0;
 	    $self->{last_vectors} = $self->{last_vectors} . $token;
 	}
-	elsif ($self->{in_vector} == 1) {
+	elsif ($self->{in_vector}) {
 	    $self->{last_vectors} = $self->{last_vectors} . $token;
 	}
 	elsif ($self->{in_param_assign}) {
@@ -388,6 +402,16 @@ sub operator {
 	    $self->{last_inst_mod} = $mod;
 	    $self->{is_inst_ok} = 0;
 	    $self->{is_pin_ok} = 1;
+	}
+	elsif (($token eq "(" || $token eq ";")
+	       && ($lkw eq "module" || $lkw eq "primitive")) {
+	    my $mod = shift @{$self->{last_symbols}};
+	    $self->{last_module} = $mod;
+	    print "Gota$lkw $mod\n"    if ($Debug);
+	    $self->module ($lkw, $mod, undef, $self->{in_celldefine});
+	    $self->{last_keyword} = ""; $lkw="";
+	    $self->{in_ports} = 1;
+	    # Fallthru, more ; prep for next command is below
 	}
 	elsif ($token eq "," || $token eq ";") {
 	    if ($self->{is_pin_ok}
@@ -419,19 +443,13 @@ sub operator {
 		$self->{is_inst_ok} = 1;
 	    }
 
-	    if ($token eq ";" || $token eq "=") {
+	    if ($token eq ";" || $token eq "="
+		|| ($token eq "," && $self->{in_ports})) {
 		if ($lkw eq "task") {
 		    my $mod = $self->{last_symbols}[0];
 		    $self->{last_task} = $mod;
 		    print "Gota$lkw $mod\n"    if ($Debug);
 		    $self->task ($lkw, $mod);
-		} elsif ($lkw eq "module"
-			 || $lkw eq "primitive") {
-		    my $mod = shift @{$self->{last_symbols}};
-		    $self->{last_module} = $mod;
-		    print "Gota$lkw $mod\n"    if ($Debug);
-		    $self->module ($lkw, $mod, $self->{last_symbols},
-				   $self->{in_celldefine});
 		} elsif ($lkw eq "function") {
 		    my $mod = $self->{last_symbols}[0];
 		    $self->{last_function} = $mod;
@@ -472,11 +490,14 @@ sub operator {
 		    $self->{is_inst_ok} = 1;
 		    $self->{is_signal_ok} = 1;
 		    $self->{is_pin_ok} = 0;
+		    $self->{in_ports} = 0;
 		    $self->{got_preproc} = 0;
 		}
 		elsif ( $token eq "=") {
 		    $self->{is_signal_ok} = 0;
 		    $self->{is_inst_ok} = 0;
+		}
+		elsif ( $token eq ",") {
 		}
 		else { die "programming error\n" };
 	    }
