@@ -1,4 +1,4 @@
-#$Revision: 1.39 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $
+#$Revision: 1.40 $$Date: 2004/12/08 22:20:01 $$Author: wsnyder $
 ######################################################################
 #
 # Copyright 2001-2004 by Wilson Snyder.  This program is free software;
@@ -155,7 +155,7 @@ __END__
 
 =head1 NAME
 
-Verilog::Preproc - Preprocess Verilog files Files
+Verilog::Preproc - Preprocess Verilog files
 
 =head1 SYNOPSIS
 
