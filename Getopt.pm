@@ -1,5 +1,5 @@
 # Verilog::Getopt.pm -- Verilog command line parsing
-# $Revision: 1.55 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $
+# $Revision: 1.56 $$Date: 2004/12/24 17:11:14 $$Author: wsnyder $
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #
@@ -464,6 +464,7 @@ functions that are called:
     +incdir+I<dir>		incdir (I<dir>)
     +define+I<var>+I<value>	define (I<val>,I<value>)
     +define+I<var>		define (I<val>,undef)
+    +librescan		Ignored
     -f I<file>		Parse parameters in file
     -v I<file>		library (I<file>)
     -y I<dir>		module_dir (I<dir>)
