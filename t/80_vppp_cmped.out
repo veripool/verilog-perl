@@ -1,0 +1,36 @@
+
+`line 1 "verilog/inc2.v" 1
+
+
+
+At file `__FILE__  line `__LINE__
+ 
+`line 5 "verilog/inc2.v" 0
+
+`line 1 "verilog/inc3.v" 1
+
+
+
+
+ 
+  
+  
+  
+  At file `__FILE__  line `__LINE__
+
+   
+
+`line 13 "inc3_a_filename_from_line_directive" 0
+ 
+
+ 
+  
+
+`line 17 "inc3_a_filename_from_line_directive" 0
+
+
+`line 18 "inc3_a_filename_from_line_directive" 2
+
+`line 5 "verilog/inc2.v" 0
+
+  
