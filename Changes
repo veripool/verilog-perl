@@ -10,6 +10,8 @@ The contributors that suggested a given feature are shown in [].
 	rather then internal hash references.  This matches earlier
 	documentation, and behavior of the pins_sorted, etc functions.
 
+***	Add Verilog::GetOpt GCC -U<define> switch for undefining.
+
 ****	Support SUSE Linux and OS-X. [Jose Renau] 
 
 * Verilog::Language 2.303 2004/11/18
@@ -258,7 +260,7 @@ The contributors that suggested a given feature are shown in [].
 ****	test.pl added
 
 ----------------------------------------------------------------------
-$Revision: 1.2 $$Date: 2004/12/09 14:00:07 $$Author: wsnyder $
+$Revision: 1.3 $$Date: 2004/12/24 17:18:37 $$Author: wsnyder $
 ----------------------------------------------------------------------
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
