@@ -1,5 +1,5 @@
 # Verilog::Language.pm -- Verilog language keywords, etc
-# $Revision: 1.60 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $
+# $Revision: 1.61 $$Date: 2004/12/09 15:27:22 $$Author: wsnyder $
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #
@@ -24,16 +24,13 @@ Verilog::Language - Verilog language utilities
 
   use Verilog::Language;
 
-  $result = Verilog::Language::is_keyword ($symbol_string)
-  $result = Verilog::Language::is_compdirect ($symbol_string)
-  $result = Verilog::Language::number_value ($number_string)
-  $result = Verilog::Language::number_bits  ($number_string)
-  @vec    = Verilog::Language::split_bus ($bus)
-
-  print Verilog::Language::is_compdirect ("`include");
-     1
-  print Verilog::Language::number_value ("32'h13");
-     19
+  $result = Verilog::Language::is_keyword ("wire");  # true
+  $result = Verilog::Language::is_compdirect ("`notundef");  # false
+  $result = Verilog::Language::number_value ("4'b111");  # 8
+  $result = Verilog::Language::number_bits  ("32'h1b");  # 32
+  @vec    = Verilog::Language::split_bus ("[31,5:4]"); # 31, 5, 4
+  @vec    = Verilog::Language::split_bus_nocomma ("[31:29]"); # 31, 30, 29
+  $result = Verilog::Language::strip_comments ("a/*b*/c");  # ac
 
 =head1 DESCRIPTION
 
