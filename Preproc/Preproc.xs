@@ -1,5 +1,5 @@
 #/* Verilog.xs -- Verilog Booter  -*- C++ -*-
-#* $Revision: 1.18 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $
+#* $Revision: 1.19 $$Date: 2004/12/08 22:20:45 $$Author: wsnyder $
 #*********************************************************************
 #*
 #* DESCRIPTION: Verilog::Preproc Perl XS interface
@@ -195,6 +195,7 @@ int pedantic
 PROTOTYPE: $$$$$
 CODE:
 {
+    if (CLASS) {}  // Prevent unused warning
     VFileLineXs* filelinep = new VFileLineXs(1/*ok,for initial*/);
     VPreprocXs* preprocp = new VPreprocXs(filelinep);
     filelinep->setPreproc(preprocp);
