@@ -6,6 +6,8 @@ The contributors that suggested a given feature are shown in [].
 
 ***	Vrename no longer recurses into CVS or .svn directories.
 
+***	Add specparam keyword. [Mark Grossman]
+
 * Verilog::Language 2.312 2005/02/04
 
 ***	Fix ignoring lines with same line number as end of last include.

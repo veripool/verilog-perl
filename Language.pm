@@ -140,7 +140,7 @@ foreach my $kwd (qw(
 		    automatic cell config design endconfig endgenerate
 		    generate genvar instance liblist localparam
 		    noshowcancelled pulsestyle_ondetect pulsestyle_onevent
-		    showcancelled signed use
+		    showcancelled signed specparam use
 
 		    alias always_comb always_ff always_latch assert
 		    assert_strobe before bind bit break byte chandle class
