@@ -2,9 +2,13 @@ Revision history for Perl extension Verilog::Language.
 
 The contributors that suggested a given feature are shown in [].
 
-* Verilog::Language 2.30**
+* Verilog::Language 2.310 *****
 
 **	NEWS is now renamed Changes, to support CPAN indexing. [Offer Kaye]
+
+**	Pins, nets, ports, and cells accessor methods now return lists
+	rather then internal hash references.  This matches earlier
+	documentation, and behavior of the pins_sorted, etc functions.
 
 ****	Support SUSE Linux and OS-X. [Jose Renau] 
 
@@ -254,7 +258,7 @@ The contributors that suggested a given feature are shown in [].
 ****	test.pl added
 
 ----------------------------------------------------------------------
-$Revision: 1.1 $$Date: 2004/12/08 22:21:18 $$Author: wsnyder $
+$Revision: 1.2 $$Date: 2004/12/09 14:00:07 $$Author: wsnyder $
 ----------------------------------------------------------------------
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].

@@ -1,5 +1,5 @@
 # Verilog - Verilog Perl Interface
-# $Revision: 1.33 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $
+# $Revision: 1.34 $$Date: 2004/12/09 14:00:07 $$Author: wsnyder $
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #
@@ -53,7 +53,7 @@ structs('new',
 
 sub delete {
     my $self = shift;
-    my $h = $self->cell->pins;
+    my $h = $self->cell->_pins;
     delete $h->{$self->name};
     return undef;
 }

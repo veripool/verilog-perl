@@ -1,5 +1,5 @@
 # Verilog - Verilog Perl Interface
-# $Revision: 1.40 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $
+# $Revision: 1.41 $$Date: 2004/12/09 14:00:07 $$Author: wsnyder $
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #
@@ -91,7 +91,7 @@ sub module {
 	 (name=>$module,
 	  is_libcell=>($fileref->is_libcell() || $in_celldefine),
 	  filename=>$self->filename, lineno=>$self->lineno);
-    @{$self->{modref}->portsordered} = @$orderref;
+    @{$self->{modref}->_portsordered} = @$orderref;
     $fileref->_modules($module, $self->{modref});
 }
 
