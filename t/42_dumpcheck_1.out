@@ -1,0 +1,39 @@
+Module:v_hier_sub  File:verilog/v_hier_sub.v
+  Port:avec  Dir:in  Type:wire  Array:
+  Port:clk  Dir:in  Type:wire  Array:
+  Port:qvec  Dir:out  Type:wire  Array:
+  Net:avec  O  Type:wire  Array:  3:0
+  Net:clk  O  Type:wire  Array:
+  Net:qvec  I  Type:wire  Array:  3:0
+  Cell:subsub0  is-a:v_hier_subsub
+            Module:v_hier_subsub  File:verilog/v_hier_subsub.v
+    Pin:a  Net:1'b1
+              Port:a  Dir:in  Type:wire  Array:
+    Pin:q  Net:qvec[0]
+              Port:q  Dir:out  Type:wire  Array:
+  Cell:subsub2  is-a:v_hier_subsub
+            Module:v_hier_subsub  File:verilog/v_hier_subsub.v
+    Pin:a  Net:1'b0
+              Port:a  Dir:in  Type:wire  Array:
+    Pin:q  Net:qvec[2]
+              Port:q  Dir:out  Type:wire  Array:
+Module:v_hier_subsub  File:verilog/v_hier_subsub.v
+  Port:a  Dir:in  Type:wire  Array:
+  Port:q  Dir:out  Type:wire  Array:
+  Net:a  O  Type:wire  Array:
+  Net:q  I  Type:wire  Array:
+Module:v_hier_top  File:verilog/v_hier_top.v
+  Port:clk  Dir:in  Type:wire  Array:
+  Net:clk  O  Type:wire  Array:
+  Cell:missing  is-a:missing
+  Cell:sub  is-a:v_hier_sub
+            Module:v_hier_sub  File:verilog/v_hier_sub.v
+    Pin:avec  Net:avec[3:0]
+              Port:avec  Dir:in  Type:wire  Array:
+    Pin:clk  Net:1'b0
+              Port:clk  Dir:in  Type:wire  Array:
+    Pin:qvec  Net:qvec[3:0]
+              Port:qvec  Dir:out  Type:wire  Array:
+Module:v_hier_top2  File:verilog/v_hier_top2.v
+  Port:clk  Dir:in  Type:wire  Array:
+  Net:clk  O  Type:wire  Array:
