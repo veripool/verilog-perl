@@ -10,7 +10,7 @@ use strict;
 use Test;
 use Cwd;
 
-BEGIN { plan tests => 9 }
+BEGIN { plan tests => 10 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Getopt;
@@ -70,3 +70,6 @@ ok ($#out == 13);
     print "LEFT: ",join(" ",@left2),"\n";
     ok ($#left2 == 3);
 }
+
+$opt->map_directories(sub{s![a-z]!x!; $_});
+ok(1);

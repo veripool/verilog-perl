@@ -275,6 +275,16 @@ sub get_parameters {
     return (@params);
 }
 
+sub write_parameters_file {
+    my $self = shift;
+    my $filename = shift;
+    # Write get_parameters to a file
+    my $fh = IO::File->new($filename, "w") or croak "%Error: $! $filename,";
+    my @opts = $self->get_parameters();
+    print $fh join("\n",@opts);
+    $fh->close;
+}
+
 #######################################################################
 # Utility functions
 
@@ -353,6 +363,22 @@ sub libext_matches {
 	return $filename if ($filename =~ /$re/);
     }
     return undef;
+}
+
+sub map_directories {
+    my $self = shift;
+    my $func = shift;
+    # Execute map function on all directories listed in self.
+    {
+	my @newdir = $self->incdir();
+	@newdir = map {&{$func}} @newdir;
+	$self->incdir(\@newdir);
+    }
+    {
+	my @newdir = $self->module_dir();
+	@newdir = map {&{$func}} @newdir;
+	$self->module_dir(\@newdir);
+    }
 }
 
 #######################################################################
@@ -488,6 +514,10 @@ functions that are called:
     -II<dir>		incdir (I<dir>)
     -f I<file>		Parse parameters in file
     all others		Put in returned list
+
+=item $self->write_parameters_file ( I<filename> )
+
+Write the output from get_parameters to the specified file.
 
 =back
 
