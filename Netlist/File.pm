@@ -131,6 +131,7 @@ sub signal_decl {
     my $netname = shift;
     my $vector = shift;
     my $array = shift;
+    my $signed = shift;
     print " Sig $netname $inout\n" if $Verilog::Netlist::Debug;
 
     my $msb;
@@ -158,6 +159,7 @@ sub signal_decl {
 	     filename=>$self->filename, lineno=>$self->lineno,
 	     simple_type=>1, type=>'wire', array=>$array,
 	     comment=>undef, msb=>$msb, lsb=>$lsb,
+	     signed=>$signed,
 	     );
     }
     elsif ($inout =~ /(inout|in|out)(put|)$/) {
@@ -169,6 +171,7 @@ sub signal_decl {
 	     filename=>$self->filename, lineno=>$self->lineno,
 	     simple_type=>1, type=>'wire', array=>$array,
 	     comment=>undef, msb=>$msb, lsb=>$lsb,
+	     signed=>$signed,
 	     );
 	##
 	my $port = $modref->new_port

@@ -2,7 +2,7 @@ module foo (
    abcconst, def, noconnect, x, y);
    input [2:0] abcconst;
    input [31:0] def;
-   input noconnect;
+   input signed [3:0] noconnect;
    input x;
    input y;
 endmodule

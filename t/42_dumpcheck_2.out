@@ -6,7 +6,7 @@ Module:foo  File:verilog/pinorder.v
   Port:y  Dir:in  Type:wire  Array:
   Net:abcconst  O  Type:wire  Array:  2:0
   Net:def  O  Type:wire  Array:  31:0
-  Net:noconnect  O  Type:wire  Array:
+  Net:noconnect  O  Type:wire  Array:  3:0
   Net:x  O  Type:wire  Array:
   Net:y  O  Type:wire  Array:
 Module:foo2  File:verilog/pinorder.v

@@ -37,6 +37,7 @@ structs('new',
 	   comment	=> '$', #'	# Comment provided by user
 	   array	=> '$', #'	# Vector
 	   module	=> '$', #'	# Module entity belongs to
+	   signed	=> '$', #'	# True if signed
 	   # below only after links()
 	   port		=> '$', #'	# Reference to port connected to
 	   msb		=> '$', #'	# MSB of signal (if known)
@@ -99,12 +100,14 @@ sub lint {
 
 sub _decls {
     my $self = shift;
+    my $type = $self->type;
     if ($self->port) {
-	return "input" if $self->port->direction eq "in";
-	return "output" if $self->port->direction eq "out";
-	return "inout" if $self->port->direction eq "inout";
+	$type = "input" if $self->port->direction eq "in";
+	$type = "output" if $self->port->direction eq "out";
+	$type = "inout" if $self->port->direction eq "inout";
     }
-    return $self->type;
+    $type .= " signed" if $self->signed;
+    return $type;
 }
 
 sub verilog_text {
