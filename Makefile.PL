@@ -13,7 +13,7 @@ $DOLLAR = '$$';	# Quoted properly for make
 sub MY::postamble {
 "
 README: readme.texi
-	-rm \$@
+	-rm -rf \$@
 	makeinfo \$< --output \$@ --no-headers --no-validate
 
 clean::
@@ -38,7 +38,7 @@ maintainer-dist: preexist dist tag
 maintainer-copy:
 
 maintainer-clean: distclean
-	-rm README Makefile
+	-rm -rf README Makefile
 
 ";
 }
