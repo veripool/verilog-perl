@@ -30,6 +30,7 @@ structs('new',
 	   filename 	=> '$', #'	# Filename this came from
 	   lineno	=> '$', #'	# Linenumber this came from
 	   userdata	=> '%',		# User information
+	   attributes	=> '%', #'	# Misc attributes for systemperl or other processors
 	   #
 	   submodname	=> '$', #'	# Which module it instantiates
 	   module	=> '$', #'	# Module reference

@@ -35,6 +35,7 @@ structs('new',
 	   lineno	=> '$', #'	# Linenumber this came from
 	   netlist	=> '$', #'	# Netlist is a member of
 	   userdata	=> '%',		# User information
+	   attributes	=> '%', #'	# Misc attributes for systemperl or other processors
 	   #
 	   attrs	=> '@',		# list of "category name[ =](.*)" strings
 	   _ports	=> '%',		# hash of Verilog::Netlist::Ports

@@ -31,6 +31,7 @@ structs('new',
 	   basename	=> '$', #'	# Basename of the file
 	   netlist	=> '$', #'	# Netlist is a member of
 	   userdata	=> '%',		# User information
+	   attributes	=> '%', #'	# Misc attributes for systemperl or other processors
 	   is_libcell	=> '$',	#'	# True if is a library cell
 	   # For special procedures
 	   _modules	=> '%',		# For autosubcell_include

@@ -30,6 +30,7 @@ structs('new',
 	   filename 	=> '$', #'	# Filename this came from
 	   lineno	=> '$', #'	# Linenumber this came from
 	   userdata	=> '%',		# User information
+	   attributes	=> '%', #'	# Misc attributes for systemperl or other processors
 	   #
 	   direction	=> '$', #'	# Direction (in/out/inout)
 	   type	 	=> '$', #'	# C++ Type (bool/int)
@@ -46,12 +47,15 @@ sub _link {
     my $self = shift;
     if (!$self->net) {
 	my $net = $self->module->find_net ($self->name);
-	$net or $net = $self->module->new_net
-	    (name=>$self->name,
-	     filename=>$self->filename, lineno=>$self->lineno,
-	     type=>$self->type, array=>$self->array,
-	     comment=>undef,
-	     );
+	if (!$net) {
+	    $net = $self->module->new_net
+		(name=>$self->name,
+		 filename=>$self->filename, lineno=>$self->lineno,
+		 type=>$self->type, array=>$self->array,
+		 comment=>undef,
+		 );
+	    $net->attributes($self->attributes);  # Copy attributes across
+	}
 	if ($net && $net->port && $net->port != $self) {
 	    $self->error ("Port redeclares existing port: ",$self->name,"\n");
 	}
