@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 # vppp - Preprocess Verilog
-# $Id: vppp,v 1.6 2004/09/01 20:21:45 wsnyder Exp $
+# $Id: vppp,v 1.7 2004/12/04 20:13:28 wsnyder Exp $
 ######################################################################
 #
 # Copyright 2000-2004 by Wilson Snyder <wsnyder@wsnyder.org>.  This
@@ -92,7 +92,7 @@ exit (0);
 ######################################################################
 
 sub usage {
-    print 'Version: $Id: vppp,v 1.6 2004/09/01 20:21:45 wsnyder Exp $ '."\n";
+    print 'Version: $Id: vppp,v 1.7 2004/12/04 20:13:28 wsnyder Exp $ '."\n";
     $SIG{__WARN__} = sub{};	#pod2text isn't clean.
     pod2text($0);
     exit (1);

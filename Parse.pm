@@ -1,5 +1,5 @@
 # Verilog::Parse.pm -- Verilog preprocessing
-# $Revision: 1.42 $$Date: 2004/11/18 19:53:58 $$Author: wsnyder $
+# $Revision: 1.43 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #

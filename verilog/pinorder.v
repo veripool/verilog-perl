@@ -1,4 +1,4 @@
-// $Revision: 1.2 $$Date: 2003/10/02 21:11:45 $$Author: wsnyder $
+// $Revision: 1.3 $$Date: 2004/12/04 20:13:29 $$Author: wsnyder $
 // DESCRIPTION: Verilog-Perl: Example Verilog for testing package
 // This file ONLY is placed into the Public Domain, for any use,
 // without warranty, 2003 by Wilson Snyder.

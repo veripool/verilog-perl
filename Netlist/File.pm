@@ -1,5 +1,5 @@
 # Verilog - Verilog Perl Interface
-# $Revision: 1.39 $$Date: 2004/11/18 19:53:45 $$Author: wsnyder $
+# $Revision: 1.40 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #

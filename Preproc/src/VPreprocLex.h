@@ -1,4 +1,4 @@
-// $Revision: 1.16 $$Date: 2004/03/31 18:33:39 $$Author: wsnyder $  -*- C++ -*-
+// $Revision: 1.17 $$Date: 2004/12/04 20:13:29 $$Author: wsnyder $  -*- C++ -*-
 //*************************************************************************
 // DESCRIPTION: Verilog::Preproc: Internal header for lex interfacing
 //

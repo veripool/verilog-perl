@@ -1,4 +1,4 @@
-#$Revision: 1.38 $$Date: 2004/11/18 19:54:04 $$Author: wsnyder $
+#$Revision: 1.39 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $
 ######################################################################
 #
 # Copyright 2001-2004 by Wilson Snyder.  This program is free software;
