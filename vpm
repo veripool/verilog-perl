@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 # vpm - Preprocess Verilog signals
-# $Revision: 1.73 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $
+# $Revision: 1.74 $$Date: 2004/12/09 14:48:43 $$Author: wsnyder $
 ######################################################################
 #
 # Copyright 2000-2004 by Wilson Snyder.  This program is free software;
@@ -146,7 +146,7 @@ exit (0);
 ######################################################################
 
 sub usage {
-    print 'Version: $Revision: 1.73 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $ ';
+    print 'Version: $Revision: 1.74 $$Date: 2004/12/09 14:48:43 $$Author: wsnyder $ ';
     print "\n";
     $SIG{__WARN__} = sub{};	#pod2text isn't clean.
     pod2text($0);
@@ -1128,7 +1128,7 @@ __END__
 
 =head1 NAME
 
-vpm - Preprocess verilog code
+vpm - Preprocess Verilog code assertions
 
 =head1 SYNOPSIS
 
@@ -1141,10 +1141,10 @@ B<vpm>
 
 =head1 DESCRIPTION
 
-Vpm will read the specified verilog files and preprocess them.  The files
-are written to the directory named .vpm unless another name is given with
-B<-o>.  If a directory is passed, all files in that directory will be
-preprocessed.
+Vpm will read the specified verilog files and preprocess special PLI
+assertions.  The files are written to the directory named .vpm unless
+another name is given with B<-o>.  If a directory is passed, all files in
+that directory will be preprocessed.
 
 =head1 ARGUMENTS
 

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 # vppp - Preprocess Verilog
-# $Id: vppp,v 1.7 2004/12/04 20:13:28 wsnyder Exp $
+# $Id: vppp,v 1.8 2004/12/09 14:48:43 wsnyder Exp $
 ######################################################################
 #
 # Copyright 2000-2004 by Wilson Snyder <wsnyder@wsnyder.org>.  This
@@ -92,7 +92,7 @@ exit (0);
 ######################################################################
 
 sub usage {
-    print 'Version: $Id: vppp,v 1.7 2004/12/04 20:13:28 wsnyder Exp $ '."\n";
+    print 'Version: $Id: vppp,v 1.8 2004/12/09 14:48:43 wsnyder Exp $ '."\n";
     $SIG{__WARN__} = sub{};	#pod2text isn't clean.
     pod2text($0);
     exit (1);
@@ -130,11 +130,8 @@ vppp - Preprocess Verilog code using verilog-perl
 
 =head1 DESCRIPTION
 
-Vppp reads the verilog files passwd on the command line and outputs
-preprocessed output to standard out or the filename passewd with B<-p>.
-preprocesses Verilog code (Verilog PreProcessor in Perl).  It reads all of
-the files on the command line similar to B<verilog> or B<vcs>, and prints
-to standard out or the argument of B<-o> the preprocessed code.
+Vppp reads the Verilog files passed on the command line and outputs
+preprocessed output to standard out or the filename passed with B<-p>.
 
 =head1 VERILOG ARGUMENTS
 

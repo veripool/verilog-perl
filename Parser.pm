@@ -1,5 +1,5 @@
 # Verilog::Parser.pm -- Verilog parsing
-# $Revision: 1.65 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $
+# $Revision: 1.66 $$Date: 2004/12/09 14:48:43 $$Author: wsnyder $
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #
@@ -195,6 +195,7 @@ L<Verilog::Netlist>,
 L<Verilog::Getopt>, 
 L<vrename>,
 L<vpm>
+L<vppp>
 
 =cut
 
