@@ -4,7 +4,7 @@ Language.pm
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
 Makefile.PL
-NEWS
+Changes
 Netlist.pm
 Netlist/Cell.pm
 Netlist/File.pm
