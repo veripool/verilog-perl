@@ -2,7 +2,7 @@ Revision history for Perl extension Verilog::Language.
 
 The contributors that suggested a given feature are shown in [].
 
-* Verilog::Language 2.31****
+* Verilog::Language 2.311 2005/01/27
 
 ***	Support parsing of signed numbers.  [Rudi Rughoonundon]
 
