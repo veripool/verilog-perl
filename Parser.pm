@@ -433,7 +433,7 @@ sub parse {
 		print "GotaOPERATOR $token\n"    if ($Debug);
 		$self->operator ($token);
 	    }
-	    elsif (($text =~ s/^([0-9]*'[BHODbhod]\ *[0-9A-FXZa-fxz_?]+)//)    #'
+	    elsif (($text =~ s/^([0-9]*'\ *[Ss]?\ *[BHODbhod]\ *[0-9A-FXZa-fxz_?]+)//)    #'
 				 || ($text =~ s/^([0-9]+[0-9a-fA-F_]*)// )) {
 		my $token = $1;
 		print "GotaNUMBER $token\n"    if ($Debug);

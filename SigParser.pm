@@ -276,6 +276,9 @@ sub keyword {
 	    $self->{in_celldefine} = !($1 || "");
 	}
     }
+    if ($token eq 'signed') {
+	return;	  # Ignore signed, just treat as normal in/out
+    }
     if ($self->{in_preproc_line} != $self->line()) {
 	$self->{last_keyword} = $self->{attr_keyword} = $token;
 	@{$self->{last_symbols}} = ();

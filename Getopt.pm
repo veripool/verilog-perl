@@ -240,6 +240,7 @@ sub depend_files {
 
 sub get_parameters {
     my $self = shift;
+    # Defines
     my @params = ();
     foreach my $def (sort (keys %{$self->{defines}})) {
 	my $defvalue = $self->defvalue($def);
@@ -250,9 +251,14 @@ sub get_parameters {
 	    push @params, "+define+${def}${defvalue}";
 	}
     }
+    # Put all libexts on one line, else NC-Verilog will bitch
+    my $exts="";
     foreach my $ext ($self->libext()) {
-	push @params, "+libext+$ext";
+	$exts = "+libext" if !$exts;
+	$exts .= "+$ext";
     }
+    push @params, $exts if $exts;
+    # Includes...
     foreach my $dir ($self->incdir()) {
 	if ($self->{gcc_style}) {
 	    push @params, "-I${dir}";

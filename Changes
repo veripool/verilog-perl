@@ -2,6 +2,12 @@ Revision history for Perl extension Verilog::Language.
 
 The contributors that suggested a given feature are shown in [].
 
+* Verilog::Language 2.31****
+
+****	Support parsing of signed numbers.  [Rudi Rughoonundon]
+
+****    Fix Verilog::Getopt::get_parameters for NC-Verilog.
+
 * Verilog::Language 2.310 2005/01/24
 
 **	NEWS is now renamed Changes, to support CPAN indexing. [Offer Kaye]

@@ -10,7 +10,7 @@ module v_hier_subsub (/*AUTOARG*/
    a
    );
    parameter IGNORED;
-   input a;
+   input  signed a;
    output q;
    wire   q = a;
 endmodule

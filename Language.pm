@@ -28,6 +28,7 @@ Verilog::Language - Verilog language utilities
   $result = Verilog::Language::is_compdirect ("`notundef");  # false
   $result = Verilog::Language::number_value ("4'b111");  # 8
   $result = Verilog::Language::number_bits  ("32'h1b");  # 32
+  $result = Verilog::Language::number_signed ("1'sh1");  # 1
   @vec    = Verilog::Language::split_bus ("[31,5:4]"); # 31, 5, 4
   @vec    = Verilog::Language::split_bus_nocomma ("[31:29]"); # 31, 30, 29
   $result = Verilog::Language::strip_comments ("a/*b*/c");  # ac
@@ -47,16 +48,20 @@ Return true if the given symbol string is a Verilog reserved keyword.
 
 Return true if the given symbol string is a Verilog compiler directive.
 
-=item Verilog::Language::number_value ($number_string)
-
-Return the numeric value of a Verilog value, or undef if incorrectly
-formed.  Since it is returned as a signed integer, it may fail for over 31
-bit integers.
-
 =item Verilog::Language::number_bits ($number_string)
 
 Return the number of bits in a value string, or undef if incorrectly
 formed, _or_ not specified.
+
+=item Verilog::Language::number_signed ($number_string)
+
+Return true if the Verilog value is signed, else undef.
+
+=item Verilog::Language::number_value ($number_string)
+
+Return the numeric value of a Verilog value, or undef if incorrectly
+formed.  It ignores any signed Verilog attributes, but is is returned as a
+perl signed integer, so it may fail for over 31 bit values.
 
 =item Verilog::Language::split_bus ($bus)
 
@@ -221,16 +226,24 @@ sub number_bits {
     return undef;
 }
 
+sub number_signed {
+    my $number = shift;
+    if ($number =~ /\'\s*s/i) {
+	return 1;
+    }
+    return undef;
+}
+
 sub number_value {
     my $number = shift;
     $number =~ s/[_ ]//g;
-    if ($number =~ /\'h([0-9a-f]+)$/i) {
+    if ($number =~ /\'s?h([0-9a-f]+)$/i) {
 	return (hex ($1));
     }
-    elsif ($number =~ /\'o([0-9a-f]+)$/i) {
+    elsif ($number =~ /\'s?o([0-9a-f]+)$/i) {
 	return (oct ($1));
     }
-    elsif ($number =~ /\'b([0-1]+)$/i) {
+    elsif ($number =~ /\'s?b([0-1]+)$/i) {
 	my $val = 0;
 	my $bit;
 	$number = $1;
@@ -239,7 +252,7 @@ sub number_value {
 	}
 	return ($val);
     }
-    elsif ($number =~ /\'d([0-9]+)$/i
+    elsif ($number =~ /\'s?d?([0-9]+)$/i
 	   || $number =~ /^([0-9]+)$/i) {
 	return ($1);
     }

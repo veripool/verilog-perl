@@ -46,7 +46,7 @@ ok (($fp eq (Cwd::abs_path("t")."/20_getopt.t"))
 
 my @out = $opt->get_parameters();
 print "OUT: ",(join(" ",@out)),"\n";
-ok ($#out == 14);
+ok ($#out == 13);
 
 {
     my $opt2 = new Verilog::Getopt ();
@@ -54,7 +54,7 @@ ok ($#out == 14);
     print join(" ",@left2),"\n";
     my @out2 = $opt->get_parameters();
     print join(" ",@out2),"\n";
-    ok ($#out2 == 14);
+    ok ($#out2 == 13);
 }
 
 {

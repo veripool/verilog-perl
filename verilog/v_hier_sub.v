@@ -10,7 +10,7 @@ module v_hier_sub (/*AUTOARG*/
    );
 
    v_hier_subsub #(
-		   .IGNORED(20)
+		   .IGNORED('sh20)
 		   )
      subsub0 (
 	      // Outputs
