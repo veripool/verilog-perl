@@ -1,0 +1,11 @@
+blib
+Makefile
+pm_to_blib
+*.def
+*.dll
+*.exp
+*.o
+*.c
+*.bs
+*.xsc
+*.output
