@@ -129,6 +129,7 @@ class VPreprocLex {
     void setStateDefValue();
     void setStateIncFilename();
     void unputString(const char* textp);
+    void unused();
 };
 
 #endif // Guard

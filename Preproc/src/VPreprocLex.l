@@ -206,6 +206,13 @@ void VPreprocLex::lineDirective(const char* textp) {
     }
 }
 
+void VPreprocLex::unused() {
+    if (0) {
+	// Prevent unused warnings
+	yy_top_state();
+    }
+}
+
 /*###################################################################
  * Local Variables:
  * mode: C
