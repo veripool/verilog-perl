@@ -1,10 +1,11 @@
+Changes
+configure
 COPYING
 Getopt.pm
 Language.pm
+Makefile.PL
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
-Makefile.PL
-Changes
 Netlist.pm
 Netlist/Cell.pm
 Netlist/File.pm
@@ -18,6 +19,7 @@ Parser.pm
 Preproc/Makefile.PL
 Preproc/Preproc.pm
 Preproc/Preproc.xs
+Preproc/src/example.cpp
 Preproc/src/Makefile.PL
 Preproc/src/Makefile_without_perl
 Preproc/src/VFileLine.cpp
@@ -26,11 +28,9 @@ Preproc/src/VPreproc.cpp
 Preproc/src/VPreproc.h
 Preproc/src/VPreprocLex.h
 Preproc/src/VPreprocLex.l
-Preproc/src/example.cpp
 Preproc/typemap
 README
 SigParser.pm
-configure
 t/00_pod.t
 t/10_keywords.t
 t/12_splitbus.t
@@ -39,6 +39,8 @@ t/20_getopt.t
 t/30_preproc.out
 t/30_preproc.t
 t/30_preproc2.out
+t/35_sigparser.out
+t/35_sigparser.t
 t/40_netlist.t
 t/42_dumpcheck.t
 t/42_dumpcheck_1.out
