@@ -28,12 +28,8 @@ ok($orig_lines==$new_lines);
 
 # Build the model
 unlink "simv";
-if (!$ENV{VCS_HOME} || !-r "$ENV{VCS_HOME}/bin/vcs") {
-    warn "*** You do not seem to have VCS installed, not running rest of test.\n";
-    warn "*** (If you do not own VCS, ignore this warning).\n";
-    skip(1,1);
-} else {
-    chdir 'test_dir';
+chdir 'test_dir';
+if ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
     run_system (# We use VCS, insert your simulator here
 		"$ENV{VCS_HOME}/bin/vcs"
 		# vpm uses `pli to point to the hiearchy of the pli module
@@ -48,10 +44,29 @@ if (!$ENV{VCS_HOME} || !-r "$ENV{VCS_HOME}/bin/vcs") {
     # Execute the model (VCS is a compiled simulator)
     run_system ("./simv");
     unlink ("./simv");
-    chdir '..';
-	
     ok(1);
 }
+elsif ($ENV{CDS_INCISIVE_HOME} && -d $ENV{CDS_INCISIVE_HOME}) {
+    run_system ("ncverilog"
+		." -q"
+		# vpm uses `pli to point to the hiearchy of the pli module
+		." +define+pli=pli"
+		# vpm uses `__message_on to point to the message on variable
+		." +define+__message_on=pli.message_on"
+		# Read files from .vpm BEFORE reading from other directories
+		." +librescan +libext+.v -y .vpm"
+		# Finally, read the needed top level file
+		." .vpm/example.v"
+		);
+    ok(1);
+}
+else {
+    warn "\n";
+    warn "*** You do not seem to have VCS or NC-Verilog installed, not running rest of test.\n";
+    warn "*** (If you do not own VCS/NC-Verilog, ignore this warning).\n";
+    skip(1,1);
+}
+chdir '..';
 
 sub lines_in {
     my $filename = shift;
