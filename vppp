@@ -1,0 +1,254 @@
+#!/usr/bin/perl -w
+# vppp - Preprocess Verilog
+# $Id: vppp,v 1.6 2004/09/01 20:21:45 wsnyder Exp $
+######################################################################
+#
+# Copyright 2000-2004 by Wilson Snyder <wsnyder@wsnyder.org>.  This
+# program is free software; you can redistribute it and/or modify it under
+# the terms of either the GNU Lesser General Public License or the Perl
+# Artistic License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+######################################################################
+
+require 5.005;
+use lib 'blib/arch';
+use lib 'blib/lib';
+use lib '.';
+
+use Getopt::Long;
+use IO::File;
+use Pod::Text;
+
+use Verilog::Preproc;
+use Verilog::Getopt;
+use strict;
+use vars qw ($Debug);
+
+######################################################################
+# main
+
+$Debug = 0;
+my $opt_output_filename = undef;
+my $opt_blank=1;
+my @opt_files;
+my @opt_pp_flags;
+
+autoflush STDOUT 1;
+autoflush STDERR 1;
+
+# Option parsing
+my $Opt = new Verilog::Getopt();
+@ARGV = $Opt->parameter(@ARGV);
+Getopt::Long::config ("no_auto_abbrev","pass_through");
+if (! GetOptions (
+		  "help"	=> \&usage,
+		  "debug"	=> \&debug,
+		  "o=s"		=> \$opt_output_filename,
+		  "blank!"	=> \$opt_blank,
+		  "comment!"	=> sub { shift; push @opt_pp_flags, (keep_comments=>shift); },
+		  "line!"	=> sub { shift; push @opt_pp_flags, (line_directives=>shift); },
+		  "pedantic!"	=> sub { shift; push @opt_pp_flags, (pedantic=>shift); },
+		  "simple!"	=> sub { if ($_[0]) {
+		      push @opt_pp_flags, (keep_comments=>0,
+					   line_directives=>0,
+					   );
+		      $opt_blank=0;
+		  } },
+		  "<>"		=> \&parameter,
+		  )) {
+    usage();
+}
+
+if (!@opt_files) {
+    die "%Error: vppp: No input filenames specified.\n";
+}
+
+my $fh = IO::File->new;
+if ($opt_output_filename) {
+    $fh->open(">$opt_output_filename") or die "%Error: $! $opt_output_filename\n";
+} else {
+    $fh->open(">-") or die;
+}
+
+my $vp = Verilog::Preproc->new(@opt_pp_flags,
+			       options=>$Opt,);
+
+$vp->debug($Debug) if $Debug;
+foreach my $file (@opt_files) {
+    $vp->open($file);
+    while (defined (my $line = $vp->getline())) {
+	next if !$opt_blank && $line =~ /^\s*[\n]?$/;
+	print $fh $line;
+    }
+}
+
+exit (0);
+
+######################################################################
+
+sub usage {
+    print 'Version: $Id: vppp,v 1.6 2004/09/01 20:21:45 wsnyder Exp $ '."\n";
+    $SIG{__WARN__} = sub{};	#pod2text isn't clean.
+    pod2text($0);
+    exit (1);
+}
+
+sub debug {
+    $Debug = 1;
+}
+
+sub parameter {
+    my $param = shift;
+    if ($param =~ /^--?/) {
+	die "%Error: vppp: Unknown parameter: $param\n";
+    } else {
+	push @opt_files, $param;
+    }
+}
+
+######################################################################
+######################################################################
+######################################################################
+
+__END__
+
+=pod
+
+=head1 NAME
+
+vppp - Preprocess Verilog code using verilog-perl
+
+=head1 SYNOPSIS
+
+  vppp --help
+  vppp [verilog_options] [-o filename] [verilog_files.v...]
+
+=head1 DESCRIPTION
+
+Vppp reads the verilog files passwd on the command line and outputs
+preprocessed output to standard out or the filename passewd with B<-p>.
+preprocesses Verilog code (Verilog PreProcessor in Perl).  It reads all of
+the files on the command line similar to B<verilog> or B<vcs>, and prints
+to standard out or the argument of B<-o> the preprocessed code.
+
+=head1 VERILOG ARGUMENTS
+
+The following arguments are compatible with GCC, VCS and most Verilog
+programs.
+
+=over 4
+
+=item +define+I<var>+I<value>
+=item -DI<var>=I<value>
+
+Defines the given preprocessor symbol.
+
+=item -f I<file>
+
+Read the specified file, and act as if all text inside it was
+specified as command line parameters.
+
+=item +incdir+I<dir>
+=item -II<dir>
+
+Add the directory to the list of directories that should be searched
+for include directories or libraries.
+
+=item +libext+I<ext>+I<ext>...
+
+Specify the extensions that should be used for finding modules.  If for
+example module I<x> is referenced, look in I<x>.I<ext>.
+
+=item -y I<dir>
+
+Add the directory to the list of directories that should be searched
+for include directories or libraries.
+
+=back
+
+=head1 VPPP ARGUMENTS
+
+=over 4
+
+=item --help
+
+Displays this message and program version and exits.
+
+=item --o I<file>
+
+Use the given filename for output instead of stdout.
+
+=item --noblank
+
+Removes empty lines from the output.  Should be used with --noline, as if
+correct line numbers are needed, blank lines must be preserved for proper
+accounting by the program reading the output of vppp.
+
+=item --nocomment
+
+Remove comments.
+
+=item --noline
+
+Remove `line directives.
+
+=item --pedantic
+
+Rigorously obey the Verilog spec.  This disables the `__FILE__ and
+`__LINE__ features, and may disable other features that are not specified
+in the language reference manual. Defaults false.
+
+=item --simple
+
+Requests simple output, an alias for --noline, --nocomment and --noblank.
+
+=back
+
+=head1 LANGUAGE EXTENSIONS
+
+Vppp supports the preprocessing constructs defined in the Verilog 2001 and
+SystemVerilog 3.1 standards.
+
+The following additional constructs may be added to your Verilog code.
+
+=over 4
+
+=item `__FILE__
+
+The __FILE__ define expands to the current filename, like C++'s __FILE__.
+
+=item `__LINE__
+
+The __LINE__ define expands to the current line number, like C++'s __LINE__.
+
+=item `error I<string>
+
+This will report an error when encountered, like C++'s #error.
+
+=back
+
+=head1 DISTRIBUTION
+
+The latest version is available from CPAN and from
+L<http://www.veripool.com/verilog-perl.html>.
+
+Copyright 2000-2004 by Wilson Snyder.  This package is free software; you
+can redistribute it and/or modify it under the terms of either the GNU
+Lesser General Public License or the Perl Artistic License.
+
+=head1 AUTHORS
+
+Wilson Snyder <wsnyder@wsnyder.org>
+
+=head1 SEE ALSO
+
+L<Verilog::Getopt>,
+L<Verilog::Preproc>
+
+=cut
+######################################################################
