@@ -2,11 +2,13 @@ Revision history for Perl extension Verilog::Language.
 
 The contributors that suggested a given feature are shown in [].
 
-* Verilog::Language 2.31***
+* Verilog::Language 2.313 2005/03/01
 
 ***	Vrename no longer recurses into CVS or .svn directories.
 
 ***	Add specparam keyword. [Mark Grossman]
+
+****	Add NC-Verilog, and Verilog::Parser tests.
 
 * Verilog::Language 2.312 2005/02/04
 
