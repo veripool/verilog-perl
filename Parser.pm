@@ -1,5 +1,5 @@
 # Verilog::Parser.pm -- Verilog parsing
-# $Revision: 1.63 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $
+# $Revision: 1.64 $$Date: 2004/12/08 21:41:33 $$Author: wsnyder $
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #
@@ -189,7 +189,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 =head1 SEE ALSO
 
 L<Verilog::Preproc>, 
-L<Verilog::ParserSig>, 
+L<Verilog::SigParser>, 
 L<Verilog::Language>, 
 L<Verilog::Netlist>, 
 L<Verilog::Getopt>, 
