@@ -1,5 +1,5 @@
 # Verilog - Verilog Perl Interface
-# $Revision: 1.39 $$Date: 2004/12/09 14:00:07 $$Author: wsnyder $
+# $Revision: 1.40 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #
@@ -21,7 +21,7 @@ use Verilog::Netlist;
 use Verilog::Netlist::Subclass;
 @ISA = qw(Verilog::Netlist::Cell::Struct
 	Verilog::Netlist::Subclass);
-$VERSION = '2.303';
+$VERSION = '2.310';
 use strict;
 
 structs('new',

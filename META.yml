@@ -1,7 +1,7 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Verilog-Perl
-version:      2.303
+version:      2.310
 version_from: Language.pm
 installdirs:  site
 requires:
