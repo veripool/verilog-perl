@@ -1,0 +1,128 @@
+\input texinfo @c -*-texinfo-*-
+@c $Revision: 1.21 $$Date: 2004/09/09 18:03:41 $$Author: wsnyder $
+@c %**start of header
+@setfilename readme.info
+@settitle Perl Verilog Installation
+@c %**end of header
+
+@c DESCRIPTION: TexInfo: DOCUMENT source run through texinfo to produce README file
+@c Use 'make README' to produce the output file
+
+@node Top, Copyright, (dir), (dir)
+
+This is the Verilog Perl Package.
+
+@menu
+* Copyright::                   
+* Description::                 
+* Obtaining Distribution::      
+* Supported Systems::           
+* Installation::                
+@end menu
+
+@node Copyright, Description, Top, Top
+@section Copyright
+
+This package is Copyright 2000-2004 by Wilson Snyder @email{wsnyder@@wsnyder.org}.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of either the GNU General Public License or the
+Perl Artistic License.
+
+This code is provided with no warranty of any kind, and is used entirely at
+your own risk.
+
+@node Description, Complete Parsing, Copyright, Top
+@section Description
+
+This package provides functions to support writing utilities that use
+the Verilog language.  See @samp{man Verilog::Language} and @samp{man vrename}
+after installation.
+
+Included is @samp{vrename}, a program for renaming signals, modules,
+and parameters across many verilog files at once.  
+
+@samp{vppp} is a Verilog preprocessor.  Low level classes allow
+preprocessing inside of Perl or C++ programs as a standard stream.
+
+Also included is @samp{vpm} to convert macros that look like pli calls,
+such as $info, into different Verilog code.  This enables programs like
+Verilint and Synopsys dc_shell to ignore the macros (as they ignore pli
+calls), but have the simulator do something special with them.
+
+For example:
+
+@example
+      $info (0, "Welcome to a VPMed file\n");
+@end example
+
+becomes
+
+@example
+      ... $write ("[%0t] -I:example.v:0012: Welcome to a VPMed file\n",$time); ...
+@end example
+
+where the filename and line number of the message have been added along
+with the timestamp.
+
+@node Complete Parsing, Obtaining Distribution, Description, Top
+@section Complete Parsing
+
+The lower level parsing routines do not keep behavioral statements, or
+bit connectivity within busses.  If you're looking for a front end
+that keeps all information, you may want to consider using the C++
+front end that is part of Verilator.  See
+@uref{http://www.veripool.com/verilator.html}.
+
+@node Obtaining Distribution, Supported Systems, Complete Parsing, Top
+@section Obtaining Distribution
+
+The latest version is available at 
+@uref{http://www.perl.org/CPAN/}
+
+Download the latest package from that site, and decompress.
+@samp{gunzip Verilog-Perl_version.tar.gz ; tar xvf Verilog-Perl_version.tar}
+
+@node Supported Systems, Installation, Obtaining Distribution, Top
+@section Supported Systems
+
+This version of Verilog has been built and tested on:
+
+@itemize @bullet
+@item sparc-sun-solaris2.5.1
+@item i386-linux
+@item i686-w2k-cygwin
+@end itemize
+
+It should run on any system with Perl, G++ and Flex.
+
+@node Installation,  , Supported Systems, Top
+@section Installation
+
+@enumerate
+@item
+@code{cd} to the directory containing this README notice.
+
+@item
+Type @samp{perl Makefile.PL} to configure Verilog for your system.
+
+@item
+Type @samp{make} to compile Verilog.  Some Solaris users have had
+trouble with ``open'' being redefined.  If this happens, try editing
+the Makefile to change _FILE_OFFSET_BITS to 32 instead of 64.
+
+@item
+Type @samp{make test} to check the package.  If you don't have
+Synopsys' VCS, the test will print a warning, which you can ignore.
+
+@item
+Type @samp{make install} to install the programs and any data files and
+documentation.
+
+@item
+Look at @samp{t/60_vpm.t} to see how to use @samp{vpm} in your build
+methodology.
+
+@end enumerate
+
+
