@@ -318,7 +318,7 @@ sub file_path {
 
     defined $filename or carp "%Error: Undefined filename,";
     return $self->{_file_path_cache}{$filename} if defined $self->{_file_path_cache}{$filename};
-    if (-r $filename) {
+    if (-r $filename && !-d $filename) {
 	$self->{_file_path_cache}{$filename} = $filename;
 	$self->depend_files($filename);
 	return $filename;
@@ -333,7 +333,7 @@ sub file_path {
 	foreach my $postfix ("", @{$self->{libext}}) {
 	    my $found = "$dir/$filename$postfix";
 	    next if $checked{$found}; $checked{$found}=1;  # -r can be quite slow
-	    if (-r $found) {
+	    if (-r $found && !-d $filename) {
 		$self->{_file_path_cache}{$filename} = $found;
 		$self->depend_files($found);
 		return $found;

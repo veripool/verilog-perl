@@ -4,7 +4,9 @@ The contributors that suggested a given feature are shown in [].
 
 * Verilog::Language 2.31****
 
-****	Support parsing of signed numbers.  [Rudi Rughoonundon]
+***	Support parsing of signed numbers.  [Rudi Rughoonundon]
+
+**** 	Fix resolve_filename misfinding directories. [John Tseng]
 
 ****    Fix Verilog::Getopt::get_parameters for NC-Verilog.
 

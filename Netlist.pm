@@ -171,7 +171,7 @@ sub resolve_filename {
 	$filename = $self->remove_defines($filename);
 	$filename = $self->{options}->file_path($filename);
     }
-    if (!-r $filename) {
+    if (!-r $filename || -d $filename) {
 	return undef;
     }
     $self->dependency_in ($filename);
