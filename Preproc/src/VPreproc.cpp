@@ -1,12 +1,5 @@
 // $Revision: 1.28 $$Date$$Author$  -*- C++ -*-
 //*************************************************************************
-// DESCRIPTION: Verilog::Preproc: Internal implementation of default preprocessor
-//
-// Code available from: http://www.veripool.com/verilog-perl
-//
-// Authors: Wilson Snyder
-//
-//*************************************************************************
 //
 // Copyright 2000-2005 by Wilson Snyder.  This program is free software;
 // you can redistribute it and/or modify it under the terms of either the GNU
@@ -17,6 +10,14 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
+//*************************************************************************
+/// \file
+/// \brief Verilog::Preproc: Internal implementation of default preprocessor
+///
+/// Authors: Wilson Snyder
+///
+/// Code available from: http://www.veripool.com/verilog-perl
+///
 //*************************************************************************
 
 #include <stdio.h>
@@ -34,35 +35,35 @@
 //#include <FlexLexer.h>
 
 //*************************************************************************
-// Data for a preprocessor instantiation.
+/// Data for a preprocessor instantiation.
 
 struct VPreprocImp : public VPreprocOpaque {
-    VPreproc*	m_preprocp;	// Object we're holding data for
-    VFileLine*	m_filelinep;	// Last token's starting point
-    int		m_debug;	// Debugging level
-    VPreprocLex* m_lexp;	// Current lexer state (NULL = closed)
-    stack<VPreprocLex*> m_includeStack;	// Stack of includers above current m_lexp
+    VPreproc*	m_preprocp;	///< Object we're holding data for
+    VFileLine*	m_filelinep;	///< Last token's starting point
+    int		m_debug;	///< Debugging level
+    VPreprocLex* m_lexp;	///< Current lexer state (NULL = closed)
+    stack<VPreprocLex*> m_includeStack;	///< Stack of includers above current m_lexp
 
     enum ProcState { ps_TOP, ps_DEFNAME, ps_DEFVALUE, ps_DEFPAREN, ps_DEFARG,
 		     ps_INCNAME, ps_ERRORNAME };
-    ProcState	m_state;	// Current state of parser
-    int		m_stateFor;	// Token state is parsing for
-    int		m_off;		// If non-zero, ifdef level is turned off, don't dump text
-    string	m_lastSym;	// Last symbol name found.
+    ProcState	m_state;	///< Current state of parser
+    int		m_stateFor;	///< Token state is parsing for
+    int		m_off;		///< If non-zero, ifdef level is turned off, don't dump text
+    string	m_lastSym;	///< Last symbol name found.
 
     // For getRawToken/ `line insertion
-    string	m_lineCmt;	// Line comment(s) to be returned
-    int		m_lineAdd;	// Empty lines to return to maintain line count
+    string	m_lineCmt;	///< Line comment(s) to be returned
+    int		m_lineAdd;	///< Empty lines to return to maintain line count
 
     // For defines
-    string	m_defName;	// Define last name being defined
-    string	m_defParams;	// Define parameter list for next expansion
-    stack<bool> m_ifdefStack;	// Stack of true/false emmiting evaluations
-    vector<string> m_defArgs;	// List of define arguments
-    unsigned	m_defDepth;	// How many `defines deep
+    string	m_defName;	///< Define last name being defined
+    string	m_defParams;	///< Define parameter list for next expansion
+    stack<bool> m_ifdefStack;	///< Stack of true/false emmiting evaluations
+    vector<string> m_defArgs;	///< List of define arguments
+    unsigned	m_defDepth;	///< How many `defines deep
 
     // For getline()
-    string	m_lineChars;	// Characters left for next line
+    string	m_lineChars;	///< Characters left for next line
 
     VPreprocImp(VFileLine* filelinep) {
 	m_filelinep = filelinep;

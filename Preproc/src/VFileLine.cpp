@@ -1,12 +1,5 @@
 // $Revision: 1.13 $$Date$$Author$  -*- C++ -*-
 //*************************************************************************
-// DESCRIPTION: Verilog::Preproc: Error handling implementation
-//
-// Code available from: http://www.veripool.com/verilog-perl
-//
-// Authors: Wilson Snyder
-//
-//*************************************************************************
 //
 // Copyright 2000-2005 by Wilson Snyder.  This program is free software;
 // you can redistribute it and/or modify it under the terms of either the GNU
@@ -18,12 +11,20 @@
 // GNU General Public License for more details.
 //
 //*************************************************************************
+/// \file
+/// \brief Verilog::Preproc: Error handling implementation
+///
+/// Authors: Wilson Snyder
+///
+/// Code available from: http://www.veripool.com/verilog-perl
+///
+//*************************************************************************
 
 #include <stdio.h>
 
 #include "VFileLine.h"
 
-int VFileLine::s_numErrors = 0;
+int VFileLine::s_numErrors = 0;		///< Number of errors detected
 
 //============================================================================
 
