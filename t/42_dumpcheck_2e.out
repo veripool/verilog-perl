@@ -1,0 +1,26 @@
+module foo (
+   abcconst, def, noconnect, x, y);
+   input [2:0] abcconst;
+   input [31:0] def;
+   input noconnect;
+   input x;
+   input y;
+endmodule
+
+module foo2 (
+   x, y, z);
+   output x;
+   input y;
+   input z;
+endmodule
+
+module pinorder4 (
+   );
+   wire [31:0] IPCD_const;
+   wire [7:0] a_i;
+   wire b_i;
+   wire d_o;
+   foo foo1 (.abcconst(3'h0), .def(IPCD_const), .noconnect(), .y(b_i));
+   foo2 foo2 (.x(b_i), .y(d_o), .z(a_i[0]));
+endmodule
+
