@@ -46,7 +46,7 @@ if ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
     unlink ("./simv");
     ok(1);
 }
-elsif ($ENV{CDS_INCISIVE_HOME} && -d $ENV{CDS_INCISIVE_HOME}) {
+elsif ($ENV{NC_ROOT} && -d "$ENV{NC_ROOT}/tools") {
     run_system ("ncverilog"
 		." -q"
 		# vpm uses `pli to point to the hiearchy of the pli module
