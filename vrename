@@ -1,0 +1,685 @@
+#!/usr/bin/perl -w
+# vrename - Rename Verilog signals across multiple files
+# $Revision: 1.49 $$Date: 2004/11/18 19:55:04 $$Author: wsnyder $
+# Author: Wilson Snyder <wsnyder@wsnyder.org>
+################ Introduction ################
+#
+# Copyright 2000-2004 by Wilson Snyder.  This program is free software;
+# you can redistribute it and/or modify it under the terms of either the GNU
+# General Public License or the Perl Artistic License.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+######################################################################
+
+require 5.005;
+package main;
+use lib 'blib/arch';
+use lib 'blib/lib';
+use lib '.';
+
+use Getopt::Long;
+use IO::File;
+use IO::Dir;
+use Pod::Text;
+
+use Verilog::Language;
+use Verilog::Parser;
+use strict;
+
+use vars qw ($VERSION %Vrename_Dont_Crypt %Vrename_Left_Edge_Define
+	     %Signal_Locs %Signal_Newname %Encrypt
+	     $Debug $Opt_Xref $Opt_Crypt $Opt_Write $Opt_Keywords
+	     @Files);
+
+$VERSION = '2.303';
+
+######################################################################
+
+# List of signals to never crypt
+# (Just put temporaries into signals.vrename)
+foreach (
+	 'unused_ok',
+	 '__FILE__',	# Verilator, proposed for Verilog 2005
+	 '__LINE__',	# Verilator, proposed for Verilog 2005
+	 'ms','us','ns','ps','fs',	# Time precision arguments used in `timescale
+	 'a'..'z', 'A'..'Z',		# Single character names (cryptic enough!)
+	 ) {
+    $Vrename_Dont_Crypt{$_} = "";
+}
+
+# These defines contain a preprocessor directive
+# Thus when crypting we have to keep them at left edge
+%Vrename_Left_Edge_Define =
+    ('`time_scale' => "",
+     '`timescale' => "",
+     );
+
+######################################################################
+# main
+
+# capitalized are globals
+$Debug = 0;
+my $opt_change = 0;
+my $opt_list = 0;
+$Opt_Xref = 0;
+$Opt_Crypt = 0;   # Global scope, used in sub-package
+$Opt_Write = 1;
+$Opt_Keywords = 0;
+my $opt_read = 0;
+my $change_filename = "signals.vrename";
+my $output_dir = "";
+@Files = ();
+
+if (! GetOptions (
+		  "help"	=> \&usage,
+		  "debug"	=> \&debug,
+		  "version"	=> \&version,
+		  "crypt!"	=> \$Opt_Crypt,
+		  "change!"	=> \$opt_change,
+		  "changefile=s"=> \$change_filename,
+		  "o=s"		=> \$output_dir,
+		  "read!"	=> \$opt_read,
+		  "write!"	=> \$Opt_Write,
+		  "keywords!"	=> \$Opt_Keywords,
+		  "list!"	=> \$opt_list,
+		  "xref!"	=> \$Opt_Xref,
+		  "<>"		=> \&parameter,
+		  )) {
+    usage();
+}
+
+if ($output_dir ne ""
+    && $output_dir !~ /[\/\\]$/) {
+    $output_dir .= "/";
+}
+
+if (!@Files) { &usage(); }
+
+if ($output_dir eq "" && $Opt_Crypt && $opt_change) {
+    print STDERR "You must use -o with -crypt or your uncrypted files will be overwritten.\n";
+    exit (10);
+}
+
+if ($opt_read || $opt_change) {
+    changes_read ($change_filename);
+}
+
+if ($opt_change) {
+    foreach my $file_or_dir (@Files) {
+	verilog_change_sig ($file_or_dir);
+    }
+}
+
+if ($opt_list) {
+    foreach my $file_or_dir (@Files) {
+	parse_file($file_or_dir);
+    }
+    if ($Opt_Crypt) {
+	changes_crypt();
+    }
+    changes_from_loc ();
+    changes_write ($change_filename);
+}
+
+exit (0);
+
+######################################################################
+
+sub nop{}
+
+sub usage {
+    print "Version: $VERSION\n";
+    print 'Id: $Revision: 1.49 $$Date: 2004/11/18 19:55:04 $$Author: wsnyder $ ', "\n";
+    $SIG{__WARN__} = \&nop;	#pod2text isn't clean.
+    pod2text($0);
+    exit (1);
+}
+
+sub version {
+    print "Version: $VERSION\n";
+    print '$Revision: 1.49 $$Date: 2004/11/18 19:55:04 $$Author: wsnyder $ ', "\n";
+    exit (1);
+}
+
+sub debug {
+    $Debug = 1;
+    $Verilog::Parser::Debug = $Debug;
+}
+
+sub parameter {
+    my $param = shift;
+    push @Files, $param;
+    (-r $param) or die "Can't open $param";
+}
+
+######################################################################
+
+sub changes_from_loc {
+    # If a signal was found, but doesn't have change information, make it
+    # default to have a change record with replacement same as basename.
+    foreach my $sig (sort (keys %Signal_Locs)) {
+	if (! defined $Signal_Newname{$sig}) {
+	    $Signal_Newname{$sig} = $sig;
+	}
+    }
+}
+
+######################################################################
+
+sub changes_crypt {
+    # Make random names for signals
+
+    my %used_rand = ();
+    foreach my $sig (keys %Signal_Locs) {
+	if (! defined $Signal_Newname{$sig}
+	    && $sig !~ /\$/
+	    && (! defined $Vrename_Dont_Crypt{$sig})
+	    ) {
+	    my $has_encry = 0;
+	    my $has_uncry = 0;
+	    $has_uncry ||= $main::Dont_Decrypt{$sig};
+	    foreach my $loc (@{$Signal_Locs{$sig}}) {
+		$has_encry ||= defined $Encrypt{$loc};
+		$has_uncry ||= ! (defined $Encrypt{$loc});
+	    }
+	    if ($has_encry && !$has_uncry) {
+		my $rand = random_string();
+		while (defined $used_rand{$rand}) {
+		    $rand = random_string();
+		}
+		$used_rand{$rand} = 1;
+		$Signal_Newname{$sig} = $rand;
+	    }
+	}
+    }
+}
+
+sub random_string {
+    return  sprintf ("%c%c%c%c%c%c",
+		     (rand (26)) + 65,
+		     (rand (26)) + 65,
+		     (rand (26)) + 65,
+		     (rand (26)) + 65,
+		     (rand (26)) + 65,
+		     (rand (26)) + 65,
+		     (rand (26)) + 65,
+		     (rand (26)) + 65);
+}
+######################################################################
+
+sub changes_write {
+    # Read in the list of signal names to change
+    my $filename = shift;
+
+    my $fh = new IO::File;
+    $fh->open ($filename,"w") or die "%Error: $! $filename.\n";
+
+    my $sigcnt=0;
+    print $fh "# Generated by vrename on ", scalar(localtime), "\n";
+    print $fh "#\n";
+    print $fh "# Files read for this analysis:\n";
+    foreach my $file (@Files) {
+	print $fh "vfile\t\"$file\"";
+	if ($Encrypt{$file}) {
+	    print $fh "\t-crypt";
+	}
+	print $fh "\n";
+    }
+    print $fh "#\n";
+    print $fh "#\tOriginal Signal Name\t\tName to change to\n";
+    print $fh "#\t--------------------\t\t-----------------\n";
+    print $fh "#\n";
+
+    foreach my $sig (sort (keys %Signal_Newname)) {
+	$sigcnt++;
+	print $fh "sigren\t\"$sig\"";
+	my $len = 8 + 2 + length $sig;
+	while ($len < 32) {
+	    print $fh "\t";
+	    $len += 8;
+	}
+	print $fh "\t\"$Signal_Newname{$sig}\"";
+	if ($Opt_Xref) {
+	    my $len = 40 + 2 + length $sig;
+	    while ($len < 64) {
+		print $fh "\t";
+		$len += 8;
+	    }
+	    print $fh "\t#";
+	    foreach my $loc (@{$Signal_Locs{$sig}}) {
+		print $fh "$loc ";
+	    }
+	}
+	print $fh "\n";
+    }
+
+    print $fh "#\n";
+    print $fh "# Use M-x compile in emacs to automatically perform the changes:\n";
+    print $fh "## Local Variables: ***\n";
+    print $fh "## compile-command: \"$0 -change ";
+    foreach my $file (@Files) {
+	print $fh $file, " ";
+    }
+    print $fh "\" ***\n";
+    print $fh "## End: ***\n";
+
+    $fh->close();
+    print "Wrote $filename  (Changes list, $sigcnt signals)\n";
+}
+
+sub changes_read {
+    # Write out the list of signals in a format for easy editing
+    my $filename = shift;
+    print "Read $filename\n";
+
+    my $fh = new IO::File;
+    $fh->open ($filename) or die "%Error: $! $filename.\n";
+
+    while (my $line = $fh->getline()) {
+	chomp $line;
+
+	$line =~ s/#.*$//;
+	$line =~ s/^[ \t]+//;
+
+	if ($line =~ /^$/ ) {
+	    # comment
+	}
+	elsif ($line =~ /^sigren\s+\"([^\"]+)\"\s+\"([^\"]+)\"/ ) {
+	    print "Rename got $1  $2\n" if ($Debug);
+	    $Signal_Newname {$1} = $2;
+	}
+	elsif ($line =~ /^vfile/ ) {
+	    # ignore
+	}
+	else {
+	    die "$filename $.: Can't parse \"$line\"\n";
+	}
+    }
+
+    $fh->close();
+}
+
+######################################################################
+
+sub crypt_string {
+    my $filestrg = shift;
+
+    my $magicb = "@@@@@!~SAVEVLB~!@@@@@";
+    my $magice = "@@@@@!~SAVEVLE~!@@@@@";
+    $filestrg =~ s/(\/[*\/]\s*)[Vv]erilint\s*([0-9]+)\s*off/$magicb Verilint $2 off $magice$1/g;
+    $filestrg =~ s/(\/[*\/]\s*)([Ss]ynopsys\s*\S+)/$magicb $2 $magice$1/g;
+    $filestrg =~ s/\/\*[\000-\377]*?\*\///g;        # block comments
+    $filestrg =~ s/^\s*\/\/.*\n//g;                 # lines begining with '//'
+    $filestrg =~ s/\/\/[^\"\n]*\n//g;               # inline comments with no '"' chars, saves '"////stuf"'
+    $filestrg =~ s/\/\/[^\"\n]*\"[^\"\n]*\".*\n//g; # inline comments with 2 '"' chars, kills '// "stuff"'
+    $filestrg =~ s/[ \t]+/ /g;
+    $filestrg =~ s/^[ \t]+//g;
+    $filestrg =~ s/[ \t]+$//g;
+    my $oldstrg = $filestrg;
+    $filestrg = "/*ENCRYPTED:VRENAME*/";
+    my $pos = 0;
+    my $oldpos;
+    my $literal = 0;
+    my $define = 0;
+    for ($oldpos = 0; $oldpos < length $oldstrg; $oldpos++) {
+	my $char = substr $oldstrg, $oldpos, 1;
+	if ($char eq "\n") {
+	    if ($define || $literal) {
+		$filestrg .= $char;
+		$pos = 0;
+		$define = 0;
+	    } else {
+		$filestrg .= " "; $pos++;
+	    }
+	}
+	elsif ($char eq "`" && !$literal) {
+	    my $defkwd = (substr $oldstrg, $oldpos);
+            $defkwd =~ /^(\`[a-z0-9_]*)/;
+	    $defkwd = $1;
+	    if (Verilog::Language::is_keyword ($defkwd)
+		|| (defined $Vrename_Left_Edge_Define {$defkwd})) {
+		$filestrg .= "\n"; $pos = 0;
+		$filestrg .= $char; $pos++;
+		$define = 1;
+	    }
+	    else {
+		$filestrg .= $char; $pos++;
+	    }
+	}
+	elsif ($char eq '"') {
+	    $filestrg .= $char; $pos++;
+	    $literal = ! $literal;
+	}
+	elsif ($char eq " " && !$literal && !$define) {
+	    if ($pos > 80) {
+		$filestrg .= "\n"; $pos = 0;
+	    }
+	    elsif ($pos != 0) {
+		$filestrg .= $char; $pos++;
+	    }
+	}
+	else {
+	    $filestrg .= $char; $pos++;
+	}
+    }
+    $filestrg =~ s/[ \t]+/ /g;
+    while ($filestrg =~ /$magicb([\000-\377]*?)$magice/) {
+	my $rep = $1;
+	$rep =~ s/[\n]/ /g;
+	$filestrg =~ s/$magicb([\000-\377]*?)$magice/\n\/\*$rep\*\/\n/;
+    }
+    $filestrg .= "\n";
+    return $filestrg;
+}
+
+######################################################################
+
+sub _recurse_dir {
+    my $dir = shift;
+    my $callback = shift;
+
+    my $dh = new IO::Dir($dir) or warn "%Warning: $! $dir\n";
+    while (defined (my $basefile = $dh->read)) {
+	next if (($basefile eq ".") || ($basefile eq ".."));
+	&$callback("$dir/$basefile");
+    }
+    $dh->close();
+    return;
+}
+
+sub parse_file {
+    my $filename = shift;
+
+    print "parse file $filename\n";
+    if (-d $filename) {
+	_recurse_dir($filename, \&parse_file);
+	return;
+    }
+
+    my $parser = Verilog::Vrename::Reader->new();
+    $parser->parse_file ($filename);
+}
+
+sub verilog_change_sig {
+    # Rename signals in this filename
+    my $filename = shift;
+
+    if (-d $filename) {
+	_recurse_dir($filename, \&verilog_change_sig);
+	return;
+    }
+
+    # Read in the whole file in a swath
+    local $/ = undef;
+    open (VFILE, "<$filename") or die "Can't read $filename.";
+    my $filestrg = <VFILE>;
+    close VFILE;
+
+    if ($Opt_Crypt) {
+	if ($filestrg =~ /ENCRYPT_ME/) {
+	    $Encrypt{$filename} = 1;
+	}
+    }
+
+    # If crypting, strip comments
+    if ($Encrypt{$filename}) {
+	$filestrg = crypt_string ($filestrg);
+    }
+
+    # Replace any changed signals
+    my $hadrepl = 0;
+    my %signal_magic = ();
+    # pass1: replace with magic replacement string
+    # (two steps so renaming a->b and b->a at the same time doesn't screw up)
+    foreach my $sig (keys %Signal_Newname) {
+	my $new = $Signal_Newname{$sig};
+	if ($new ne $sig) {
+	    my $magic = "@@@@@!~${hadrepl}~!@@@@@";
+	    my $sig_quoted = quotemeta $sig;
+	    if ($filestrg =~ s/([^a-zA-Z0-9_\$\%\'\"])$sig_quoted(?=[^a-zA-Z0-9_])/$1$magic/g) {
+		print "match s$sig n$new m$magic\n" if $Debug;
+		$hadrepl ++;
+		$signal_magic{$sig} = $magic;
+	    }
+	}
+    }
+    # pass2: magic->new
+    foreach my $sig (keys %Signal_Newname) {
+	if (defined $signal_magic{$sig}) {
+	    my $magic = $signal_magic{$sig};
+	    my $new = $Signal_Newname{$sig};
+	    if ($filestrg =~ s/$magic/$new/g) {
+		print "match s$sig n$new m$magic\n" if $Debug;
+	    }
+	}
+    }
+
+    # Save it
+    if ($hadrepl || $Opt_Crypt) {
+	if (!$Opt_Write) {
+	    print "$filename  ($hadrepl signals matched) (-n: Not written)\n";
+	} else {
+	    open (VFILE, ">$output_dir$filename") or die "%Error: $! $output_dir$filename.\n";
+	    print VFILE $filestrg;
+	    close VFILE;
+	    if ($Encrypt{$filename}) {print "Encrypted ";} else {print "Wrote ";}
+	    print "$filename  ($hadrepl signals matched)\n";
+	}
+    }
+}
+
+######################################################################
+
+package Verilog::Vrename::Reader;
+require Exporter;
+
+use strict;
+use Carp;
+use vars qw( $Debug @ISA @EXPORT
+	     $Last_Keyword $Last_Filename
+	     %Modules_Sigs );
+use Verilog::Parser;
+
+BEGIN {
+    @ISA = qw( Verilog::Parser );
+    @EXPORT = qw( $Debug );
+}
+
+sub new {
+    my $class = shift;
+    my $self = $class->SUPER::new(warning_limit=>1);
+    bless $self, $class;
+    return $self;
+}
+
+sub _track_signal {
+    my $sig = shift;
+
+    $sig =~ s/\`//g;	# Remove `s from define usages else won't match define declaration
+
+    if (!$Modules_Sigs{$sig}) {
+	push @{$main::Signal_Locs{$sig}}, $Last_Filename;
+    }
+    $Modules_Sigs{$sig} = 1;
+    if ($main::Opt_Crypt && ($Last_Keyword eq "module"
+			    || $Last_Keyword eq "function"
+			    || $Last_Keyword eq "task")) {
+	$main::Dont_Decrypt{$sig} = 1;
+	$Last_Keyword = "";
+    }
+}
+
+sub keyword {
+    # Callback from parser when a keyword occurs
+    my $self = shift;	# Parser invoked
+    my $token = shift;	# What token was parsed
+
+    $Last_Keyword = $token;
+    if ($main::Opt_Keywords) {
+	_track_signal($token);
+    }
+}
+
+sub symbol {
+    # Callback from parser when a symbol occurs
+    my $self = shift;	# Parser invoked
+    my $sig = shift;	# What token was parsed
+
+    #print "Signal callback $self $token\n" if ($Debug);
+    _track_signal($sig);
+}
+
+sub parse_file {
+    # Read all signals in this filename
+    # Overloads Verilog::Parse::parse_file
+    @_ == 2 or croak 'usage: $parser->parse_file($filename)';
+    my $self = shift;
+    my $filename = shift;
+
+    local %Modules_Sigs = ();	# Signals already found in module
+
+    my $fh = new IO::File;
+    local $Last_Keyword = "";
+
+    local $Last_Filename = $filename;
+
+    $fh->open($filename) or die "%Error: $! $filename\n";
+    while (my $line = $fh->getline() ) {
+	Verilog::Parser::parse ($self, $line);
+    }
+
+    if ($main::Opt_Crypt) {
+	seek ($fh, 0, 0);
+	local $/ = undef;
+	my $filestrg = <$fh>;
+	# Same test below
+	if ($filestrg =~ /ENCRYPT_ME/) {
+	    $main::Encrypt{$filename} = 1;
+	}
+    }
+    $fh->close;
+}
+
+######################################################################
+######################################################################
+
+__END__
+
+=head1 NAME
+
+vrename - change signal names across many Verilog files
+
+=head1 SYNOPSIS
+
+  vrename <filename_or_directory>...
+
+=head1 DESCRIPTION
+
+Vrename will allow a signal to be changed across all levels of the
+design hiearchy using a three step process.  (It actually includes
+module names, macros, and other definitions, so those can be changed too.)
+
+First, use
+
+    vrename --list  [<file.v>...]  [<directory>....]
+
+This reads the specified files, or all files below the specified directory,
+and creates a signals.vrename file. 
+
+Now, edit the signals.vrename file manually to specify the new signal
+names.  Then, use
+
+    vrename --change [<file.v>...]  [<directory>....]
+
+=head1 ARGUMENTS
+
+vrename takes the following arguments:
+
+=over 4
+
+=item --help
+
+Displays this message and program version and exits.
+
+=item --version
+
+Displays program version and exits.
+
+=item --change
+
+Take the signals file signals.vrename in the current directory
+and change the signals in the design as specified by the
+signals file.  Either --list or --change must be specified.
+
+=item --changefile {file}
+
+Use the given filename instead of "signals.vrename".
+
+=item --crypt
+
+With --list, randomize the signal renames.  With --change, compress spaces
+and comments and apply those renames listed in the file (presumably created
+with vrename --list --crypt).
+
+The comment /*ENCRYPT_ME*/ must be included in all files that need to be
+encrypted.  If a signal should not be encrypted, it can simply be set in
+the signals.vrename list to be changed to itself.  After encrypting, you
+may want to save the signals.vrename file so you have a key for decoding,
+and also so that it may be used for the next encryption run.  When used in
+this way for the next encryption run, only new signals will get new
+encryptions, all other encryptions will be encrypted the same.
+
+=item --keywords
+
+Include keywords in the renaming list.  Default is to ignore keywords, as
+changing a keyword will probably result in unrunnable code, however,
+occasionally it may be necessary to rename signals which happen to match
+the name of keywords recently added to the language (such as 'bit').
+
+=item --list
+
+Create a list of signals in the design and write to
+signals.vrename.  Either --list or --change must be specified.
+
+=item --nowrite
+
+Don't write the actual changes, just report the files that would be changed.
+
+=item --o {dir}
+
+Use the given directory for output instead of the current directory.
+
+=item --read
+
+Read the changes list, allows --list to append to the
+changes already read.
+
+=item --xref
+
+Include a cross reference of where the signals are used.
+--list must also be specified.
+
+=back
+
+=head1 DISTRIBUTION
+
+The latest version is available from CPAN and from
+L<http://www.veripool.com/verilog-perl.html>.
+
+Copyright 2000-2004 by Wilson Snyder.  This package is free software; you
+can redistribute it and/or modify it under the terms of either the GNU
+Lesser General Public License or the Perl Artistic License.
+
+=head1 AUTHORS
+
+Wilson Snyder <wsnyder@wsnyder.org>
+
+=head1 SEE ALSO
+
+L<Verilog::Parser>
+
+=cut

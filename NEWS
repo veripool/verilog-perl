@@ -1,0 +1,266 @@
+Verilog::Language NEWS --  history of user-visible changes.
+
+The contributors that suggested a given feature is shown in [].
+
+This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
+
+* Changes in Verilog::Language 2.303 2004/11/18
+
+***	Add vpm --nopli for stripping $pli calls. [Mike Lopresti]
+
+* Changes in Verilog::Language 2.302 2004/11/10
+
+****	Support Verilog 2001 named instantiation parameters. [Thomas Ziller]
+
+* Changes in Verilog::Language 2.301 2004/10/26
+
+****	Fix pod documentation errors. [Offer Kaye]
+
+* Changes in Verilog::Language 2.300 2004/04/01
+
+**	Added vppp preprocessor command.
+
+**	Preprocessor is now Verilog 2001 and SystemVerilog 3.1 compliant.
+	Adds arguments to defines, and `include <> syntax.
+
+**	Added SystemVerilog 3.1 keywords to Verilog::Language
+
+**	Added vrename --keywords and recursion on directory arguments.
+
+***	Added to SigParser::module callback "$in_celldefine" 4th argument.
+	Netlist::File sets $module->is_libcell() either if the file is a
+	library or the module is within "`celldefine ... `endcelldefine".
+
+***	Added to Verilog::Netlist (metacomment=>{ firstWord=>val, ... })
+	argument.  For each comment that begins with at least two words,
+	Verilog::SigParser calls back attribute() if the first word has a
+	true value in %metacomment.
+
+***	Module::attrs_sorted() now returns a list of "category name[ =]..."
+	strings from metacomments between "module" and the first declaration.
+
+****	(Verilog::Preproc receives the list of metacomment keywords but
+	does not yet filter the comments for speed.)
+
+****	Fixed ` substitution inside define value strings.
+
+* Changes in Verilog::Language 2.232 3/10/2004
+
+***	Fix newline insertion in vpm $info messages.
+
+* Changes in Verilog::Language 2.231 1/27/2004
+
+****	Documentation fixes.
+
+* Changes in Verilog::Language 2.230 10/02/2003
+
+**	Vpm has been changed to use Verilog standard flags.
+	Vpm will no longer recurse all directories, instead it now accepts
+	+incdir+, -v or -f flags as would a regular simulator, and
+	preprocesses all files found.
+
+**	Added Netlist::verilog_text for writing netlists. [Phillip Prentice]
+
+***	Added Cell/Port/Pin::delete methods for editing netlists.
+
+***	Added Netlist::top_modules_sorted method.
+
+***	In Netlist, read in library files if cell not found. [John Potter]
+
+***	Fix SigParser dropping 1'b0/1'b1 pins. [John Potter]
+
+***	In vpm, support $error({"concatenate ","string"}); [Ray Strouble]
+
+****	In vpm, fix comments and line numbering in asserts. [Ray Strouble]
+
+****	Fix detection of wire assignments. [David Duxstad]
+
+* Changes in Verilog::Language 2.226 8/19/2003
+
+****	GCC 3.3 fixes
+
+* Changes in Verilog::Language 2.225 8/12/2003
+
+***	Have Getopt::parameter return unknown arguments from
+	inside -f files.  [David Duxstad]
+
+***	Change assert_amone/onehot to use faster equation
+	in place of case statement. [Greg Waters]
+
+****	Add tri/tri0/tri1 as wire declarative terms. [David Duxstad]
+
+****	Redhat 9 and GCC 3.2.2 fixes
+
+* Changes in Verilog::Language 2.224 5/20/2003
+
+**	Add order based pin/cell connections.  [by David Duxstad]
+
+* Changes in Verilog::Language 2.222 3/6/2003
+
+****	Support instantiations with multiple cell names. [Bruce Nepple]
+
+****	Support uppercase radix letters.  [Wilson Li]
+
+* Changes in Verilog::Language 2.221 3/4/2003
+
+****	Fix missing example.cpp file
+
+* Changes in Verilog::Language 2.220 2/6/2003
+
+***	Support primitives as if they were modules.  [Bruce Nepple]
+
+***	The link_read_nonfatal=>1 netlist option will prevent missing
+	modules from being errors during link.  [Bruce Nepple]
+
+***	Add Verilog::Parser support for `protected. [Scott Bleiweiss]
+
+****	Update documentation & Netlist example.  [Bruce Nepple]
+
+* Changes in Verilog::Language 2.220 12/27/2002
+
+****	Solaris perl 5.005_03 LD error fixed.  [Mark Moe]
+	Solaris note about FILE_OFFSET_BITS.  [Simon Curry]
+
+****	GCC 3.2 use std compile errors fixed. [Eugene Weber]
+
+* Changes in Verilog::Language 2.214 10/21/2002
+
+***	Pickup input msb & lsb's.  [Joel Earl]
+
+****	Fix inclusion of x's in $assert_onehot for verilator. [Ray Strouble]
+
+* Changes in Verilog::Language 2.213 9/5/2002
+
+****	Support Cygwin (Windows) installations.  [Richard Dje]
+
+* Changes in Verilog::Language 2.212 8/30/2002
+
+***	Fix pin concatenations to not create false pins. [Kenneth Jiang]
+	Concatenations are now just ignored; there is still no way to track
+	pin interconnects where different bus bits end up interconnected
+	differently.
+
+* Changes in Verilog::Language 2.211 8/19/2002
+
+***	If Verilog::Getopt list accessors are passed a reference,
+	set the entire list to the reference, rather then adding a element.
+
+* Changes in Verilog::Language 2.210 8/8/2002
+
+****	Cleanups to support GNU Bison 1.35
+
+****	Minor changes for SystemC support  
+
+* Changes in Verilog::Language 2.200 5/3/2002
+
+***	Many fixes to vrename --crypt, including fixing `timescale,
+	comments, and replacement of strings.  [Greg Davis]
+
+****	Fixed vpm $asserts dropping extra newlines. [Greg Waters]
+
+****	Fixed `define substitution bug.
+
+* Changes in Verilog::Language 2.100 3/11/2002 
+
+**	Installation now requires GCC/G++ and Flex.
+
+**	Added Verilog::Preproc, a Verilog 2001 Preprocessor.
+	Verilog::Netlist now uses this preprocessor by default.
+
+****	Fixed bug with vrename --crypt not working.  [Greg Davis]
+
+****	Fixed bug with vrename and \ quoted signals.  [Greg Davis]
+
+* Changes in Verilog::Language 2.010 11/16/2001
+
+***	Added netlist interconnectivity checks.
+
+* Changes in Verilog::Language 2.000 9/17/2001
+
+**	Added the Verilog::Netlist package.
+	This allows for simple scripts to extract pins, module
+	hiearchy, etc from interconnected Verilog files.
+
+***	Added Parser reset() method for clearing parse states
+	for new files.  [Joe Panec]
+
+* Changes in Verilog::Language 1.15 10/25/2001
+
+**	Added $assert_req_ack for checking simple handshakes.
+
+**	Added --nostop, and made --stop be the default.
+	This adds a $stop to $warn and $error, which is easier
+	for new users to understand as no pli.v is required.
+
+* Changes in Verilog::Language 1.14 9/17/2001
+
+***	Fixed bug when endmodule/endtask/endfunction have
+	no trailing ;.  [Darren Jones]
+
+***	Added Verilog 2001 keywords to Verilog::Language.
+
+* Changes in Verilog::Language 1.13 5/17/2001
+
+***	Added Verilog::Getopt::get_parameter() function.
+
+***	Added Verilog::Getopt::file_abs() function.
+
+***	Added missing keywords to Verilog::Language:
+	deassign disable extern highz0 highz1 large medium pull0
+	pull1 release scalared small strong0 strong1 weak0 weak1
+
+* Changes in Verilog::Language 1.12 5/15/2001
+
+**	Added new Verilog::Getopt, for standard option parsing.
+
+* Changes in Verilog::Language 1.11 3/31/2001
+
+***	Fixed \net### hang in Parser.  [Mark Lakata]
+
+* Changes in Verilog::Language 1.10 3/15/2001
+
+***	Fixed line number being incorrect in Parser.  [Alan Heinold]
+
+* Changes in Verilog::Language 1.9 2/13/2001
+
+**	Added Verilog::Language::is_compdirect.  [Darren Jones]
+
+* Changes in Verilog::Language 1.7 11/02/2000
+
+**	Added parametric module support to Parser.pm.  [Darren Jones]
+
+****	Fixed bug where // comments with no following text broke.
+	[Darren Jones]
+
+* Changes in Verilog::Language 1.6 9/07/2000
+
+**	Added the vpm preprocessor
+
+****	Fixed bug where missing end-quote would hang Verilog::Parser
+
+* Changes in Verilog::Language 1.5 5/22/2000
+
+**	Allowed non-numerics in bus subscripts
+	[Alan.Heinold@East.Sun.COM]
+
+***	Fixed bug where lines with just a newline would boggle the linecount.
+
+* Changes in Verilog::Language 1.4 1/21/2000
+
+****	test.pl added
+
+----------------------------------------------------------------------
+$Revision: 1.83 $$Date: 2004/11/18 19:53:39 $$Author: wsnyder $
+----------------------------------------------------------------------
+Copyright information:
+
+   Copyright 2001-2004 by Wilson Snyder.  This program is free software;
+   you can redistribute it and/or modify it under the terms of either the GNU
+   General Public License or the Perl Artistic License.
+
+   See the README file included with this file for licencing information.
+
+Local variables:
+mode: outline
+paragraph-separate: "[ 	]*$"
+end:
