@@ -114,7 +114,7 @@ use vars qw($VERSION %Keyword %Compdirect);
 ######################################################################
 #### Configuration Section
 
-$VERSION = '2.313';
+$VERSION = '2.314';
 
 ######################################################################
 #### Internal Variables
