@@ -1,4 +1,4 @@
-# $Revision: 1.10 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $
+# $Revision: 1.11 $$Date: 2004/12/08 22:21:06 $$Author: wsnyder $
 # DESCRIPTION: Perl ExtUtils: Type 'perl Makefile.PL' to create a Makefile for this package
 #
 # Copyright 2000-2004 by Wilson Snyder.  This program is free software;
@@ -11,7 +11,8 @@ use Config;
 sub MY::postamble {
     my $out;
     #print Config::myconfig();
-    if ($Config{osname} !~ /cygwin/i && $Config{archname} !~ /cygwin/i) {
+    if ($Config{osname} !~ /cygwin/i && $Config{archname} !~ /cygwin/i
+	&& $Config{osname} !~ /darwin/i && $Config{archname} !~ /darwin/i) {
 	# Cygwin: Don't change LD, it breaks
 	# Sun: Requires g++ LD
 	# Linux: Either way
