@@ -1,5 +1,5 @@
 # Verilog::SigParser.pm -- Verilog signal parsing
-# $Revision: 1.55 $$Date: 2004/12/09 14:03:47 $$Author: wsnyder $
+# $Revision: 1.55 $$Date$$Author$
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #
@@ -402,6 +402,7 @@ sub operator {
 		my $pin_name = $self->{pin_name};
 		$namedports = 1 if defined $pin_name;
 		$pin_name ||= "pin" . $self->{is_pin_ok};
+		print "Gotapin $pin_name\n"    if ($Debug);
 		$self->pin ($pin_name,
 			    $sym . $vec,
 			    $self->{is_pin_ok},
@@ -459,7 +460,7 @@ sub operator {
 				$vec = $self->{last_vectors};
 			    }
 			}
-			#print "Gota$lkw $sig $vec $mem\n"    if ($Debug);
+			print "Gota$lkw $sig $vec $mem\n"    if ($Debug);
 			$self->signal_decl ($lkw, $sig, $vec, $mem);
 		    }
 		}
