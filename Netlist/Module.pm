@@ -51,6 +51,7 @@ structs('new',
 	   _autosubcells=> '$', #'	# Module has /*AUTOSUBCELL_DECL*/ in it
 	   _autotrace	=> '%', #'	# Module has /*AUTOTRACE*/ in it
 	   _autoinoutmod=> '$', #'	# Module has /*AUTOINOUT_MODULE*/ in it
+	   _pintemplates=> '@', #'	# Module SP_TEMPLATEs
 	   _ctor	=> '$', #'	# Module has SC_CTOR in it
 	   _code_symbols=> '$', #'	# Hash ref of symbols found in raw code
 	   lesswarn     => '$',	#'	# True if some warnings should be disabled
