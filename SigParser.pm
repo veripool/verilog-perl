@@ -263,7 +263,7 @@ sub keyword {
     my $token = shift;	# What token was parsed
 
     if (defined $self->{last_preproc} && $self->{preprocess}
-	&& $self->{in_preproc_line} != $self->line()
+	&& $self->_non_pp_line()
 	&& $self->{last_preproc} eq "`define") {
 	my $def = shift @{$self->{last_ppitem}};
 	$self->ppdefine ($def, (join "",@{$self->{last_ppitem}}));
@@ -274,6 +274,7 @@ sub keyword {
     if ($token =~ /^\`/) {
 	$self->{last_preproc} = $token;
 	$self->{in_preproc_line} = $self->line;
+	$self->{in_preproc_file} = $self->filename;
 	if ($token =~ /^\`(end)?celldefine$/) {
 	    $self->{in_celldefine} = !($1 || "");
 	}
@@ -282,7 +283,7 @@ sub keyword {
 	$self->{is_signed} = 1;
 	return;	  # Ignore rest of code, need to pickup input/output
     }
-    if ($self->{in_preproc_line} != $self->line()) {
+    if ($self->_non_pp_line()) {
 	$self->{last_keyword} = $self->{attr_keyword} = $token;
 	@{$self->{last_symbols}} = ();
 	$self->{last_vectors} = "";
@@ -327,7 +328,7 @@ sub symbol {
     my $self = shift;	# Parser invoked
     my $token = shift;	# What token was parsed
 
-    if ($self->{in_preproc_line} != $self->line()) {
+    if ($self->_non_pp_line()) {
 	if ($self->{in_vector}) {
 	    $self->{last_vectors} = $self->{last_vectors} . $token;
 	} elsif ($self->{in_param_assign}) {
@@ -356,7 +357,7 @@ sub number {
     my $self = shift;	# Parser invoked
     my $token = shift;	# What token was parsed
 
-    if ($self->{in_preproc_line} != $self->line()) {
+    if ($self->_non_pp_line()) {
 	$self->{last_vectors} = $self->{last_vectors} . $token;
     } else {
 	push @{$self->{last_ppitem}}, $token;
@@ -372,7 +373,7 @@ sub operator {
 
     #print "Op $token\n" if $Debug;
 
-    if ($self->{in_preproc_line} != $self->line) {
+    if ($self->_non_pp_line()) {
 	if ($token eq "{") { $self->{bracket_level} ++; }
 	elsif ($token eq "}") { $self->{bracket_level}-- if $self->{bracket_level}; }
 	if ($token eq "(") { $self->{paren_level} ++; }
@@ -538,6 +539,15 @@ sub operator {
 	push @{$self->{last_ppitem}}, $token;
     }
     $self->{last_operator} = $token;
+}
+
+######################################################################
+# Internals
+
+sub _non_pp_line {
+    my $self = $_[0];
+    return ($self->{in_preproc_line} != $self->line()
+	    || $self->{in_preproc_file} != $self->filename());
 }
 
 ######################################################################
