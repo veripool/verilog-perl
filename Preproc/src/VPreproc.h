@@ -33,12 +33,13 @@ using namespace std;
 # undef open	// Perl 64 bit on solaris has a nasty hack that redefines open
 #endif
 
+/// Generic opaque pointer to VPreprocImp implementation class.
 class VPreprocOpaque {};
 class VDefine;
 
 //**********************************************************************
 // VPreproc
-/// A Preprocessor.
+/// Verilog Preprocessor.
 ////
 /// This defines a preprocessor.  Functions are virtual so users can override them.
 /// After creating, call open(), then getline() in a loop.  The class will to the rest...
