@@ -2,6 +2,10 @@ Revision history for Perl extension Verilog::Language.
 
 The contributors that suggested a given feature are shown in [].
 
+* Verilog::Language 2.31***
+
+***	Vrename no longer recurses into CVS or .svn directories.
+
 * Verilog::Language 2.312 2005/02/04
 
 ***	Fix ignoring lines with same line number as end of last include.

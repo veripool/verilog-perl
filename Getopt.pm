@@ -19,7 +19,7 @@ require 5.000;
 require Exporter;
 
 use strict;
-use vars qw($VERSION $Debug);
+use vars qw($VERSION $Debug %Skip_Basenames);
 use Carp;
 use IO::File;
 use File::Basename;
@@ -30,6 +30,16 @@ use Cwd;
 #### Configuration Section
 
 $VERSION = '2.312';
+
+# Basenames we should ignore when recursing directories,
+# Because they contain large files of no relevance
+foreach ( '.', '..',
+	  'CVS',
+	  '.svn',
+	  'blib',
+	  ) {
+    $Skip_Basenames{$_} = 1;
+}
 
 #######################################################################
 #######################################################################
@@ -297,6 +307,13 @@ sub remove_duplicates {
     return @rtn;
 }
 
+sub file_skip_special {
+    my $self = shift;
+    my $filename = shift;
+    $filename =~ s!.*[/\\]!!;
+    return $Skip_Basenames{$filename};
+}
+
 sub file_abs {
     my $self = shift;
     my $filename = shift;
@@ -554,6 +571,11 @@ reference argument, sets the list to the argument.
 
 Using the incdir and libext lists, convert the specified module or filename
 ("foo") to a absolute filename ("include/dir/foo.v").
+
+=item $self->file_skip_special ( $filename )
+
+Return true if the filename is one that generally should be ignored when
+recursing directories, such as for example, ".", "CVS", and ".svn".
 
 =item $self->incdir ()
 

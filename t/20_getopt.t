@@ -10,7 +10,7 @@ use strict;
 use Test;
 use Cwd;
 
-BEGIN { plan tests => 10 }
+BEGIN { plan tests => 13 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Getopt;
@@ -73,3 +73,7 @@ ok ($#out == 13);
 
 $opt->map_directories(sub{s![a-z]!x!; $_});
 ok(1);
+
+ok($opt->file_skip_special(".svn"));
+ok(!$opt->file_skip_special("svn"));
+ok($opt->file_skip_special("foo/bar/baz/CVS"));

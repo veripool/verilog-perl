@@ -27,6 +27,7 @@ use IO::Dir;
 use Pod::Text;
 
 use Verilog::Language;
+use Verilog::Getopt;
 use Verilog::Parser;
 use strict;
 
@@ -384,7 +385,7 @@ sub _recurse_dir {
 
     my $dh = new IO::Dir($dir) or warn "%Warning: $! $dir\n";
     while (defined (my $basefile = $dh->read)) {
-	next if (($basefile eq ".") || ($basefile eq ".."));
+	next if Verilog::Getopt->file_skip_special($basefile);
 	&$callback("$dir/$basefile");
     }
     $dh->close();
