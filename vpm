@@ -1096,7 +1096,7 @@ sub string {
 
 sub comment {
     # Callback from parser when a comment
-    # *** For speeding things up, this is only invoked when doing vericov
+    # *** To speed things up, this is only invoked when doing vericov
     my ($parser, $token) = @_;
     if (!$Opt_Vericov) {
 	$parser->{unreadback} .= $token;
