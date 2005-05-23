@@ -38,7 +38,7 @@ extern "C" {
 }
 
 #ifdef open
-# undef open	// Perl 64 bit on solaris has a nasty hack that redefines open
+# undef open	/* Perl 64 bit on solaris has a nasty hack that redefines open */
 #endif
 
 #//**********************************************************************
@@ -195,7 +195,7 @@ int pedantic
 PROTOTYPE: $$$$$
 CODE:
 {
-    if (CLASS) {}  // Prevent unused warning
+    if (CLASS) {}  /* Prevent unused warning */
     VFileLineXs* filelinep = new VFileLineXs(1/*ok,for initial*/);
     VPreprocXs* preprocp = new VPreprocXs(filelinep);
     filelinep->setPreproc(preprocp);
@@ -278,7 +278,7 @@ CODE:
     static string holdline;
     if (!THIS || THIS->isEof()) XSRETURN_UNDEF;
     string lastline = THIS->getline();
-    holdline = lastline;	// Stash it so c_str() doesn't disappear immediately
+    holdline = lastline;	/* Stash it so c_str() doesn't disappear immediately */
     RETVAL = lastline.c_str();
 }
 OUTPUT: RETVAL
