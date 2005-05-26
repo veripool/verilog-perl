@@ -11,7 +11,10 @@ use Carp;
 
 $DOLLAR = '$$';	# Quoted properly for make
 sub MY::postamble {
-"
+    my $out="";
+    $out .= "CCFLAGS += -Wall -Wno-unused -Werror\n" if $ENV{VERILATOR_AUTHOR_SITE};
+    $out .= "OPTIMIZE += -Wno-unused\n" if $ENV{VERILATOR_AUTHOR_SITE};  # Makefile has another -Wall
+    $out .= "
 README: readme.texi
 	-rm -rf \$@
 	makeinfo \$< --output \$@ --no-headers --no-validate
@@ -41,6 +44,7 @@ maintainer-clean: distclean
 	-rm -rf README Makefile
 
 ";
+    return $out;
 }
 
 local $! = undef;

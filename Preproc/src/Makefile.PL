@@ -13,6 +13,7 @@ sub MY::postamble {
     #print Config::myconfig();
     $out .= "LD = g++\n";	# Always as we're making exe
     $out .= "CCFLAGS += -Wall -Wno-unused -Werror\n" if $ENV{VERILATOR_AUTHOR_SITE};
+    $out .= "OPTIMIZE += -Wno-unused\n" if $ENV{VERILATOR_AUTHOR_SITE};  # Makefile has another -Wall
     $out .= '
 CC = g++
 LEX = flex
