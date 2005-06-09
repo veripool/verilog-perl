@@ -2,6 +2,10 @@ Revision history for Perl extension Verilog::Language.
 
 The contributors that suggested a given feature are shown in [].
 
+* Verilog::Language 2.31**
+
+****	Fix define substitution with incomplete defines.  [by Ronald Dean Smith]
+
 * Verilog::Language 2.315 2005/03/16
 
 ****	Support for latest SystemC::Netlist version.

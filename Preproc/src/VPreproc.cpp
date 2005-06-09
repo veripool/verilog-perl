@@ -256,6 +256,10 @@ string VPreprocImp::defineSubst() {
 		    string subst = iter->second;
 		    out += subst;
 		} else {
+		    if (prev == "`") {
+			out += prev;
+			prev = "";
+		    }
 		    out += argName;
 		}
 		argName = "";
