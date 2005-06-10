@@ -2,9 +2,11 @@ Revision history for Perl extension Verilog::Language.
 
 The contributors that suggested a given feature are shown in [].
 
-* Verilog::Language 2.31**
+* Verilog::Language 2.316 2005/06/10
 
 ****	Fix define substitution with incomplete defines.  [by Ronald Dean Smith]
+
+****	Fix C++ Comments causing Perl compile problems. [Merijn Brand]
 
 * Verilog::Language 2.315 2005/03/16
 

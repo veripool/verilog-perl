@@ -36,7 +36,7 @@ use vars qw ($VERSION %Vrename_Dont_Crypt %Vrename_Left_Edge_Define
 	     $Debug $Opt_Xref $Opt_Crypt $Opt_Write $Opt_Keywords
 	     @Files);
 
-$VERSION = '2.315';
+$VERSION = '2.316';
 
 ######################################################################
 
@@ -314,7 +314,7 @@ sub crypt_string {
     $filestrg =~ s/(\/[*\/]\s*)[Vv]erilint\s*([0-9]+)\s*off/$magicb Verilint $2 off $magice$1/g;
     $filestrg =~ s/(\/[*\/]\s*)([Ss]ynopsys\s*\S+)/$magicb $2 $magice$1/g;
     $filestrg =~ s/\/\*[\000-\377]*?\*\///g;        # block comments
-    $filestrg =~ s/^\s*\/\/.*\n//g;                 # lines begining with '//'
+    $filestrg =~ s/^\s*\/\/.*\n//g;                 # lines beginning with '//'
     $filestrg =~ s/\/\/[^\"\n]*\n//g;               # inline comments with no '"' chars, saves '"////stuf"'
     $filestrg =~ s/\/\/[^\"\n]*\"[^\"\n]*\".*\n//g; # inline comments with 2 '"' chars, kills '// "stuff"'
     $filestrg =~ s/[ \t]+/ /g;

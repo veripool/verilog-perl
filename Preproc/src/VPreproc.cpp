@@ -58,7 +58,7 @@ struct VPreprocImp : public VPreprocOpaque {
     // For defines
     string	m_defName;	///< Define last name being defined
     string	m_defParams;	///< Define parameter list for next expansion
-    stack<bool> m_ifdefStack;	///< Stack of true/false emmiting evaluations
+    stack<bool> m_ifdefStack;	///< Stack of true/false emitting evaluations
     vector<string> m_defArgs;	///< List of define arguments
     unsigned	m_defDepth;	///< How many `defines deep
 

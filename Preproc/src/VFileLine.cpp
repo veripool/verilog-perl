@@ -67,7 +67,7 @@ void VFileLine::error(const string msg) {
     if (msg[msg.length()-1] != '\n') {
 	fprintf (stderr, "%%Error: %s", msg.c_str());
     } else {
-	fprintf (stderr, "%%Error: %s\n", msg.c_str());	// Append newline, as user ommitted it.
+	fprintf (stderr, "%%Error: %s\n", msg.c_str());	// Append newline, as user omitted it.
     }
 }
 
