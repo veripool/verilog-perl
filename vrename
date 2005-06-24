@@ -33,7 +33,7 @@ use strict;
 
 use vars qw ($VERSION %Vrename_Dont_Crypt %Vrename_Left_Edge_Define
 	     %Signal_Locs %Signal_Newname %Encrypt
-	     $Debug $Opt_Xref $Opt_Crypt $Opt_Write $Opt_Keywords
+	     $Debug $Opt_Xref $Opt_Crypt $Opt_Crypt_All $Opt_Write $Opt_Keywords
 	     @Files);
 
 $VERSION = '2.316';
@@ -68,6 +68,7 @@ my $opt_change = 0;
 my $opt_list = 0;
 $Opt_Xref = 0;
 $Opt_Crypt = 0;   # Global scope, used in sub-package
+$Opt_Crypt_All = 0;   # Global scope, used in sub-package
 $Opt_Write = 1;
 $Opt_Keywords = 0;
 my $opt_read = 0;
@@ -80,6 +81,7 @@ if (! GetOptions (
 		  "debug"	=> \&debug,
 		  "version"	=> \&version,
 		  "crypt!"	=> \$Opt_Crypt,
+		  "cryptall!"	=> \$Opt_Crypt_All,
 		  "change!"	=> \$opt_change,
 		  "changefile=s"=> \$change_filename,
 		  "o=s"		=> \$output_dir,
@@ -92,6 +94,7 @@ if (! GetOptions (
 		  )) {
     usage();
 }
+$Opt_Crypt = 1 if $Opt_Crypt_All;
 
 if ($output_dir ne ""
     && $output_dir !~ /[\/\\]$/) {
@@ -183,9 +186,13 @@ sub changes_crypt {
 	    my $has_encry = 0;
 	    my $has_uncry = 0;
 	    $has_uncry ||= $main::Dont_Decrypt{$sig};
-	    foreach my $loc (@{$Signal_Locs{$sig}}) {
-		$has_encry ||= defined $Encrypt{$loc};
-		$has_uncry ||= ! (defined $Encrypt{$loc});
+	    if ($Opt_Crypt_All) {
+		$has_encry = 1;
+	    } else {
+		foreach my $loc (@{$Signal_Locs{$sig}}) {
+		    $has_encry ||= defined $Encrypt{$loc};
+		    $has_uncry ||= ! (defined $Encrypt{$loc});
+		}
 	    }
 	    if ($has_encry && !$has_uncry) {
 		my $rand = random_string();
@@ -627,12 +634,20 @@ and comments and apply those renames listed in the file (presumably created
 with vrename --list --crypt).
 
 The comment /*ENCRYPT_ME*/ must be included in all files that need to be
-encrypted.  If a signal should not be encrypted, it can simply be set in
-the signals.vrename list to be changed to itself.  After encrypting, you
-may want to save the signals.vrename file so you have a key for decoding,
-and also so that it may be used for the next encryption run.  When used in
-this way for the next encryption run, only new signals will get new
-encryptions, all other encryptions will be encrypted the same.
+encrypted, or use the --cryptall flag.  If a signal should not be
+encrypted, it can simply be set in the signals.vrename list to be changed
+to itself.  After encrypting, you may want to save the signals.vrename file
+so you have a key for decoding, and also so that it may be used for the
+next encryption run.  When used in this way for the next encryption run,
+only new signals will get new encryptions, all other encryptions will be
+encrypted the same.
+
+=item --cryptall
+
+As with --crypt, but put cryptic names into signals.vrename even if the
+file does not include ENCRYPT_ME.  Generally you will then need to edit the
+signals.vrename file manually to exclude any top level signals that should
+be preserved.
 
 =item --keywords
 
