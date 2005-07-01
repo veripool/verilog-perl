@@ -124,24 +124,28 @@ foreach my $kwd (qw(
 		    casex casez cmos deassign default defparam
 		    disable else end endcase endfunction endmodule
 		    endprimitive endspecify endtable endtask event
-		    extern for force forever fork function highz0
+		    for force forever fork function highz0
 		    highz1 if initial inout input integer join large
-		    macromodule makefile medium module nand negedge
+		    macromodule medium module nand negedge
 		    nmos nor not notif0 notif1 or output parameter
 		    pmos posedge primitive pull0 pull1 pulldown
 		    pullup rcmos real realtime reg release repeat
 		    rnmos rpmos rtran rtranif0 rtranif1 scalared
-		    signed small specify strong0 strong1 supply
+		    signed small specify strength strong0 strong1
 		    supply0 supply1 table task time tran tranif0
 		    tranif1 tri tri0 tri1 triand trior trireg
 		    vectored wait wand weak0 weak1 while wire wor
 		    xnor xor
+		    )) { $Keyword{$kwd} = 1; }
 
-		    automatic cell config design endconfig endgenerate
-		    generate genvar instance liblist localparam
+foreach my $kwd (qw(
+		    automatic cell config design edge endconfig endgenerate
+		    generate genvar ifnone instance liblist localparam
 		    noshowcancelled pulsestyle_ondetect pulsestyle_onevent
-		    showcancelled signed specparam use
+		    showcancelled signed specparam unsigned use
+		    )) { $Keyword{$kwd} = 1; }
 
+foreach my $kwd (qw(
 		    alias always_comb always_ff always_latch assert
 		    assert_strobe before bind bit break byte chandle class
 		    clocking const constraint context continue cover dist
@@ -154,34 +158,33 @@ foreach my $kwd (qw(
 		    shortint shortreal solve static string struct super
 		    this throughout timeprecision timeunit type typedef
 		    union unique var virtual void wait_order with within
-		    )) {
-    $Keyword{$kwd} = 1;
-}
-foreach my $kwd ("`celldefine", "`default_nettype", "`define", "`else",
+		    )) { $Keyword{$kwd} = 1; }
+
+foreach my $kwd (
+		 "`celldefine", "`default_nettype", "`define", "`else",
 		 "`endcelldefine", "`endif", "`ifdef", "`include",
 		 "`nounconnected_drive", "`resetall", "`timescale",
 		 "`unconnected_drive", "`undef",
-		 # Verilog 2001
-		 "`default_nettype", "`elsif", "`undef", "`ifndef",
-		 "`file", "`line",
 		 # Commercial Extensions
 		 "`protected", "`endprotected",
-		 ) {
-    $Keyword{$kwd} = 1;
-    $Compdirect{$kwd} = 1;
-}
+		 ) { $Keyword{$kwd} = $Compdirect{$kwd} = 1; }
+
+foreach my $kwd (
+		 "`default_nettype", "`elsif", "`undef", "`ifndef",
+		 "`file", "`line",
+		 ) { $Keyword{$kwd} = $Compdirect{$kwd} = 1; }
 
 ######################################################################
 #### Keyword utilities
 
 sub is_keyword {
     my $symbol = shift;
-    return ($Keyword {$symbol});
+    return ($Keyword{$symbol});
 }
 
 sub is_compdirect {
     my $symbol = shift;
-    return ($Compdirect {$symbol});
+    return ($Compdirect{$symbol});
 }
 
 ######################################################################

@@ -6,6 +6,9 @@ The contributors that suggested a given feature are shown in [].
 
 ***     Add vrename --cryptall option.
 
+***     Fix Language is_keywords to match V2K language spec. [Mark Grossman]
+	Deleted extern, makefile, supply.  Added ifnone, strength, unsigned.
+
 * Verilog::Language 2.316 2005/06/10
 
 ****	Fix define substitution with incomplete defines.  [by Ronald Dean Smith]
