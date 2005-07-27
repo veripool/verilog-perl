@@ -50,16 +50,16 @@ void appendDefValue(char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(
 %x ARGMODE
 %x INCMODE
 
-WHITESPACE	[ \t\r\f]
-NEWLINE		[\n]
-QUOTE		[\"]
-BACKSLASH	[\\]
-SYMBOL		[a-zA-Z_][a-zA-Z0-9_$]*
+ws		[ \t\r\f]
+newline		[\n]
+quote		[\"]
+backslash	[\\]
+symbol		[a-zA-Z_][a-zA-Z0-9_$]*
 
 	/**************************************************************/
 %%
 
-^{WHITESPACE}*"`line"{WHITESPACE}+.*{NEWLINE}	{ VPreprocLex::s_currentLexp->lineDirective(yytext); }
+^{ws}*"`line"{ws}+.*{newline}	{ VPreprocLex::s_currentLexp->lineDirective(yytext); }
 
 	/* Special directives we recognise */
 "`include"	{ return(VP_INCLUDE); }
@@ -89,34 +89,32 @@ SYMBOL		[a-zA-Z_][a-zA-Z0-9_$]*
 	/* C-style comments. */
 "/*"			{ yy_push_state(CMTMODE); yymore(); }
 <CMTMODE>"*/"		{ yy_pop_state(); if (keepComments()) return(VP_COMMENT); }
-<CMTMODE>{NEWLINE}	{ linenoInc(); if (keepComments()) yymore(); else { yytext="\n"; yyleng=1; return(VP_WHITE); } }
+<CMTMODE>{newline}	{ linenoInc(); if (keepComments()) yymore(); else { yytext="\n"; yyleng=1; return(VP_WHITE); } }
 <CMTMODE>.		{ yymore(); }
-<CMTMODE><<EOF>>	{ yyerror("EOF in '/* ... */' block comment\n");
-			  yyleng = 0; yyterminate(); }
+<CMTMODE><<EOF>>	{ yyerror("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
 
 	/* Pass-through strings */
-{QUOTE}			{ yy_push_state(STRMODE); yymore(); }
-<STRMODE>{NEWLINE}	{ linenoInc();
-			  yyerror("Unterminated string");
-			  BEGIN(INITIAL); }
+{quote}			{ yy_push_state(STRMODE); yymore(); }
+<STRMODE><<EOF>>	{ linenoInc(); yyerror("EOF in unterminated string"); yyleng=0; yyterminate(); }
+<STRMODE>{newline}	{ linenoInc(); yyerror("Unterminated string"); BEGIN(INITIAL); }
 <STRMODE>[^\"\\]	{ yymore(); }
-<STRMODE>{BACKSLASH}.	{ yymore(); }
-<STRMODE>{QUOTE} 	{ yy_pop_state();
+<STRMODE>{backslash}.	{ yymore(); }
+<STRMODE>{quote} 	{ yy_pop_state();
 			  if (VPreprocLex::s_currentLexp->m_parenLevel) appendDefValue(yytext,yyleng);
 			  else return (VP_STRING); }
 
 	/* Pass-through include <> filenames */
-<INCMODE>{NEWLINE}	{ linenoInc();
-			  yyerror("Unterminated include filename");
-			  BEGIN(INITIAL); }
+<INCMODE><<EOF>>	{ linenoInc(); yyerror("EOF in unterminated include filename"); yyleng=0; yyterminate(); }
+<INCMODE>{newline}	{ linenoInc(); yyerror("Unterminated include filename"); BEGIN(INITIAL); }
 <INCMODE>[^\>\\]	{ yymore(); }
-<INCMODE>{BACKSLASH}.	{ yymore(); }
+<INCMODE>{backslash}.	{ yymore(); }
 <INCMODE>[\>]	 	{ yy_pop_state(); return (VP_STRING); }
 
 	/* Reading definition */
 <DEFMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <DEFMODE>"//"[^\n]*	{ if (keepComments()) return (VP_COMMENT);}
-<DEFMODE>{NEWLINE}	{ linenoInc();
+<DEFMODE><<EOF>>	{ linenoInc(); yyerror("EOF (missing return?) in define value"); yyleng=0; yyterminate(); }
+<DEFMODE>{newline}	{ linenoInc();
 			  yy_pop_state();
 			  return (VP_DEFVALUE); }	/* Note contains a return */
 <DEFMODE>[^\/\*\n\m\\]+	|
@@ -125,13 +123,14 @@ SYMBOL		[a-zA-Z_][a-zA-Z0-9_$]*
 <DEFMODE>[\\]\n		{ linenoInc(); appendDefValue(" ",1); }
 
 	/* Define calls */
-"`"{SYMBOL}		{ return (VP_DEFREF); }
+"`"{symbol}		{ return (VP_DEFREF); }
 
 	/* Define arguments */
 <ARGMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <ARGMODE>"//"[^\n]*	{ if (keepComments()) return (VP_COMMENT);}
-<ARGMODE>{NEWLINE}	{ yytext="\n"; yyleng=1; return(VP_WHITE); }
-<ARGMODE>{QUOTE}	{ yy_push_state(STRMODE); yymore(); }
+<ARGMODE><<EOF>>	{ yyerror("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
+<ARGMODE>{newline}	{ yytext="\n"; yyleng=1; return(VP_WHITE); }
+<ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
 <ARGMODE>[(]		{ VPreprocLex::s_currentLexp->m_parenLevel++; appendDefValue(yytext,yyleng); }
 <ARGMODE>[,)]		{ if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
 			      appendDefValue(yytext,yyleng);
@@ -143,10 +142,10 @@ SYMBOL		[a-zA-Z_][a-zA-Z0-9_$]*
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }
 
 	/* Generics */
-{SYMBOL}      		{ return (VP_SYMBOL); }
+{symbol}      		{ return (VP_SYMBOL); }
      /* [\m]      		{ } */
-[\n]	 		{ linenoInc(); return(VP_WHITE); }	/* Not {NEWLINE}, too long */
-{WHITESPACE}+		{ return (VP_WHITE); }
+[\n]	 		{ linenoInc(); return(VP_WHITE); }	/* Not {newline}, too long */
+{ws}+			{ return (VP_WHITE); }
 .			{ return (VP_TEXT); }
 %%
 

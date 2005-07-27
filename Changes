@@ -2,12 +2,14 @@ Revision history for Perl extension Verilog::Language.
 
 The contributors that suggested a given feature are shown in [].
 
-* Verilog::Language 2.31****
+* Verilog::Language 2.32****
 
 ***     Add vrename --cryptall option.
 
 ***     Fix Language is_keywords to match V2K language spec. [Mark Grossman]
 	Deleted extern, makefile, supply.  Added ifnone, strength, unsigned.
+
+****	Fix core dump when missing newline in `define.  [David van der bokke]
 
 * Verilog::Language 2.316 2005/06/10
 

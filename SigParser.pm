@@ -547,7 +547,7 @@ sub operator {
 sub _non_pp_line {
     my $self = $_[0];
     return ($self->{in_preproc_line} != $self->line()
-	    || $self->{in_preproc_file} != $self->filename());
+	    || $self->{in_preproc_file} ne $self->filename());
 }
 
 ######################################################################
