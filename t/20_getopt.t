@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# $Revision: 1.11 $$Date$$Author$
+# $Id:$
 # DESCRIPTION: Perl ExtUtils: Type 'make test' to test this package
 #
 # Copyright 2000-2005 by Wilson Snyder.  This program is free software;

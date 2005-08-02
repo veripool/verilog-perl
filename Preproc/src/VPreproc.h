@@ -1,4 +1,4 @@
-// $Revision: 1.18 $$Date$$Author$  -*- C++ -*-
+// $Id:$  -*- C++ -*-
 //*************************************************************************
 //
 // Copyright 2000-2005 by Wilson Snyder.  This program is free software;

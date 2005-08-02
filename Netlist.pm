@@ -1,5 +1,5 @@
 # Verilog - Verilog Perl Interface
-# $Revision: 1.43 $$Date$$Author$
+# $Id:$
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #

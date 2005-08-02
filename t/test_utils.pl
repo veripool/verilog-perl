@@ -1,4 +1,4 @@
-# $Revision: 1.14 $$Date$$Author$
+# $Id:$
 # DESCRIPTION: Perl ExtUtils: Common routines required by package tests
 #
 # Copyright 2000-2005 by Wilson Snyder.  This program is free software;

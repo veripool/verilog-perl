@@ -1,5 +1,5 @@
 \input texinfo @c -*-texinfo-*-
-@c $Revision: 1.23 $$Date$$Author$
+@c $Id:$
 @c %**start of header
 @setfilename readme.info
 @settitle Perl Verilog Installation

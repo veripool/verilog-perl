@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 # vrename - Rename Verilog signals across multiple files
-# $Revision: 1.51 $$Date$$Author$
+# $Id:$
 # Author: Wilson Snyder <wsnyder@wsnyder.org>
 ################ Introduction ################
 #
@@ -137,7 +137,7 @@ sub nop{}
 
 sub usage {
     print "Version: $VERSION\n";
-    print 'Id: $Revision: 1.51 $$Date$$Author$ ', "\n";
+    print 'Id: $Id:$ ', "\n";
     $SIG{__WARN__} = \&nop;	#pod2text isn't clean.
     pod2text($0);
     exit (1);
@@ -145,7 +145,7 @@ sub usage {
 
 sub version {
     print "Version: $VERSION\n";
-    print '$Revision: 1.51 $$Date$$Author$ ', "\n";
+    print '$Id:$ ', "\n";
     exit (1);
 }
 

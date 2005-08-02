@@ -308,7 +308,7 @@ The contributors that suggested a given feature are shown in [].
 ****	test.pl added
 
 ----------------------------------------------------------------------
-$Revision: 1.3 $$Date$$Author$
+$Id:$
 ----------------------------------------------------------------------
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].

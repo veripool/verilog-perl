@@ -1,4 +1,4 @@
-#$Revision: 1.41 $$Date$$Author$
+#$Id:$
 ######################################################################
 #
 # Copyright 2001-2005 by Wilson Snyder.  This program is free software;

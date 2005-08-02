@@ -1,4 +1,4 @@
 #!/bin/sh
-# $Revision: 1.5 $$Date: 2004/12/04 20:13:28 $$Author: wsnyder $
+# $Id:$
 # DESCRIPTION: Perl ExtUtils: Invoke 'perl Makefile.PL' for those more familiar with GNU tools
 perl Makefile.PL
