@@ -1,4 +1,4 @@
-// $Id:$
+// $Id$
 // DESCRIPTION: Verilog-Perl: Example Verilog for testing package
 // This file ONLY is placed into the Public Domain, for any use,
 // without warranty, 2000-2005 by Wilson Snyder.
@@ -18,7 +18,13 @@ module v_hier_sub (/*AUTOARG*/
 	      // Inputs
 	      .a		(1'b1));
 
-   // By pin position
-   v_hier_subsub subsub2 (qvec[2], 1'b0);
+
+   generate
+      genvar 	K;
+      for (K=0; K<1; K=K+1) begin : genloop
+	 // By pin position, inside generate
+	 v_hier_subsub subsub2 (qvec[2], 1'b0);
+      end
+   endgenerate
 
 endmodule
