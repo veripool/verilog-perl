@@ -11,10 +11,10 @@ module example;
    integer i;
 
    initial begin
-      $info (0, "Welcome to a VPMed file\n");
+      $uinfo (0, "Welcome to a VPMed file\n");
       i=0;
-      $assert (1==1, "Why doesn't 1==1??\n");
-      $assert (/*comm
+      $uassert (1==1, "Why doesn't 1==1??\n");
+      $uassert (/*comm
 		ent*/1==1,
 	       //comment
 	       /*com
@@ -22,19 +22,19 @@ module example;
 	       ent*/
 	       );
       //
-      i=3'b100;  $assert_amone(i[2:0], "amone ok\n");
-      i=3'b010;  $assert_amone(i[2:0], "amone ok\n");
-      i=3'b001;  $assert_amone(i[2:0], "amone ok\n");
-      i=3'b000;  $assert_amone(i[2:0], "amone ok\n");
-      //i=3'b011;  $assert_amone(i[2:0], "amone error expected\n");
-      //i=3'b110;  $assert_amone(i[2:0], "amone error expected\n");
+      i=3'b100;  $uassert_amone(i[2:0], "amone ok\n");
+      i=3'b010;  $uassert_amone(i[2:0], "amone ok\n");
+      i=3'b001;  $uassert_amone(i[2:0], "amone ok\n");
+      i=3'b000;  $uassert_amone(i[2:0], "amone ok\n");
+      //i=3'b011;  $uassert_amone(i[2:0], "amone error expected\n");
+      //i=3'b110;  $uassert_amone(i[2:0], "amone error expected\n");
       //
-      i=2'b10;  $assert_onehot(i[1:0], "onehot ok\n");
-      i=2'b01;  $assert_onehot(i[1:0], "onehot ok\n");
-      i=2'b10;  $assert_onehot(i[1],i[0], "onehot ok\n");
-      i=2'b10;  $assert_onehot({i[1],i[0]}, "onehot ok\n");
-      //i=2'b11;  $assert_onehot(i[2:0], "onehot error expected\n");
-      //i=2'b00;  $assert_onehot(i[2:0], "onehot error expected\n");
+      i=2'b10;  $uassert_onehot(i[1:0], "onehot ok\n");
+      i=2'b01;  $uassert_onehot(i[1:0], "onehot ok\n");
+      i=2'b10;  $uassert_onehot(i[1],i[0], "onehot ok\n");
+      i=2'b10;  $uassert_onehot({i[1],i[0]}, "onehot ok\n");
+      //i=2'b11;  $uassert_onehot(i[2:0], "onehot error expected\n");
+      //i=2'b00;  $uassert_onehot(i[2:0], "onehot error expected\n");
    end
 
    // Test assertions within case statements
@@ -43,7 +43,7 @@ module example;
       casez (i)
 	3'b100: ;
 	3'b000: $stop;
-	3'b010: $error("Why?\n");
+	3'b010: $uerror("Why?\n");
 	default: $stop;
       endcase
       if ($time > 1000) $stop;
@@ -75,9 +75,9 @@ module example;
       bus_ack  = 1'b0;
    end
    always @ (posedge clk) begin
-      $assert_req_ack (bus_req,
-		       bus_ack /*COMMENT*/,
-		       bus_data);
+      $uassert_req_ack (bus_req,
+			bus_ack /*COMMENT*/,
+			bus_data);
    end
 
    // Overall control loop
@@ -86,8 +86,8 @@ module example;
       #1;
       i = i + 1;
       clk = !clk;
-      if (i==20) $warn  (0, "Don't know what to do next!\n");
-      if (i==22) $error (0, "Guess I'll error out!\n");
+      if (i==20) $uwarn  (0, "Don't know what to do next!\n");
+      if (i==22) $uerror (0, "Guess I'll error out!\n");
    end
 
 endmodule

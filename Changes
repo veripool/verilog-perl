@@ -3,6 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 2.32**
+
+***	vpm now aliases $error to $uerror, etc, to avoid conflict
+	with SystemVerilog $error function.  [Tad Truex]
+
 * Verilog::Language 2.321 2005/08/03
 
 ***	Verilog::SigParser now sees cells inside generates.  [by Thomas Ziller]

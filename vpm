@@ -62,6 +62,17 @@ $VERSION = '2.321';
        '$error' =>		\&error,
        '$info' =>		\&info,
        '$warn' =>		\&warn,
+       ## U versions, to avoid conflicts with SystemVerilog
+       '$uassert' =>		\&assert,
+       '$uassert_amone' =>	sub {assert_hot(0,@_); },   # atmost one hot
+       '$uassert_onehot' =>	sub {assert_hot(1,@_); },
+       '$uassert_req_ack' =>	\&assert_req_ack,
+       '$uassert_info' =>	\&assert_info,
+       '$ucheck_ilevel' =>	\&check_ilevel,
+       '$ucoverage' =>		\&coverage,
+       '$uerror' =>		\&error,
+       '$uinfo' =>		\&info,
+       '$uwarn' =>		\&warn,
        );
 
 # Any tokens appearing here will be removed with the --chiponly option
@@ -470,7 +481,7 @@ sub coverage {
 	    $realbit_low = $2;
 	    $realbit_width = 1;
 	}
-	if ($sig =~ /\$expand\(([0-9]+),(.*)\)?$/) {
+	if ($sig =~ /\$u?expand\(([0-9]+),(.*)\)?$/) {
 	    $realbit_width = $1;
 	    $sig = $2;
 	    ($realbit_high != $realbit_low && $realbit_high > 0)
@@ -1229,52 +1240,52 @@ These verilog pseudo-pli calls are expanded:
 
 =over 4
 
-=item $assert (I<case>, "message", [I<vars>...] )
+=item $uassert (I<case>, "message", [I<vars>...] )
 
-Report a $error if the given case is FALSE.  (Like assert() in C.)
+Report a $uerror if the given case is FALSE.  (Like assert() in C.)
 
-=item $assert_amone (I<sig>, [I<sig>...], "message", [I<vars>...] )
+=item $uassert_amone (I<sig>, [I<sig>...], "message", [I<vars>...] )
 
-Report a $error if more then one signal is asserted, or any are X.  (None
+Report a $uerror if more then one signal is asserted, or any are X.  (None
 asserted is ok.)  The error message will include a binary display of the
 signal values.
 
-=item $assert_info (I<case>, "message", [I<vars>...] )
+=item $uassert_info (I<case>, "message", [I<vars>...] )
 
-Report a $info if the given case is FALSE.  (Like assert() in C.)
+Report a $uinfo if the given case is FALSE.  (Like assert() in C.)
 
-=item $assert_onehot (I<sig>, [I<sig>...], "message", [I<vars>...] )
+=item $uassert_onehot (I<sig>, [I<sig>...], "message", [I<vars>...] )
 
-Report a $error if other then one signal is asserted, or any are X.  The
+Report a $uerror if other then one signal is asserted, or any are X.  The
 error message will include a binary display of the signal values.
 
-=item $assert_req_ack (I<req_sig>, I<ack_sig>, [I<data_sig>,...] )
+=item $uassert_req_ack (I<req_sig>, I<ack_sig>, [I<data_sig>,...] )
 
 Check for a single cycle request pulse, followed by a single cycle
 acknowledgment pulse.  Do not allow any of the data signals to change
 between the request and acknowledgement.
 
-=item $check_ilevel (I<level> )
+=item $ucheck_ilevel (I<level> )
 
 Return true if the __message level is greater or equal to the given
 level, and that global messages are turned on.
 
-=item $coverage (I<signal>, [I<signal>...] )
+=item $ucoverage (I<signal>, [I<signal>...] )
 
 Add code to perform coverage analysis on all possible values of the given
-signals, or with $expand around a signal, the value of each bit
+signals, or with $uexpand around a signal, the value of each bit
 independently.
 
-=item $info (I<level>, "message", [I<vars>...] )
+=item $uinfo (I<level>, "message", [I<vars>...] )
 
 Report a informational message in standard form.  End test if warning
 limit exceeded.
 
-=item $error ("message", [I<vars>...] )
+=item $uerror ("message", [I<vars>...] )
 
 Report a error message in standard form.  End test if error limit exceeded.
 
-=item $warn ("message", [I<vars>...] )
+=item $uwarn ("message", [I<vars>...] )
 
 Report a warning message in standard form.
 

@@ -1,5 +1,5 @@
 \input texinfo @c -*-texinfo-*-
-@c $Id:$
+@c $Id$
 @c %**start of header
 @setfilename readme.info
 @settitle Perl Verilog Installation
@@ -56,7 +56,7 @@ calls), but have the simulator do something special with them.
 For example:
 
 @example
-      $info (0, "Welcome to a VPMed file\n");
+      $uinfo (0, "Welcome to a VPMed file\n");
 @end example
 
 becomes

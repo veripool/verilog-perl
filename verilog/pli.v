@@ -19,16 +19,16 @@ module pli;
    always @ (errors or warnings) begin
 `ifdef OPTIONAL_EXIT_ON_WARNING
       if (errors!=0 || warnings!=0) begin
-	 $info (0, "Errors/warnings found, exiting!\n");
+	 $uinfo (0, "Errors/warnings found, exiting!\n");
 	 $finish;
       end
 `else
       if (errors!=0) begin
-	 $info (0, "Errors found, exiting!\n");
+	 $uinfo (0, "Errors found, exiting!\n");
 	 $finish;
       end
       else if (warnings!=0) begin
-	 $info (0, {"Warnings found, ","consider stopping!\n"});
+	 $uinfo (0, {"Warnings found, ","consider stopping!\n"});
       end
 `endif
    end
