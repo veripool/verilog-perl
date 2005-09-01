@@ -204,6 +204,7 @@ sub assert_info {
     shift;
     my $cond = shift;
     my @params = @_;
+    # Lower case -i indicates it's a assert vs. a info
     message_line ("-i", $cond, 0,0, @params);
 }
 
@@ -423,7 +424,7 @@ sub message {
     message_header();
 
     # These long lines without breaks are intentional; I want to preserve line numbers
-    my $is_warn = (($char eq "%%E") || ($char eq "%%W"));
+    my $is_warn = (($char eq "%%E") || ($char eq "%%W") || ($char eq "-i"));
 
     if ($cond ne "1") {
 	# Conditional code, for $assert
