@@ -8,6 +8,8 @@ indicates the contributor was also the author of the fix; Thanks!
 ***	vpm now aliases $error to $uerror, etc, to avoid conflict
 	with SystemVerilog $error function.  [Tad Truex]
 
+***	$uassert_info now uses __message_on. [Vasu Arasanipalai]
+
 * Verilog::Language 2.321 2005/08/03
 
 ***	Verilog::SigParser now sees cells inside generates.  [by Thomas Ziller]
