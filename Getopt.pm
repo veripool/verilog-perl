@@ -250,12 +250,13 @@ sub depend_files {
 
 sub get_parameters {
     my $self = shift;
+    my %args = (gcc_stlyle => $self->{gcc_style},);
     # Defines
     my @params = ();
     foreach my $def (sort (keys %{$self->{defines}})) {
 	my $defvalue = $self->defvalue($def);
 	$defvalue = "=".($defvalue||"") if (defined $defvalue && $defvalue ne "");
-	if ($self->{gcc_style}) {
+	if ($args{gcc_style}) {
 	    push @params, "-D${def}${defvalue}";
 	} else {
 	    push @params, "+define+${def}${defvalue}";
@@ -270,7 +271,7 @@ sub get_parameters {
     push @params, $exts if $exts;
     # Includes...
     foreach my $dir ($self->incdir()) {
-	if ($self->{gcc_style}) {
+	if ($args{gcc_style}) {
 	    push @params, "-I${dir}";
 	} else {
 	    push @params, "+incdir+${dir}";
