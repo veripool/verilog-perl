@@ -439,6 +439,10 @@ sub parse {
 		print "GotaNUMBER $token\n"    if ($Debug);
 		$self->number ($token);
 	    }
+	    elsif ($text =~ s/^(\\)$//) {
+		my $token = $1;
+		$self->{unreadback} .= $token;
+	    }
 	    elsif ($text =~ s/^([^\n]+)//) {
 		my $token = $1;
 		$self->{unreadback} .= $token;
