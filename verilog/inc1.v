@@ -46,6 +46,11 @@ $display(`msg(left side, right side))
 `define foo(f) f``_suffix
 `foo(bar)  
 
+`define zap(which)   \
+   	$c("Zap(\"",which,"\");");
+`zap(bug1);
+`zap("bug2");
+
 `define EMPTY_TRUE
 `ifndef EMPTY_TRUE
   `error "Empty is still true"

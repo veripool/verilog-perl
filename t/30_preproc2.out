@@ -108,9 +108,13 @@ verilog/inc1.v:44:
 verilog/inc1.v:45:  bar_suffix   
 verilog/inc1.v:46: 
 verilog/inc1.v:47:  
-verilog/inc1.v:48:  
-verilog/inc1.v:49:    
-verilog/inc1.v:50: 
-verilog/inc1.v:50: `line 50 "verilog/inc1.v" 0
-verilog/inc1.v:50: 
+verilog/inc1.v:49:  $c("Zap(\"",bug1,"\");"); ;
+verilog/inc1.v:50:  $c("Zap(\"","bug2","\");"); ;
 verilog/inc1.v:51: 
+verilog/inc1.v:52:  
+verilog/inc1.v:53:  
+verilog/inc1.v:54:    
+verilog/inc1.v:55: 
+verilog/inc1.v:55: `line 55 "verilog/inc1.v" 0
+verilog/inc1.v:55: 
+verilog/inc1.v:56: 
