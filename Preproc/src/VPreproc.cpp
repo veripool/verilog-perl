@@ -386,8 +386,8 @@ int VPreprocImp::getRawToken() {
 	if (debug()) {
 	    char buf[10000]; strncpy(buf, yytext, yyleng);  buf[yyleng] = '\0';
 	    for (char* cp=buf; *cp; cp++) if (*cp=='\n') *cp='$';
-	    printf ("%d: RAW %d %d:  %-10s: %s\n",
-		    m_filelinep->lineno(), m_off, m_state, tokenName(tok), buf);
+	    fprintf (stderr,"%d: RAW %d %d:  %-10s: %s\n",
+		     m_filelinep->lineno(), m_off, m_state, tokenName(tok), buf);
 	}
     
 	// On EOF, try to pop to upper level includes, as needed.
@@ -413,7 +413,7 @@ int VPreprocImp::getToken() {
 	// Always emit white space and comments between tokens.
 	if (tok==VP_WHITE) return (tok);
 	if (tok==VP_COMMENT) {
-	    if (!m_off) {
+	    if (!m_off && m_lexp->m_keepComments) {
 		if (m_lexp->m_keepComments == KEEPCMT_SUB) {
 		    string rtn; rtn.assign(yytext,yyleng);
 		    m_preprocp->comment(rtn);
@@ -695,19 +695,19 @@ string VPreprocImp::getline() {
     char* rtnp;
     while (NULL==(rtnp=strchr(m_lineChars.c_str(),'\n'))) {
 	int tok = getToken();
+	if (debug()) {
+	    char buf[100000];
+	    strncpy(buf, yytext, yyleng);
+	    buf[yyleng] = '\0';
+	    for (char* cp=buf; *cp; cp++) if (*cp=='\n') *cp='$';
+	    fprintf (stderr,"%d: GETFETC:  %-10s: %s\n",
+		     m_filelinep->lineno(), tokenName(tok), buf);
+	}
 	if (tok==VP_EOF) {
 	    // Add a final newline, in case the user forgot the final \n.
 	    m_lineChars.append("\n");
 	}
 	else {
-	    if (debug()) {
-		char buf[100000];
-		strncpy(buf, yytext, yyleng);
-		buf[yyleng] = '\0';
-		for (char* cp=buf; *cp; cp++) if (*cp=='\n') *cp='$';
-		printf ("%d: GETFETC:  %-10s: %s\n",
-			m_filelinep->lineno(), tokenName(tok), buf);
-	    }
 	    m_lineChars.append(yytext,0,yyleng);
 	}
     }
@@ -716,6 +716,6 @@ string VPreprocImp::getline() {
     int len = rtnp-m_lineChars.c_str()+1;
     string theLine(m_lineChars, 0, len);
     m_lineChars = m_lineChars.erase(0,len);	// Remove returned characters
-    if (debug()) printf ("%d: GETLINE:  %s\n", m_filelinep->lineno(), theLine.c_str());
+    if (debug()) fprintf (stderr,"%d: GETLINE:  %s\n", m_filelinep->lineno(), theLine.c_str());
     return theLine;
 }

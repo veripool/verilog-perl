@@ -3,7 +3,7 @@
 %option noc++
 %option prefix="VPreprocLex"
 %{
-/* $Id:$
+/* $Id$
  ******************************************************************************
  * DESCRIPTION: Verilog Preprocessor Lexer
  * 
@@ -36,7 +36,6 @@
 VPreprocLex* VPreprocLex::s_currentLexp = NULL;	// Current lexing point
 
 #define linenoInc()  { VPreprocLex::s_currentLexp->linenoInc(); }
-int  keepComments() { return VPreprocLex::s_currentLexp->m_keepComments; }
 bool pedantic() { return VPreprocLex::s_currentLexp->m_pedantic; }
 void yyerror(char* msg) { VPreprocLex::s_currentLexp->m_curFilelinep->error(msg); }
 void appendDefValue(char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(t,l); }
@@ -54,47 +53,37 @@ ws		[ \t\r\f]
 newline		[\n]
 quote		[\"]
 backslash	[\\]
-symbol		[a-zA-Z_][a-zA-Z0-9_$]*
+symb		[a-zA-Z_][a-zA-Z0-9_$]*
 
 	/**************************************************************/
 %%
 
-^{ws}*"`line"{ws}+.*{newline}	{ VPreprocLex::s_currentLexp->lineDirective(yytext); }
+<INITIAL>^{ws}*"`line"{ws}+.*{newline}	{ VPreprocLex::s_currentLexp->lineDirective(yytext); }
 
 	/* Special directives we recognise */
-"`include"	{ return(VP_INCLUDE); }
-"`ifdef"	{ return(VP_IFDEF); }
-"`ifndef"	{ return(VP_IFNDEF); }
-"`else"		{ return(VP_ELSE); }
-"`elsif"	{ return(VP_ELSIF); }
-"`endif"	{ return(VP_ENDIF); }
-"`undef"	{ return(VP_UNDEF); }
-"`define"	{ return(VP_DEFINE); }
+<INITIAL>"`include"	{ return(VP_INCLUDE); }
+<INITIAL>"`ifdef"	{ return(VP_IFDEF); }
+<INITIAL>"`ifndef"	{ return(VP_IFNDEF); }
+<INITIAL>"`else"	{ return(VP_ELSE); }
+<INITIAL>"`elsif"	{ return(VP_ELSIF); }
+<INITIAL>"`endif"	{ return(VP_ENDIF); }
+<INITIAL>"`undef"	{ return(VP_UNDEF); }
+<INITIAL>"`define"	{ return(VP_DEFINE); }
 
 	/* Optional directives we recognise */
-"`__FILE__"	{ if (!pedantic()) {
-    		     yytext = (char*)VPreprocLex::s_currentLexp->m_curFilelinep->cfilename();
-    		     yyleng = strlen(yytext); return (VP_TEXT);
-                  } else return(VP_DEFREF); }
-"`__LINE__"	{ if (!pedantic()) {
-                     static char buf[10];
-		     sprintf(buf, "%d",VPreprocLex::s_currentLexp->m_curFilelinep->lineno());
-                     yytext = buf; yyleng = strlen(yytext); return (VP_TEXT);
-                  } else return(VP_DEFREF); }
-"`error"	{ if (!pedantic()) return (VP_ERROR); else return(VP_DEFREF); }
-
-	/* One line comments. */
-"//"[^\n]* 		{ if (keepComments()) return (VP_COMMENT); }
-
-	/* C-style comments. */
-"/*"			{ yy_push_state(CMTMODE); yymore(); }
-<CMTMODE>"*/"		{ yy_pop_state(); if (keepComments()) return(VP_COMMENT); }
-<CMTMODE>{newline}	{ linenoInc(); if (keepComments()) yymore(); else { yytext="\n"; yyleng=1; return(VP_WHITE); } }
-<CMTMODE>.		{ yymore(); }
-<CMTMODE><<EOF>>	{ yyerror("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
+<INITIAL>"`__FILE__"	{ if (!pedantic()) {
+	    		     yytext = (char*)VPreprocLex::s_currentLexp->m_curFilelinep->cfilename();
+	    		     yyleng = strlen(yytext); return (VP_TEXT);
+	                  } else return(VP_DEFREF); }
+<INITIAL>"`__LINE__"	{ if (!pedantic()) {
+	                     static char buf[10];
+			     sprintf(buf, "%d",VPreprocLex::s_currentLexp->m_curFilelinep->lineno());
+	                     yytext = buf; yyleng = strlen(yytext); return (VP_TEXT);
+	                  } else return(VP_DEFREF); }
+<INITIAL>"`error"	{ if (!pedantic()) return (VP_ERROR); else return(VP_DEFREF); }
 
 	/* Pass-through strings */
-{quote}			{ yy_push_state(STRMODE); yymore(); }
+<INITIAL>{quote}	{ yy_push_state(STRMODE); yymore(); }
 <STRMODE><<EOF>>	{ linenoInc(); yyerror("EOF in unterminated string"); yyleng=0; yyterminate(); }
 <STRMODE>{newline}	{ linenoInc(); yyerror("Unterminated string"); BEGIN(INITIAL); }
 <STRMODE>[^\"\\]	{ yymore(); }
@@ -112,7 +101,7 @@ symbol		[a-zA-Z_][a-zA-Z0-9_$]*
 
 	/* Reading definition */
 <DEFMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
-<DEFMODE>"//"[^\n]*	{ if (keepComments()) return (VP_COMMENT);}
+<DEFMODE>"//"[^\n]*	{ return (VP_COMMENT);}
 <DEFMODE><<EOF>>	{ linenoInc(); yyerror("EOF (missing return?) in define value"); yyleng=0; yyterminate(); }
 <DEFMODE>{newline}	{ linenoInc();
 			  yy_pop_state();
@@ -122,12 +111,9 @@ symbol		[a-zA-Z_][a-zA-Z0-9_$]*
 <DEFMODE>.		{ appendDefValue(yytext,yyleng); }
 <DEFMODE>[\\]\n		{ linenoInc(); appendDefValue(" ",1); }
 
-	/* Define calls */
-"`"{symbol}		{ return (VP_DEFREF); }
-
 	/* Define arguments */
 <ARGMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
-<ARGMODE>"//"[^\n]*	{ if (keepComments()) return (VP_COMMENT);}
+<ARGMODE>"//"[^\n]*	{ return (VP_COMMENT);}
 <ARGMODE><<EOF>>	{ yyerror("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
 <ARGMODE>{newline}	{ yytext="\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
@@ -141,12 +127,24 @@ symbol		[a-zA-Z_][a-zA-Z0-9_$]*
 <ARGMODE>[^\/\*\n\m\\(,)\"]+	|
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }
 
+	/* One line comments. */
+<INITIAL>"//"[^\n]* 	{ return (VP_COMMENT); }
+
+	/* C-style comments. */
+<INITIAL>"/*"		{ yy_push_state(CMTMODE); yymore(); }
+<CMTMODE>"*/"		{ yy_pop_state(); return(VP_COMMENT); }
+<CMTMODE>{newline}	{ linenoInc(); yymore(); }
+<CMTMODE>.		{ yymore(); }
+<CMTMODE><<EOF>>	{ yyerror("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
+
+	/* Define calls */
+<INITIAL>"`"{symb}	{ return (VP_DEFREF); }
+
 	/* Generics */
-{symbol}      		{ return (VP_SYMBOL); }
-     /* [\m]      		{ } */
-[\n]	 		{ linenoInc(); return(VP_WHITE); }	/* Not {newline}, too long */
-{ws}+			{ return (VP_WHITE); }
-.			{ return (VP_TEXT); }
+<INITIAL>{symb}		{ return (VP_SYMBOL); }
+<INITIAL>[\n]	 	{ linenoInc(); return(VP_WHITE); }	/* Not {newline}, too long */
+<INITIAL>{ws}+		{ return (VP_WHITE); }
+<INITIAL>.		{ return (VP_TEXT); }
 %%
 
 void VPreprocLex::setStateDefArg() {
