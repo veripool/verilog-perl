@@ -36,6 +36,11 @@ $Warnings = $Errors = 0;
 ######################################################################
 #### Member functions
 
+sub fileline {
+    my $self = shift;
+    return ($self->filename||"").":".($self->lineno||"");
+}
+
 ######################################################################
 #### Error Handling
 # Class::Struct is great, but it can't have a @ISA... Sigh.
@@ -44,20 +49,20 @@ $Warnings = $Errors = 0;
 sub info {
     my $self = shift;
     $self = shift if ref $_[0];	# Optional reference to object
-    CORE::warn "-Info: ".($self->filename||"").":".($self->lineno||"").": ".join('',@_);
+    CORE::warn "-Info: ".$self->fileline.": ".join('',@_);
 }
 
 sub warn {
     my $self = shift;
     $self = shift if ref $_[0];	# Optional reference to object
-    CORE::warn "%Warning: ".($self->filename||"").":".($self->lineno||"").": ".join('',@_);
+    CORE::warn "%Warning: ".$self->fileline.": ".join('',@_);
     $Warnings++;
 }
 
 sub error {
     my $self = shift;
     $self = shift if ref $_[0];	# Optional reference to object
-    CORE::warn "%Error: ".($self->filename||"").":".($self->lineno||"").": ".join('',@_);
+    CORE::warn "%Error: ".$self->fileline.": ".join('',@_);
     $Errors++;
 }
 

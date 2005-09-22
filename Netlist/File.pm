@@ -247,7 +247,6 @@ sub error {
 
     my $fileref = $self->{fileref};
     # Call Verilog::Netlist::Subclass's error reporting, it will track # errors
-    my $fileline = $self->filename.":".$self->lineno;
     $fileref->error ($self, "$text\n");
 }
 
