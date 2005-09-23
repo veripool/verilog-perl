@@ -49,20 +49,20 @@ sub fileline {
 sub info {
     my $self = shift;
     $self = shift if ref $_[0];	# Optional reference to object
-    CORE::warn "-Info: ".$self->fileline.": ".join('',@_);
+    CORE::warn "-Info: ".($self->filename||"").":".($self->lineno||"").": ".join('',@_);
 }
 
 sub warn {
     my $self = shift;
     $self = shift if ref $_[0];	# Optional reference to object
-    CORE::warn "%Warning: ".$self->fileline.": ".join('',@_);
+    CORE::warn "%Warning: ".($self->filename||"").":".($self->lineno||"").": ".join('',@_);
     $Warnings++;
 }
 
 sub error {
     my $self = shift;
     $self = shift if ref $_[0];	# Optional reference to object
-    CORE::warn "%Error: ".$self->fileline.": ".join('',@_);
+    CORE::warn "%Error: ".($self->filename||"").":".($self->lineno||"").": ".join('',@_);
     $Errors++;
 }
 

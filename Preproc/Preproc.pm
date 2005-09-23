@@ -1,4 +1,4 @@
-#$Id:$
+#$Id$
 ######################################################################
 #
 # Copyright 2001-2005 by Wilson Snyder.  This program is free software;
@@ -98,6 +98,11 @@ sub remove_defines {
 	$sym = $val if defined $val;
     }
     return $sym;
+}
+
+sub fileline {
+    my $self = shift;
+    return ($self->filename||"").":".($self->lineno||"");
 }
 
 ######################################################################

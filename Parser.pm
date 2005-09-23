@@ -275,6 +275,11 @@ sub filename {
     return $self->{filename};
 }
 
+sub fileline {
+    my $self = shift;
+    return ($self->filename||"").":".($self->lineno||"");
+}
+
 sub reset {
     # Reset internal parse states
     my $self = shift;	# Parser
