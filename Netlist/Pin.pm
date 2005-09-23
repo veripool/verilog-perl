@@ -99,6 +99,11 @@ sub _link {
     }
 }
 
+sub type_match {
+    my $self = shift;
+    return $self->net->type eq $self->port->type;
+}
+
 sub lint {
     my $self = shift;
     if (!$self->net && !$self->netlist->{implicit_wires_ok}) {
@@ -110,7 +115,7 @@ sub lint {
     if ($self->port && $self->net) {
 	my $nettype = $self->net->type;
 	my $porttype = $self->port->type;
-	if ($nettype ne $porttype) {
+	if (!$self->type_match) {
 	    $self->error("Port pin type $porttype != Net type $nettype: "
 			 ,$self->name,"\n");
 	}
