@@ -49,10 +49,14 @@ t/42_dumpcheck_2e.out
 t/42_dumpcheck_2v.out
 t/50_vrename.t
 t/60_vpm.t
+t/80_vhier_cells.out
+t/80_vhier_inpfiles.out
+t/80_vhier_modfiles.out
 t/80_vppp.t
 t/80_vppp_cmped.out
 t/80_vppp_none.out
 t/80_vppp_simple.out
+t/85_vhier.t
 t/test_utils.pl
 verilog/example.v
 verilog/inc1.v
@@ -67,6 +71,7 @@ verilog/v_hier_subprim.v
 verilog/v_hier_subsub.v
 verilog/v_hier_top.v
 verilog/v_hier_top2.v
+vhier
 vpm
 vppp
 vrename
