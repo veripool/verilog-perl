@@ -43,6 +43,8 @@ structs('new',
 	   sp_autocreated	=> '$', #'	# Created by /*AUTOINOUT*/
 	   ]);
 
+sub netlist { return $_[0]->module->netlist; }
+
 sub _link {
     my $self = shift;
     if (!$self->net) {
