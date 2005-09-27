@@ -410,8 +410,9 @@ sub message {
 
     $params[1] = convert_concat_string($params[1]);
     unless ($char =~ /^-I/i) {
-	if ($params[1] =~ s/\"\s*$/ /) {
+	if ($params[1] =~ s/\s*\"\s*$//) {
 	    # For a well-formed message, $params[1] now ends in "\\n".
+	    $params[1] .= "\\n" if $params[1] !~ /\\n$/;
 	    $params[1] = $params[1]."${char}: In %m\\n\"";
 	}
     }
