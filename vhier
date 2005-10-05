@@ -127,14 +127,58 @@ sub vhier {
     }
 
     if ($Opt_ModFiles) {
-	foreach my $file ($nl->files_sorted) {
-	    printf +("  %s\n",$file->name);
-	}
+	show_mod_files($nl);
     }
 
     if ($Opt_InFiles) {
 	foreach my $filename ($Opt->depend_files) {
 	    printf +("  %s\n",$filename);
+	}
+    }
+}
+
+sub show_mod_files {
+    my $nl = shift;
+    # We'll attach a level attribute to each module indicating it's maximum depth
+    foreach my $mod ($nl->modules) {
+	$mod->attributes("_vhier_level", 0);
+    }
+    # Recurse the tree and determine level
+    foreach my $mod ($nl->modules) {
+	if ($mod->is_top) {
+	    _mod_files_recurse($mod, 1);
+	}
+    }
+    # Make sort key based on numeric level
+    my %keys;
+    foreach my $mod ($nl->modules) {
+	my $key = sprintf("%03d_%s", $mod->attributes("_vhier_level"), $mod->name);
+	$keys{$key} = $mod;
+    }
+    my @files;
+    my %files;  # Uniquify the array
+    foreach my $key (sort {$b cmp $a} (keys %keys)) {
+	my $mod = $keys{$key};
+	my $filename = $mod->filename;
+	if (!$files{$filename}) {
+	    $files{$filename} = 1;
+	    push @files, " "x($mod->attributes("_vhier_level")) . $filename;
+	}
+    }
+    foreach my $filename (reverse @files) {
+	print "  $filename\n";
+    }
+}
+
+sub _mod_files_recurse {
+    my $mod = shift;
+    my $level = shift;
+    if ($mod->attributes("_vhier_level") < $level) {
+	$mod->attributes("_vhier_level", $level);
+    }
+    foreach my $cell ($mod->cells_sorted) {
+	if ($cell->submod) {
+	    _mod_files_recurse ($cell->submod, $level+1);
 	}
     }
 }
@@ -233,8 +277,9 @@ those files needed to represent the entire design.
 
 =item --module-files
 
-Show all module filenames in top-down order.  Unlike input-files, header
-files are not included.
+Show all module filenames in top-down order.  Child modules will always
+appear as low as possible, so that reversing the list will allow bottom-up
+processing of modules.  Unlike input-files, header files are not included.
 
 =item --no-missing
 

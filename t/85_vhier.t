@@ -15,9 +15,9 @@ BEGIN { require "t/test_utils.pl"; }
 
 print "Checking vhier...\n";
 
-vhier ("t/80_vhier_cells.out",   "--cells");
-vhier ("t/80_vhier_inpfiles.out",   "--input-files");
-vhier ("t/80_vhier_modfiles.out",   "--module-files");
+vhier ("t/85_vhier_cells.out",   "--cells");
+vhier ("t/85_vhier_inpfiles.out",   "--input-files");
+vhier ("t/85_vhier_modfiles.out",   "--module-files");
 
 sub vhier {
     my $checkname = shift;
