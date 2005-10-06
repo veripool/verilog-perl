@@ -72,8 +72,6 @@ if ($opt_output_filename) {
 
 vhier(@opt_files);
 
-my $nl = Verilog::Netlist->new(options=>$Opt,);
-
 exit (0);
 
 ######################################################################
