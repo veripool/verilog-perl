@@ -281,7 +281,7 @@ Show all module filenames in top-down order.  Child modules will always
 appear as low as possible, so that reversing the list will allow bottom-up
 processing of modules.  Unlike input-files, header files are not included.
 
-=item --no-missing
+=item --nomissing
 
 Do not complain about references to missing modules.
 
