@@ -44,6 +44,7 @@ my $Opt_Cells;
 my $Opt_ModFiles;
 my $Opt_InFiles;
 my $Opt_Missing = 1;
+my $Opt_Xml;
 @ARGV = $Opt->parameter(@ARGV);
 Getopt::Long::config ("no_auto_abbrev","pass_through");
 if (! GetOptions (
@@ -54,6 +55,7 @@ if (! GetOptions (
 		  "module-files!"	=> \$Opt_ModFiles,
 		  "input-files!"	=> \$Opt_InFiles,
 		  "missing!"	=> \$Opt_Missing,
+		  "xml!"	=> \$Opt_Xml,
 		  "<>"		=> \&parameter,
 		  )) {
     usage();
@@ -70,7 +72,7 @@ if ($opt_output_filename) {
     $fh->open(">-") or die;
 }
 
-vhier(@opt_files);
+vhier($fh, @opt_files);
 
 exit (0);
 
@@ -100,6 +102,7 @@ sub parameter {
 #### Creation
 
 sub vhier {
+    my $fh = shift;
     my @files = @_;
 
     my $nl = new Verilog::Netlist (options => $Opt,
@@ -119,24 +122,25 @@ sub vhier {
     if ($Opt_Cells) {
 	foreach my $mod ($nl->modules_sorted) {
 	    if ($mod->is_top) {
-		show_hier ($mod, "  ", "");
+		show_hier ($fh, $mod, "  ", "");
 	    }
 	}
     }
 
     if ($Opt_ModFiles) {
-	show_mod_files($nl);
+	show_mod_files($nl, $fh);
     }
 
     if ($Opt_InFiles) {
 	foreach my $filename ($Opt->depend_files) {
-	    printf +("  %s\n",$filename);
+	    printf $fh +("  %s\n",$filename);
 	}
     }
 }
 
 sub show_mod_files {
     my $nl = shift;
+    my $fh = shift;
     # We'll attach a level attribute to each module indicating it's maximum depth
     foreach my $mod ($nl->modules) {
 	$mod->attributes("_vhier_level", 0);
@@ -164,7 +168,7 @@ sub show_mod_files {
 	}
     }
     foreach my $filename (reverse @files) {
-	print "  $filename\n";
+	print $fh "  $filename\n";
     }
 }
 
@@ -182,15 +186,16 @@ sub _mod_files_recurse {
 }
 
 sub show_hier {
+    my $fh = shift;
     my $mod = shift;
     my $indent = shift;
     my $hier = shift;
     $hier .= $mod->name;
-    printf ("%-38s %s\n", $indent."Module ".$mod->name,$hier) if $Debug;
-    printf "%s%s\n", $indent, $mod->name;
+    printf $fh ("%-38s %s\n", $indent."Module ".$mod->name,$hier) if $Debug;
+    printf $fh "%s%s\n", $indent, $mod->name;
     foreach my $cell ($mod->cells_sorted) {
 	if ($cell->submod) {
-	    show_hier ($cell->submod, $indent."  ", $hier.".");
+	    show_hier ($fh, $cell->submod, $indent."  ", $hier.".");
 	}
     }
 }
@@ -266,7 +271,7 @@ Use the given filename for output instead of stdout.
 
 =item --cells
 
-Show all cells in top-down order.
+Show the module name of all cells in top-down order.
 
 =item --input-files
 
