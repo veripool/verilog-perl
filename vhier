@@ -190,12 +190,11 @@ sub show_hier {
     my $mod = shift;
     my $indent = shift;
     my $hier = shift;
-    $hier .= $mod->name;
     printf $fh ("%-38s %s\n", $indent."Module ".$mod->name,$hier) if $Debug;
     printf $fh "%s%s\n", $indent, $mod->name;
     foreach my $cell ($mod->cells_sorted) {
 	if ($cell->submod) {
-	    show_hier ($fh, $cell->submod, $indent."  ", $hier.".");
+	    show_hier ($fh, $cell->submod, $indent."  ", $hier.".".$cell->name);
 	}
     }
 }
