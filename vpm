@@ -99,6 +99,7 @@ my $Opt_Stop = 1;	# Put $stop in error messages
 my $Opt_Verilator = 0;	# Verilator
 my $Last_Vericov = 0;	# Last run's Opt_Vericov
 my $Last_Chiponly = 0;	# Last run's Opt_Chiponly
+my $Opt_Minimum;	# Include `__message_minimum
 my @Opt_Exclude;
 
 my $Total_Files = 0;
@@ -127,6 +128,7 @@ if (! GetOptions (
 		  "-o=s"	=> \$output_dirname,
 		  "exclude=s"	=> sub {shift; push @Opt_Exclude, shift;},
 		  "nopli!"	=> \$Opt_NoPli,
+		  "minimum!"	=> \$Opt_Minimum,
 		  "<>"		=> \&parameter,
 		  )) {
     usage();
@@ -281,6 +283,7 @@ sub check_ilevel {
     shift;
     my $level = shift;
     my $chk = "/*vpm*/if ((`__message_on) && ";
+    $chk .= ' && (`__message_minimum >= (' . $level . '))' if $Opt_Minimum;
     $chk = $chk . '(__message >= (' . $level . ')))';
     sendout ($chk);
 }
@@ -441,7 +444,8 @@ sub message {
     } else {
 	# Complex test
 	$Insure_Symbols{$Last_Module}{__message} = ['integer',5];	# Make this symbol exist if doesn't
-	my $chk = 'if (__message >= (' . $params[0] . ')';
+	my $chk = 'if ((__message >= (' . $params[0] . '))';
+	$chk .= ' && (`__message_minimum >= (' . $params[0] . '))' if $Opt_Minimum;
 	$chk .= " && (`__message_on) " if $is_warn;
 	$chk .= ') ';
 	sendout ($chk);
@@ -1203,6 +1207,11 @@ Exclude processing any files which begin with the specified prefix.
 =item --help
 
 Displays this message and program version and exits.
+
+=item --minimum
+
+Include `__message_minimum in the $uinfo test, so that by defining
+__message_minimum=1 some uinfos may be optimized away at compile time.
 
 =item --nopli
 

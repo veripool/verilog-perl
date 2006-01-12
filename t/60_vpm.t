@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# $Id:$
+# $Id$
 # DESCRIPTION: Perl ExtUtils: Type 'make test' to test this package
 #
 # Copyright 2000-2005 by Wilson Snyder.  This program is free software;
@@ -17,7 +17,7 @@ print "Checking vpm...\n";
 
 # Preprocess the files
 mkdir "test_dir/.vpm", 0777;
-run_system ("${PERL} vpm --nostop -o test_dir/.vpm --date -y verilog/");
+run_system ("${PERL} vpm --minimum --nostop -o test_dir/.vpm --date -y verilog/");
 ok(1);
 ok(-r 'test_dir/.vpm/pli.v');
 
@@ -36,6 +36,8 @@ if ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
 		." +define+pli=pli"
 		# vpm uses `__message_on to point to the message on variable
 		." +define+__message_on=pli.message_on"
+		# vpm --minimum uses `__message_minimum to optimize away some messages
+		." +define+__message_minimum=1"
 		# Read files from .vpm BEFORE reading from other directories
 		." +librescan +libext+.v -y .vpm"
 		# Finally, read the needed top level file
@@ -53,6 +55,8 @@ elsif ($ENV{NC_ROOT} && -d "$ENV{NC_ROOT}/tools") {
 		." +define+pli=pli"
 		# vpm uses `__message_on to point to the message on variable
 		." +define+__message_on=pli.message_on"
+		# vpm --minimum uses `__message_minimum to optimize away some messages
+		." +define+__message_minimum=1"
 		# Read files from .vpm BEFORE reading from other directories
 		." +librescan +libext+.v -y .vpm"
 		# Finally, read the needed top level file
