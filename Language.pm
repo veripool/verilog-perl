@@ -136,14 +136,14 @@ foreach my $kwd (qw(
 		    tranif1 tri tri0 tri1 triand trior trireg
 		    vectored wait wand weak0 weak1 while wire wor
 		    xnor xor
-		    )) { $Keyword{$kwd} = 1; }
+		    )) { $Keyword{$kwd} = 1995; }
 
 foreach my $kwd (qw(
 		    automatic cell config design edge endconfig endgenerate
 		    generate genvar ifnone instance liblist localparam
 		    noshowcancelled pulsestyle_ondetect pulsestyle_onevent
 		    showcancelled signed specparam unsigned use
-		    )) { $Keyword{$kwd} = 1; }
+		    )) { $Keyword{$kwd} = 2001; }
 
 foreach my $kwd (qw(
 		    alias always_comb always_ff always_latch assert
@@ -158,7 +158,7 @@ foreach my $kwd (qw(
 		    shortint shortreal solve static string struct super
 		    this throughout timeprecision timeunit type typedef
 		    union unique var virtual void wait_order with within
-		    )) { $Keyword{$kwd} = 1; }
+		    )) { $Keyword{$kwd} = 2005; }
 
 foreach my $kwd (
 		 "`celldefine", "`default_nettype", "`define", "`else",
@@ -167,12 +167,12 @@ foreach my $kwd (
 		 "`unconnected_drive", "`undef",
 		 # Commercial Extensions
 		 "`protected", "`endprotected",
-		 ) { $Keyword{$kwd} = $Compdirect{$kwd} = 1; }
+		 ) { $Keyword{$kwd} = $Compdirect{$kwd} = 1995; }
 
 foreach my $kwd (
 		 "`default_nettype", "`elsif", "`undef", "`ifndef",
 		 "`file", "`line",
-		 ) { $Keyword{$kwd} = $Compdirect{$kwd} = 1; }
+		 ) { $Keyword{$kwd} = $Compdirect{$kwd} = 2001; }
 
 ######################################################################
 #### Keyword utilities
