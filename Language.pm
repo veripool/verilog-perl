@@ -43,10 +43,18 @@ Verilog Language.  General functions will be added as needed.
 =item Verilog::Language::is_keyword ($symbol_string)
 
 Return true if the given symbol string is a Verilog reserved keyword.
+Value indicates the language standard, 1995, 2001, or sv31 for
+SystemVerilog 3.1.
 
 =item Verilog::Language::is_compdirect ($symbol_string)
 
 Return true if the given symbol string is a Verilog compiler directive.
+
+=item Verilog::Language::language_standard ($year)
+
+Sets the language standard to indicate what are keywords.  If undef, all
+standards apply.  1995 sets only Verilog 1995, 2001 sets Verilog 2001, and
+'sv31' sets SystemVerilog 3.1.
 
 =item Verilog::Language::number_bits ($number_string)
 
@@ -109,7 +117,8 @@ require 5.000;
 require Exporter;
 
 use strict;
-use vars qw($VERSION %Keyword %Compdirect);
+use vars qw($VERSION %Keyword %Keywords %Compdirect $Standard);
+use Carp;
 
 ######################################################################
 #### Configuration Section
@@ -136,14 +145,14 @@ foreach my $kwd (qw(
 		    tranif1 tri tri0 tri1 triand trior trireg
 		    vectored wait wand weak0 weak1 while wire wor
 		    xnor xor
-		    )) { $Keyword{$kwd} = 1995; }
+		    )) { $Keywords{1995}{$kwd} = 1995; }
 
 foreach my $kwd (qw(
 		    automatic cell config design edge endconfig endgenerate
 		    generate genvar ifnone instance liblist localparam
 		    noshowcancelled pulsestyle_ondetect pulsestyle_onevent
 		    showcancelled signed specparam unsigned use
-		    )) { $Keyword{$kwd} = 2001; }
+		    )) { $Keywords{2001}{$kwd} = 2001; }
 
 foreach my $kwd (qw(
 		    alias always_comb always_ff always_latch assert
@@ -158,7 +167,7 @@ foreach my $kwd (qw(
 		    shortint shortreal solve static string struct super
 		    this throughout timeprecision timeunit type typedef
 		    union unique var virtual void wait_order with within
-		    )) { $Keyword{$kwd} = 2005; }
+		    )) { $Keywords{sv31}{$kwd} = 'sv31'; }
 
 foreach my $kwd (
 		 "`celldefine", "`default_nettype", "`define", "`else",
@@ -167,15 +176,45 @@ foreach my $kwd (
 		 "`unconnected_drive", "`undef",
 		 # Commercial Extensions
 		 "`protected", "`endprotected",
-		 ) { $Keyword{$kwd} = $Compdirect{$kwd} = 1995; }
+		 ) { $Keywords{$kwd}{1995} = $Compdirect{$kwd} = 1995; }
 
 foreach my $kwd (
 		 "`default_nettype", "`elsif", "`undef", "`ifndef",
 		 "`file", "`line",
-		 ) { $Keyword{$kwd} = $Compdirect{$kwd} = 2001; }
+		 ) { $Keywords{$kwd}{2001} = $Compdirect{$kwd} = 2001; }
+
+language_standard ('sv31');  # Default standard
 
 ######################################################################
 #### Keyword utilities
+
+sub language_standard {
+    my $standard = shift;
+    if (defined $standard) {
+	my @subsets;
+	if ($standard eq '1995') {
+	    $Standard = $standard;
+	    @subsets = qw(1995);
+	} elsif ($standard eq '2001') {
+	    $Standard = $standard;
+	    @subsets = qw(1995 2001);
+	} elsif ($standard eq 'sv31') {
+	    $Standard = $standard;
+	    @subsets = qw(1995 2001 sv31);
+	} else {
+	    croak "%Error: Verilog::Language::language_standard passed bad value: $standard,";
+	}
+	# Update keyword list to present language
+	# (We presume the language_standard rarely changes, so it's faster to compute the list.)
+	%Keyword = ();
+	foreach my $ss (@subsets) {
+	    foreach my $kwd (%{$Keywords{$ss}}) {
+		$Keyword{$kwd} = $ss;
+	    }
+	}
+    }
+    return $Standard;
+}
 
 sub is_keyword {
     my $symbol = shift;

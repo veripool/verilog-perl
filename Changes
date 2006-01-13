@@ -7,6 +7,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***     Added vpm --minimum switch.
 
+****	Added Verilog::Language::language_standard to allow setting
+	which language standard (1995,2001,SystemVerilog) is used for keywords.
+
 * Verilog::Language 2.331 2005/10/05
 
 ***     Added vhier example program. [Vasu Arasanipalai]
