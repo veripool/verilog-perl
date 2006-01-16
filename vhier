@@ -41,9 +41,11 @@ autoflush STDERR 1;
 # Option parsing
 my $Opt = new Verilog::Getopt();
 my $Opt_Cells;
+my $Opt_Modules;
 my $Opt_ModFiles;
 my $Opt_InFiles;
 my $Opt_Missing = 1;
+my $Opt_Missing_Modules;
 my $Opt_Xml;
 @ARGV = $Opt->parameter(@ARGV);
 Getopt::Long::config ("no_auto_abbrev","pass_through");
@@ -53,8 +55,10 @@ if (! GetOptions (
 		  "o=s"		=> \$opt_output_filename,
 		  "cells!"	=> \$Opt_Cells,
 		  "module-files!"	=> \$Opt_ModFiles,
+		  "modules!"		=> \$Opt_Modules,
 		  "input-files!"	=> \$Opt_InFiles,
-		  "missing!"	=> \$Opt_Missing,
+		  "missing!"		=> \$Opt_Missing,
+		  "missing-modules!"	=> \$Opt_Missing_Modules,
 		  "xml!"	=> \$Opt_Xml,
 		  "<>"		=> \&parameter,
 		  )) {
@@ -127,6 +131,10 @@ sub vhier {
 	}
     }
 
+    if ($Opt_Modules) {
+	show_module_names($nl, $fh);
+    }
+
     if ($Opt_ModFiles) {
 	show_mod_files($nl, $fh);
     }
@@ -135,6 +143,35 @@ sub vhier {
 	foreach my $filename ($Opt->depend_files) {
 	    printf $fh +("  %s\n",$filename);
 	}
+    }
+
+    if ($Opt_Missing_Modules) {
+	show_missing_module_names($nl,$fh);
+    }
+}
+
+sub show_module_names {
+    my $nl = shift;
+    my $fh = shift;
+    foreach my $mod ($nl->modules_sorted) {
+	print $fh "  ",$mod->name,"\n";
+    }
+}
+
+sub show_missing_module_names {
+    my $nl = shift;
+    my $fh = shift;
+
+    my %miss_names;
+    foreach my $mod ($nl->modules) {
+	foreach my $cell ($mod->cells_sorted) {
+	    if (!$cell->submod) {
+		$miss_names{$cell->submodname} = 1;
+	    }
+	}
+    }
+    foreach my $key (sort (keys %miss_names)) {
+	print $fh "  $key\n";
     }
 }
 
@@ -283,9 +320,17 @@ Show all module filenames in top-down order.  Child modules will always
 appear as low as possible, so that reversing the list will allow bottom-up
 processing of modules.  Unlike input-files, header files are not included.
 
+=item --modules
+
+Show all module names.
+
 =item --nomissing
 
 Do not complain about references to missing modules.
+
+=item --missing-modules
+
+With --nomissing, show all modules that are not found.
 
 =back
 
