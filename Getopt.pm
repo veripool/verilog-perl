@@ -59,6 +59,7 @@ sub new {
 		vcs_style => 1,
 		fileline => 'Command_Line',
 		unparsed => [],
+		define_warnings => 1,
 		@_
 		};
     bless $self, $class;
@@ -443,7 +444,8 @@ sub define {
 	my $params = shift||"";
 	print "Define $token $params= $value\n" if $Debug;
 	my $oldval = $self->{defines}{$token};
-	(!defined $oldval or ($oldval eq $value)) or warn "%Warning: ".$self->fileline().": Redefining `$token\n";
+	(!defined $oldval or ($oldval eq $value) or !$self->{define_warnings})
+	    or warn "%Warning: ".$self->fileline().": Redefining `$token\n";
 	if ($params) {
 	    $self->{defines}{$token} = [$value, $params];
 	} else {
@@ -455,8 +457,22 @@ sub undef {
     my $self = shift;
     my $token = shift;
     my $oldval = $self->{defines}{$token};
-    (defined $oldval) or carp "%Warning: ".$self->fileline().": No definition to undef for $token,";
+    (defined $oldval or !$self->{define_warnings})
+	or carp "%Warning: ".$self->fileline().": No definition to undef for $token,";
     delete $self->{defines}{$token};
+}
+
+sub remove_defines {
+    my $self = shift;
+    my $sym = shift;
+    my $val = "x";
+    while (defined $val) {
+	last if $sym eq $val;
+	(my $xsym = $sym) =~ s/^\`//;
+	$val = $self->defvalue_nowarn($xsym);  #Undef if not found
+	$sym = $val if defined $val;
+    }
+    return $sym;
 }
 
 ######################################################################
@@ -600,6 +616,10 @@ Returns reference to list of libraries.  With argument, adds that library.
 
 Returns reference to list of module directories.  With argument, adds that
 directory.
+
+=item $self->remove_defines ( $token )
+
+Return string with any definitions in the token removed.
 
 =item $self->undef ( $token )
 
