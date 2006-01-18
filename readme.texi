@@ -48,7 +48,7 @@ and parameters across many verilog files at once.
 @samp{vppp} is a Verilog preprocessor.  Low level classes allow
 preprocessing inside of Perl or C++ programs as a standard stream.
 
-@samp{vhier} will report hiearchy information, such as all files in a
+@samp{vhier} will report hierarchy information, such as all files in a
 design.
 
 Also included is @samp{vpm} to convert macros that look like pli calls,

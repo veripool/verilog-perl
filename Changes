@@ -25,7 +25,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	$uassert_info now uses __message_on. [Vasu Arasanipalai]
 
-****	Fix preprocessor substitution of quoted parameterized defines.
+****	Fix preprocessor substitution of quoted parametrized defines.
 
 * Verilog::Language 2.321 2005/08/03
 
@@ -266,7 +266,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 **	Added the Verilog::Netlist package.
 	This allows for simple scripts to extract pins, module
-	hiearchy, etc from interconnected Verilog files.
+	hierarchy, etc from interconnected Verilog files.
 
 ***	Added Parser reset() method for clearing parse states
 	for new files.  [Joe Panec]

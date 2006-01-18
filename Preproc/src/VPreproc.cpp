@@ -194,7 +194,7 @@ string VPreprocImp::defineSubst() {
     // and would make recursive definitions and parameter handling nasty.
     //
     // Note we parse the definition parameters and value here.  If a
-    // parameterized define is used many, many times, we could cache the
+    // parametrized define is used many, many times, we could cache the
     // parsed result.
     if (debug()) {
 	cout<<"defineSubstIn  `"<<m_defName<<" "<<m_defParams<<endl;
@@ -653,7 +653,7 @@ int VPreprocImp::getToken() {
 		    goto next_tok;
 		}
 		else {  // Found, with parameters
-		    if (debug()) cout<<"Defref `"<<name<<" => parameterized"<<endl;
+		    if (debug()) cout<<"Defref `"<<name<<" => parametrized"<<endl;
 		    m_defName = name;
 		    m_defParams = params;
 		    m_state = ps_DEFPAREN;  m_stateFor = tok;

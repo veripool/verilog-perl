@@ -32,7 +32,7 @@ chdir 'test_dir';
 if ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
     run_system (# We use VCS, insert your simulator here
 		"$ENV{VCS_HOME}/bin/vcs"
-		# vpm uses `pli to point to the hiearchy of the pli module
+		# vpm uses `pli to point to the hierarchy of the pli module
 		." +define+pli=pli"
 		# vpm uses `__message_on to point to the message on variable
 		." +define+__message_on=pli.message_on"
@@ -51,7 +51,7 @@ if ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
 elsif ($ENV{NC_ROOT} && -d "$ENV{NC_ROOT}/tools") {
     run_system ("ncverilog"
 		." -q"
-		# vpm uses `pli to point to the hiearchy of the pli module
+		# vpm uses `pli to point to the hierarchy of the pli module
 		." +define+pli=pli"
 		# vpm uses `__message_on to point to the message on variable
 		." +define+__message_on=pli.message_on"

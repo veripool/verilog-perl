@@ -589,7 +589,7 @@ vrename - change signal names across many Verilog files
 =head1 DESCRIPTION
 
 Vrename will allow a signal to be changed across all levels of the
-design hiearchy using a three step process.  (It actually includes
+design hierarchy using a three step process.  (It actually includes
 module names, macros, and other definitions, so those can be changed too.)
 
 First, use
