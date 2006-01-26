@@ -439,7 +439,8 @@ sub parse {
 		$self->operator ($token);
 	    }
 	    elsif (($text =~ s/^([0-9]*'\ *[Ss]?\ *[BHODbhod]\ *[0-9A-FXZa-fxz_?]+)//)    #'
-				 || ($text =~ s/^([0-9]+[0-9a-fA-F_]*)// )) {
+		   || ($text =~ s/^([0-9]+[0-9a-fA-F_]*)// )
+		   || ($text =~ s/^('\ *[01xXzZ])//) ) { #' SystemVerilog
 		my $token = $1;
 		print "GotaNUMBER $token\n"    if ($Debug);
 		$self->number ($token);
