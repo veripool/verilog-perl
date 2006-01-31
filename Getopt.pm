@@ -36,6 +36,7 @@ $VERSION = '2.340';
 foreach ( '.', '..',
 	  'CVS',
 	  '.svn',
+	  '.snapshot',
 	  'blib',
 	  ) {
     $Skip_Basenames{$_} = 1;
