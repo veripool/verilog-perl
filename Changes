@@ -7,6 +7,10 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add SystemVerilog `0, `1, `x, `z.  [John Tseng]
 
+****	Fix module #() parameter declarations.  [Andy Kuo]
+
+****	Fix "output reg" and "output wire" declarations.  [Andy Kuo]
+
 * Verilog::Language 2.340 2006/01/16
 
 ***     Added vpm --minimum switch.

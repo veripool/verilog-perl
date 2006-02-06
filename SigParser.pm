@@ -283,8 +283,15 @@ sub keyword {
     if ($token eq 'signed') {
 	$self->{is_signed} = 1;
 	return;	  # Ignore rest of code, need to pickup input/output
+    } 
+    if ($token eq 'reg' || $token eq 'wire') {
+	my $pkw = $self->{last_keyword};
+	if ($pkw eq 'input' || $pkw eq 'output' || $pkw eq 'inout') {
+	    return;	  # Treat "output reg/wire" as just a "output"
+	}
     }
     if ($self->_non_pp_line()) {
+	$self->{prelast_keyword} = $self->{last_keyword};
 	$self->{last_keyword} = $self->{attr_keyword} = $token;
 	@{$self->{last_symbols}} = ();
 	$self->{last_vectors} = "";
@@ -384,7 +391,7 @@ sub operator {
 
     my $lkw = $self->{last_keyword};
 
-    #print "Op $token\n" if $Debug;
+    print "Op $token   IP$self->{in_ports} PA$self->{in_param_assign}  LKW $lkw\n" if $Debug;
 
     if ($self->_non_pp_line()) {
 	if ($token eq "{") { $self->{bracket_level} ++; }
@@ -402,7 +409,7 @@ sub operator {
 	elsif ($self->{in_param_assign}) {
 	    if ($token eq ")" && $self->{paren_level}==0) {
 		$self->{in_param_assign} = 0;
-		$self->{last_keyword} = "";
+		$self->{last_keyword} = $self->{param_pre_keyword};
 		$self->{last_symbols} = $self->{param_pre_symbols};
 	    }
 	    $self->{last_param} = $self->{last_param} . $token;
@@ -423,7 +430,8 @@ sub operator {
 	    $self->{is_inst_ok} = 0;
 	    $self->{is_pin_ok} = 1;
 	}
-	elsif (($token eq "(" || $token eq ";")
+	elsif ((($token eq "(" && !$self->{possibly_in_param_assign})
+		|| $token eq ";")
 	       && ($lkw eq "module" || $lkw eq "primitive")) {
 	    my $mod = shift @{$self->{last_symbols}};
 	    $self->{last_module} = $mod;
@@ -516,6 +524,7 @@ sub operator {
 		    $self->{is_pin_ok} = 0;
 		    $self->{in_ports} = 0;
 		    $self->{got_preproc} = 0;
+		    $self->{possibly_in_param_assign} = 0;
 		}
 		elsif ( $token eq "=") {
 		    $self->{is_signal_ok} = 0;
@@ -542,6 +551,7 @@ sub operator {
 	    $self->{in_param_assign} = 1;
 	    $self->{possibly_in_param_assign} = 0;
 	    $self->{param_pre_symbols} = [@{$self->{last_symbols}}];
+	    $self->{param_pre_keyword} = $self->{last_keyword};
 	    $self->{last_param} = $self->{last_param} . $token;
 	}
 	elsif ($token eq ")" && 

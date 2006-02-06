@@ -9,7 +9,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 8 }
+BEGIN { plan tests => 10 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::SigParser::Debug = 1;
@@ -24,6 +24,10 @@ my $n2 = check ('test_dir/42.dmp', 'verilog/pinorder.v');
 ok(1);
 ok(files_identical("test_dir/42.dmp", "t/42_dumpcheck_2.out"));
 ok(files_identical("test_dir/42.dmp.v", "t/42_dumpcheck_2v.out"));
+
+check ('test_dir/42_v2k.dmp', 'verilog/v_v2k.v', );
+ok(1);
+ok(files_identical("test_dir/42_v2k.dmp", "t/42_dumpcheck_v2k.out"));
 
 print "Edit tests\n";
 $n2->find_module("pinorder4")->find_cell("foo3")->delete;
