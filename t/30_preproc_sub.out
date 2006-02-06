@@ -4,28 +4,36 @@ verilog/inc2.v:1:
 verilog/inc2.v:1: `line 1 "verilog/inc1.v" 0
 verilog/inc2.v:1: 
 verilog/inc2.v:1: `line 1 "verilog/inc2.v" 1
-verilog/inc2.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
-verilog/inc2.v:2: // This file ONLY is placed into the Public Domain, for any use,
-verilog/inc2.v:3: // without warranty, 2000-2006 by Wilson Snyder.
+COMMENT: // DESCRIPTION: Verilog::Preproc: Example source code
+verilog/inc2.v:1:  /*CMT*/ 
+COMMENT: // This file ONLY is placed into the Public Domain, for any use,
+verilog/inc2.v:2:  /*CMT*/ 
+COMMENT: // without warranty, 2000-2006 by Wilson Snyder.
+verilog/inc2.v:3:  /*CMT*/ 
 verilog/inc2.v:4: At file verilog/inc2.v  line 4
 verilog/inc3.v:1:  
 verilog/inc3.v:1: `line 5 "verilog/inc2.v" 0
 verilog/inc3.v:1: 
 verilog/inc3.v:1: `line 1 "verilog/inc3.v" 1
-inc3_a_filename_from_line_directive:2: // DESCRIPTION: Verilog::Preproc: Example source code
-inc3_a_filename_from_line_directive:3: // This file ONLY is placed into the Public Domain, for any use,
-inc3_a_filename_from_line_directive:4: // without warranty, 2000-2006 by Wilson Snyder.
+COMMENT: // DESCRIPTION: Verilog::Preproc: Example source code
+inc3_a_filename_from_line_directive:2:  /*CMT*/ 
+COMMENT: // This file ONLY is placed into the Public Domain, for any use,
+inc3_a_filename_from_line_directive:3:  /*CMT*/ 
+COMMENT: // without warranty, 2000-2006 by Wilson Snyder.
+inc3_a_filename_from_line_directive:4:  /*CMT*/ 
 inc3_a_filename_from_line_directive:5: 
 inc3_a_filename_from_line_directive:6:  
 inc3_a_filename_from_line_directive:7:   
 inc3_a_filename_from_line_directive:8:   
-inc3_a_filename_from_line_directive:9:   // FOO
+COMMENT: // FOO
+inc3_a_filename_from_line_directive:9:    /*CMT*/ 
 inc3_a_filename_from_line_directive:10:   At file inc3_a_filename_from_line_directive  line 10
 inc3_a_filename_from_line_directive:11: 
 inc3_a_filename_from_line_directive:12:    
 inc3_a_filename_from_line_directive:13: 
 inc3_a_filename_from_line_directive:13: `line 13 "inc3_a_filename_from_line_directive" 0
-inc3_a_filename_from_line_directive:13:  // guard
+COMMENT: // guard
+inc3_a_filename_from_line_directive:13:   /*CMT*/ 
 inc3_a_filename_from_line_directive:14: 
 inc3_a_filename_from_line_directive:15:  
 inc3_a_filename_from_line_directive:16:   
@@ -41,22 +49,33 @@ verilog/inc2.v:6:
 verilog/inc2.v:6: `line 6 "verilog/inc2.v" 2
 verilog/inc2.v:6: 
 verilog/inc2.v:6: `line 1 "verilog/inc1.v" 0
-verilog/inc1.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
-verilog/inc1.v:2: // This file ONLY is placed into the Public Domain, for any use,
-verilog/inc1.v:3: // without warranty, 2000-2006 by Wilson Snyder.
+COMMENT: // DESCRIPTION: Verilog::Preproc: Example source code
+verilog/inc1.v:1:  /*CMT*/ 
+COMMENT: // This file ONLY is placed into the Public Domain, for any use,
+verilog/inc1.v:2:  /*CMT*/ 
+COMMENT: // without warranty, 2000-2006 by Wilson Snyder.
+verilog/inc1.v:3:  /*CMT*/ 
 verilog/inc1.v:4: text.
 verilog/inc1.v:5: 
-verilog/inc1.v:6:  /*but not *//* or this either */
-verilog/inc1.v:7:  // but not
-verilog/inc1.v:8:  foo  bar 
-verilog/inc1.v:9:  foobar2 
+COMMENT: /*but not */
+COMMENT: /* or this either */
+verilog/inc1.v:6:  
+COMMENT: // but not
+verilog/inc1.v:7:  
+COMMENT: /*CMT*/
+COMMENT: /*CMT*/
+verilog/inc1.v:8:  foo   /*CMT*/   bar     /*CMT*/  
+COMMENT: /*CMT*/
+verilog/inc1.v:9:  foobar2   /*CMT*/  
 verilog/inc1.v:10: 
 verilog/inc1.v:11:  
 verilog/inc1.v:13: 
-verilog/inc1.v:14: /*******COMMENT*****/
+COMMENT: /*******COMMENT*****/
+verilog/inc1.v:14:  /*CMT*/ 
 verilog/inc1.v:15:  first part    		second part 
 verilog/inc1.v:16: 
-verilog/inc1.v:17: //===========================================================================
+COMMENT: //===========================================================================
+verilog/inc1.v:17:  /*CMT*/ 
 verilog/inc1.v:18:  
 verilog/inc1.v:19: 
 verilog/inc1.v:20:  
@@ -92,8 +111,10 @@ verilog/inc1.v:47:
 verilog/inc1.v:49:  $c("Zap(\"",bug1,"\");"); ;
 verilog/inc1.v:50:  $c("Zap(\"","bug2","\");"); ;
 verilog/inc1.v:51: 
-verilog/inc1.v:52: /* Define inside comment: `DEEPER and `WITHTICK */
-verilog/inc1.v:53: // More commentary: `zap(bug1); `zap("bug2");
+COMMENT: /* Define inside comment: `DEEPER and `WITHTICK */
+verilog/inc1.v:52:  /*CMT*/ 
+COMMENT: // More commentary: `zap(bug1); `zap("bug2");
+verilog/inc1.v:53:  /*CMT*/ 
 verilog/inc1.v:54: 
 verilog/inc1.v:55:  
 verilog/inc1.v:56:  

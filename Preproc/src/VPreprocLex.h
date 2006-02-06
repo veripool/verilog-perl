@@ -92,6 +92,7 @@ void yy_delete_buffer( YY_BUFFER_STATE b );
 //======================================================================
 
 #define KEEPCMT_SUB 2
+#define KEEPCMT_EXP 3
 
 //======================================================================
 /// Class entry for each per-lexter state

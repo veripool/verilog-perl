@@ -414,7 +414,8 @@ int VPreprocImp::getToken() {
 	if (tok==VP_WHITE) return (tok);
 	if (tok==VP_COMMENT) {
 	    if (!m_off && m_lexp->m_keepComments) {
-		if (m_lexp->m_keepComments == KEEPCMT_SUB) {
+		if (m_lexp->m_keepComments == KEEPCMT_SUB
+		    || m_lexp->m_keepComments == KEEPCMT_EXP) {
 		    string rtn; rtn.assign(yytext,yyleng);
 		    m_preprocp->comment(rtn);
 		} else {

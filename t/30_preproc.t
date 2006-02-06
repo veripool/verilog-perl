@@ -10,7 +10,7 @@ use IO::File;
 use strict;
 use Test;
 
-BEGIN { plan tests => 8 }
+BEGIN { plan tests => 10 }
 BEGIN { require "t/test_utils.pl"; }
 
 #######################################################################
@@ -51,7 +51,7 @@ ok(1);
 
     my $ln = 1;
     while (defined(my $line = $pp->getline())) {
-	print "LINE: $line";
+	#print "LINE: $line";
 	print $fhout $pp->filename.":".$pp->lineno.": ".$line;
 	die if ++$ln > 2000;
     }
@@ -61,13 +61,19 @@ ok(1);
     ok(files_identical("test_dir/inc.out", "t/30_preproc.out"));
 }
 
-{
+test ('_sub', keep_comments=>'sub',);
+test ('_on',  keep_comments=>1,);
+
+sub test {
+    my $id = shift;
+    my @args = @_;
+
     my $opt = prep();
-    my $pp = new MyPreproc (options=>$opt, keep_comments=>'sub',);
+    my $pp = new MyPreproc (options=>$opt, @args);
     $pp->open("inc1.v");
     $pp->open("inc2.v");
 
-    my $fhout = IO::File->new(">test_dir/inc2.out");
+    my $fhout = IO::File->new(">test_dir/inc${id}.out");
     $::OUTTO = $fhout;
     while (defined(my $line = $pp->getline())) {
 	print $fhout $pp->filename.":".$pp->lineno.": ".$line;
@@ -75,6 +81,6 @@ ok(1);
     $fhout->close();
     ok(1);
 
-    ok(files_identical("test_dir/inc2.out", "t/30_preproc2.out"));
+    ok(files_identical("test_dir/inc${id}.out", "t/30_preproc${id}.out"));
 }
 

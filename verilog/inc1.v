@@ -51,6 +51,9 @@ $display(`msg(left side, right side))
 `zap(bug1);
 `zap("bug2");
 
+/* Define inside comment: `DEEPER and `WITHTICK */
+// More commentary: `zap(bug1); `zap("bug2");
+
 `define EMPTY_TRUE
 `ifndef EMPTY_TRUE
   `error "Empty is still true"

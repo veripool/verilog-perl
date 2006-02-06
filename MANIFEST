@@ -38,7 +38,8 @@ t/20_getopt.opt
 t/20_getopt.t
 t/30_preproc.out
 t/30_preproc.t
-t/30_preproc2.out
+t/30_preproc_on.out
+t/30_preproc_sub.out
 t/35_sigparser.out
 t/35_sigparser.t
 t/40_netlist.t

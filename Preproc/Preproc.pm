@@ -42,6 +42,7 @@ sub new {
     bless $self, $class;
     # Sets $self->{_cthis}
     $self->{keep_comments} = 2 if ($self->{keep_comments} eq 'sub');
+    $self->{keep_comments} = 3 if ($self->{keep_comments} eq 'expand'); #TBD
     $self->_new(
 		$self,
 		$self->{keep_comments},
