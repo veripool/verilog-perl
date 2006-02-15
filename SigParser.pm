@@ -494,7 +494,9 @@ sub operator {
 			    || $lkw eq "tri0" || $lkw eq "tri1"
 			    || $lkw eq "supply0" || $lkw eq "supply1")
 			)
-		       && $self->{is_signal_ok}) {
+		       && $self->{is_signal_ok}
+		       && !$self->{last_task}
+		       && !$self->{last_function}) {
 		    my $sig;
 		    foreach $sig (@{$self->{last_symbols}}) {
 			my $vec = "";

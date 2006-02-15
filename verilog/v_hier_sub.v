@@ -27,4 +27,9 @@ module v_hier_sub (/*AUTOARG*/
       end
    endgenerate
 
+   function foo;
+      input not_part_of_pinlist;
+      foo = not_part_of_pinlist;
+   endfunction
+
 endmodule
