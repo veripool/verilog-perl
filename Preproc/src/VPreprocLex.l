@@ -109,7 +109,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 <DEFMODE>[^\/\*\n\m\\]+	|
 <DEFMODE>[\\][^\n]	|
 <DEFMODE>.		{ appendDefValue(yytext,yyleng); }
-<DEFMODE>[\\]\n		{ linenoInc(); appendDefValue(" ",1); }
+<DEFMODE>[\\]\n		{ linenoInc(); appendDefValue("\n",1); }
 
 	/* Define arguments */
 <ARGMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }

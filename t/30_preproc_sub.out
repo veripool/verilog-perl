@@ -69,6 +69,7 @@ COMMENT: /*CMT*/
 verilog/inc1.v:9:  foobar2   /*CMT*/  
 verilog/inc1.v:10: 
 verilog/inc1.v:11:  
+verilog/inc1.v:11: 
 verilog/inc1.v:13: 
 COMMENT: /*******COMMENT*****/
 verilog/inc1.v:14:  /*CMT*/ 
@@ -108,6 +109,7 @@ verilog/inc1.v:44:
 verilog/inc1.v:45:  bar_suffix   
 verilog/inc1.v:46: 
 verilog/inc1.v:47:  
+verilog/inc1.v:47: 
 verilog/inc1.v:49:  $c("Zap(\"",bug1,"\");"); ;
 verilog/inc1.v:50:  $c("Zap(\"","bug2","\");"); ;
 verilog/inc1.v:51: 

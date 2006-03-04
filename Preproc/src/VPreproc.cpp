@@ -479,7 +479,16 @@ int VPreprocImp::getToken() {
 	    }
 	}
 	case ps_DEFVALUE: {
+ 	    static string newlines;
+	    newlines = "\n";  // Always start with trailing return
 	    if (tok == VP_DEFVALUE) {
+		// Remove returns
+		for (unsigned i=0; i<m_lexp->m_defValue.length(); i++) {
+		    if (m_lexp->m_defValue[i] == '\n') {
+			m_lexp->m_defValue[i] = ' ';
+			newlines += "\n";
+		    }
+		}
 		if (!m_off) {
 		    string params;
 		    if (m_lexp->m_defValue=="" || isspace(m_lexp->m_defValue[0])) {
@@ -515,7 +524,8 @@ int VPreprocImp::getToken() {
 	    m_state = ps_TOP;
 	    // DEFVALUE is terminated by a return, but lex can't return both tokens.
 	    // Thus, we emit a return here.
-	    yytext="\n"; yyleng=1; return(VP_WHITE); 
+	    yytext=(char*)(newlines.c_str()); yyleng=newlines.length();
+	    return(VP_WHITE); 
 	}
 	case ps_DEFPAREN: {
 	    if (tok==VP_TEXT && yyleng==1 && yytext[0]=='(') {
