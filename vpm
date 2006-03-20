@@ -248,13 +248,14 @@ sub assert_req_ack {
     
     # Output it
     message_header();
+    sendout("if (`__message_on) begin ");  # Need to wait till after reset, so FSM doesn't start
     sendout("casez({($busy),($req),($ack)}) ");
     sendout(" 3'b000: ;");
     sendout(" 3'b010: $busy<=1'b1;");
-    sendout(" 3'b011: if (`__message_on) "); error(0,"\"Unexpected $req coincident with $ack\\n\"");
-    sendout(" 3'b001: if (`__message_on) "); error(0,"\"Unexpected $ack with no request pending\\n\"");
+    sendout(" 3'b011: "); error(0,"\"Unexpected $req coincident with $ack\\n\"");
+    sendout(" 3'b001: "); error(0,"\"Unexpected $ack with no request pending\\n\"");
     sendout(" 3'b100: ;");
-    sendout(" 3'b11?: if (`__message_on) "); error(0,"\"Unexpected $req with request already pending\\n\"");
+    sendout(" 3'b11?: "); error(0,"\"Unexpected $req with request already pending\\n\"");
     sendout(" 3'b101: $busy<=1'b0;");
     sendout("endcase ");
     
@@ -262,7 +263,7 @@ sub assert_req_ack {
 	sendout(" if (($req)||($busy)) begin");
 	sendout(" if (($busy)) begin");
 	for (my $n=0; $n<=$#params; $n++) {
-	    sendout(" if ($dholds[$n] != ^($params[$n]) && (`__message_on)) ");
+	    sendout(" if ($dholds[$n] != ^($params[$n])) ");
 	    error(0,"\"Unexpected transition of $params[$n] during transaction\\n\"");
 	}
 	sendout(" end");
@@ -272,6 +273,7 @@ sub assert_req_ack {
 	}
 	sendout(" end ");
     }
+    sendout(" end ");
 
     message_trailer();
     $ReqAck_Num++;

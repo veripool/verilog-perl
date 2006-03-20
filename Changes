@@ -5,11 +5,6 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 2.34***
 
-***     Vpm's $uassert_req_ack now uses `__message_on to control
-	printing assertions, rather then around the entire block.
-	This may result in additional warnings, but works better if
-	`__message_on is enabled post-reset.
-
 ***	SigParser and the Netlister now ignore function and task IOs.
 
 ****	Preproc line numbers being off due to multi-line defines.  [Mat Zeno]
