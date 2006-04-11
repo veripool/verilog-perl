@@ -352,6 +352,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ----------------------------------------------------------------------
 $Id$
+DESCRIPTION: Documentation on change history for this package
 ----------------------------------------------------------------------
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
