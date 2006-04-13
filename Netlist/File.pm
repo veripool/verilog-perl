@@ -53,7 +53,7 @@ sub new {
     my %params = (@_);	# filename=>
 
     # A new file; make new information
-    $params{fileref} or die "No fileref parameter?";
+    $params{fileref} or die "%Error: No fileref parameter?";
     $params{netlist} = $params{fileref}->netlist;
     my $parser = $class->SUPER::new (%params,
 				     modref=>undef,	# Module being parsed now
@@ -64,7 +64,7 @@ sub new {
     push @opt, (options=>$params{netlist}{options}) if $params{netlist}{options};
     my $meta = $params{metacomment};
     if ($meta) {
-	die "'metacomment' arg of Netlist or read_file() must be a hash,"
+	die "%Error: 'metacomment' arg of Netlist or read_file() must be a hash,"
 	    unless (ref($meta) eq 'HASH');
 	push @opt, metacomments=>[ grep({ $meta->{$_} } keys %$meta) ];
 	push @opt, keep_comments=>1;

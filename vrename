@@ -157,7 +157,7 @@ sub debug {
 sub parameter {
     my $param = shift;
     push @Files, $param;
-    (-r $param) or die "Can't open $param";
+    (-r $param) or die "%Error: Can't open $param";
 }
 
 ######################################################################
@@ -304,7 +304,7 @@ sub changes_read {
 	    # ignore
 	}
 	else {
-	    die "$filename $.: Can't parse \"$line\"\n";
+	    die "%Error: $filename $.: Can't parse \"$line\"\n";
 	}
     }
 
@@ -423,7 +423,7 @@ sub verilog_change_sig {
 
     # Read in the whole file in a swath
     local $/ = undef;
-    open (VFILE, "<$filename") or die "Can't read $filename.";
+    open (VFILE, "<$filename") or die "%Error: Can't read $filename.";
     my $filestrg = <VFILE>;
     close VFILE;
 

@@ -107,7 +107,7 @@ my @files = ();
 my @instance_tests_list = ();
 
 my $Prog_Mtime = 0;	# Time program last changed, so we bag cache on change
-(-r "$RealBin/vpm") or die "Where'd my source code go?";
+(-r "$RealBin/vpm") or die "%Error: Where'd the vpm source code go?";
 $Prog_Mtime = (stat("$RealBin/vpm"))[9];
 
 autoflush STDOUT 1;
@@ -376,7 +376,7 @@ sub message_write {
 	$task = ($Opt_Stop ? '$stop;' : "`pli.errors = `pli.errors+1;");
     } elsif ($char eq "%%W") {
 	$task = ($Opt_Stop ? '$stop;' : "`pli.warnings = `pli.warnings+1;");
-    } else { die "Unknown message character class '$char'\n"; }
+    } else { die "%Error: Unknown message character class '$char'\n"; }
 
     my $ids = "";
     my $idm = "";
