@@ -487,4 +487,6 @@ L<Verilog::Netlist::Pin>,
 L<Verilog::Netlist::Port>,
 L<Verilog::Netlist::Subclass>
 
+And the L<http://www.veripool.com/verilog-mode.html>Verilog-Mode package for Emacs.
+
 =cut

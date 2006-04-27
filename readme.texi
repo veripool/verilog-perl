@@ -89,6 +89,9 @@ The latest version is available at
 Download the latest package from that site, and decompress.
 @samp{gunzip Verilog-Perl_version.tar.gz ; tar xvf Verilog-Perl_version.tar}
 
+You may also want to try the AUTO features present in
+L<http://www.veripool.com/verilog-mode.html>Verilog-Mode.
+
 @node Supported Systems, Installation, Obtaining Distribution, Top
 @section Supported Systems
 

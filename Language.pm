@@ -109,6 +109,8 @@ L<Verilog::Parser>,
 L<Verilog::ParseSig>, 
 L<Verilog::Getopt>
 
+And the L<http://www.veripool.com/verilog-mode.html>Verilog-Mode package for Emacs.
+
 =cut
 ######################################################################
 
