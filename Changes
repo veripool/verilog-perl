@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 2.34***
 
+***	Vpm now emits $timeformat when passed the --timeformat-units switch.
+
 ***	SigParser and the Netlister now ignore function and task IOs.
 
 ****	Preproc line numbers being off due to multi-line defines.  [Mat Zeno]

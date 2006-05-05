@@ -101,6 +101,8 @@ my $Last_Vericov = 0;	# Last run's Opt_Vericov
 my $Last_Chiponly = 0;	# Last run's Opt_Chiponly
 my $Opt_Minimum;	# Include `__message_minimum
 my @Opt_Exclude;
+my $Opt_Timeformat_Units = undef;
+my $Opt_Timeformat_Precision = 0;
 
 my $Total_Files = 0;
 my @files = ();
@@ -116,19 +118,21 @@ $Opt = new Verilog::Getopt();
 @ARGV = $Opt->parameter(@ARGV);	# Strip -y, +incdir+, etc
 
 if (! GetOptions (
-		  "help"	=> \&usage,
-		  "debug"	=> \&debug,
+		  "-o=s"	=> \$output_dirname,
 		  "allfiles!"	=> \$Opt_AllFiles,
-		  "quiet!"	=> \$Opt_Quiet,
+		  "chiponly!"	=> \$Opt_Chiponly,	# For makeesim only
 		  "date!"	=> \$Opt_Date,
+		  "debug"	=> \&debug,
+		  "exclude=s"	=> sub {shift; push @Opt_Exclude, shift;},
+		  "help"	=> \&usage,
+		  "minimum!"	=> \$Opt_Minimum,
+		  "nopli!"	=> \$Opt_NoPli,
+		  "quiet!"	=> \$Opt_Quiet,
+		  "stop!"	=> \$Opt_Stop,
+		  "timeformat-precision=s" => \$Opt_Timeformat_Precision,
+		  "timeformat-units=s"	=> \$Opt_Timeformat_Units,
 		  "vericov!"	=> \$Opt_Vericov,
 		  "verilator!"	=> \$Opt_Verilator,
-		  "stop!"	=> \$Opt_Stop,
-		  "chiponly!"	=> \$Opt_Chiponly,	# For makeesim only
-		  "-o=s"	=> \$output_dirname,
-		  "exclude=s"	=> sub {shift; push @Opt_Exclude, shift;},
-		  "nopli!"	=> \$Opt_NoPli,
-		  "minimum!"	=> \$Opt_Minimum,
 		  "<>"		=> \&parameter,
 		  )) {
     usage();
@@ -380,7 +384,10 @@ sub message_write {
 
     my $ids = "";
     my $idm = "";
-    sendout ("begin \$write (\"[%0t] ${char}:$ids${lineinfo} ");
+    sendout ("begin");
+    sendout (" \$timeformat($Opt_Timeformat_Units, $Opt_Timeformat_Precision,\"\",20);")
+	if defined $Opt_Timeformat_Units;
+    sendout (" \$write (\"[%0t] ${char}:$ids${lineinfo} ");
     my $par = $params[2];
     $par =~ s/^\s*\"//;
     sendout ("$par,\$time$idm$otherargs");
@@ -1229,6 +1236,17 @@ Suppress messages about what files are being preprocessed.
 By default, $error and $warn insert a $stop statement.  With --nostop, this
 is replaced by incrementing a variable, which may then be used to
 conditionally halt simulation.
+
+=item timeformat-units I<units>
+
+If specified, include Verilog $timeformat calls before all messages.  Use
+the provided argument as the units.  Units is in powers of 10, so -9
+indicates to use nanoseconds.
+
+=item timeformat-precision I<prec>
+
+When using --timeformat-units, use this as the precision value, the number
+of digits after the decimal point.  Defaults to zero.
 
 =item --vericov
 
