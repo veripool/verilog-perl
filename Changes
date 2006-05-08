@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Preproc line numbers being off due to multi-line defines.  [Mat Zeno]
 
+****	Fix `include `DEFINE.
+
 * Verilog::Language 2.341 2006/02/06
 
 ***	Add SystemVerilog `0, `1, `x, `z.  [John Tseng]

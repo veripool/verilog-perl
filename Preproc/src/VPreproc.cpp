@@ -583,6 +583,10 @@ int VPreprocImp::getToken() {
 		m_lexp->setStateIncFilename();
 		goto next_tok;
 	    }
+	    else if (tok==VP_DEFREF) {
+		// Expand it, then state will come back here
+		break;
+	    }
 	    else {
 		m_state = ps_TOP;
 		error((string)"Expecting include filename. Found: "+tokenName(tok)+"\n");
