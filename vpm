@@ -656,7 +656,7 @@ sub vpm_process {
 	    $insert .= "$type $sym; initial $sym = $value;";
 	}
 	if ($insert) {
-	    $Sendout =~ s%/\*vpm symbols $mod\*/%/*vpm*/$insert/*vpm*/%
+	    $Sendout =~ s%/\*vpm symbols $mod\*/%/*vpm*/$insert/*vpm*/%g
 		or die "vpm %Error: $filename: Couldn't find symbol insertion point in $mod\n";
 	}
     }
