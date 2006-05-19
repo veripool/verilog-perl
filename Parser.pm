@@ -218,7 +218,7 @@ use Verilog::Language;
 # Other configurable settings.
 $Debug = 0;		# for debugging
 
-$VERSION = '2.341';
+$VERSION = '2.350';
 
 #######################################################################
 

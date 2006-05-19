@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 2.34***
+* Verilog::Language 2.350 2006/05/19
 
 ***	Vpm now emits $timeformat when passed the --timeformat-units switch.
 
