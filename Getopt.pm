@@ -363,7 +363,7 @@ sub file_path {
 	foreach my $postfix ("", @{$self->{libext}}) {
 	    my $found = "$dir/$filename$postfix";
 	    next if $checked{$found}; $checked{$found}=1;  # -r can be quite slow
-	    if (-r $found && !-d $filename) {
+	    if (-r $found && !-d $found) {
 		$self->{_file_path_cache}{$filename} = $found;
 		$self->depend_files($found);
 		return $found;
