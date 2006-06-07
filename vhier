@@ -57,6 +57,7 @@ if (! GetOptions (
 		  "module-files!"	=> \$Opt_ModFiles,
 		  "modules!"		=> \$Opt_Modules,
 		  "input-files!"	=> \$Opt_InFiles,
+		  "language=s"		=> sub { shift; Verilog::Language::language_standard(shift); },
 		  "missing!"		=> \$Opt_Missing,
 		  "missing-modules!"	=> \$Opt_Missing_Modules,
 		  "xml!"	=> \$Opt_Xml,
@@ -313,6 +314,12 @@ Show the module name of all cells in top-down order.
 
 Show all input filenames.  Copying all of these files should result in only
 those files needed to represent the entire design.
+
+=item --language-standard <1995|2001|sv31>
+
+Set the language standard for the files.  This determines which tokens are
+signals versus keywords, such as the ever-common "do" (data-out signal,
+versus a do-while loop keyword).
 
 =item --module-files
 
