@@ -356,13 +356,14 @@ sub file_path {
     # Check each search path
     # We use both the incdir and moduledir.  This isn't strictly correct,
     # but it's fairly silly to have to specify both all of the time.
-    my %checked = ();
+    my %checked_dir = ();
+    my %checked_file = ();
     foreach my $dir (@{$self->incdir()}, @{$self->module_dir()}) {
-	next if $checked{$dir}; $checked{$dir}=1;  # -r can be quite slow
+	next if $checked_dir{$dir}; $checked_dir{$dir}=1;  # -r can be quite slow
 	# Check each postfix added to the file
 	foreach my $postfix ("", @{$self->{libext}}) {
 	    my $found = "$dir/$filename$postfix";
-	    next if $checked{$found}; $checked{$found}=1;  # -r can be quite slow
+	    next if $checked_file{$found}; $checked_file{$found}=1;  # -r can be quite slow
 	    if (-r $found && !-d $found) {
 		$self->{_file_path_cache}{$filename} = $found;
 		$self->depend_files($found);

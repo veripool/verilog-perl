@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***     Add vhier --language option.  [Sean Nazareth]
 
+****	Fix Getopt::file_path when dir names match file names. [by John Tseng]
+
 * Verilog::Language 2.350 2006/05/19
 
 ***	Vpm now emits $timeformat when passed the --timeformat-units switch.
