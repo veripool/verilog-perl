@@ -83,8 +83,10 @@ front end that is part of Verilator.  See
 @node Obtaining Distribution, Supported Systems, Complete Parsing, Top
 @section Obtaining Distribution
 
-The latest version is available at 
-@uref{http://www.perl.org/CPAN/}
+Verilog-Perl is part of the L<http://www.veripool.com/> free Verilog
+EDA software tool suite.  The latest version is available from
+@uref{http://www.perl.org/CPAN/}, and from
+@uref{http://www.veripool.com/verilog-perl.html}.
 
 Download the latest package from that site, and decompress.
 @samp{gunzip Verilog-Perl_version.tar.gz ; tar xvf Verilog-Perl_version.tar}
