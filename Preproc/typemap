@@ -9,7 +9,7 @@ O_CTHIS
     // SELF->{_cthis} = THIS
     if( sv_isobject(SELF) && (SvTYPE(SvRV(SELF)) == SVt_PVHV) ) {
 	SV **svp = hv_fetch ((HV*)SvRV(SELF), \"_cthis\", 6, 1);
-	sv_setiv(*svp, (IV)( $var ));
+	sv_setiv(*svp, PTR2IV( $var ));
 	XSRETURN_UNDEF;
     } else {
         warn( \"${Package}::$func_name() -- $var is not a blessed HV reference\" );
@@ -20,7 +20,7 @@ INPUT
 O_CTHIS
     if( sv_isobject($arg) && (SvTYPE(SvRV( $arg )) == SVt_PVHV) ) {
         SV **svp = hv_fetch ((HV*)SvRV(( $arg )), \"_cthis\", 6, 0);
-        $var = ($type)SvIV( *svp );
+        $var = INT2PTR($type,SvIV( *svp ));
     } else {
         warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
         XSRETURN_UNDEF;

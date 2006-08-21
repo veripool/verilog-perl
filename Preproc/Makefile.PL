@@ -18,6 +18,11 @@ sub MY::postamble {
 	# Linux: Either way
 	$out .= "LD = g++\n";
     }
+    if ($Config{osname} =~ /cygwin/i || $Config{archname} =~ /cygwin/i) {
+	# Cygwin ExtUtils::MakeMaker ignores our LIBS declaration and says
+	# "No library found for -lstdc++".  Force it.
+	$out .= "LDLOADLIBS += -lstdc++\n";
+    }
     $out .= "CCFLAGS += -Wall -Wno-unused -Werror\n" if $ENV{VERILATOR_AUTHOR_SITE};
     $out .= "OPTIMIZE += -Wno-unused\n" if $ENV{VERILATOR_AUTHOR_SITE};  # Makefile has another -Wall
     $out .= '
