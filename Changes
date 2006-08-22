@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 2.352 2006/08/21
+* Verilog::Language 2.352 2006/08/22
 
 ***	Fix compile errors under Cygwin.  [Mattan Tsachi]
 
