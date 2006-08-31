@@ -37,7 +37,7 @@ YFLAGS = -d -v
 LIBS = -ll -lm
 COPT = -ggdb
 
-CPPFLAGSNOWALL = -MMD -I. -I$(srcdir) $(COPT)
+CPPFLAGSNOWALL = -MMD -MP -I. -I$(srcdir) $(COPT)
 CPPFLAGS = $(CPPFLAGSNOWALL) -Wall -Wno-char-subscripts -Werror
 
 HEADERS = symboltab.h $(wildcard V*.h v*.h)
