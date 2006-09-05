@@ -46,6 +46,7 @@ foreach (
 	 'unused_ok',
 	 '__FILE__',	# Verilator, proposed for Verilog 2005
 	 '__LINE__',	# Verilator, proposed for Verilog 2005
+	 'verilator',
 	 'ms','us','ns','ps','fs',	# Time precision arguments used in `timescale
 	 'a'..'z', 'A'..'Z',		# Single character names (cryptic enough!)
 	 ) {
@@ -182,6 +183,7 @@ sub changes_crypt {
 	if (! defined $Signal_Newname{$sig}
 	    && $sig !~ /\$/
 	    && (! defined $Vrename_Dont_Crypt{$sig})
+	    && !Verilog::Language::is_compdirect("`".$sig)
 	    ) {
 	    my $has_encry = 0;
 	    my $has_uncry = 0;
@@ -207,15 +209,18 @@ sub changes_crypt {
 }
 
 sub random_string {
-    return  sprintf ("%c%c%c%c%c%c",
-		     (rand (26)) + 65,
-		     (rand (26)) + 65,
-		     (rand (26)) + 65,
-		     (rand (26)) + 65,
-		     (rand (26)) + 65,
-		     (rand (26)) + 65,
-		     (rand (26)) + 65,
-		     (rand (26)) + 65);
+    while (1) {
+	my $sig = sprintf ("%c%c%c%c%c%c",
+			   (rand (26)) + ord('a'),
+			   (rand (26)) + ord('a'),
+			   (rand (26)) + ord('a'),
+			   (rand (26)) + ord('a'),
+			   (rand (26)) + ord('a'),
+			   (rand (26)) + ord('a'),
+			   (rand (26)) + ord('a'),
+			   (rand (26)) + ord('a'));
+	return $sig if !Verilog::Language::is_keyword($sig);
+    }
 }
 ######################################################################
 
