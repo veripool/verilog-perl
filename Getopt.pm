@@ -75,7 +75,7 @@ sub parameter_file {
     my $filename = shift;
 
     print "*parameter_file $filename\n" if $Debug;
-    my $fh = IO::File->new($filename) or die "%Error: ".$self->fileline().": $! $filename\n";
+    my $fh = IO::File->new("<$filename") or die "%Error: ".$self->fileline().": $! $filename\n";
     my $hold_fileline = $self->fileline();
     while (my $line = $fh->getline()) {
 	chomp $line;
@@ -292,7 +292,7 @@ sub write_parameters_file {
     my $self = shift;
     my $filename = shift;
     # Write get_parameters to a file
-    my $fh = IO::File->new($filename, "w") or croak "%Error: $! $filename,";
+    my $fh = IO::File->new(">$filename") or croak "%Error: $! writing $filename,";
     my @opts = $self->get_parameters();
     print $fh join("\n",@opts);
     $fh->close;

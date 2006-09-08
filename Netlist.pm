@@ -246,7 +246,7 @@ sub dependency_write {
     my $self = shift;
     my $filename = shift;
 
-    my $fh = IO::File->new(">$filename") or die "%Error: $! $filename\n";
+    my $fh = IO::File->new(">$filename") or die "%Error: $! writing $filename\n";
     print $fh "$filename";
     foreach my $dout (sort (keys %{$self->{_depend_out}})) {
 	print $fh " $dout";
