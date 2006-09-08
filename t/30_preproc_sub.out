@@ -55,7 +55,7 @@ COMMENT: // This file ONLY is placed into the Public Domain, for any use,
 verilog/inc1.v:2:  /*CMT*/ 
 COMMENT: // without warranty, 2000-2006 by Wilson Snyder.
 verilog/inc1.v:3:  /*CMT*/ 
-verilog/inc1.v:4: text.
+verilog/inc1.v:4:    text.
 verilog/inc1.v:5: 
 COMMENT: /*but not */
 COMMENT: /* or this either */

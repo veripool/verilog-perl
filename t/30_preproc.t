@@ -10,7 +10,7 @@ use IO::File;
 use strict;
 use Test;
 
-BEGIN { plan tests => 10 }
+BEGIN { plan tests => 12 }
 BEGIN { require "t/test_utils.pl"; }
 
 #######################################################################
@@ -63,6 +63,7 @@ ok(1);
 
 test ('_sub', keep_comments=>'sub',);
 test ('_on',  keep_comments=>1,);
+test ('_nows', keep_comments=>0, keep_whitespace=>0,);
 
 sub test {
     my $id = shift;

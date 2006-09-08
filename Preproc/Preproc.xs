@@ -48,6 +48,7 @@ class VPreprocXs : public VPreproc {
 public:
     SV*		m_self;	// Class called from
     int		m_keepComments;
+    int		m_keepWhitespace;
     bool	m_lineDirectives;
     bool	m_pedantic;
 
@@ -56,6 +57,7 @@ public:
 
     // Control methods
     virtual int  keepComments() { return m_keepComments; }	// Return comments
+    virtual int  keepWhitespace() { return m_keepWhitespace; }	// Return extra whitespace
     virtual bool lineDirectives() { return m_lineDirectives; }	// Insert `line directives
     virtual bool pedantic() { return m_pedantic; }		// Obey standard; Don't substitute `__FILE__ and `__LINE__
 
@@ -184,12 +186,13 @@ void VPreprocXs::call (
 MODULE = Verilog::Preproc  PACKAGE = Verilog::Preproc
 
 #//**********************************************************************
-#// self->_new (class, keepcmt, linedir, pedantic)
+#// self->_new (class, keepcmt, keepwhite, linedir, pedantic)
 
 static VPreprocXs *
-VPreprocXs::_new (SELF, keepcmt, linedir, pedantic)
+VPreprocXs::_new (SELF, keepcmt, keepwhite, linedir, pedantic)
 SV *SELF
 int keepcmt
+int keepwhite
 int linedir
 int pedantic
 PROTOTYPE: $$$$$
@@ -201,6 +204,7 @@ CODE:
     filelinep->setPreproc(preprocp);
     preprocp->m_self = newSVsv(SELF);
     preprocp->m_keepComments = keepcmt;
+    preprocp->m_keepWhitespace = keepwhite;
     preprocp->m_lineDirectives = linedir;
     preprocp->m_pedantic = pedantic;
     RETVAL = preprocp;

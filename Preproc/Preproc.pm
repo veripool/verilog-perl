@@ -35,6 +35,7 @@ bootstrap Verilog::Preproc;
 sub new {
     my $class = shift;  $class = ref $class if ref $class;
     my $self = {keep_comments=>1,
+		keep_whitespace=>1,
 		line_directives=>1,
 		pedantic=>0,
 		options=>Verilog::Getopt->new(),	# If the user didn't give one, still work!
@@ -46,6 +47,7 @@ sub new {
     $self->_new(
 		$self,
 		$self->{keep_comments},
+		$self->{keep_whitespace},
 		$self->{line_directives},
 		$self->{pedantic},
 		);
@@ -250,6 +252,12 @@ comment() function so that meta-comments can be processed outside of the
 output stream.  Note that some programs use meta-comments to embed useful
 information (synthesis and lint), so use this with caution if feeding to
 tools other then your own.  Defaults to 1.
+
+=item keep_whitespace=>0
+
+With keep_whitespace set to zero, compress all whitespace to a single space
+or newline.  When set to one (the default), retain whitespace.  Defaults to
+1.
 
 =item line_directives=>0
 

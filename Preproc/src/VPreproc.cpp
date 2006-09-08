@@ -323,6 +323,7 @@ void VPreprocImp::open(string filename, VFileLine* filelinep) {
 
     m_lexp = new VPreprocLex (fp);
     m_lexp->m_keepComments = m_preprocp->keepComments();
+    m_lexp->m_keepWhitespace = m_preprocp->keepWhitespace();
     m_lexp->m_pedantic = m_preprocp->pedantic();
     m_lexp->m_curFilelinep = m_preprocp->filelinep()->create(filename, 1);
     m_filelinep = m_lexp->m_curFilelinep;  // Remember token start location
@@ -707,30 +708,41 @@ int VPreprocImp::getToken() {
 string VPreprocImp::getline() {
     // Get a single line from the parse stream.  Buffer unreturned text until the newline.
     if (isEof()) return "";
-    char* rtnp;
-    while (NULL==(rtnp=strchr(m_lineChars.c_str(),'\n'))) {
-	int tok = getToken();
-	if (debug()) {
-	    char buf[100000];
-	    strncpy(buf, yytext, yyleng);
-	    buf[yyleng] = '\0';
-	    for (char* cp=buf; *cp; cp++) if (*cp=='\n') *cp='$';
-	    fprintf (stderr,"%d: GETFETC:  %-10s: %s\n",
-		     m_filelinep->lineno(), tokenName(tok), buf);
+    while (1) {
+	char* rtnp;
+	bool gotEof = false;
+	while (NULL==(rtnp=strchr(m_lineChars.c_str(),'\n'))) {
+	    int tok = getToken();
+	    if (debug()) {
+		char buf[100000];
+		strncpy(buf, yytext, yyleng);
+		buf[yyleng] = '\0';
+		for (char* cp=buf; *cp; cp++) if (*cp=='\n') *cp='$';
+		fprintf (stderr,"%d: GETFETC:  %-10s: %s\n",
+			 m_filelinep->lineno(), tokenName(tok), buf);
+	    }
+	    if (tok==VP_EOF) {
+		// Add a final newline, in case the user forgot the final \n.
+		m_lineChars.append("\n");
+		gotEof = true;
+	    }
+	    else {
+		m_lineChars.append(yytext,0,yyleng);
+	    }
 	}
-	if (tok==VP_EOF) {
-	    // Add a final newline, in case the user forgot the final \n.
-	    m_lineChars.append("\n");
-	}
-	else {
-	    m_lineChars.append(yytext,0,yyleng);
-	}
-    }
 
-    // Make new string with data up to the newline.
-    int len = rtnp-m_lineChars.c_str()+1;
-    string theLine(m_lineChars, 0, len);
-    m_lineChars = m_lineChars.erase(0,len);	// Remove returned characters
-    if (debug()) fprintf (stderr,"%d: GETLINE:  %s\n", m_filelinep->lineno(), theLine.c_str());
-    return theLine;
+	// Make new string with data up to the newline.
+	int len = rtnp-m_lineChars.c_str()+1;
+	string theLine(m_lineChars, 0, len);
+	m_lineChars = m_lineChars.erase(0,len);	// Remove returned characters
+
+	if (!m_preprocp->keepWhitespace() && !gotEof) {
+	    const char* cp=theLine.c_str();
+	    for (; *cp && (isspace(*cp) || *cp=='\n'); cp++) {}
+	    if (!*cp) continue;
+	}
+
+	if (debug()) fprintf (stderr,"%d: GETLINE:  %s\n", m_filelinep->lineno(), theLine.c_str());
+	return theLine;
+    }
 }

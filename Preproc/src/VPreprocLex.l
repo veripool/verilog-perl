@@ -37,6 +37,7 @@ VPreprocLex* VPreprocLex::s_currentLexp = NULL;	// Current lexing point
 
 #define linenoInc()  { VPreprocLex::s_currentLexp->linenoInc(); }
 bool pedantic() { return VPreprocLex::s_currentLexp->m_pedantic; }
+bool keepWhitespace() { return VPreprocLex::s_currentLexp->m_keepWhitespace; }
 void yyerror(char* msg) { VPreprocLex::s_currentLexp->m_curFilelinep->error(msg); }
 void appendDefValue(char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(t,l); }
 
@@ -143,7 +144,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 	/* Generics */
 <INITIAL>{symb}		{ return (VP_SYMBOL); }
 <INITIAL>[\n]	 	{ linenoInc(); return(VP_WHITE); }	/* Not {newline}, too long */
-<INITIAL>{ws}+		{ return (VP_WHITE); }
+<INITIAL>{ws}+		{ if (!keepWhitespace()) { yytext=" "; yyleng=1; } return VP_WHITE; }
 <INITIAL>.		{ return (VP_TEXT); }
 %%
 

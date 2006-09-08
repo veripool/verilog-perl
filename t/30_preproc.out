@@ -44,7 +44,7 @@ verilog/inc2.v:6: `line 1 "verilog/inc1.v" 0
 verilog/inc1.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc1.v:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/inc1.v:3: // without warranty, 2000-2006 by Wilson Snyder.
-verilog/inc1.v:4: text.
+verilog/inc1.v:4:    text.
 verilog/inc1.v:5: 
 verilog/inc1.v:6:  /*but not *//* or this either */
 verilog/inc1.v:7:  // but not

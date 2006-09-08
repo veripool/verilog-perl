@@ -71,6 +71,7 @@ sub new {
     } else {
 	push @opt, keep_comments=>0;
     }
+    push @opt, keep_whitespace=>0;
     my $preproc = Verilog::Preproc->new(@opt);
     $preproc->open($params{filename});
     $parser->parse_preproc_file ($preproc);

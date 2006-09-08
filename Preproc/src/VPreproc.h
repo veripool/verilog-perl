@@ -70,6 +70,7 @@ public:
     // CONTROL METHODS
     // These options control how the parsing proceeds
     virtual int keepComments() { return 1; }		///< Return comments, 0=no, 1=yes, 2=callback
+    virtual int keepWhitespace() { return 1; }		///< Return extra whitespace, 0=no, 1=yes
     virtual bool lineDirectives() { return true; }	///< Insert `line directives
     virtual bool pedantic() { return false; }		///< Obey standard; Don't substitute `__FILE__ and `__LINE__
 

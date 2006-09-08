@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 2.35**
 
+***	Added Preproc keep_whitespace=>0 option to delete whitespace.
+
 ****    Vrename --crypt now uses lower case random identifiers for readability.
 
 * Verilog::Language 2.352 2006/08/22
