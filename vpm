@@ -802,8 +802,8 @@ sub vpm_recursive {
 	my $dh = new IO::Dir $srcdir or die "%Error: Could not directory $srcdir.\n";
 	while (defined (my $basefile = $dh->read)) {
 	    my $srcfile = $srcdir . $basefile;
-	    next if -d $srcfile;
 	    if ($Opt->libext_matches($srcfile)) {
+		next if -d $srcfile;
 		vpm_process_one($srcfile, $destdir);
 	    }
 	}
