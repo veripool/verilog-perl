@@ -51,7 +51,7 @@ void appendDefValue(char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(
 %x INCMODE
 
 ws		[ \t\r\f]
-newline		[\n]
+nl		[\n]
 quote		[\"]
 backslash	[\\]
 symb		[a-zA-Z_][a-zA-Z0-9_$]*
@@ -59,7 +59,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 	/**************************************************************/
 %%
 
-<INITIAL>^{ws}*"`line"{ws}+.*{newline}	{ VPreprocLex::s_currentLexp->lineDirective(yytext); }
+<INITIAL>^{ws}*"`line"{ws}+.*{nl}	{ VPreprocLex::s_currentLexp->lineDirective(yytext); }
 
 	/* Special directives we recognise */
 <INITIAL>"`include"	{ return(VP_INCLUDE); }
@@ -86,7 +86,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 	/* Pass-through strings */
 <INITIAL>{quote}	{ yy_push_state(STRMODE); yymore(); }
 <STRMODE><<EOF>>	{ linenoInc(); yyerror("EOF in unterminated string"); yyleng=0; yyterminate(); }
-<STRMODE>{newline}	{ linenoInc(); yyerror("Unterminated string"); BEGIN(INITIAL); }
+<STRMODE>{nl}		{ linenoInc(); yyerror("Unterminated string"); BEGIN(INITIAL); }
 <STRMODE>[^\"\\]	{ yymore(); }
 <STRMODE>{backslash}.	{ yymore(); }
 <STRMODE>{quote} 	{ yy_pop_state();
@@ -95,7 +95,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 
 	/* Pass-through include <> filenames */
 <INCMODE><<EOF>>	{ linenoInc(); yyerror("EOF in unterminated include filename"); yyleng=0; yyterminate(); }
-<INCMODE>{newline}	{ linenoInc(); yyerror("Unterminated include filename"); BEGIN(INITIAL); }
+<INCMODE>{nl}		{ linenoInc(); yyerror("Unterminated include filename"); BEGIN(INITIAL); }
 <INCMODE>[^\>\\]	{ yymore(); }
 <INCMODE>{backslash}.	{ yymore(); }
 <INCMODE>[\>]	 	{ yy_pop_state(); return (VP_STRING); }
@@ -104,19 +104,19 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 <DEFMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <DEFMODE>"//"[^\n]*	{ return (VP_COMMENT);}
 <DEFMODE><<EOF>>	{ linenoInc(); yyerror("EOF (missing return?) in define value"); yyleng=0; yyterminate(); }
-<DEFMODE>{newline}	{ linenoInc();
+<DEFMODE>{nl}		{ linenoInc();
 			  yy_pop_state();
 			  return (VP_DEFVALUE); }	/* Note contains a return */
 <DEFMODE>[^\/\*\n\m\\]+	|
 <DEFMODE>[\\][^\n]	|
 <DEFMODE>.		{ appendDefValue(yytext,yyleng); }
-<DEFMODE>[\\]\n		{ linenoInc(); appendDefValue("\n",1); }
+<DEFMODE>[\\]{nl}	{ linenoInc(); appendDefValue("\n",1); }
 
 	/* Define arguments */
 <ARGMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <ARGMODE>"//"[^\n]*	{ return (VP_COMMENT);}
 <ARGMODE><<EOF>>	{ yyerror("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
-<ARGMODE>{newline}	{ yytext="\n"; yyleng=1; return(VP_WHITE); }
+<ARGMODE>{nl}		{ yytext="\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
 <ARGMODE>[(]		{ VPreprocLex::s_currentLexp->m_parenLevel++; appendDefValue(yytext,yyleng); }
 <ARGMODE>[,)]		{ if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
@@ -134,7 +134,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 	/* C-style comments. */
 <INITIAL>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <CMTMODE>"*/"		{ yy_pop_state(); return(VP_COMMENT); }
-<CMTMODE>{newline}	{ linenoInc(); yymore(); }
+<CMTMODE>{nl}		{ linenoInc(); yymore(); }
 <CMTMODE>.		{ yymore(); }
 <CMTMODE><<EOF>>	{ yyerror("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
 
@@ -143,7 +143,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 
 	/* Generics */
 <INITIAL>{symb}		{ return (VP_SYMBOL); }
-<INITIAL>[\n]	 	{ linenoInc(); return(VP_WHITE); }	/* Not {newline}, too long */
+<INITIAL>{nl}	 	{ linenoInc(); return(VP_WHITE); }
 <INITIAL>{ws}+		{ if (!keepWhitespace()) { yytext=" "; yyleng=1; } return VP_WHITE; }
 <INITIAL>.		{ return (VP_TEXT); }
 %%
