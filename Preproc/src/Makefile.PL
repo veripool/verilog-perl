@@ -23,6 +23,8 @@ LEX = flex
 
 VPATH += src
 
+all:: example
+
 example: example.o VPreproc.o VFileLine.o VPreprocLex.o
 	$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 

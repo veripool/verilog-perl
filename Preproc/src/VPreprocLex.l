@@ -50,8 +50,9 @@ void appendDefValue(char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(
 %x ARGMODE
 %x INCMODE
 
-ws		[ \t\r\f]
-nl		[\n]
+ws		[ \t\f\r]
+wsn		[ \t\f]
+crnl		[\r]*[\n]
 quote		[\"]
 backslash	[\\]
 symb		[a-zA-Z_][a-zA-Z0-9_$]*
@@ -59,7 +60,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 	/**************************************************************/
 %%
 
-<INITIAL>^{ws}*"`line"{ws}+.*{nl}	{ VPreprocLex::s_currentLexp->lineDirective(yytext); }
+<INITIAL>^{ws}*"`line"{ws}+.*{crnl}	{ VPreprocLex::s_currentLexp->lineDirective(yytext); }
 
 	/* Special directives we recognise */
 <INITIAL>"`include"	{ return(VP_INCLUDE); }
@@ -86,7 +87,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 	/* Pass-through strings */
 <INITIAL>{quote}	{ yy_push_state(STRMODE); yymore(); }
 <STRMODE><<EOF>>	{ linenoInc(); yyerror("EOF in unterminated string"); yyleng=0; yyterminate(); }
-<STRMODE>{nl}		{ linenoInc(); yyerror("Unterminated string"); BEGIN(INITIAL); }
+<STRMODE>{crnl}		{ linenoInc(); yyerror("Unterminated string"); BEGIN(INITIAL); }
 <STRMODE>[^\"\\]	{ yymore(); }
 <STRMODE>{backslash}.	{ yymore(); }
 <STRMODE>{quote} 	{ yy_pop_state();
@@ -95,28 +96,26 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 
 	/* Pass-through include <> filenames */
 <INCMODE><<EOF>>	{ linenoInc(); yyerror("EOF in unterminated include filename"); yyleng=0; yyterminate(); }
-<INCMODE>{nl}		{ linenoInc(); yyerror("Unterminated include filename"); BEGIN(INITIAL); }
+<INCMODE>{crnl}		{ linenoInc(); yyerror("Unterminated include filename"); BEGIN(INITIAL); }
 <INCMODE>[^\>\\]	{ yymore(); }
 <INCMODE>{backslash}.	{ yymore(); }
 <INCMODE>[\>]	 	{ yy_pop_state(); return (VP_STRING); }
 
 	/* Reading definition */
 <DEFMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
-<DEFMODE>"//"[^\n]*	{ return (VP_COMMENT);}
+<DEFMODE>"//"[^\n\r]*	{ return (VP_COMMENT);}
 <DEFMODE><<EOF>>	{ linenoInc(); yyerror("EOF (missing return?) in define value"); yyleng=0; yyterminate(); }
-<DEFMODE>{nl}		{ linenoInc();
-			  yy_pop_state();
-			  return (VP_DEFVALUE); }	/* Note contains a return */
-<DEFMODE>[^\/\*\n\m\\]+	|
-<DEFMODE>[\\][^\n]	|
+<DEFMODE>{crnl}		{ linenoInc(); yy_pop_state(); yytext="\n"; yyleng=1; return (VP_DEFVALUE); }
+<DEFMODE>[\\]{crnl}	{ linenoInc(); appendDefValue("\n",1); } /* Include return so can maintain output line count */
+<DEFMODE>[^\/\*\n\r\\]+	|
+<DEFMODE>[\\][^\n\r]	|
 <DEFMODE>.		{ appendDefValue(yytext,yyleng); }
-<DEFMODE>[\\]{nl}	{ linenoInc(); appendDefValue("\n",1); }
 
 	/* Define arguments */
 <ARGMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
-<ARGMODE>"//"[^\n]*	{ return (VP_COMMENT);}
+<ARGMODE>"//"[^\n\r]*	{ return (VP_COMMENT);}
 <ARGMODE><<EOF>>	{ yyerror("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
-<ARGMODE>{nl}		{ yytext="\n"; yyleng=1; return(VP_WHITE); }
+<ARGMODE>{crnl}		{ linenoInc(); yytext="\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
 <ARGMODE>[(]		{ VPreprocLex::s_currentLexp->m_parenLevel++; appendDefValue(yytext,yyleng); }
 <ARGMODE>[,)]		{ if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
@@ -125,16 +124,16 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 			  } else {
 			      unput(yytext[0]); yy_pop_state(); return (VP_DEFARG);
  			}}
-<ARGMODE>[^\/\*\n\m\\(,)\"]+	|
+<ARGMODE>[^\/\*\n\r\\(,)\"]+	|
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }
 
 	/* One line comments. */
-<INITIAL>"//"[^\n]* 	{ return (VP_COMMENT); }
+<INITIAL>"//"[^\n\r]* 	{ return (VP_COMMENT); }
 
 	/* C-style comments. */
 <INITIAL>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <CMTMODE>"*/"		{ yy_pop_state(); return(VP_COMMENT); }
-<CMTMODE>{nl}		{ linenoInc(); yymore(); }
+<CMTMODE>{crnl}		{ linenoInc(); yymore(); }
 <CMTMODE>.		{ yymore(); }
 <CMTMODE><<EOF>>	{ yyerror("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
 
@@ -142,9 +141,10 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 <INITIAL>"`"{symb}	{ return (VP_DEFREF); }
 
 	/* Generics */
+<INITIAL>{crnl}		{ linenoInc(); yytext="\n"; yyleng=1; return(VP_WHITE); }
 <INITIAL>{symb}		{ return (VP_SYMBOL); }
-<INITIAL>{nl}	 	{ linenoInc(); return(VP_WHITE); }
-<INITIAL>{ws}+		{ if (!keepWhitespace()) { yytext=" "; yyleng=1; } return VP_WHITE; }
+<INITIAL>[\r]		{ }
+<INITIAL>{wsn}+		{ if (!keepWhitespace()) { yytext=" "; yyleng=1; } return VP_WHITE; }
 <INITIAL>.		{ return (VP_TEXT); }
 %%
 

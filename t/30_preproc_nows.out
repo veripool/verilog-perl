@@ -20,12 +20,12 @@ verilog/inc1.v:26: "Inside: `nosubst"
 verilog/inc1.v:27:  "`nosubst" 
 verilog/inc1.v:30:  x y LLZZ x y 
 verilog/inc1.v:31:   p q LLZZ p q   r s LLZZ r s LLZZ  p q LLZZ p q   r s LLZZ r s 
-verilog/inc1.v:33:  firstline comma","line LLZZ firstline comma","line 
-verilog/inc1.v:36:  x y LLZZ "a" y 
-verilog/inc1.v:39:  (a,b) (a,b)
-verilog/inc1.v:42: $display( "left side: \" right side\"" )
-verilog/inc1.v:45:  bar_suffix 
-verilog/inc1.v:49:  $c("Zap(\"",bug1,"\");"); ;
-verilog/inc1.v:50:  $c("Zap(\"","bug2","\");"); ;
-verilog/inc1.v:58: `line 58 "verilog/inc1.v" 0
-verilog/inc1.v:59: `line 59 "verilog/inc1.v" 2
+verilog/inc1.v:35:  firstline comma","line LLZZ firstline comma","line 
+verilog/inc1.v:38:  x y LLZZ "a" y 
+verilog/inc1.v:41:  (a,b) (a,b)
+verilog/inc1.v:44: $display( "left side: \" right side\"" )
+verilog/inc1.v:47:  bar_suffix 
+verilog/inc1.v:51:  $c("Zap(\"",bug1,"\");"); ;
+verilog/inc1.v:52:  $c("Zap(\"","bug2","\");"); ;
+verilog/inc1.v:60: `line 60 "verilog/inc1.v" 0
+verilog/inc1.v:61: `line 61 "verilog/inc1.v" 2
