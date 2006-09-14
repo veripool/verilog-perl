@@ -266,12 +266,13 @@ package Verilog::Netlist::File;
 #### Functions
 
 sub read {
-    my %params = (@_);	# netlist=>, filename=>, per-file options
+    my %params = (lookup_type=>'module',
+		  @_);	# netlist=>, filename=>, per-file options
 
     my $filename = $params{filename} or croak "%Error: ".__PACKAGE__."::read_file (filename=>) parameter required, stopped";
     my $netlist = $params{netlist} or croak ("Call Verilog::Netlist::read_file instead,");
 
-    my $filepath = $netlist->resolve_filename($filename);
+    my $filepath = $netlist->resolve_filename($filename, $params{lookup_type});
     if (!$filepath) {
 	if ($params{error_self}) { $params{error_self}->error("Cannot find $filename\n"); }
 	elsif (!defined $params{error_self}) { die "%Error: Cannot find $filename\n"; }  # 0=suppress error

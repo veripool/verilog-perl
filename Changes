@@ -9,6 +9,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Preprocessor now strips all DOS carrage returns.
 
+***	Allow Verilog::Getopt::file_path to resolve module_dir and/or incdirs.
+	Use only module_dir to resolve Netlist modules.  [by John Tseng]
+
 ****    Vrename --crypt now uses lower case random identifiers for readability.
 
 ****	Fix DOS carrage returns in multiline defines.  [Ralf Karge]

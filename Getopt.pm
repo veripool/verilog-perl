@@ -343,6 +343,7 @@ sub file_path_cache_flush {
 sub file_path {
     my $self = shift;
     my $filename = shift;
+    my $lookup_type = shift || 'all';
     # return path to given filename using library directories & files, or undef
     # locations are cached, because -r can be a very slow operation
 
@@ -353,12 +354,21 @@ sub file_path {
 	$self->depend_files($filename);
 	return $filename;
     }
+    # What paths to use?
+    my @dirlist;
+    if ($lookup_type eq 'module') {
+	@dirlist = $self->module_dir();
+    } elsif ($lookup_type eq 'include') {
+	@dirlist = $self->incdir();
+    } else {  # all
+	@dirlist = ($self->incdir(), $self->module_dir());
+    }
     # Check each search path
     # We use both the incdir and moduledir.  This isn't strictly correct,
     # but it's fairly silly to have to specify both all of the time.
     my %checked_dir = ();
     my %checked_file = ();
-    foreach my $dir (@{$self->incdir()}, @{$self->module_dir()}) {
+    foreach my $dir (@dirlist) {
 	next if $checked_dir{$dir}; $checked_dir{$dir}=1;  # -r can be quite slow
 	# Check each postfix added to the file
 	foreach my $postfix ("", @{$self->{libext}}) {
@@ -512,10 +522,12 @@ Create a new Getopt.  If gcc_style=>0 is passed as a parameter, parsing of
 GCC-like parameters is disabled.  If vcs_style=>0 is passed as a parameter,
 parsing of VCS-like parameters is disabled.
 
-=item $self->file_path ( I<filename> )
+=item $self->file_path ( I<filename>, [I<lookup-type>] )
 
 Returns a new path to the filename, using the library directories and
-search paths to resolve the file.
+search paths to resolve the file.  Optional lookup-type is
+'module','include', or 'all', to use only module_dirs, incdirs, or both for
+the lookup.
 
 =item $self->get_parameters ( )
 

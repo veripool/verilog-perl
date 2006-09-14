@@ -166,10 +166,10 @@ sub top_modules_sorted {
 sub resolve_filename {
     my $self = shift;
     my $filename = shift;
-    my $from = shift;
+    my $lookup_type = shift;
     if ($self->{options}) {
 	$filename = $self->remove_defines($filename);
-	$filename = $self->{options}->file_path($filename);
+	$filename = $self->{options}->file_path($filename, $lookup_type);
     }
     if (!-r $filename || -d $filename) {
 	return undef;
@@ -447,9 +447,11 @@ a module that wasn't found, and thus might be inside the libraries.
 Expand any `defines in the string and return the results.  Undefined
 defines will remain in the returned string.
 
-=item $netlist->resolve_filename (I<string>)
+=item $netlist->resolve_filename (I<string>, [I<lookup-type>])
 
-Convert a module name to a filename.  Return undef if not found.
+Convert a module name to a filename.  Optional lookup-type is
+'module','include', or 'all', to use only module_dirs, incdirs, or both for
+the lookup.  Return undef if not found.
 
 =item $self->verilog_text
 
