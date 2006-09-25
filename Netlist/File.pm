@@ -201,7 +201,7 @@ sub instant {
     $self->{cellref} = $modref->new_cell
 	 (name=>$instname, 
 	  filename=>$self->filename, lineno=>$self->lineno,
-	  submodname=>$submodname);
+	  submodname=>$submodname, params=>$params,);
 }
 
 sub pin {

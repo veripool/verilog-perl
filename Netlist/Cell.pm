@@ -34,6 +34,7 @@ structs('new',
 	   #
 	   submodname	=> '$', #'	# Which module it instantiates
 	   module	=> '$', #'	# Module reference
+	   params	=> '$', #'	# Textual description of parameters
 	   _pins	=> '%',		# List of Verilog::Netlist::Pins
 	   byorder 	=> '$',		# True if Cell call uses order based pins
 	   # after link():
@@ -131,7 +132,9 @@ sub dump {
     my $self = shift;
     my $indent = shift||0;
     my $norecurse = shift;
-    print " "x$indent,"Cell:",$self->name(),"  is-a:",$self->submodname(),"\n";
+    print " "x$indent,"Cell:",$self->name(),"  is-a:",$self->submodname();
+    print " ".$self->params if defined $self->params;
+    print "\n";
     if ($self->submod()) {
 	$self->submod->dump($indent+10, 'norecurse');
     }
