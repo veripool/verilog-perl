@@ -69,11 +69,12 @@ $keyword is ('input', 'output', etc), the second argument is the name of
 the signal.  The third argument is the vector bits or "".  The fourth
 argument is the memory bits or "".
 
-=item $self->instant ( $module, $cell )
+=item $self->instant ( $module, $cell, $parameters )
 
 This method is called when a instantiation is defined.  The first
 parameter is the name of the module being instantiated, and the second
-parameter is the name of the cell.
+parameter is the name of the cell.  The third is the textual list of
+parameters, otherwise unparsed.
 
 =item $self->pin ( $name, $connection, $index )
 
@@ -195,6 +196,7 @@ sub instant {
     my $self = shift;
     my $module = shift;
     my $cell = shift;
+    my $params = shift;
 }
 
 sub pin {
@@ -426,10 +428,11 @@ sub operator {
 	    @{$self->{last_symbols}} = ();
 	    $self->{last_vectors} = "";
 	    print "Gotainst $mod $inst\n"    if ($Debug);
-	    $self->instant ($mod, $inst);
+	    $self->instant ($mod, $inst, $self->{last_param});
 	    $self->{last_inst_mod} = $mod;
 	    $self->{is_inst_ok} = 0;
 	    $self->{is_pin_ok} = 1;
+	    $self->{last_param} = "";
 	}
 	elsif ((($token eq "(" && !$self->{possibly_in_param_assign})
 		|| $token eq ";")

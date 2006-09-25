@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 2.36*
+
+***	Add parameters to Verilog::Parser instant callback. [Monte Becker]
+
 * Verilog::Language 2.360 2006/09/14
 
 ***	Added Preproc keep_whitespace=>0 option to delete whitespace.

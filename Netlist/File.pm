@@ -191,7 +191,7 @@ sub instant {
     my $self = shift;
     my $submodname = shift;
     my $instname = shift;
-    my $hasnamedports = shift;
+    my $params = shift;
 
     print " Cell $instname\n" if $Verilog::Netlist::Debug;
     my $modref = $self->{modref};
