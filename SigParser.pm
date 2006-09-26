@@ -381,6 +381,9 @@ sub number {
     my $token = shift;	# What token was parsed
 
     if ($self->_non_pp_line()) {
+	if ($self->{in_param_assign}) {
+	    $self->{last_param} = $self->{last_param} . $token;
+	}
 	$self->{last_vectors} = $self->{last_vectors} . $token;
     } else {
 	push @{$self->{last_ppitem}}, $token;
@@ -525,6 +528,7 @@ sub operator {
 		if ($token eq ";") {
 		    $self->{last_keyword} = "";  # Keep {attr_keyword}
 		    @{$self->{last_symbols}} = ();
+		    $self->{last_param} = "";
 		    $self->{is_inst_ok} = 1;
 		    $self->{is_signal_ok} = 1;
 		    $self->{is_pin_ok} = 0;

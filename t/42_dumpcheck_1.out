@@ -5,7 +5,7 @@ Module:v_hier_sub  File:verilog/v_hier_sub.v
   Net:avec  O  Type:wire  Array:  3:0
   Net:clk  O  Type:wire  Array:
   Net:qvec  I  Type:wire  Array:  3:0
-  Cell:subsub0  is-a:v_hier_subsub
+  Cell:subsub0  is-a:v_hier_subsub #(.IGNORED('sh20))
             Module:v_hier_subsub  File:verilog/v_hier_subsub.v
     Pin:a  Net:1'b1
               Port:a  Dir:in  Type:wire  Array:

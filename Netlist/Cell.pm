@@ -133,7 +133,7 @@ sub dump {
     my $indent = shift||0;
     my $norecurse = shift;
     print " "x$indent,"Cell:",$self->name(),"  is-a:",$self->submodname();
-    print " ".$self->params if defined $self->params;
+    print " ".$self->params if (($self->params||"") ne "");
     print "\n";
     if ($self->submod()) {
 	$self->submod->dump($indent+10, 'norecurse');
