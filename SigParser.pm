@@ -138,7 +138,7 @@ use Verilog::Parser;
 # Other configurable settings.
 $Debug = 0;		# for debugging
 
-$VERSION = '2.360';
+$VERSION = '2.361';
 
 #######################################################################
 

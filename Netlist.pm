@@ -25,7 +25,7 @@ use Verilog::Netlist::Subclass;
 use strict;
 use vars qw($Debug $Verbose $VERSION);
 
-$VERSION = '2.360';
+$VERSION = '2.361';
 
 ######################################################################
 #### Error Handling
@@ -284,7 +284,7 @@ Verilog::Netlist - Verilog Netlist
 
     # Prepare netlist
     my $nl = new Verilog::Netlist (options => $opt,);
-    foreach my $file ('testnetlist.sp') {
+    foreach my $file ('testnetlist.v') {
 	$nl->read_file (filename=>$file);
     }
     # Read in any sub-modules
@@ -293,7 +293,7 @@ Verilog::Netlist - Verilog Netlist
     $nl->exit_if_error();
 
     foreach my $mod ($nl->top_modules_sorted) {
-        show_hier ($mod, "  ", "", "");
+	show_hier ($mod, "  ", "", "");
     }
 
     sub show_hier {

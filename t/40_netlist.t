@@ -18,7 +18,7 @@ ok(1);
 {
     print "Checking example in Netlist.pm\n";
 
-  use Verilog::Netlist;
+    use Verilog::Netlist;
 
     # Setup options so files can be found
     use Verilog::Getopt;
@@ -40,7 +40,7 @@ ok(1);
     $nl->exit_if_error();
 
     foreach my $mod ($nl->top_modules_sorted) {
-	show_hier ($mod, "  ", "","");
+	show_hier ($mod, "  ", "", "");
     }
 
     sub show_hier {
