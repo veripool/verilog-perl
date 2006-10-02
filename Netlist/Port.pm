@@ -119,7 +119,8 @@ Any array declaration for the port.
 
 =item $self->comment
 
-Any comment the user placed on the same line as the port.
+Returns any comments following the definition.  keep_comments=>1 must be
+passed to Verilog::Netlist::new for comments to be retained.
 
 =item $self->direction
 

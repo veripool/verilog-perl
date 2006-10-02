@@ -12,7 +12,7 @@ use Test;
 BEGIN { plan tests => 10 }
 BEGIN { require "t/test_utils.pl"; }
 
-#$Verilog::SigParser::Debug = 1;
+#$Verilog::SigParser::Debug = $Verilog::Parser::Debug = 1;
 use Verilog::Netlist;
 ok(1);
 
@@ -47,6 +47,7 @@ sub check {
 		     );
     my $nl = new Verilog::Netlist (options => $opt,
 				   link_read_nonfatal=>1,
+				   keep_comments => 1,
 				   );
     foreach my $file (@files) {
 	$nl->read_file (filename=>$file);

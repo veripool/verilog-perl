@@ -32,6 +32,7 @@ structs('new',
 	   netlist	=> '$', #'	# Netlist is a member of
 	   userdata	=> '%',		# User information
 	   attributes	=> '%', #'	# Misc attributes for systemperl or other processors
+	   comment	=> '$', #'	# Comment provided by user
 	   is_libcell	=> '$',	#'	# True if is a library cell
 	   # For special procedures
 	   _modules	=> '%',		# For autosubcell_include
@@ -58,6 +59,7 @@ sub new {
     my $parser = $class->SUPER::new (%params,
 				     modref=>undef,	# Module being parsed now
 				     cellref=>undef,	# Cell being parsed now
+				     _cmtref=>undef,	# Object to attach comments to
 				     );
     
     my @opt;
@@ -68,6 +70,8 @@ sub new {
 	    unless (ref($meta) eq 'HASH');
 	push @opt, metacomments=>[ grep({ $meta->{$_} } keys %$meta) ];
 	push @opt, keep_comments=>1;
+    } elsif ($params{netlist}{keep_comments}) {
+	push @opt, keep_comments=>$params{netlist}{keep_comments};
     } else {
 	push @opt, keep_comments=>0;
     }
@@ -94,6 +98,7 @@ sub module {
 	  is_libcell=>($fileref->is_libcell() || $in_celldefine),
 	  filename=>$self->filename, lineno=>$self->lineno);
     $fileref->_modules($module, $self->{modref});
+    $self->{_cmtref} = $self->{modref};
 }
 
 sub port {
@@ -163,6 +168,7 @@ sub signal_decl {
 	     comment=>undef, msb=>$msb, lsb=>$lsb,
 	     signed=>$signed,
 	     );
+	$self->{_cmtref} = $net;
     }
     elsif ($inout =~ /(inout|in|out)(put|)$/) {
 	my $dir = $1;
@@ -175,6 +181,7 @@ sub signal_decl {
 	     comment=>undef, msb=>$msb, lsb=>$lsb,
 	     signed=>$signed,
 	     );
+	$self->{_cmtref} = $net;
 	##
 	my $port = $modref->new_port
 	    (name=>$netname,
@@ -202,6 +209,7 @@ sub instant {
 	 (name=>$instname, 
 	  filename=>$self->filename, lineno=>$self->lineno,
 	  submodname=>$submodname, params=>$params,);
+    $self->{_cmtref} = $self->{cellref};
 }
 
 sub pin {
@@ -216,14 +224,15 @@ sub pin {
     if (!$cellref) {
 	return $self->error ("PIN outside of cell definition", $net);
     }
-    $cellref->new_pin (name=>$pin,
-		       portname=>$pin,
-		       portnumber=>$number,
-		       pinnamed=>$hasnamedports,
-		       filename=>$self->filename, lineno=>$self->lineno,
-		       netname=>$net, );
+    my $pinref = $cellref->new_pin (name=>$pin,
+				    portname=>$pin,
+				    portnumber=>$number,
+				    pinnamed=>$hasnamedports,
+				    filename=>$self->filename, lineno=>$self->lineno,
+				    netname=>$net, );
     # If any pin uses call-by-name, then all are assumed to use call-by-name
     $cellref->byorder(1) if !$hasnamedports;
+    $self->{_cmtref} = $pinref;
 }
 
 sub ppdefine {
@@ -240,6 +249,26 @@ sub ppinclude {
     my $defvar = shift;
     my $definition = shift;
     $self->error("No `includes yet.\n");
+}
+
+sub keyword {
+    # OVERRIDE Verilog::Parse calls when keyword occurs
+    my $self = shift;	# Parser invoked
+    $self->SUPER::keyword(@_);
+    $self->{_cmtref} = undef;
+}
+
+sub comment {
+    my $self = shift;
+    # OVERRIDE Verilog::Parse calls when comment occurs
+    $self->SUPER::comment(@_);
+    my $text = shift;	# Includes comment delimiters
+    if ($self->{_cmtref}) {
+	my $old = $self->{_cmtref}->comment();
+	if (defined $old) { $old .= "\n"; } else { $old=""; }
+	$old .= $text;
+	$self->{_cmtref}->comment($old);
+    }
 }
 
 sub error {
@@ -283,12 +312,12 @@ sub read {
     my $fileref = $netlist->new_file (name=>$filepath,
 				      is_libcell=>$params{is_libcell}||0,
 				      );
-    my $metacomment = $params{metacomment} || $netlist->{metacomment};
 
     my $parser = Verilog::Netlist::File::Parser->new
 	( fileref=>$fileref,
 	  filename=>$filepath,	# for ->read
-	  metacomment=>$metacomment,
+	  metacomment=>($params{metacomment} || $netlist->{metacomment}),
+	  keep_comments=>($params{keep_comments} || $netlist->{keep_comments}),
 	  );
     return $fileref;
 }

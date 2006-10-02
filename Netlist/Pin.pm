@@ -37,6 +37,7 @@ structs('new',
 	   userdata	=> '%',		# User information
 	   attributes	=> '%', #'	# Misc attributes for systemperl or other processors
 	   #
+	   comment	=> '$', #'	# Comment provided by user
 	   netname	=> '$', #'	# Net connection
 	   portname 	=> '$', #'	# Port connection name
 	   portnumber   => '$', #'	# Position of name in call
@@ -190,6 +191,11 @@ See also Verilog::Netlist::Subclass for additional accessors and methods.
 =item $self->cell
 
 Reference to the Verilog::Netlist::Cell the pin is under.
+
+=item $self->comment
+
+Returns any comments following the definition.  keep_comments=>1 must be
+passed to Verilog::Netlist::new for comments to be retained.
 
 =item $self->delete
 

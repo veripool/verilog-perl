@@ -9,7 +9,7 @@ module v_hier_top (/*AUTOARG*/
    // Inputs
    clk
    );
-   input clk;
+   input clk;	/* pragma jsc_clk */
    `hsub sub (/*AUTOINST*/
 	      // Outputs
 	      .qvec			(qvec[3:0]),

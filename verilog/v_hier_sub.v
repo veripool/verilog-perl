@@ -5,8 +5,8 @@
 
 module v_hier_sub (/*AUTOARG*/
    input clk,
-   input [3:0] avec,
-   output [3:0] qvec
+   input [3:0] avec,	// Comment for v_hier_sub, avec
+   output [3:0] qvec	/* Comment for v_hier_sub, qvec */
    );
 
    v_hier_subsub #(

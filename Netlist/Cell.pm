@@ -32,6 +32,7 @@ structs('new',
 	   userdata	=> '%',		# User information
 	   attributes	=> '%', #'	# Misc attributes for systemperl or other processors
 	   #
+	   comment	=> '$', #'	# Comment provided by user
 	   submodname	=> '$', #'	# Which module it instantiates
 	   module	=> '$', #'	# Module reference
 	   params	=> '$', #'	# Textual description of parameters
@@ -201,6 +202,11 @@ module.
 See also Verilog::Netlist::Subclass for additional accessors and methods.
 
 =over 4
+
+=item $self->comment
+
+Returns any comments following the definition.  keep_comments=>1 must be
+passed to Verilog::Netlist::new for comments to be retained.
 
 =item $self->delete
 

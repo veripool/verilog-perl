@@ -5,7 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 2.36*
 
-***	Add parameters to Verilog::Parser instant callback. [Monte Becker]
+**	Attach Verilog comments to Netlist objects.  [Monte Becker]
+
+***	Add parameters to Verilog::Parser instant callback.  [Monte Becker]
 
 * Verilog::Language 2.360 2006/09/14
 

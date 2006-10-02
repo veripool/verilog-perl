@@ -44,6 +44,7 @@ sub new {
 		options => undef,	# Usually pointer to Verilog::Getopt
 		implicit_wires_ok => 1,
 		link_read => 1,
+		#keep_comments => 0,
 		_libraries_done => {},
 		@_};
     bless $self, $class;
@@ -350,11 +351,16 @@ Error checks the entire netlist structure.
 
 =item $netlist->link()
 
-Resolves references between the different modules.  If link_read=>1 is
-passed when netlist->new is called (it is by default), undefined modules
-will be searched for using the Verilog::Getopt package, passed by a
-reference in the creation of the netlist.  To suppress errors in any
-missing references, set link_read_nonfatal=>1 also.
+Resolves references between the different modules.
+
+If link_read=>1 is passed when netlist->new is called (it is by default),
+undefined modules will be searched for using the Verilog::Getopt package,
+passed by a reference in the creation of the netlist.  To suppress errors
+in any missing references, set link_read_nonfatal=>1 also.
+
+If keep_comments=>1 is passed, comment fields will be entered on net
+declarations into the Vtest::Netlist::Net structures.  Otherwise all
+comments are stripped for speed.
 
 =item $netlist->new
 

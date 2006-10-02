@@ -198,7 +198,8 @@ signals, for the width of a signal, use msb/lsb/width.
 
 =item $self->comment
 
-Any comment the user placed on the same line as the net.
+Returns any comments following the definition.  keep_comments=>1 must be
+passed to Verilog::Netlist::new for comments to be retained.
 
 =item $self->module
 
