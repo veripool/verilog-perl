@@ -312,6 +312,11 @@ Verilog::Netlist::Port in the module.
 
 Returns list of references to Verilog::Netlist::Port in the module.
 
+=item $self->ports_ordered
+
+Returns list of references to Verilog::Netlist::Port in the order the ports
+were declared in the module's port list.
+
 =item $self->ports_sorted
 
 Returns list of name sorted references to Verilog::Netlist::Port in the module.
