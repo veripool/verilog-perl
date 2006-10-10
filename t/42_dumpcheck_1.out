@@ -1,3 +1,19 @@
+Module:v_comments  File:verilog/v_comments.v
+  Port:a  Dir:in  Type:wire  Array:
+  Port:b  Dir:inout  Type:wire  Array:
+  Port:c  Dir:out  Type:wire  Array:
+  Port:d  Dir:out  Type:wire  Array:
+  Port:d1  Dir:out  Type:wire  Array:
+  Port:d2  Dir:out  Type:wire  Array:
+  Port:d3  Dir:out  Type:wire  Array:
+  Net:a  O  Type:wire  Array:
+  Net:b    Type:wire  Array:  10:0
+  Net:c  I  Type:wire  Array:  0:10
+  Net:d  I  Type:wire  Array:  ((2*32)-1):0
+  Net:d1  I  Type:wire  Array:  32:0
+  Net:d2  I  Type:wire  Array:  (`math-1):0
+  Net:d3  I  Type:wire  Array:  32-1:0
+  Net:e    Type:wire  Array:  11:0
 Module:v_hier_sub  File:verilog/v_hier_sub.v
   Port:avec  Dir:in  Type:wire  Array:
   Port:clk  Dir:in  Type:wire  Array:
