@@ -32,11 +32,14 @@ VPreprocLex.o:	VPreprocLex.h VPreproc.h VFileLine.h
 VPreproc.o:	VPreprocLex.h VPreproc.h VFileLine.h
 VFileLine.o:	VPreprocLex.h VPreproc.h VFileLine.h
 
-VPreprocLex.cpp: VPreprocLex.l
+VPreprocLex_prefix.cpp: VPreprocLex.l
 	$(LEX) $(LEXFLAGS) -o$@ $<
 
+VPreprocLex.cpp: VPreprocLex_prefix.cpp
+	sed "s/(void) *fwrite(\(.*\))/if (fwrite(\1)) {}/" < $< > $@    # GCC 4.1.0 warn_unused_result
+
 clean::
-	-rm -rf test *.d *.o VPreprocLex.cpp *.output example example.exe
+	-rm -rf test *.d *.o VPreprocLex*.cpp *.output example example.exe
 ';
     return $out;
 }

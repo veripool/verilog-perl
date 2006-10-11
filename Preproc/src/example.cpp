@@ -36,7 +36,9 @@ int main() {
 
     // We don't have a directory search path in this trivial parser, so
     // we CD to the right place so everything is local.
-    chdir("../../verilog");
+    if (chdir("../../verilog")) {
+	filelinep->fatal("Can't chdir ../../verilog.  Exiting\n");
+    }
 
     // Tokens will come from this file
     pp->open("inc1.v");

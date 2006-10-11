@@ -3,6 +3,6 @@
 *.bs
 *.old
 pm_to_blib
-VPreprocLex.cpp
+VPreprocLex*.cpp
 Makefile
 example

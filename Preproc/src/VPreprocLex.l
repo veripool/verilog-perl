@@ -146,6 +146,8 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 <INITIAL>[\r]		{ }
 <INITIAL>{wsn}+		{ if (!keepWhitespace()) { yytext=" "; yyleng=1; } return VP_WHITE; }
 <INITIAL>.		{ return (VP_TEXT); }
+
+<*>.|\n			{ yymore(); }	/* Prevent hitting ECHO; */
 %%
 
 void VPreprocLex::setStateDefArg() {
