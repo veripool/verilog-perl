@@ -41,6 +41,7 @@ use vars qw ($VERSION $Debug $Opt %Vpm_Conversions
 	     $Sendout
 	     %Insure_Symbols
 	     %File_Mtime %File_Mtime_Read %File_Mtime_Read_Used
+	     %File_Dest
 	     );
 $VERSION = '2.361';
 
@@ -781,8 +782,12 @@ sub vpm_recursive_postlude {
 	    && !$File_Mtime_Read_Used{$srcfile}) {
 	    (my $basefile = $srcfile) =~ s/.*\///;
 	    my $destfile = "$destdir$basefile";
-	    print "\t    vpm: Deleted? $srcfile\n" if !$Opt_Quiet;
-	    unlink $destfile;
+	    # A file with the same basename may now be in a different dir,
+	    # and already processed, so don't delete it.
+	    if (!$File_Dest{$destfile}) {
+		print "\t    vpm: Deleted? $srcfile\n" if !$Opt_Quiet;
+		unlink $destfile;
+	    }
 	}
     }
 
@@ -823,6 +828,7 @@ sub vpm_process_one {
 
     (my $basefile = $srcfile) =~ s!.*[/\\]!!;
     my $destfile = "$destdir$basefile";
+    $File_Dest{$destfile} = 1;
 
     my $src_mtime = (stat($srcfile))[9];
     $src_mtime ||= 0;

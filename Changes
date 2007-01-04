@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 2.36***
+
+****	Fix vpm deleting output when file moved between directories.
+
 * Verilog::Language 2.361 2006/10/02
 
 **	Attach Verilog comments to Netlist objects.  [Monte Becker]
