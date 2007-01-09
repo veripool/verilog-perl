@@ -10,6 +10,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Fix bug13462; parse {} concatenations in pin connections. [Jeff Trull]
 
+***	Remove backslashes in quoted symbols when they aren't needed.
+
 ****	Fix vpm deleting output when file moved between directories.
 
 * Verilog::Language 2.361 2006/10/02

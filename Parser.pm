@@ -405,8 +405,7 @@ sub parse {
 		$self->{token_string} = "\"";
 		$self->{inquote} = 1;
 	    }
-	    elsif (($text =~ s/^([a-zA-Z_\`\$][a-zA-Z0-9_\`\$]*)//)
-		   || ($text =~ s/^(\\\S+\s+)//)) { #cseddon - escaped identifiers
+	    elsif ($text =~ s/^([a-zA-Z_\`\$][a-zA-Z0-9_\`\$]*)//) {
 		my $token = $1;
 		if (!$self->{inquote}) {
 		    if (Verilog::Language::is_keyword($token)) {
@@ -421,6 +420,15 @@ sub parse {
 			print "GotaSYMBOL $token\n"    if ($Debug);
 			$self->symbol ($token);
 		    }
+		}
+	    }
+	    elsif ($text =~ s/^(\\\S+\s)//) { # Escaped identifiers
+		my $token = $1;
+		if (!$self->{inquote}) {
+		    print "GotaSYMBOL $token\n"    if ($Debug);
+		    # If it's a simple "\foo " that didn't need quoting, remove quotes
+		    $token = $1 if $token =~ /^\\([a-zA-Z_][a-zA-Z0-9_]*)\s*$/;
+		    $self->symbol ($token);
 		}
 	    }
 	    elsif ($text =~ s/^\/\*//) {

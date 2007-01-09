@@ -12,7 +12,7 @@ module v_hier_sub (/*AUTOARG*/
    v_hier_subsub #(
 		   .IGNORED('sh20)
 		   )
-     subsub0 (
+     \subsub0 (
 	      // Outputs
 	      .q		(qvec[0]),
 	      // Inputs
