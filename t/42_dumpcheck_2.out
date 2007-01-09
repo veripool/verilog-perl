@@ -13,7 +13,7 @@ Module:foo2  File:verilog/pinorder.v
   Port:x  Dir:out  Type:wire  Array:
   Port:y  Dir:in  Type:wire  Array:
   Port:z  Dir:in  Type:wire  Array:
-  Net:x  I  Type:wire  Array:
+  Net:x  I  Type:reg  Array:
   Net:y  O  Type:wire  Array:
   Net:z  O  Type:wire  Array:
 Module:pinorder4  File:verilog/pinorder.v

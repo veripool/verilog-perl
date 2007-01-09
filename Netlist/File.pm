@@ -164,10 +164,11 @@ sub signal_decl {
 	$net or $net = $modref->new_net
 	    (name=>$netname,
 	     filename=>$self->filename, lineno=>$self->lineno,
-	     simple_type=>1, type=>'wire', array=>$array,
+	     simple_type=>1, type=>$inout, array=>$array,
 	     comment=>undef, msb=>$msb, lsb=>$lsb,
 	     signed=>$signed,
 	     );
+	$net->type($inout);  # If it's already declared as in/out etc, mark the type
 	$self->{_cmtref} = $net;
     }
     elsif ($inout =~ /(inout|in|out)(put|)$/) {

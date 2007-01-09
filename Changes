@@ -3,7 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 2.36***
+* Verilog::Language 2.37***
+
+***	Fix bug24248, reg/tri/supply* declarations, etc are now stored in Net
+	structures as the declared type, instead of as 'wire'.  [Jeff Trull]
 
 ****	Fix vpm deleting output when file moved between directories.
 
