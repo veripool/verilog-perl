@@ -15,7 +15,7 @@ module v_hier_top (/*AUTOARG*/
 	      .qvec			(qvec[3:0]),
 	      // Inputs
 	      .clk			(1'b0),
-	      .avec			(avec[3:0]));
+	      .avec			({avec[3],avec[2:0]}));
 
    missing missing ();
 

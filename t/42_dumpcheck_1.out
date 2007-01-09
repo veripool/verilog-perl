@@ -44,7 +44,7 @@ Module:v_hier_top  File:verilog/v_hier_top.v
   Cell:missing  is-a:missing
   Cell:sub  is-a:v_hier_sub
             Module:v_hier_sub  File:verilog/v_hier_sub.v
-    Pin:avec  Net:avec[3:0]
+    Pin:avec  Net:{avec[3], avec[2:0]}
               Port:avec  Dir:in  Type:wire  Array:
     Pin:clk  Net:1'b0
               Port:clk  Dir:in  Type:wire  Array:

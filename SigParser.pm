@@ -244,6 +244,7 @@ sub reset {
     $self->{last_function} = undef;
     $self->{last_task} = undef;
     $self->{last_vectors} = "";
+    $self->{last_list} = "";            # store bracketed list
     $self->{last_param} = "";
     $self->{is_inst_ok} = 1;
     $self->{is_pin_ok} = 0;
@@ -252,6 +253,7 @@ sub reset {
     $self->{in_preproc_line} = -1;
     $self->{in_celldefine} = 0;
     $self->{in_vector} = 0;
+    $self->{in_list} = 0;
     $self->{in_param_assign} = 0;
     $self->{in_ports} = 0;
     $self->{in_generate} = 0;
@@ -370,7 +372,7 @@ sub symbol {
 	$self->{last_keyword} eq "begin" && 
         $self->{last_operator} eq ":") {
       $self->{last_keyword}="";
-      $self->{last_symbols}=();
+      @{$self->{last_symbols}}=();
       $self->{is_inst_ok} = 1;
     }
 }
@@ -448,10 +450,32 @@ sub operator {
 	    $self->{in_ports} = 1;
 	    # Fallthru, more ; prep for next command is below
 	}
+	elsif ((($token eq ",") || ($token eq "}")) &&
+	       $self->{in_list} && !$self->{in_vector}) {
+	    # add whatever we just saw to the list
+	    if ($self->{last_symbols}[0]) {
+		$self->{last_list} .= $self->{last_symbols}[0];
+		@{$self->{last_symbols}} = ();
+	    }
+	    if ($self->{last_vectors}) {
+		$self->{last_list} .= $self->{last_vectors};
+		$self->{last_vectors} = "";
+	    }
+	    # now either clean up or prepare to continue collecting the list
+	    if ($token eq ",") {
+		$self->{last_list} .= ", ";
+	    }
+	    else {
+		# end of list
+		$self->{in_list} = 0;
+		$self->{last_list} .= "}";
+	    }
+	}
 	elsif ($token eq "," || $token eq ";") {
 	    if ($self->{is_pin_ok}
 		&& (defined $self->{last_symbols}[0]
 		    || $self->{last_vectors}
+		    || $self->{last_list}
 		    || $token eq ",")
 		&& !$self->{bracket_level}) {
 		my $vec = $self->{last_vectors};
@@ -462,14 +486,16 @@ sub operator {
 		$namedports = 1 if defined $pin_name;
 		$pin_name ||= "pin" . $self->{is_pin_ok};
 		print "Gotapin $pin_name\n"    if ($Debug);
+		my $pin_connection = $self->{last_list} || ($sym . $vec);
 		$self->pin ($pin_name,
-			    $sym . $vec,
+			    $pin_connection,
 			    $self->{is_pin_ok},
 			    $namedports,
 			    $self->{signed});
 		$self->{is_pin_ok}++;  # moved to after pin call
 		$self->{pin_name} = undef;
 		$self->{last_vectors} = "";
+		$self->{last_list} = "";
 		@{$self->{last_symbols}} = ();
 	    }
 	    if ($token eq "," && $self->{is_pin_ok} && !$self->{paren_level}) {
@@ -552,6 +578,10 @@ sub operator {
 	    } else {
 		$self->{last_vectors} = $self->{last_vectors} . ' ' . $token;
 	    }
+	}
+	elsif ($token eq "{") {
+	    $self->{in_list} = 1;
+	    $self->{last_list} = "{";
 	}
 	elsif ($token eq "#") {
 	    $self->{possibly_in_param_assign} = 1;
