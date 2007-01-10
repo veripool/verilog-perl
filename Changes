@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 2.37***
+* Verilog::Language 2.370 2007/01/10
 
 ***	Fix bug24248; reg/tri/supply* declarations, etc are now stored in Net
 	structures as the declared type, instead of as 'wire'.  [Jeff Trull]
@@ -401,7 +401,7 @@ DESCRIPTION: Documentation on change history for this package
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
 
-Copyright 2001-2006 by Wilson Snyder.  This program is free software;
+Copyright 2001-2007 by Wilson Snyder.  This program is free software;
 you can redistribute it and/or modify it under the terms of either the GNU
 General Public License or the Perl Artistic License.
 

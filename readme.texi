@@ -26,7 +26,7 @@ This is the Verilog Perl Package.
 @node Copyright, Description, Top, Top
 @section Copyright
 
-This package is Copyright 2000-2006 by Wilson Snyder @email{wsnyder@@wsnyder.org}.
+This package is Copyright 2000-2007 by Wilson Snyder @email{wsnyder@@wsnyder.org}.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of either the GNU General Public License or the
