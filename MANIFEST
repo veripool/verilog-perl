@@ -31,6 +31,7 @@ Preproc/typemap
 README
 SigParser.pm
 t/00_pod.t
+t/01_manifest.t
 t/10_keywords.t
 t/12_splitbus.t
 t/20_getopt.opt
