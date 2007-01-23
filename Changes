@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 2.371 ****
+* Verilog::Language 2.371 2007/01/23
 
 ***	Fix bug24345; supply statements cause lint warnings.  [Jeff Trull]
 
