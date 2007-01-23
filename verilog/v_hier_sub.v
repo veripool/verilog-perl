@@ -9,6 +9,8 @@ module v_hier_sub (/*AUTOARG*/
    output [3:0] qvec	/* Comment for v_hier_sub, qvec */
    );
 
+   supply1 	a1;
+
    v_hier_subsub #(
 		   .IGNORED('sh20)
 		   )
@@ -16,7 +18,7 @@ module v_hier_sub (/*AUTOARG*/
 	      // Outputs
 	      .q		(qvec[0]),
 	      // Inputs
-	      .a		(1'b1));
+	      .a		(a1));
 
 
    generate

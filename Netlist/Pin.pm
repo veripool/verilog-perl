@@ -102,7 +102,11 @@ sub _link {
 
 sub type_match {
     my $self = shift;
-    return $self->net->type eq $self->port->type;
+    # We could check for specific types being OK, but nearly every thing,
+    # reg/trireg/wire/wand etc/tri/ supply0|1 etc
+    # is allowed to connect with everything else, and we're not a lint tool...
+    # So, not: return $self->net->type eq $self->port->type;
+    return 1;
 }
 
 sub lint {
