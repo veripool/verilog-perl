@@ -133,7 +133,9 @@ sub new_net {
     my $self = shift;
     # @_ params
     # Create a new net under this module
-    my $netref = new Verilog::Netlist::Net (direction=>'net', @_, module=>$self, );
+    my $netref = new Verilog::Netlist::Net (direction=>'net', type=>'wire',
+					    @_,
+					    module=>$self, );
     $self->_nets ($netref->name(), $netref);
     return $netref;
 }
