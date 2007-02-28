@@ -43,7 +43,7 @@ use vars qw ($VERSION $Debug $Opt %Vpm_Conversions
 	     %File_Mtime %File_Mtime_Read %File_Mtime_Read_Used
 	     %File_Dest
 	     );
-$VERSION = '2.371';
+$VERSION = '2.372';
 
 ######################################################################
 # configuration
