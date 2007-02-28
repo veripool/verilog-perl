@@ -39,6 +39,7 @@ sub new {
 		line_directives=>1,
 		pedantic=>0,
 		options=>Verilog::Getopt->new(),	# If the user didn't give one, still work!
+		#include_open_nonfatal=>0,
 		@_};
     bless $self, $class;
     # Sets $self->{_cthis}
@@ -57,18 +58,30 @@ sub new {
 
 sub open {
     my $self = shift;
-    my $filename = shift;
+    my %params = (
+		  # filename =>
+		  # open_nonfatal => 0,
+		  );
+    if ($#_ > 0) { %params=(@_); } else { $params{filename}=shift; }
+    # We allow either open(name) or open(filename=>name);
+
     # Allow user to put `defined names on the command line instead of filenames,
+
     # then convert them properly.
+    my $filename = $params{filename};
     $filename = $self->remove_defines($filename);
     printf ("Perl open $filename\n") if $self->{debug};
     $filename = $self->{options}->file_path($filename);
     printf ("Perl openfp $filename\n") if $self->{debug};
     if (!-r $filename) {
-	$self->error("Cannot open $filename");
+	if (!$params{open_nonfatal}) {
+	    $self->error("Cannot open $filename");
+	}
+	return undef;
     } else {
 	$self->_open($filename);
     }
+    return $self;
 }
 
 sub debug {
@@ -123,7 +136,9 @@ sub comment {}
 sub include {
     my ($self,$filename)=@_;
     print "INCLUDE $filename\n" if $self->{debug};
-    $self->open($filename);
+    $self->open(filename => $filename,
+		open_nonfatal => $self->{include_open_nonfatal},
+		);
 }
 
 # Note rather then overriding these, a derived Verilog::Getopt class can
@@ -170,7 +185,7 @@ Verilog::Preproc - Preprocess Verilog files
     use Verilog::Getopt;
 
     my $vp = Verilog::Preproc->new(I<parameters>);
-    $vp->open("verilog_file.v");
+    $vp->open(filename=>"verilog_file.v");
     my $line = $vp->getline();
 
 =head1 EXAMPLE
@@ -184,7 +199,7 @@ Verilog::Preproc - Preprocess Verilog files
     @ARGV = $opt->parameter(@ARGV);
 
     my $vp = Verilog::Preproc->new(options=>$opt,);
-    $vp->open("verilog_file.v");
+    $vp->open(filename=>"verilog_file.v");
     while (defined (my $line = $vp->getline())) {
        print $line;
     }
@@ -224,11 +239,14 @@ multiple include files.
 Creates a new preprocessor.  See the PARAMETERS section for the options
 that may be passed to new.
 
-=item $self->open(I<filename>)
+=item $self->open(filename=>I<filename>)
 
 Opens the specified file.  If called before a file is completely parsed,
 the new file will be parsed completely before returning to the previously
 open file.  (As if it was an include file.)
+
+Open may also be called without named parameters, in which case the only
+argument is the filename.
 
 =item $self->unreadback(I<text>)
 
@@ -243,6 +261,11 @@ insert special code into the output stream.
 The following named parameters may be passed to the new constructor.
 
 =over 4
+
+=item include_open_nonfatal=>1
+
+With include_open_nonfatal set to one, ignore any include files that do
+not exist.
 
 =item keep_comments=>0
 

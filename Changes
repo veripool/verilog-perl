@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 2.37***
 
+***	Add include_open_nonfatal option to Preproc and Netlist.  [Eric Miller]
+
 ****	Fix bug24552; Verilog::Module::new_net now defaults net type
 	to 'wire'. [Takeo Komiyama]
 

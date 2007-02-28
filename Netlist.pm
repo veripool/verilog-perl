@@ -44,6 +44,7 @@ sub new {
 		options => undef,	# Usually pointer to Verilog::Getopt
 		implicit_wires_ok => 1,
 		link_read => 1,
+		#include_open_nonfatal => 0,
 		#keep_comments => 0,
 		_libraries_done => {},
 		@_};
@@ -367,6 +368,9 @@ comments are stripped for speed.
 Creates a new netlist structure.  Pass optional parameters by name.  The
 parameter "options" may contain a reference to a Verilog::Getopt module,
 to be used for locating files.
+
+The parameter "include_open_nonfatal=>1" is passed to Verilog::Preproc
+to ignore any include files that do not exist.
 
 =item $netlist->dump
 

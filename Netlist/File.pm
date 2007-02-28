@@ -76,6 +76,7 @@ sub new {
 	push @opt, keep_comments=>0;
     }
     push @opt, keep_whitespace=>0;
+    push @opt, include_open_nonfatal=>1 if $params{netlist}{include_open_nonfatal};
     my $preproc = Verilog::Preproc->new(@opt);
     $preproc->open($params{filename});
     $parser->parse_preproc_file ($preproc);
