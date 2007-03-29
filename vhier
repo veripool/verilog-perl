@@ -48,7 +48,7 @@ my $Opt_Missing = 1;
 my $Opt_Missing_Modules;
 my $Opt_Xml;
 @ARGV = $Opt->parameter(@ARGV);
-Getopt::Long::config ("no_auto_abbrev","pass_through");
+Getopt::Long::config ("no_auto_abbrev");
 if (! GetOptions (
 		  "help"	=> \&usage,
 		  "debug"	=> \&debug,

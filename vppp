@@ -44,16 +44,16 @@ autoflush STDERR 1;
 # Option parsing
 my $Opt = new Verilog::Getopt();
 @ARGV = $Opt->parameter(@ARGV);
-Getopt::Long::config ("no_auto_abbrev","pass_through");
+Getopt::Long::config ("no_auto_abbrev");
 if (! GetOptions (
 		  "help"	=> \&usage,
 		  "debug"	=> \&debug,
 		  "o=s"		=> \$opt_output_filename,
 		  "blank!"	=> \$opt_blank,
-		  "comment!"	=> sub { shift; push @opt_pp_flags, (keep_comments=>shift); },
-		  "line!"	=> sub { shift; push @opt_pp_flags, (line_directives=>shift); },
-		  "pedantic!"	=> sub { shift; push @opt_pp_flags, (pedantic=>shift); },
-		  "simple!"	=> sub { if ($_[0]) {
+		  "comment!"	=> sub { push @opt_pp_flags, (keep_comments=>$_[1]); },
+		  "line!"	=> sub { push @opt_pp_flags, (line_directives=>$_[1]); },
+		  "pedantic!"	=> sub { push @opt_pp_flags, (pedantic=>$_[1]); },
+		  "simple!"	=> sub { if ($_[1]) {
 		      push @opt_pp_flags, (keep_comments=>0,
 					   line_directives=>0,
 					   );
