@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 2.37****
+* Verilog::Language 2.373 2007/04/02
 
 ***     Fix vppp breaking with Getopt::Long 2.36.  [Andreas J. König]
 
