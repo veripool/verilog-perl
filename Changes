@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***     Fix vppp breaking with Getopt::Long 2.36.  [Andreas J. König]
 
+****	Fix modules without any ports causing lost declarations.  [Mark Nodine]
+
 * Verilog::Language 2.372 2007/02/28
 
 ***	Add include_open_nonfatal option to Preproc and Netlist.  [Eric Miller]

@@ -14,6 +14,8 @@ Module:v_comments  File:verilog/v_comments.v
   Net:d2  I  Type:wire  Array:  (`math-1):0
   Net:d3  I  Type:wire  Array:  32-1:0
   Net:e    Type:reg  Array:  11:0
+Module:v_hier_noport  File:verilog/v_hier_noport.v
+  Net:internal    Type:reg  Array:
 Module:v_hier_sub  File:verilog/v_hier_sub.v
   Port:avec  Dir:in  Type:wire  Array:
   Port:clk  Dir:in  Type:wire  Array:
@@ -55,3 +57,5 @@ Module:v_hier_top  File:verilog/v_hier_top.v
 Module:v_hier_top2  File:verilog/v_hier_top2.v
   Port:clk  Dir:in  Type:wire  Array:
   Net:clk  O  Type:wire  Array:
+  Cell:noport  is-a:v_hier_noport
+            Module:v_hier_noport  File:verilog/v_hier_noport.v

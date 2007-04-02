@@ -72,6 +72,7 @@ verilog/pli.v
 verilog/test.v
 verilog/test.vrename
 verilog/v_comments.v
+verilog/v_hier_noport.v
 verilog/v_hier_sub.v
 verilog/v_hier_subprim.v
 verilog/v_hier_subsub.v
