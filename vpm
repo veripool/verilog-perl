@@ -18,7 +18,7 @@ require 5.005;
 use Getopt::Long;
 use IO::File;
 use IO::Dir;
-use Pod::Text;
+use Pod::Usage;
 use FindBin qw($RealBin);
 use File::Copy;
 use strict "vars";
@@ -136,7 +136,7 @@ if (! GetOptions (
 		  "verilator!"	=> \$Opt_Verilator,
 		  "<>"		=> \&parameter,
 		  )) {
-    usage();
+    die "%Error: Bad usage, try 'vpm --help'\n";
 }
 
 push @files, ($Opt->incdir(), $Opt->library(), $Opt->module_dir());
@@ -165,13 +165,12 @@ exit (0);
 
 sub usage {
     print 'Version: $Id$ ';
-    print "\n";
-    $SIG{__WARN__} = sub{};	#pod2text isn't clean.
-    pod2text($0);
     print "\nThe following tokens are converted:\n";
     foreach my $tok (keys %Vpm_Conversions ) {
 	print "\tToken $tok\n";
     }
+    print "\n";
+    pod2usage(-verbose=>2, -exitval => 2);
     exit (1);
 }
 

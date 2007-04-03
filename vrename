@@ -24,7 +24,7 @@ use lib '.';
 use Getopt::Long;
 use IO::File;
 use IO::Dir;
-use Pod::Text;
+use Pod::Usage;
 
 use Verilog::Language;
 use Verilog::Getopt;
@@ -93,7 +93,7 @@ if (! GetOptions (
 		  "xref!"	=> \$Opt_Xref,
 		  "<>"		=> \&parameter,
 		  )) {
-    usage();
+    die "%Error: Bad usage, try 'vrename --help'\n";
 }
 $Opt_Crypt = 1 if $Opt_Crypt_All;
 
@@ -139,8 +139,7 @@ sub nop{}
 sub usage {
     print "Version: $VERSION\n";
     print 'Id: $Id$ ', "\n";
-    $SIG{__WARN__} = \&nop;	#pod2text isn't clean.
-    pod2text($0);
+    pod2usage(-verbose=>2, -exitval => 2);
     exit (1);
 }
 

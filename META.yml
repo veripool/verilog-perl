@@ -5,6 +5,7 @@ version_from: Language.pm
 license:      perl
 installdirs:  site
 requires:
+    Pod::Usage:                    0
 
 distribution_type: module
 generated_by: hand

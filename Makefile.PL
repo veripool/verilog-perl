@@ -59,6 +59,8 @@ WriteMakefile(
 	      VERSION_FROM  => 'Language.pm',
 	      NO_META	=> 1,
 	      #OPTIMIZE	=> '-ggdb',
+	      PREREQ_PM => {'Pod::Usage' => 0,
+			},
 	      PMLIBDIRS => ['lib', 'Verilog', 'Netlist',],
 	      EXE_FILES => [qw( vrename vpm vppp vhier )],
 	      'clean'	=> {FILES => qw (test_dir signals.vrename .vpm simv ),},

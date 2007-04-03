@@ -22,7 +22,7 @@ use lib '.';
 
 use Getopt::Long;
 use IO::File;
-use Pod::Text;
+use Pod::Usage;
 
 use Verilog::Preproc;
 use Verilog::Getopt;
@@ -61,7 +61,7 @@ if (! GetOptions (
 		  } },
 		  "<>"		=> \&parameter,
 		  )) {
-    usage();
+    die "%Error: Bad usage, try 'vppp --help'\n";
 }
 
 if (!@opt_files) {
@@ -93,8 +93,7 @@ exit (0);
 
 sub usage {
     print 'Version: $Id$ '."\n";
-    $SIG{__WARN__} = sub{};	#pod2text isn't clean.
-    pod2text($0);
+    pod2usage(-verbose=>2, -exitval => 2);
     exit (1);
 }
 
