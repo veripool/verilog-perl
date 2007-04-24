@@ -31,6 +31,6 @@ foreach my $line (<STDIN>) {
     # Fix flex 2.5.4 and GCC 4.1.0 warn_unused_result
     $line =~ s!\(void\) *fwrite\((.*)\)!if (fwrite($1)) {}!g;
     # Fix flex 2.5.33 and GCC 4.1.2 "warning: comparison between signed and unsigned integer expressions" in YY_INPUT
-    $line =~ s!for \( n = 0; n < max_size && !for ( n = 0; n < (size_t)max_size && !g;
+#FIX    $line =~ s!for \( n = 0; n < max_size && !for ( n = 0; n < (size_t)max_size && !g;
     print "$line";
 }

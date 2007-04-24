@@ -35,8 +35,8 @@ VFileLine.o:	VPreprocLex.h VPreproc.h VFileLine.h
 VPreprocLex_prefix.cpp: VPreprocLex.l
 	$(LEX) $(LEXFLAGS) -o$@ $<
 
-VPreprocLex.cpp: VPreprocLex_prefix.cpp
-	$(PERL) flexfix < $< > $@
+VPreprocLex.cpp: flexfix VPreprocLex_prefix.cpp
+	$(PERL) flexfix < VPreprocLex_prefix.cpp > $@
 
 clean::
 	-rm -rf test *.d *.o VPreprocLex*.cpp *.output example example.exe
