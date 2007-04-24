@@ -36,7 +36,7 @@ VPreprocLex_prefix.cpp: VPreprocLex.l
 	$(LEX) $(LEXFLAGS) -o$@ $<
 
 VPreprocLex.cpp: VPreprocLex_prefix.cpp
-	sed "s/(void) *fwrite(\(.*\))/if (fwrite(\1)) {}/" < $< > $@    # GCC 4.1.0 warn_unused_result
+	$(PERL) flexfix < $< > $@
 
 clean::
 	-rm -rf test *.d *.o VPreprocLex*.cpp *.output example example.exe
