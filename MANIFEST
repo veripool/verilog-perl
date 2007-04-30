@@ -19,6 +19,7 @@ Preproc/Makefile.PL
 Preproc/Preproc.pm
 Preproc/Preproc.xs
 Preproc/src/example.cpp
+Preproc/src/flexfix
 Preproc/src/Makefile.PL
 Preproc/src/Makefile_without_perl
 Preproc/src/VFileLine.cpp
@@ -27,7 +28,6 @@ Preproc/src/VPreproc.cpp
 Preproc/src/VPreproc.h
 Preproc/src/VPreprocLex.h
 Preproc/src/VPreprocLex.l
-Preproc/src/flexfix
 Preproc/typemap
 README
 SigParser.pm
@@ -53,6 +53,7 @@ t/42_dumpcheck_2.out
 t/42_dumpcheck_2e.out
 t/42_dumpcheck_2v.out
 t/42_dumpcheck_v2k.out
+t/44_create.t
 t/50_vrename.t
 t/60_vpm.t
 t/80_vppp.t
