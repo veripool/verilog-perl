@@ -128,7 +128,7 @@ class VPreprocLex {
 
     /// Called by VPreprocLex.l from lexer
     void appendDefValue(const char* text, int len);
-    void lineDirective(const char* text);
+    void lineDirective(const char* text) { m_curFilelinep = m_curFilelinep->lineDirective(text); }
     void linenoInc() { m_curFilelinep = m_curFilelinep->create(m_curFilelinep->lineno()+1); }
     /// Called by VPreproc.cpp to inform lexer
     void setStateDefArg();

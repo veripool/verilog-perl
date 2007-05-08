@@ -29,6 +29,15 @@ $VERSION = '2.316';
 
 bootstrap Verilog::Preproc;
 
+#In Preproc.xs:
+# sub _new (class, keepcmt, linedir, pedantic)
+# sub _open (class)
+# sub getline (class)
+# sub eof (class)
+# sub filename (class)
+# sub lineno (class)
+# sub unreadback (class, text)
+
 ######################################################################
 #### Accessors
 
@@ -45,8 +54,7 @@ sub new {
     # Sets $self->{_cthis}
     $self->{keep_comments} = 2 if ($self->{keep_comments} eq 'sub');
     $self->{keep_comments} = 3 if ($self->{keep_comments} eq 'expand'); #TBD
-    $self->_new(
-		$self,
+    $self->_new($self,
 		$self->{keep_comments},
 		$self->{keep_whitespace},
 		$self->{line_directives},
@@ -90,15 +98,6 @@ sub debug {
     $self->{debug} = $level;
     $self->_debug($level);
 }
-
-#In Preproc.xs:
-# sub _new (class, keepcmt, linedir, pedantic)
-# sub _open (class)
-# sub getline (class)
-# sub eof (class)
-# sub filename (class)
-# sub lineno (class)
-# sub unreadback (class, text)
 
 ######################################################################
 #### Utilities

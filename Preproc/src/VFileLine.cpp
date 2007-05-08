@@ -77,6 +77,34 @@ const char* VFileLine::itoa(int i) {
     return buf;
 }
 
+VFileLine* VFileLine::lineDirective(const char* textp) {
+    // Handle `line directive
+    // Skip `line
+    while (*textp && isspace(*textp)) textp++;
+    while (*textp && !isspace(*textp)) textp++;
+    while (*textp && (isspace(*textp) || *textp=='"')) textp++;
+
+    // Grab linenumber
+    int lineno = this->lineno();
+    const char *ln = textp;
+    while (*textp && !isspace(*textp)) textp++;
+    if (isdigit(*ln)) {
+	lineno = atoi(ln);
+    }
+    while (*textp && (isspace(*textp) || *textp=='"')) textp++;
+
+    // Grab filename
+    string filename = this->filename();
+    const char* fn = textp;
+    while (*textp && !(isspace(*textp) || *textp=='"')) textp++;
+    if (textp != fn) {
+	string strfn = fn;
+	strfn = strfn.substr(0, textp-fn);
+	filename = strfn;
+    }
+    return create(filename,lineno);
+}
+
 //======================================================================
 // Global scope
 

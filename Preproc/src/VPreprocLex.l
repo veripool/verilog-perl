@@ -184,28 +184,6 @@ void VPreprocLex::appendDefValue(const char* textp, int len) {
     m_defValue.append(textp,len);
 }
 
-void VPreprocLex::lineDirective(const char* textp) {
-    while (*textp && isspace(*textp)) textp++;
-    if (0==strncmp(textp,"`line",strlen("`line"))) textp+=strlen("`line");
-    while (*textp && (isspace(*textp) || *textp=='"')) textp++;
-
-    // Grab linenumber
-    const char *ln = textp;
-    while (*textp && !isspace(*textp)) textp++;
-    if (isdigit(*ln)) {
-	m_curFilelinep = m_curFilelinep->create(atoi(ln));
-    }
-    while (*textp && (isspace(*textp) || *textp=='"')) textp++;
-
-    // Grab filename
-    const char *fn = textp;
-    while (*textp && !(isspace(*textp) || *textp=='"')) textp++;
-    if (textp != fn) {
-	string newfilename; newfilename.append(fn, (textp-fn));
-	m_curFilelinep = m_curFilelinep->create(newfilename, m_curFilelinep->lineno());
-    }
-}
-
 void VPreprocLex::unused() {
     if (0) {
 	// Prevent unused warnings

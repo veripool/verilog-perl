@@ -60,6 +60,7 @@ public:
     // METHODS
     virtual void fatal(const string msg);	///< Report a fatal error at given location
     virtual void error(const string msg);	///< Report a error at given location
+    VFileLine* lineDirective(const char* textp);
     // STATIC METHODS
     static int numErrors() {return s_numErrors;}	///< Return total errors detected
 
