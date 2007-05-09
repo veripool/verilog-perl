@@ -41,8 +41,7 @@ maintainer-dist: preexist dist tag
 maintainer-copy:
 
 maintainer-clean: distclean
-	-rm -rf README Makefile
-
+	-rm -rf README Makefile MANIFEST.bak \$(MAKEFILE_OLD)
 ";
     return $out;
 }

@@ -44,6 +44,8 @@ t/30_preproc_on.out
 t/30_preproc_sub.out
 t/32_noinc.t
 t/32_noinc.v
+t/34_parser.out
+t/34_parser.t
 t/35_sigparser.out
 t/35_sigparser.t
 t/40_netlist.t
