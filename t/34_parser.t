@@ -10,7 +10,7 @@ use strict;
 use Test;
 use Data::Dumper; $Data::Dumper::Indent = 1; #Debug
 
-BEGIN { plan tests => 3 }
+BEGIN { plan tests => 5 }
 BEGIN { require "t/test_utils.pl"; }
 
 ######################################################################
@@ -53,6 +53,12 @@ ok(1);
 
 # Use our class and dump to a file
 my $dump_fh = new IO::File(">test_dir/34.dmp") or die "%Error: $! test_dir/34.dmp,";
+
+my $p = new Verilog::Parser;
+ok($p);
+$p->lineno(100);
+$p->filename("XXX");
+ok($p->lineno == 100);
 
 read_test("verilog/v_hier_subprim.v", $dump_fh);
 read_test("verilog/v_hier_sub.v", $dump_fh);

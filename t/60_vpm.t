@@ -10,7 +10,7 @@ use IO::File;
 use strict;
 use Test;
 
-BEGIN { plan tests => 4 }
+BEGIN { plan tests => 5 }
 BEGIN { require "t/test_utils.pl"; }
 
 print "Checking vpm...\n";
@@ -21,10 +21,8 @@ run_system ("${PERL} vpm --minimum --nostop -o test_dir/.vpm --date -y verilog/"
 ok(1);
 ok(-r 'test_dir/.vpm/pli.v');
 
-my $orig_lines = lines_in("verilog/example.v");
-my $new_lines = lines_in("test_dir/.vpm/example.v");
-print "Line count: $orig_lines =? $new_lines\n";
-ok($orig_lines==$new_lines);
+ok(compare('lines', [glob("test_dir/.vpm/*.v")]));
+ok(compare('diff',  [glob("test_dir/.vpm/*.v")]));
 
 # Build the model
 unlink "simv";
@@ -77,4 +75,45 @@ sub lines_in {
     my $fh = IO::File->new($filename) or die "%Error: $! $filename";
     my @lines = $fh->getlines();
     return $#lines;
+}
+
+sub compare {
+    my $mode = shift;
+    my $files = shift;
+    my $ok = 1;
+  file:
+    foreach my $file (@{$files}) {
+	$file =~ s!.*/!!;
+	# SPECIAL FILES we processed!
+	next if $file eq 'example.v';
+
+
+	my $fn1 = "verilog/$file";
+	my $fn2 = "test_dir/.vpm/$file";
+	if ($mode eq 'lines') {
+	    my $orig_lines = lines_in($fn1);
+	    my $new_lines = lines_in($fn2);
+	    if ($orig_lines!=$new_lines)  { $ok=0; print "%Error: "; }
+	    print "Line count: $file: $orig_lines =? $new_lines\n";
+	}
+	elsif ($mode eq 'diff') {
+	    my $f1 = IO::File->new ($fn1) or die "%Error: $! $fn1,";
+	    my $f2 = IO::File->new ($fn2) or die "%Error: $! $fn2,";
+	    my @l1 = $f1->getlines();
+	    my @l2 = $f2->getlines();
+	    my $nl = $#l1;  $nl = $#l2 if ($#l2 > $nl);
+	    for (my $l=0; $l<=$nl; $l++) {
+		next if $l2[$l] =~ /vpm/;
+		if (($l1[$l]||"") ne ($l2[$l]||"")) {
+		    warn ("%Warning: Line ".($l+1)." mismatches; diff $fn1 $fn2\n"
+			  ."F1: ".($l1[$l]||"*EOF*\n")
+			  ."F2: ".($l2[$l]||"*EOF*\n"));
+		    $ok = 0;
+		    next file;
+		}
+	    }
+	}
+	else { die; }
+    }
+    return $ok;
 }
