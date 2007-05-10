@@ -62,6 +62,7 @@ ok($p->lineno == 100);
 
 read_test("verilog/v_hier_subprim.v", $dump_fh);
 read_test("verilog/v_hier_sub.v", $dump_fh);
+read_test("verilog/example.v", $dump_fh);
 ok(1);
 $dump_fh->close();
 
