@@ -25,10 +25,11 @@ sub _common {
     my $what = shift;
     my $call_self = shift;
     my $text = shift;
-    if (defined $self->unreadback && $self->unreadback ne '') {
+    my $urb = $self->unreadback;
+    if ($urb &&  $urb ne '') {
 	$self->{dump_fh}->printf("%s:%03d: unreadback '%s'\n",
 				 $self->filename, $self->lineno,
-				 $self->unreadback);
+				 $urb);
 	$self->unreadback('');
     }
     $self->{dump_fh}->printf("%s:%03d: %s '%s'\n",
