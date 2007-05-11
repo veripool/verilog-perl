@@ -44,6 +44,8 @@ In order to make the parser do anything interesting, you must make a
 subclass where you override one or more of the following methods as
 appropriate:
 
+=head1 CALLBACKS
+
 =over 4
 
 =item $self->attribute ( $keyword, $text )
@@ -99,6 +101,10 @@ This method is called when a module is defined.
 This is being distributed as a baseline for future contributions.  Don't
 expect a lot, the Parser is still naive, and there are many awkward cases
 that aren't covered.
+
+Note the SigParser is focused on extracting signal information.  It does
+NOT extract enough information to derrive general interconnect; for example
+the contents of 'assign' statements are not parsed.
 
 =head1 DISTRIBUTION
 
