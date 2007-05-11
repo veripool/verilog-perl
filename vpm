@@ -52,18 +52,7 @@ $VERSION = '2.373';
 # Avoid having a token that is a substring of a standard function, for example
 #     $wr would be bad (beginning of $write).  That would slow down the parsing.
 %Vpm_Conversions  
-    = (#Token 			Function for processing it
-       '$assert' =>		\&assert,
-       '$assert_amone' =>	sub {assert_hot(0,@_); },   # atmost one hot
-       '$assert_onehot' =>	sub {assert_hot(1,@_); },
-       '$assert_req_ack' =>	\&assert_req_ack,
-       '$assert_info' =>	\&assert_info,
-       '$check_ilevel' =>	\&check_ilevel,
-       '$coverage' =>		\&coverage,
-       '$error' =>		\&error,
-       '$info' =>		\&info,
-       '$warn' =>		\&warn,
-       ## U versions, to avoid conflicts with SystemVerilog
+    = (## U versions, to avoid conflicts with SystemVerilog
        '$uassert' =>		\&assert,
        '$uassert_amone' =>	sub {assert_hot(0,@_); },   # atmost one hot
        '$uassert_onehot' =>	sub {assert_hot(1,@_); },
@@ -625,6 +614,7 @@ sub vpm_process {
     # Set up parsing
     my $parser = new Verilog::Vpm::Parser;
     $parser->filename($filename);
+    $parser->lineno(1);
 
     # Open file for reading and parse it
     my $fh = IO::File->new("<$filename") or die "%Error: $! $filename.";
@@ -643,7 +633,8 @@ sub vpm_process {
     while (my $line = $fh->getline() ) {
 	$parser->parse ($line);
     }
-    $Sendout .= $parser->unreadback();
+    $parser->eof;
+    $Sendout .= $parser->unreadback();    $parser->unreadback('');
     $fh->close;
 
     # Hack the output text to add in the messages variable
@@ -874,6 +865,8 @@ sub vpm_process_one {
 
 package Verilog::Vpm::Parser;
 require Exporter;
+use Verilog::Parser;
+use base qw(Verilog::Parser);
 
 BEGIN {
     # Symbols to alias to global scope
@@ -903,7 +896,7 @@ BEGIN {
 
 use strict;
 use vars (@GLOBALS,
-	  qw ( @ISA @EXPORT $VERSION
+	  qw ( @EXPORT $VERSION
 	       $Last_Keyword
 	       @Last_Symbols
 	       @Last_Number_Ops
@@ -915,14 +908,9 @@ use vars (@GLOBALS,
 	       ));
 use Verilog::Parser;
 
-BEGIN {
-    @ISA = qw( Verilog::Parser );
-}
-
 sub new {
     my $class = shift;
     my $self = $class->SUPER::new();
-
     bless $self, $class;
 
     # State of the parser
@@ -948,7 +936,7 @@ sub new {
 sub keyword {
     # Callback from parser when a keyword occurs
     my ($parser, $token) = @_;
-    my $since = $parser->unreadback();
+    my $since = $parser->unreadback(); $parser->unreadback('');
 
     $Last_Keyword = $token;
     @Last_Symbols = ();
@@ -972,7 +960,7 @@ sub keyword {
 sub symbol {
     # Callback from parser when a symbol occurs
     my ($parser, $token) = @_;
-    my $since = $parser->unreadback();
+    my $since = $parser->unreadback(); $parser->unreadback('');
 
     if ($token eq "__LINE__") { $token = $parser->line(); }
     if ($token eq "__FILE__") { $token = $parser->filename(); }
@@ -1016,7 +1004,7 @@ sub symbol {
 sub number {
     # Callback from parser when a number occurs
     my ($parser, $token) = @_;
-    my $since = $parser->unreadback();
+    my $since = $parser->unreadback(); $parser->unreadback('');
 
     if ($In_Message) {
 	print "Callback NUMBER $token\n"    if ($Debug);
@@ -1030,7 +1018,7 @@ sub number {
 sub operator {
     # Callback from parser when a operator occurs
     my ($parser, $token) = @_;
-    my $since = $parser->unreadback();
+    my $since = $parser->unreadback(); $parser->unreadback('');
 
     if ($In_Message) {
 	print "Callback OPERATOR $token  ($Parens, $Param_Num)\n"    if ($Debug);
@@ -1107,7 +1095,7 @@ sub string {
     # Callback from parser when a string occurs
     my ($parser, $token) = @_;
 
-    my $since = $parser->unreadback();
+    my $since = $parser->unreadback(); $parser->unreadback('');
 
     if ($In_Message) {
 	print "Callback STRING $token\n"    if ($Debug);
@@ -1128,11 +1116,11 @@ sub comment {
     # *** To speed things up, this is only invoked when doing vericov
     my ($parser, $token) = @_;
     if (!$Opt_Vericov) {
-	$parser->{unreadback} .= $token;
+	$parser->unreadback($parser->unreadback() . $token);
 	return;
     }
 
-    my $since = $parser->unreadback();
+    my $since = $parser->unreadback(); $parser->unreadback('');
 
     if ($Opt_Vericov
 	&& (($token =~ /summit\s+modcovon/

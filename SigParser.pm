@@ -46,28 +46,17 @@ appropriate:
 
 =over 4
 
-=item $self->module ( $keyword, $name, ignored, $in_celldefine )
+=item $self->attribute ( $keyword, $text )
 
-This method is called when a module is defined.
-
-=item $self->port ( $name )
-
-This method is called when a module port is defined.
-
-=item $self->task ( $keyword, $name )
-
-This method is called when a module is defined.
+Scanned an attribute (future: Verilog-2001) or meta-comment.  The parser
+inspects the first word of each comment line (C<//key rest> to end of line)
+or comment block (C</*key rest */).  It calls
+C<$self->attribute( prev_keyword, meta_text )> if the first word has a true
+value in hash C<$self->metacomment>.
 
 =item $self->function ( $keyword, $name )
 
 This method is called when a function is defined.
-
-=item $self->signal_decl ( $keyword, $signame, $vector, $mem, $signed )
-
-This method is called when a signal is declared.  The first argument,
-$keyword is ('input', 'output', etc), the second argument is the name of
-the signal.  The third argument is the vector bits or "".  The fourth
-argument is the memory bits or "".
 
 =item $self->instant ( $module, $cell, $parameters )
 
@@ -76,17 +65,32 @@ parameter is the name of the module being instantiated, and the second
 parameter is the name of the cell.  The third is the textual list of
 parameters, otherwise unparsed.
 
+=item $self->module ( $keyword, $name, ignored, $in_celldefine )
+
+This method is called when a module is defined.
+
 =item $self->pin ( $name, $connection, $index )
+
+This method is called when a pin on a instant is defined.
+
+=item $self->port ( $name )
+
+This method is called when a module port is defined.
 
 =item $self->ppdefine ( $defvar, $definition )
 
-=item $self->attribute ( $keyword, $text )
+This method is called when a preprocessor definition is encountered.
 
-Scanned an attribute (future: Verilog-2001) or meta-comment.  The parser
-inspects the first word of each comment line (C<//key rest> to end of line)
-or comment block (C</*key rest */).  It calls
-C<$self->attribute( prev_keyword, meta_text )> if the first word has a true
-value in hash C<$self->metacomment>.
+=item $self->signal_decl ( $keyword, $signame, $vector, $mem, $signed )
+
+This method is called when a signal is declared.  The first argument,
+$keyword is ('input', 'output', etc), the second argument is the name of
+the signal.  The third argument is the vector bits or "".  The fourth
+argument is the memory bits or "".
+
+=item $self->task ( $keyword, $name )
+
+This method is called when a module is defined.
 
 =back
 

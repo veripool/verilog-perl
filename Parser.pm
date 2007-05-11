@@ -27,8 +27,9 @@ Verilog::Parser - Parse Verilog language files
   my $parser = new Verilog::Parser;
   $string = $parser->unreadback ();
   $line   = $parser->line ();
-  $parser->parse ($text)
-  $parser->parse_file ($filename)
+  $parser->parse ($text);
+  $parser->parse_file ($filename);
+  $parser->eof();
 
 =head1 DESCRIPTION
 
@@ -45,10 +46,23 @@ The external interface to Verilog::Parser is:
 
 Create a new Parser.
 
+=item $parser->eof ()
+
+Indicate the end of the input stream.  All incomplete tokens will be parsed
+and all remaining callbacks completed.
+
+=item $parser->filename ($set)
+
+Return (if $set is undefined) or set current filename.
+
+=item $parser->lineno ($set)
+
+Return (if $set is undefined) or set current line number.
+
 =item $parser->parse ($string)
 
-Parse the $string as a verilog file.  Can be called multiple times.
-The return value is a reference to the parser object.
+Parse the $string as verilog text.  Can be called multiple times.  Note not
+all callbacks may be invoked until the eof method is called.
 
 =item $parser->parse_file ($filename);
 
@@ -69,14 +83,6 @@ callback.  (For example comments, if there is no comment callback.)  This
 is useful for recording the entire contents of the input, for
 preprocessors, pretty-printers, and such.
 
-=item $parser->lineno ($set)
-
-Return (if $set is undefined) or set current line number.
-
-=item $parser->filename ($set)
-
-Return (if $set is undefined) or set current filename.
-
 =back
 
 In order to make the parser do anything interesting, you must make a
@@ -91,33 +97,33 @@ This method is called when any text in // or /**/ comments are recognized.
 The first argument, $token, is the contents of the comment including the
 comment delimiters.
 
-=item $self->string ( $token )
-
-This method is called when any text in double quotes are recognized, or on
-the text of protected regions.  The first argument, $token, is the contents
-of the string including the quotes.
-
 =item $self->keyword ( $token )
 
 This method is called when any Verilog keyword is recognized.
 The first argument, $token, is the keyword.
-
-=item $self->symbol ( $token )
-
-This method is called when any Verilog symbol is recognized.  A symbol is
-considered a non-keyword bare-word.  The first argument, $token, is the
-symbol.
-
-=item $self->operator ( $token )
-
-This method is called when any symbolic operator (+, -, etc) is recognized.
-The first argument, $token, is the operator.
 
 =item $self->number ( $token )
 
 This method is called when any number is recognized.  The first argument,
 $token, is the number.  The Verilog::Language::number_value function may be
 useful for converting a Verilog value to a Perl integer.
+
+=item $self->operator ( $token )
+
+This method is called when any symbolic operator (+, -, etc) is recognized.
+The first argument, $token, is the operator.
+
+=item $self->string ( $token )
+
+This method is called when any text in double quotes are recognized, or on
+the text of protected regions.  The first argument, $token, is the contents
+of the string including the quotes.
+
+=item $self->symbol ( $token )
+
+This method is called when any Verilog symbol is recognized.  A symbol is
+considered a non-keyword bare-word.  The first argument, $token, is the
+symbol.
 
 =back
 
@@ -471,6 +477,9 @@ sub parse {
     return $self;
 }
 
+sub eof {
+}
+
 #######################################################################
 
 sub parse_file {
@@ -488,6 +497,7 @@ sub parse_file {
     while ($line = $fh->getline() ) {
 	$self->parse ($line);
     }
+    $self->eof();
     $fh->close();
     return $self;
 }
@@ -509,6 +519,7 @@ sub parse_preproc_file {
 	    $self->parse ($line);
 	}
     }
+    $self->eof();
     return $self;
 }
 

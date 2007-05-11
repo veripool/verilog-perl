@@ -5,6 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language **
 
+***	Verilog::Parser and Verilog::SigParser objects must call the eof method
+	to insure forward compatibility.
+
 ****	Fix --help to use Pod::Usage instead of depreciated pod2text.
 
 * Verilog::Language 2.373 2007/04/02
