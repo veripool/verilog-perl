@@ -1,20 +1,20 @@
-module primitive v_hier_prim
-port q
-port a
-signal_decl output q   
-signal_decl input a   
-module module v_hier_sub
-port clk
-signal_decl input clk   
-port avec
-signal_decl input avec [3:0]  
-port qvec
-signal_decl output qvec [3:0]  
-signal_decl supply1 a1   
-instant v_hier_subsub subsub0
-pin q qvec[0] 1
-pin a a1 2
-instant v_hier_subsub subsub2
-pin pin1 qvec[2] 1
-pin pin2 1'b0 2
-function function foo
+verilog/v_hier_subprim.v:008: MODULE  'primitive' 'v_hier_prim' undef '0'
+verilog/v_hier_subprim.v:010: PORT  'q'
+verilog/v_hier_subprim.v:012: PORT  'a'
+verilog/v_hier_subprim.v:014: SIGNAL_DECL  'output' 'q' '' '' undef
+verilog/v_hier_subprim.v:015: SIGNAL_DECL  'input' 'a' '' '' undef
+verilog/v_hier_sub.v:006: MODULE  'module' 'v_hier_sub' undef '0'
+verilog/v_hier_sub.v:007: PORT  'clk'
+verilog/v_hier_sub.v:007: SIGNAL_DECL  'input' 'clk' '' '' undef
+verilog/v_hier_sub.v:008: PORT  'avec'
+verilog/v_hier_sub.v:008: SIGNAL_DECL  'input' 'avec' '[3:0]' '' undef
+verilog/v_hier_sub.v:009: PORT  'qvec'
+verilog/v_hier_sub.v:010: SIGNAL_DECL  'output' 'qvec' '[3:0]' '' undef
+verilog/v_hier_sub.v:012: SIGNAL_DECL  'supply1' 'a1' '' '' undef
+verilog/v_hier_sub.v:017: INSTANT  'v_hier_subsub' 'subsub0' '#(.IGNORED('sh20))'
+verilog/v_hier_sub.v:019: PIN  'q' 'qvec[0]' '1' '1' undef
+verilog/v_hier_sub.v:021: PIN  'a' 'a1' '2' '1' undef
+verilog/v_hier_sub.v:028: INSTANT  'v_hier_subsub' 'subsub2' ''
+verilog/v_hier_sub.v:028: PIN  'pin1' 'qvec[2]' '1' '0' undef
+verilog/v_hier_sub.v:028: PIN  'pin2' '1'b0' '2' '0' undef
+verilog/v_hier_sub.v:032: FUNCTION  'function' 'foo'

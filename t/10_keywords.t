@@ -19,11 +19,11 @@ ok (Verilog::Language::is_keyword("input"));
 ok (!Verilog::Language::is_keyword("not_input"));
 ok (Verilog::Language::is_compdirect("`define"));
 
-ok (Verilog::Language::language_standard() eq 'sv31');
+ok (Verilog::Language::language_standard() eq '1800-2005');
 ok (Verilog::Language::is_keyword("do"));
-ok (Verilog::Language::language_standard(2001) eq 2001);
+ok (Verilog::Language::language_standard(2001) eq '1364-2001');
 ok (Verilog::Language::is_keyword("generate"));
-ok (Verilog::Language::language_standard(1995) eq 1995);
+ok (Verilog::Language::language_standard(1995) eq '1364-1995');
 ok (!Verilog::Language::is_keyword("generate"));
 
 ok (Verilog::Language::number_value("5'h13")==19);

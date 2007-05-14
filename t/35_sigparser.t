@@ -20,57 +20,29 @@ use strict;
 use vars qw(@ISA);
 @ISA = qw(Verilog::SigParser);
 
-sub module {
+sub _common {
     my $self = shift;
-    my $keyword = shift;
-    my $name = shift;
-    $self->{dump_fh}->print("module $keyword $name\n");
+    my $what = shift;
+    my $call_self = shift;
+    my @args = @_;
+
+    my $args="";
+    foreach (@args) { $args .= defined $_ ? " '$_'" : " undef"; }
+    my $urb = $self->unreadback;
+    $self->{dump_fh}->printf("%s:%03d: %s %s\n",
+			     $self->filename, $self->lineno,
+			     uc $what,
+			     $args);
 }
 
-sub task {
-    my $self = shift;
-    my $keyword = shift;
-    my $name = shift;
-    $self->{dump_fh}->print("task $keyword $name\n");
-}
-
-sub function {
-    my $self = shift;
-    my $keyword = shift;
-    my $name = shift;
-    $self->{dump_fh}->print("function $keyword $name\n");
-}
-
-sub signal_decl {
-    my $self = shift;
-    my $keyword = shift;
-    my $name = shift;
-    my $vector = shift||"";
-    my $mem = shift||"";
-    my $signed = shift||"";
-    $self->{dump_fh}->print("signal_decl $keyword $name $vector $mem $signed\n");
-}
-
-sub instant {
-    my $self = shift;
-    my $module = shift;
-    my $cell = shift;
-    $self->{dump_fh}->print("instant $module $cell\n");
-}
-
-sub pin {
-    my $self = shift;
-    my $name = shift;
-    my $conn = shift||"";
-    my $number = shift||"";
-    $self->{dump_fh}->print("pin $name $conn $number\n");
-}
-
-sub port {
-    my $self = shift;
-    my $name = shift;
-    $self->{dump_fh}->print("port $name\n");
-}
+sub attribute {	$_[0]->_common('attribute', @_); }
+sub function {	$_[0]->_common('function', @_); }
+sub instant {	$_[0]->_common('instant', @_); }
+sub module {	$_[0]->_common('module', @_); }
+sub pin {	$_[0]->_common('pin', @_); }
+sub port {	$_[0]->_common('port', @_); }
+sub signal_decl { $_[0]->_common('signal_decl', @_); }
+sub task {	$_[0]->_common('task', @_); }
 
 ######################################################################
 

@@ -8,6 +8,11 @@ indicates the contributor was also the author of the fix; Thanks!
 ***	Verilog::Parser and Verilog::SigParser objects must call the eof method
 	to insure forward compatibility.
 
+***	Vpm $info etc have been removed, now only $uinfo, etc are supported.
+	This avoids conflict with SystemVerilog $error function.  [Tad Truex]
+
+***	Verilog::Language keywords now uses the `begin_keywords standard names.
+
 ****	Fix --help to use Pod::Usage instead of depreciated pod2text.
 
 * Verilog::Language 2.373 2007/04/02

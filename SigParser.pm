@@ -173,18 +173,11 @@ sub metacomment {
 
 # The my's aren't needed since we do nothing, but are useful if the
 # user copies them from here to their program.
-sub module {
-    my $self = shift;
-    my $keyword = shift;
-    my $name = shift;
-    shift;  # Ignored
-    my $in_celldefine = shift;
-}
 
-sub task {
+sub attribute {
     my $self = shift;
     my $keyword = shift;
-    my $name = shift;
+    my $text = shift;
 }
 
 sub function {
@@ -193,20 +186,19 @@ sub function {
     my $name = shift;
 }
 
-sub signal_decl {
-    my $self = shift;
-    my $keyword = shift;
-    my $name = shift;
-    my $vector = shift;
-    my $mem = shift;
-    my $signed = shift;
-}
-
 sub instant {
     my $self = shift;
     my $module = shift;
     my $cell = shift;
     my $params = shift;
+}
+
+sub module {
+    my $self = shift;
+    my $keyword = shift;
+    my $name = shift;
+    shift;  # Ignored
+    my $in_celldefine = shift;
 }
 
 sub pin {
@@ -221,22 +213,25 @@ sub port {
     my $name = shift;
 }
 
-sub attribute {
-    my $self = shift;
-    my $keyword = shift;
-    my $text = shift;
-}
-
 sub ppdefine {
     my $self = shift;
     my $defvar = shift;
     my $definition = shift;
 }
 
-sub ppinclude {
+sub signal_decl {
     my $self = shift;
-    my $defvar = shift;
-    my $definition = shift;
+    my $keyword = shift;
+    my $name = shift;
+    my $vector = shift;
+    my $mem = shift;
+    my $signed = shift;
+}
+
+sub task {
+    my $self = shift;
+    my $keyword = shift;
+    my $name = shift;
 }
 
 ######################################################################
