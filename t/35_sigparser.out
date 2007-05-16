@@ -3,6 +3,7 @@ verilog/v_hier_subprim.v:010: PORT  'q'
 verilog/v_hier_subprim.v:012: PORT  'a'
 verilog/v_hier_subprim.v:014: SIGNAL_DECL  'output' 'q' '' '' undef
 verilog/v_hier_subprim.v:015: SIGNAL_DECL  'input' 'a' '' '' undef
+verilog/v_hier_subprim.v:025: MODULE  'module' 'bug27070' undef '0'
 verilog/v_hier_sub.v:006: MODULE  'module' 'v_hier_sub' undef '0'
 verilog/v_hier_sub.v:007: PORT  'clk'
 verilog/v_hier_sub.v:007: SIGNAL_DECL  'input' 'clk' '' '' undef

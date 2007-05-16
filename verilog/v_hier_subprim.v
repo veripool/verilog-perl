@@ -20,3 +20,10 @@ primitive v_hier_prim (/*AUTOARG*/
    endtable
 
 endprimitive
+
+`celldefine
+module bug27070();
+  `define W 4
+  parameter TAP = `W'b1001;
+endmodule
+`endcelldefine

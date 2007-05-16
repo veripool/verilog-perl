@@ -48,6 +48,7 @@ t/34_parser.out
 t/34_parser.t
 t/35_sigparser.out
 t/35_sigparser.t
+t/36_sigmany.t
 t/40_netlist.t
 t/42_dumpcheck.t
 t/42_dumpcheck_1.out
@@ -71,6 +72,7 @@ verilog/example.v
 verilog/inc1.v
 verilog/inc2.v
 verilog/inc3.v
+verilog/parser_bugs.v
 verilog/pinorder.v
 verilog/pli.v
 verilog/test.v
