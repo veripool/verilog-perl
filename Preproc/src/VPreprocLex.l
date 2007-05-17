@@ -99,10 +99,12 @@ drop		[\032]
 			  else return (VP_STRING); }
 
 	/* Protected blocks */
+<INITIAL>"`protect"	{ yy_push_state(PRTMODE); yymore(); }
 <INITIAL>"`protected"	{ yy_push_state(PRTMODE); yymore(); }
 <PRTMODE><<EOF>>	{ linenoInc(); yyerror("EOF in `protected"); yyleng=0; yyterminate(); }
 <PRTMODE>{crnl}		{ linenoInc(); yymore(); }
 <PRTMODE>.	 	{ yymore(); }
+<PRTMODE>"`endprotect"   { yy_pop_state(); return (VP_TEXT); }
 <PRTMODE>"`endprotected" { yy_pop_state(); return (VP_TEXT); }
 
 	/* Pass-through include <> filenames */
