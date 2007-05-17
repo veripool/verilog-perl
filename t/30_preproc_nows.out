@@ -28,4 +28,10 @@ verilog/inc1.v:47:  bar_suffix
 verilog/inc1.v:51:  $c("Zap(\"",bug1,"\");"); ;
 verilog/inc1.v:52:  $c("Zap(\"","bug2","\");"); ;
 verilog/inc1.v:60: `line 60 "verilog/inc1.v" 0
-verilog/inc1.v:61: `line 61 "verilog/inc1.v" 2
+verilog/inc1.v:63: module prot();
+verilog/inc1.v:64: `protected
+verilog/inc1.v:64:     I!#r#e6<_Q{{E2+]I3<[3s)1@D|'E''i!O?]jD>Jo_![Cl)
+verilog/inc1.v:64:     #nj1]p,3^1~,="E@QZB\T)eU\pC#C|7=\$J$##A[@-@{Qk]
+verilog/inc1.v:67: `endprotected
+verilog/inc1.v:68: endmodule
+verilog/inc1.v:69: `line 69 "verilog/inc1.v" 2

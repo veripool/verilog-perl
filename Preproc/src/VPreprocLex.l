@@ -49,6 +49,7 @@ void appendDefValue(char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(
 %x DEFMODE
 %x ARGMODE
 %x INCMODE
+%x PRTMODE
 
 /* drop: Drop Ctrl-Z - can't pass thru or may EOF the output too soon */
 
@@ -96,6 +97,13 @@ drop		[\032]
 <STRMODE>{quote} 	{ yy_pop_state();
 			  if (VPreprocLex::s_currentLexp->m_parenLevel) appendDefValue(yytext,yyleng);
 			  else return (VP_STRING); }
+
+	/* Protected blocks */
+<INITIAL>"`protected"	{ yy_push_state(PRTMODE); yymore(); }
+<PRTMODE><<EOF>>	{ linenoInc(); yyerror("EOF in `protected"); yyleng=0; yyterminate(); }
+<PRTMODE>{crnl}		{ linenoInc(); yymore(); }
+<PRTMODE>.	 	{ yymore(); }
+<PRTMODE>"`endprotected" { yy_pop_state(); return (VP_TEXT); }
 
 	/* Pass-through include <> filenames */
 <INCMODE><<EOF>>	{ linenoInc(); yyerror("EOF in unterminated include filename"); yyleng=0; yyterminate(); }
