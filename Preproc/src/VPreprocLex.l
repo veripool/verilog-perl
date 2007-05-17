@@ -50,12 +50,15 @@ void appendDefValue(char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(
 %x ARGMODE
 %x INCMODE
 
+/* drop: Drop Ctrl-Z - can't pass thru or may EOF the output too soon */
+
 ws		[ \t\f\r]
 wsn		[ \t\f]
 crnl		[\r]*[\n]
 quote		[\"]
 backslash	[\\]
 symb		[a-zA-Z_][a-zA-Z0-9_$]*
+drop		[\032]
 
 	/**************************************************************/
 %%
@@ -104,6 +107,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 	/* Reading definition */
 <DEFMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <DEFMODE>"//"[^\n\r]*	{ return (VP_COMMENT);}
+<DEFMODE>{drop}		{ }
 <DEFMODE><<EOF>>	{ linenoInc(); yyerror("EOF (missing return?) in define value"); yyleng=0; yyterminate(); }
 <DEFMODE>{crnl}		{ linenoInc(); yy_pop_state(); yytext="\n"; yyleng=1; return (VP_DEFVALUE); }
 <DEFMODE>[\\]{crnl}	{ linenoInc(); appendDefValue("\n",1); } /* Include return so can maintain output line count */
@@ -114,6 +118,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 	/* Define arguments */
 <ARGMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <ARGMODE>"//"[^\n\r]*	{ return (VP_COMMENT);}
+<ARGMODE>{drop}		{ }
 <ARGMODE><<EOF>>	{ yyerror("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
 <ARGMODE>{crnl}		{ linenoInc(); yytext="\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
@@ -145,6 +150,7 @@ symb		[a-zA-Z_][a-zA-Z0-9_$]*
 <INITIAL>{symb}		{ return (VP_SYMBOL); }
 <INITIAL>[\r]		{ }
 <INITIAL>{wsn}+		{ if (!keepWhitespace()) { yytext=" "; yyleng=1; } return VP_WHITE; }
+<INITIAL>{drop}		{ }
 <INITIAL>.		{ return (VP_TEXT); }
 
 <*>.|\n			{ yymore(); }	/* Prevent hitting ECHO; */

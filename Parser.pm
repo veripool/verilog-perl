@@ -251,6 +251,10 @@ sub new {
 ######################################################################
 ####  Accessors
 
+sub debug {
+    $Debug = shift if defined $_[0];
+}
+
 sub unreadback {
     # Return any un read text and clear it
     my $self = shift;	# Parser

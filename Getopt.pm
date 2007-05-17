@@ -469,8 +469,9 @@ sub undef {
     my $self = shift;
     my $token = shift;
     my $oldval = $self->{defines}{$token};
-    (defined $oldval or !$self->{define_warnings})
-	or carp "%Warning: ".$self->fileline().": No definition to undef for $token,";
+    # We no longer warn about undefing something that doesn't exist, as other compilers don't
+    #(defined $oldval or !$self->{define_warnings})
+    #	or carp "%Warning: ".$self->fileline().": No definition to undef for $token,";
     delete $self->{defines}{$token};
 }
 
