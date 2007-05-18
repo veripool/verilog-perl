@@ -252,7 +252,9 @@ sub new {
 ####  Accessors
 
 sub debug {
+    my $self = shift;
     $Debug = shift if defined $_[0];
+    return $Debug;
 }
 
 sub unreadback {

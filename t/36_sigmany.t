@@ -43,6 +43,7 @@ package main;
 
 use Verilog::SigParser;
 use Verilog::Preproc;
+use Verilog::Getopt;
 ok(1);
 
 my @files;
@@ -83,12 +84,19 @@ sub one_parse {
 
     print "="x70,"\n";
     print "read $filename\n";
+    my $opt = new Verilog::Getopt;
+    $opt->define('__message_on',"1'b0");
+
     my $pp = Verilog::Preproc->new(keep_comments=>0,
-				   include_open_nonfatal=>1);
+				   include_open_nonfatal=>1,
+				   options=>$opt);
 
     my $parser = new MyParser();
     $parser->debug($debug);
     $pp->open($filename);
+    if ($ENV{VERILOG_TEST_KEYWORDS}) {
+	$parser->parse("`begin_keywords \"1364-2001\" ");
+    }
     $parser->parse_preproc_file($pp);
     return $parser;
 }

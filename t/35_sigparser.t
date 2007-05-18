@@ -35,6 +35,12 @@ sub _common {
 			     $args);
 }
 
+sub error {
+    my ($self,$text,$token)=@_;
+    my $fileline = $self->filename.":".$self->lineno;
+    warn ("%Warning: $fileline: $text\n");
+}
+
 sub attribute {	$_[0]->_common('attribute', @_); }
 sub function {	$_[0]->_common('function', @_); }
 sub instant {	$_[0]->_common('instant', @_); }
@@ -56,6 +62,7 @@ ok(1);
 my $dump_fh = new IO::File("test_dir/35.dmp","w")
     or die "%Error: $! test_dir/35.dmp,";
 
+read_test("/dev/null", $dump_fh);  # Empty files should be ok
 read_test("verilog/v_hier_subprim.v", $dump_fh);
 read_test("verilog/v_hier_sub.v", $dump_fh);
 ok(1);
@@ -73,6 +80,7 @@ sub read_test {
     my $pp = Verilog::Preproc->new(keep_comments=>0,);
 
     my $parser = new MyParser (dump_fh => $dump_fh);
+    #$parser->debug(9);
 
     # Preprocess
     $pp->open($filename);
