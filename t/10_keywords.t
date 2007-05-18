@@ -9,7 +9,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 25 }
+BEGIN { plan tests => 14 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Language;
@@ -25,18 +25,6 @@ ok (Verilog::Language::language_standard(2001) eq '1364-2001');
 ok (Verilog::Language::is_keyword("generate"));
 ok (Verilog::Language::language_standard(1995) eq '1364-1995');
 ok (!Verilog::Language::is_keyword("generate"));
-
-ok (Verilog::Language::number_value("5'h13")==19);
-ok (Verilog::Language::number_value("5'd13")==13);
-ok (Verilog::Language::number_value("5'o13")==11);
-ok (Verilog::Language::number_value("5'B11")==3);
-ok (Verilog::Language::number_value("5 'B 11")==3);
-ok (Verilog::Language::number_value("'b10")==2);
-ok (Verilog::Language::number_value("2'sb10")==2);
-ok (Verilog::Language::number_bits("8'b10")==8);
-ok (Verilog::Language::number_bits("8 'b 10")==8);
-ok (Verilog::Language::number_signed("8 'sb 1")==1);
-ok (!defined Verilog::Language::number_bits("'b10"));
 
 ok (Verilog::Language::strip_comments("he/**/l/**/lo") eq "hello");
 ok (Verilog::Language::strip_comments("he//xx/*\nllo") eq "he\nllo");

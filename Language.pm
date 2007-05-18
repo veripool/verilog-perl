@@ -57,10 +57,25 @@ standards apply.  The year is indicates the language standard as per the
 `begin_keywords macro, '1364-1995', '1364-2001', '1364-2005', or
 '1800-2005'.
 
+=item Verilog::Language::number_bigint ($number_string)
+
+Return the numeric value of a Verilog value stored as a Math::BigInt, or
+undef if incorrectly formed.  You must 'use Math::BigInt' yourself before
+calling this function.  Note bigints do not have an exact size, so NOT of a
+Math::BigInt may return a different value then verilog.  See also
+number_value and number_bitvector.
+
 =item Verilog::Language::number_bits ($number_string)
 
 Return the number of bits in a value string, or undef if incorrectly
 formed, _or_ not specified.
+
+=item Verilog::Language::number_bitvector ($number_string)
+
+Return the numeric value of a Verilog value stored as a Bit::Vector, or
+undef if incorrectly formed.  You must 'use Bit::Vector' yourself before
+calling this function.  The size of the Vector will be that returned by
+number_bits.
 
 =item Verilog::Language::number_signed ($number_string)
 
@@ -70,7 +85,8 @@ Return true if the Verilog value is signed, else undef.
 
 Return the numeric value of a Verilog value, or undef if incorrectly
 formed.  It ignores any signed Verilog attributes, but is is returned as a
-perl signed integer, so it may fail for over 31 bit values.
+perl signed integer, so it may fail for over 31 bit values.  See also
+number_bigint and number_bitvector.
 
 =item Verilog::Language::split_bus ($bus)
 
@@ -309,6 +325,65 @@ sub number_value {
     elsif ($number =~ /\'s?d?([0-9]+)$/i
 	   || $number =~ /^([0-9]+)$/i) {
 	return ($1);
+    }
+    return undef;
+}
+
+sub number_bigint {
+    my $number = shift;
+    $number =~ s/[_ ]//g;
+    if ($number =~ /\'s?h([0-9a-f]+)$/i) {
+	return (Math::BigInt->new("0x".$1));
+    }
+    elsif ($number =~ /\'s?o([0-9a-f]+)$/i) {
+	my $digits = $1;
+	my $vec = Math::BigInt->new();
+	my $len = length($digits);
+	my $bit = 0;
+	for (my $index=$len-1; $index>=0; $index--, $bit+=3) {
+	    my $digit = substr($digits,$index,1);
+	    my $val = Math::BigInt->new($digit);
+	    $val = $val->blsft($bit,2);
+	    $vec->bior($val);
+	}
+	return ($vec);
+    }
+    elsif ($number =~ /\'s?b([0-1]+)$/i) {
+	return (Math::BigInt->new("0b".$1));
+    }
+    elsif ($number =~ /\'s?d?0*([0-9]+)$/i
+	   || $number =~ /^0*([0-9]+)$/i) {
+	return (Math::BigInt->new($1));
+    }
+    return undef;
+}
+
+sub number_bitvector {
+    my $number = shift;
+    $number =~ s/[_ ]//g;
+    my $bits = number_bits($number) || 32;
+    if ($number =~ /\'s?h([0-9a-f]+)$/i) {
+	return (Bit::Vector->new_Hex($bits,$1));
+    }
+    elsif ($number =~ /\'s?o([0-9a-f]+)$/i) {
+	my $digits = $1;
+	my $vec = Bit::Vector->new($bits);
+	my $len = length($digits);
+	my $bit = 0;
+	for (my $index=$len-1; $index>=0; $index--, $bit+=3) {
+	    my $digit = substr($digits,$index,1);
+	    $vec->Bit_On($bit+2) if ($digit & 4);
+	    $vec->Bit_On($bit+1) if ($digit & 2);
+	    $vec->Bit_On($bit+0) if ($digit & 1);
+	}
+	return ($vec);
+    }
+    elsif ($number =~ /\'s?b([0-1]+)$/i) {
+	return (Bit::Vector->new_Bin($bits,$1));
+    }
+    elsif ($number =~ /\'s?d?([0-9]+)$/i
+	   || $number =~ /^([0-9]+)$/i) {
+	return (Bit::Vector->new_Dec($bits,$1));
     }
     return undef;
 }

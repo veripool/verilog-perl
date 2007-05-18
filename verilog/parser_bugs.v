@@ -1,3 +1,7 @@
+// Not legal:
+// end : ADDRESS_TEST_BLOCK             // See 9.8.1
+// `define at EOF with no newline
+
 module bug26141 ();
    wire [0:3] b;
    wire a = b[2];
@@ -122,4 +126,52 @@ endmodule
 module bug27072(
     output reg sum,
     input wire ci);
+endmodule
+
+`resetall
+module spec;
+   specify
+      specparam
+	Tac = 0.1,
+	Tcs = 0.2;
+      if ( !B & !M )
+	( posedge CLK => (  Q[0] : 1'bx )) = ( Tac, Tcs );
+      $width (negedge CLK &&& EN, Tac, 0, notif_clk);
+   endspecify
+endmodule
+
+module bugevent;
+   event e;
+   initial ->e;
+   always @ (e && e) $write("Legal\n");
+endmodule
+
+module buglocal;
+   always #(cyclehalf) begin
+      clk <= ~clk;
+   end
+   always @(*) begin end
+   initial force flag = 0;
+   initial #(delta+0.5) CLRN <= 1;
+   assign (weak0,weak1) VDD=1'b0;
+   assign (weak0,weak1) VSS=1'b1;
+   wire [71:0] #1 xxout = xxin;
+   initial #1000_000 $finish;
+   initial $display($time,,"Double commas are stupid");
+   initial for (counter[3:0] = 4'h0; counter[3:0] < limit[3:0];
+		counter[3:0] = counter[3:0] + 4'h1) $write();
+   always @(posedge(clk && !xclk) or negedge(clk && xclk) or reset) $write();
+
+   nmos   # (PullTime, PullTime, 0) (PT,PU,1'b1);
+   pulldown (strong0) pullinst (r);
+
+   defparam x.y.z.PAR = 1;
+
+   cdrv #5.0 clk(clk);
+
+   initial PI = 3.1415926535_8979323846;
+
+   always val = @ eventid 1'h1;
+
+   always dly = # (2:3:4) 5'h6 ;
 endmodule

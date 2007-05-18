@@ -9,7 +9,7 @@ module v_comments ( a,                // Pragma for a
    output [0:10] c;             // comment for c
    output [ ((2*`ThirtyTwo) - 1) : 0 ] d;
    output [ `ThirtyTwo : 0 ] d1;
-   output [ ( `math - 1 ): 0 ] d2;
+   output [ ( MATH - 1 ): 0 ] d2;
    output [ `ThirtyTwo - 1: 0 ] d3;
 
    reg           d;

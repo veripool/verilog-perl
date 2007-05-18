@@ -13,6 +13,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Verilog::Language keywords now uses the `begin_keywords standard names.
 
+***	Added Verilog::Language::number_bitvector and number_bigint for returning
+	Bit::Vector and Math::BigInt objects.  bug26967.  [Mark Nodine]
+
 ****	Fix --help to use Pod::Usage instead of depreciated pod2text.
 
 ****	Ignore quotes inside `protected/`endprotected blocks.

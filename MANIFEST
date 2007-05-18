@@ -35,6 +35,7 @@ t/00_pod.t
 t/01_manifest.t
 t/10_keywords.t
 t/12_splitbus.t
+t/14_numbers.t
 t/20_getopt.opt
 t/20_getopt.t
 t/30_preproc.out
