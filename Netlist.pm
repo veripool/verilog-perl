@@ -320,10 +320,13 @@ Verilog::Netlist - Verilog Netlist
 =head1 DESCRIPTION
 
 Verilog::Netlist contains interconnect information about a whole design
-database.
+database.  
 
-The database is composed of files, which contain the text read from each
-file.
+See the "Which Package" section of L<Verilog::Language> if you are unsure
+which parsing package to use for a new application.
+
+A Verilog::Netlist is composed of files, which contain the text read from
+each file.
 
 A file may contain modules, which are individual blocks that can be
 instantiated (designs, in Synopsys terminology.)

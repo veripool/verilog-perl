@@ -38,6 +38,55 @@ Verilog::Language - Verilog language utilities
 This package provides useful utilities for general use with the
 Verilog Language.  General functions will be added as needed.
 
+=head1 WHICH PACKAGE
+
+If you are starting a new application which needs to parse the Verilog
+language you have several tools available to you.  Which you pick depends
+on how low level and complete the information you need is.
+
+=over 4
+
+=item Verilog::Preproc
+
+Verilog::Preproc is useful when you need only text out, or a list of
+defines, etc.  It can preprocess a file, or be used to provide the Verilog
+macro language on top of synthesis scripts.  It understands the full
+SystemVerilog 2005 preprocessor syntax.
+
+=item Verilog::Parser
+
+Verilog::Parser is useful when you need to tokenize or write source filters
+(where you need everything including whitespace).  It can take raw files,
+or preprocessed input.  It understands all SystemVerilog 2005 keywords.
+
+=item Verilog::SigParser
+
+Verilog::SigParser is useful when you need a list of modules, signals,
+ports, functions, etc.  It requires a preprocessed file, and can parse most
+Verilog 2005 files, but only provides callbacks on certain interesting
+things.
+
+=item Verilog::Netlist
+
+Verilog::Netlist is useful for when you need the hierarchy, and a list of
+signals per module, pins per cell, etc.  It builds upon the output of
+Verilog::SigParser, so requires preprocessed files.
+
+This is probably the most popular choice.
+
+=item VPI
+
+Using the VPI is the best way to access the behavior of the design.  It is
+not part of this package as it requires a compliant simulator and C++ code
+to call the VPI, and understands as much of the language as the simulator
+supports.  This allows writing lint checks and full knowledge of all parts
+of the code, but generally requires the most work (short of writing a
+parser from scratch.)
+
+=back
+
+=head1 FUNCTIONS
+
 =over 4
 
 =item Verilog::Language::is_keyword ($symbol_string)

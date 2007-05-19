@@ -38,7 +38,10 @@ method is called and invoke various callback methods.   This is useful for
 extracting information and editing files while retaining all context.  For
 netlist like extractions, see L<Verilog::Netlist>.
 
-The external interface to Verilog::Parser is:
+See the "Which Package" section of L<Verilog::Language> if you are unsure
+which parsing package to use for a new application.
+
+=head1 METHODS
 
 =over 4
 
