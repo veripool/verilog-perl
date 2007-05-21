@@ -3,7 +3,9 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language **
+* Verilog::Language 2.380 2007/05/27
+
+***	Added new Verilog-Perl.pod documentation overview.
 
 ***	Verilog::Parser and Verilog::SigParser objects must call the eof method
 	to insure forward compatibility.
