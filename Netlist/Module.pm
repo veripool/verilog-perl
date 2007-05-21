@@ -260,7 +260,8 @@ Verilog::Netlist::Module - Module within a Verilog Netlist
 
 =head1 DESCRIPTION
 
-Verilog::Netlist creates a module for every file in the design.
+A Verilog::Netlist::Module object is created by Verilog::Netlist for every
+module in the design.
 
 =head1 ACCESSORS
 
@@ -399,6 +400,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Netlist::Subclass>
 L<Verilog::Netlist>
 

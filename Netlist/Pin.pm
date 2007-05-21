@@ -182,9 +182,9 @@ Verilog::Netlist::Pin - Pin on a Verilog Cell
 
 =head1 DESCRIPTION
 
-Verilog::Netlist creates a pin for every pin connection on a cell.  A Pin
-connects a net in the current design to a port on the instantiated cell's
-module.
+A Verilog::Netlist::Pin object is created by Verilog::Netlist::Cell for for
+each pin connection on a cell.  A Pin connects a net in the current design
+to a port on the instantiated cell's module.
 
 =head1 ACCESSORS
 
@@ -269,6 +269,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Netlist::Subclass>
 L<Verilog::Netlist>
 

@@ -319,8 +319,8 @@ Verilog::Netlist - Verilog Netlist
 
 =head1 DESCRIPTION
 
-Verilog::Netlist contains interconnect information about a whole design
-database.  
+Verilog::Netlist reads and holds interconnect information about a whole
+design database.
 
 See the "Which Package" section of L<Verilog::Language> if you are unsure
 which parsing package to use for a new application.
@@ -495,6 +495,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Netlist::Cell>,
 L<Verilog::Netlist::File>,
 L<Verilog::Netlist::Module>,

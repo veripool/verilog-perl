@@ -194,8 +194,8 @@ Verilog::Netlist::Cell - Instantiated cell within a Verilog Netlist
 
 =head1 DESCRIPTION
 
-Verilog::Netlist creates a cell for every instantiation in the current
-module.
+A Verilog::Netlist::Cell object is created by Verilog::Netlist for every
+instantiation in the current module.
 
 =head1 ACCESSORS
 
@@ -283,6 +283,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Netlist::Subclass>
 L<Verilog::Netlist>
 

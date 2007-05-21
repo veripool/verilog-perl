@@ -35,8 +35,9 @@ Verilog::Language - Verilog language utilities
 
 =head1 DESCRIPTION
 
-This package provides useful utilities for general use with the
-Verilog Language.  General functions will be added as needed.
+Verilog::Language provides general utilities for using the Verilog
+Language, such as parsing numbers or determing what keywords exist.
+General functions will be added as needed.
 
 =head1 WHICH PACKAGE
 
@@ -172,6 +173,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Parser>, 
 L<Verilog::ParseSig>, 
 L<Verilog::Getopt>

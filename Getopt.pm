@@ -512,8 +512,8 @@ Verilog::Getopt - Get Verilog command line options
 
 =head1 DESCRIPTION
 
-The L<Verilog::Getopt> package provides standardized handling of options similar
-to Verilog/VCS and cc/GCC.
+Verilog::Getopt provides standardized handling of options similar to
+Verilog/VCS and cc/GCC.
 
 =over 4
 
@@ -659,6 +659,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Language>
 
 =cut

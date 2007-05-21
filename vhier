@@ -255,8 +255,8 @@ vhier - Return all files in a verilog hierarchy using Verilog::Netlist
 
 =head1 DESCRIPTION
 
-Vhier reads the Verilog files passed on the command line and outputs
-a tree of all of the filenames referenced by that file.
+Vhier reads the Verilog files passed on the command line and outputs a tree
+of all of the filenames, modules, and cells referenced by that file.
 
 =head1 VERILOG ARGUMENTS
 
@@ -356,6 +356,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Getopt>,
 L<Verilog::Preproc>,
 L<Verilog::Netlist>

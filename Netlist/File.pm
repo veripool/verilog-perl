@@ -344,7 +344,8 @@ Verilog::Netlist::File - File containing Verilog code
 
 =head1 DESCRIPTION
 
-Verilog::Netlist::File allows Verilog files to be read and written.
+Verilog::Netlist::File allows Verilog::Netlist objects to be read and
+written in Verilog format.
 
 =head1 ACCESSORS
 
@@ -396,6 +397,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Netlist::Subclass>
 L<Verilog::Netlist>
 

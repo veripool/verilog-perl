@@ -33,10 +33,10 @@ Verilog::Parser - Parse Verilog language files
 
 =head1 DESCRIPTION
 
-The L<Verilog::Parser> package will tokenize a Verilog file when the parse()
-method is called and invoke various callback methods.   This is useful for
-extracting information and editing files while retaining all context.  For
-netlist like extractions, see L<Verilog::Netlist>.
+Verilog::Parser will tokenize a Verilog file when the parse() method is
+called and invoke various callback methods.  This is useful for extracting
+information and editing files while retaining all context.  For netlist
+like extractions, see L<Verilog::Netlist>.
 
 See the "Which Package" section of L<Verilog::Language> if you are unsure
 which parsing package to use for a new application.
@@ -198,6 +198,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Preproc>, 
 L<Verilog::SigParser>, 
 L<Verilog::Language>, 

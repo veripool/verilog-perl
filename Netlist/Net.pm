@@ -182,8 +182,8 @@ Verilog::Netlist::Net - Net for a Verilog Module
 
 =head1 DESCRIPTION
 
-Verilog::Netlist creates a net for every sc_signal declaration in the
-current module.
+A Verilog::Netlist::Net object is created by Verilog::Netlist::Module for
+every signal and input/output declaration in the current module.
 
 =head1 ACCESSORS
 
@@ -263,6 +263,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Netlist::Subclass>
 L<Verilog::Netlist>
 

@@ -205,9 +205,10 @@ Verilog::Preproc - Preprocess Verilog files
 
 =head1 DESCRIPTION
 
-L<Verilog::Preproc> reads Verilog files, and preprocesses them according
-to the Verilog 2001 specification.  Programs can be easily converted from
-reading a IO::File into reading preprocessed output from Verilog::Preproc.
+Verilog::Preproc reads Verilog files, and preprocesses them according to
+the SystemVerilog 2005 specification.  Programs can be easily converted
+from reading a IO::File into reading preprocessed output from
+Verilog::Preproc.
 
 See the "Which Package" section of L<Verilog::Language> if you are unsure
 which parsing package to use for a new application.
@@ -388,6 +389,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Language>, L<Verilog::Getopt>
 
 L<IO::File> 

@@ -150,9 +150,9 @@ Verilog::Netlist::Subclass - Common routines for all classes
 
 =head1 DESCRIPTION
 
-Verilog::Netlist::Subclass is used as a base class for all structures.
-It is mainly used so that $self->warn() and $self->error() will produce
-consistent results.
+The Verilog::Netlist::Subclass is used as a base class for all
+Verilog::Netlist::* structures.  It is mainly used so that $self->warn()
+and $self->error() will produce consistent results.
 
 =head1 MEMBER FUNCTIONS
 
@@ -211,6 +211,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Netlist>
 
 =cut

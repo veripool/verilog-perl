@@ -244,6 +244,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Getopt>,
 L<Verilog::Preproc>
 

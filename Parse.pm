@@ -132,6 +132,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::ParseSig>, 
 L<Verilog::Language>, 
 L<IO::File>

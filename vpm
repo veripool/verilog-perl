@@ -1158,7 +1158,7 @@ B<vpm>
 
 =head1 DESCRIPTION
 
-Vpm will read the specified verilog files and preprocess special PLI
+Vpm will read the specified Verilog files and preprocess special PLI
 assertions.  The files are written to the directory named .vpm unless
 another name is given with B<-o>.  If a directory is passed, all files in
 that directory will be preprocessed.
@@ -1330,6 +1330,7 @@ Duane Galbi <duane.galbi@conexant.com>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Parser>, L<Verilog::Pli>
 
 =cut

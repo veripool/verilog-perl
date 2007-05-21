@@ -15,12 +15,12 @@ sub MY::postamble {
     $out .= "CCFLAGS += -Wall -Wno-unused -Werror\n" if $ENV{VERILATOR_AUTHOR_SITE};
     $out .= "OPTIMIZE += -Wno-unused\n" if $ENV{VERILATOR_AUTHOR_SITE};  # Makefile has another -Wall
     $out .= "
-README: readme.texi
+README: Verilog-Perl.pod
 	-rm -rf \$@
-	makeinfo \$< --output \$@ --no-headers --no-validate
+	pod2text --loose \$< > \$@
 
 clean::
-	-rm -rf simv .vpm test_dir
+	-rm -rf simv .vpm test_dir *.tmp
 
 dist: maintainer-copy distcheck README
 

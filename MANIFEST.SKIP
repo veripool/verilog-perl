@@ -15,6 +15,7 @@
 \.def$
 \.dll$
 \.exp$
+\.tmp$
 VPreprocLex\.cpp$
 simv
 .*\.tar\.gz

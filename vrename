@@ -588,11 +588,12 @@ vrename - change signal names across many Verilog files
 
 =head1 DESCRIPTION
 
-Vrename will allow a signal to be changed across all levels of the
-design hierarchy using a three step process.  (It actually includes
-module names, macros, and other definitions, so those can be changed too.)
+Vrename will allow a signal to be changed across all levels of the design
+hierarchy, or to create a cross reference of signal names.  (It actually
+includes module names, macros, and other definitions, so those can be
+changed too.)
 
-First, use
+Vpm uses a three step process.  First, use
 
     vrename --list  [<file.v>...]  [<directory>....]
 
@@ -698,6 +699,6 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
-L<Verilog::Parser>
+L<Verilog-Perl>, L<Verilog::Parser>
 
 =cut

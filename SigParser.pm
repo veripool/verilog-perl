@@ -31,9 +31,9 @@ Verilog::SigParser - Signal Parsing for Verilog language files
 
 =head1 DESCRIPTION
 
-The L<Verilog::SigParser> package builds upon the Verilog::Parse function
-to provide callbacks for when a signal is declared, a module instantiated,
-or a module defined.  For a higher level interface to this package, see
+Verilog::SigParser builds upon the Verilog::Parser module to provide
+callbacks for when a signal is declared, a module instantiated, or a module
+defined.  For a higher level interface to this package, see
 L<Verilog::Netlist>.
 
 The external interface to Verilog::SigParser is described in the
@@ -122,6 +122,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Parser>, 
 L<Verilog::Language>, 
 L<Verilog::Netlist>, 

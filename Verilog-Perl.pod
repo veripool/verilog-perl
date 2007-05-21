@@ -1,0 +1,267 @@
+# $Id$ -*- Perl -*-
+# See copyright, etc in below POD section.
+######################################################################
+
+=pod
+
+=head1 NAME
+
+Verilog-Perl - Overview of Verilog language packages for Perl
+
+=head1 DESCRIPTION
+
+The Verilog-Perl distribution provides Perl parsing and utilities for the
+Verilog Language.  This file provides an overview of the distribution, for
+specific details on each component, see that component's manpage.
+
+You may also want to try the AUTO features present in
+L<http://www.veripool.com/verilog-mode.html> Verilog-Mode.
+
+=head1 INSTALLATION
+
+Skip this section if Verilog-Perl has already been installed.
+
+=head2 Supported Systems
+
+Verilog-Perl should run on any system with Perl, G++, Flex, and Bison.  It
+is known to work on at least:
+
+=over 4
+
+=item * sparc-sun-solaris2.5.1
+
+=item * i386-linux
+
+=item * i686-w2k-cygwin
+
+=back
+
+=head2 CPAN Installation
+
+=over 4
+
+Easiest installation is using the "CPAN" command line that comes with Perl.
+After configuring CPAN the first time, simply
+
+   $ cpan
+   cpan> install Verilog-Perl
+
+Read the rest of this file for details on the programs provided.
+
+=back
+
+=head2 Manual Installation
+
+=over 4
+
+Download the latest version from L<http://www.perl.org/CPAN/>, or
+from L<http://www.veripool.com/verilog-perl.html>.
+
+C<cd> to the directory containing this README notice.
+
+Type C<perl Makefile.PL> to configure Verilog for your system.
+
+Type C<make> to compile Verilog.  Some Solaris users have had
+trouble with "open" being redefined.  If this happens, try editing
+the Makefile to change _FILE_OFFSET_BITS to 32 instead of 64.
+
+Type C<make test> to check the package.  If you don't have
+Synopsys' VCS, the test will print a warning, which you can ignore.
+
+Type C<make install> to install the programs and any data files and
+documentation.
+
+Read the rest of this file for details on the programs provided.
+
+=back
+
+=head1 SCRIPTS
+
+The following scripts are installed by Verilog-Perl:
+
+=over 4
+
+=item L<vhier>
+
+Vhier reads the Verilog files passed on the command line and outputs a tree
+of all of the filenames, modules, and cells referenced by that file.
+
+=item L<vpm>
+
+Vpm will read the specified Verilog files and preprocess special PLI
+assertions.
+
+=item L<vppp>
+
+Vppp reads the Verilog files passed on the command line and outputs
+preprocessed output.
+
+=item L<vrename>
+
+Vrename will allow a signal to be changed across all levels of the design
+hierarchy, or to create a cross reference of signal names.
+
+=back
+
+=head1 PACKAGES
+
+=over 4
+
+=item L<Verilog::Getopt|Verilog::Getopt>
+
+Verilog::Getopt provides standardized handling of options similar to
+Verilog/VCS and cc/GCC.
+
+=item L<Verilog::Language|Verilog::Language>
+
+Verilog::Language provides general utilities for using the Verilog
+Language, such as parsing numbers or determing what keywords exist.
+
+=item L<Verilog::Netlist|Verilog::Netlist>
+
+Verilog::Netlist reads and holds interconnect information about a whole
+design database.
+
+=item L<Verilog::Netlist::Cell|Verilog::Netlist::Cell>
+
+A Verilog::Netlist::Cell object is created by Verilog::Netlist for every
+instantiation in the current module.
+
+=item L<Verilog::Netlist::File|Verilog::Netlist::File>
+
+Verilog::Netlist::File allows Verilog::Netlist objects to be read and
+written in Verilog format.
+
+=item L<Verilog::Netlist::Module|Verilog::Netlist::Module>
+
+A Verilog::Netlist::Module object is created by Verilog::Netlist for every
+module in the design.
+
+=item L<Verilog::Netlist::Net|Verilog::Netlist::Net>
+
+A Verilog::Netlist::Net object is created by Verilog::Netlist::Module for
+every signal and input/output declaration in the current module.
+
+=item L<Verilog::Netlist::Pin|Verilog::Netlist::Pin>
+
+A Verilog::Netlist::Pin object is created by Verilog::Netlist::Cell for for
+each pin connection on a cell.
+
+=item L<Verilog::Netlist::Port|Verilog::Netlist::Port>
+
+A Verilog::Netlist::Port object is created by Verilog::Netlist::Module for
+every port connection in the module.
+
+=item L<Verilog::Netlist::Subclas|Verilog::Netlist::Subclass>
+
+The Verilog::Netlist::Subclass is used as a base class for all
+Verilog::Netlist::* structures.
+
+=item L<Verilog::Parser|Verilog::Parser>
+
+Verilog::Parser will tokenize a Verilog file and invoke various callback
+methods.
+
+=item L<Verilog::Preproc|Verilog::Preproc>
+
+Verilog::Preproc reads Verilog files, and preprocesses them according to
+the Verilog specification.  Programs can be easily converted from reading a
+IO::File into reading preprocessed output from Verilog::Preproc.
+
+=item L<Verilog::SigParse|Verilog::SigParser>
+
+Verilog::SigParser builds upon the Verilog::Parser package to provide
+callbacks for when a signal is declared, a module instantiated, or a module
+defined.
+
+=back
+
+=head1 WHICH PARSER PACKAGE?
+
+If you are starting a new application which needs to parse the Verilog
+language you have several tools available to you.  Which you pick depends
+on how low level and complete the information you need is.
+
+=over 4
+
+=item Verilog::Preproc
+
+Verilog::Preproc is useful when you need only text out, or a list of
+defines, etc.  It can preprocess a file, or be used to provide the Verilog
+macro language on top of synthesis scripts.  It understands the full
+SystemVerilog 2005 preprocessor syntax.
+
+=item Verilog::Parser
+
+Verilog::Parser is useful when you need to tokenize or write source filters
+(where you need everything including whitespace).  It can take raw files,
+or preprocessed input.  It understands all SystemVerilog 2005 keywords.
+
+=item Verilog::SigParser
+
+Verilog::SigParser is useful when you need a list of modules, signals,
+ports, functions, etc.  It requires a preprocessed file, and can parse most
+Verilog 2005 files, but only provides callbacks on certain interesting
+things.
+
+=item Verilog::Netlist
+
+Verilog::Netlist is useful for when you need the hierarchy, and a list of
+signals per module, pins per cell, etc.  It builds upon the output of
+Verilog::SigParser, so requires preprocessed files.
+
+This is probably the most popular choice.
+
+=item VPI
+
+Using the VPI is the best way to access the behavior of the design.  It is
+not part of this package as it requires a compliant simulator and C++ code
+to call the VPI, and understands as much of the language as the simulator
+supports.  This allows writing lint checks and full knowledge of all parts
+of the code, but generally requires the most work (short of writing a
+parser from scratch.)
+
+=back
+
+=head1 DISTRIBUTION
+
+Verilog-Perl is part of the L<http://www.veripool.com/> free Verilog EDA
+software tool suite.  The latest version is available from CPAN and from
+L<http://www.veripool.com/verilog-perl.html>.
+
+Copyright 2000-2007 by Wilson Snyder.  This package is free software; you
+can redistribute it and/or modify it under the terms of either the GNU
+Lesser General Public License or the Perl Artistic License.
+
+This code is provided with no warranty of any kind, and is used entirely at
+your own risk.
+
+=head1 AUTHORS
+
+Wilson Snyder <wsnyder@wsnyder.org>
+
+=head1 SEE ALSO
+
+L<vhier>,
+L<vpm>,
+L<vppp>,
+L<vrename>
+
+L<Verilog::Getopt>,
+L<Verilog::Language>,
+L<Verilog::Netlist>,
+L<Verilog::Parser>,
+L<Verilog::Preproc>,
+L<Verilog::SigParser>
+
+L<Verilog::Netlist::Cell>,
+L<Verilog::Netlist::File>,
+L<Verilog::Netlist::Module>,
+L<Verilog::Netlist::Net>,
+L<Verilog::Netlist::Pin>,
+L<Verilog::Netlist::Port>,
+L<Verilog::Netlist::Subclass>,
+
+And the L<http://www.veripool.com/verilog-mode.html>Verilog-Mode package for Emacs.
+
+=cut

@@ -104,8 +104,8 @@ Verilog::Netlist::Port - Port for a Verilog Module
 
 =head1 DESCRIPTION
 
-Verilog::Netlist creates a port for every connection to the outside
-world in the current module.
+A Verilog::Netlist::Port object is created by Verilog::Netlist::Module for
+every port connection in the module.
 
 =head1 ACCESSORS
 
@@ -173,6 +173,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 =head1 SEE ALSO
 
+L<Verilog-Perl>,
 L<Verilog::Netlist::Subclass>
 L<Verilog::Netlist>
 
