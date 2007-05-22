@@ -12,11 +12,16 @@ module example;
 
 `define ten 10
 
+   reg \escaped[10] ;
+
    initial begin
       $uinfo (0, "Welcome to a VPMed file\n");
       //
       $uinfo (1, "Printed only at debug level %0d\n",1);
       $uinfo (9, "Printed only at debug level %0d\n",9);
+      //
+      \escaped[10] = 1'b1;
+      $uassert (\escaped[10] , "Escaped not 1\n");
       //
       i=0;
       $uassert (1==1, "Why doesn't 1==1??\n");
@@ -29,7 +34,7 @@ module example;
 	       ent*/
 	       );
       //
-      i=3'b100;  $uassert_amone(i[2:0], "amone ok\n");
+      i=3'b100;  $uassert_amone(\i [2:0], "amone ok\n");
       i=3'b010;  $uassert_amone(i[2:0], "amone ok\n");
       i=3'b001;  $uassert_amone(i[2:0], "amone ok\n");
       i=3'b000;  $uassert_amone(i[2:0], "amone ok\n");

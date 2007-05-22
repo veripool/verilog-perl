@@ -31,10 +31,9 @@ use vars qw ($VERSION $Debug $Opt %Vpm_Conversions
 	     $Vpm_Conversions_Regexp
 	     %Vpm_Chiponly_Rename
 	     $Opt_Vericov $Opt_Chiponly
-	     $Last_Filename
+	     $Last_Parser
 	     $Last_Module
 	     $Last_Task
-	     $Message_Filename
 	     $ReqAck_Num
 	     $Vericov_Enabled
 	     $Got_Change
@@ -212,21 +211,20 @@ sub check_signame {
 
 sub assert_req_ack {
     shift;
-    my $line = $.;
     my @params = @_;
 
     # Check parameters
     my $req = check_signame(shift @params);
     my $ack = check_signame(shift @params);
-    ($req && $ack) or die "%Error $Last_Filename:$line: Format of \$assert_req_ack boggled.\n";
+    ($req && $ack) or die "%Error: ".$Last_Parser->fileline.": Format of \$assert_req_ack boggled.\n";
     @params = map {
 	my $ipar = $_;
 	$_ = check_signame($_);
-	($_) or die "%Error $Last_Filename:$line: Parameter $ipar isn't a signal\n";
+	($_) or die "%Error: ".$Last_Parser->fileline.": Parameter $ipar isn't a signal\n";
     } @params;
 
     # Form new variables
-    $ReqAck_Num or die "%Error $Last_Filename:$line: \$assert_req_ack can't find module statement\n";
+    $ReqAck_Num or die "%Error: ".$Last_Parser->fileline.": \$assert_req_ack can't find module statement\n";
     my $busy = "_assertreqack${ReqAck_Num}_busy_r";
     $Insure_Symbols{$Last_Module}{$busy} = ['reg', 0];	# Make this symbol exist if doesn't
 
@@ -322,10 +320,11 @@ sub assert_hot {
 }
 
 sub get_lineinfo {
-    my $line = $.;
     # Align the lineinfo so that right hand sides are aligned
-    my $lineinfo = substr ($Message_Filename, 0, 17); # Don't make too long
-    $lineinfo = $lineinfo . sprintf(":%04d:", $line );
+    my $message_filename = $Last_Parser->filename;
+    $message_filename =~ s/^.*\///g;
+    my $lineinfo = substr ($message_filename, 0, 17); # Don't make too long
+    $lineinfo = $lineinfo . sprintf(":%04d:", $Last_Parser->lineno );
     $lineinfo = sprintf ("%-21s", $lineinfo);
 }
 
@@ -399,7 +398,6 @@ sub message {
     my $otherargs = shift;
     my $taskFlag = shift;
     my @params = @_;
-    my $line = $.;
 
     if ($params[0] =~ /^\s*\"/) {
 	# No digit in first parameter
@@ -417,9 +415,9 @@ sub message {
     }
 
     ($params[0] =~ /^\s*[0-9]/)
-	or die "%Error $Last_Filename:$line: Non-numeric \$message first argument: $params[0]\n";
+	or die "%Error: ".$Last_Parser->fileline.": Non-numeric \$message first argument: $params[0]\n";
     ($params[1] =~ /^\s*\"/)
-	or die "%Error $Last_Filename:$line: Non-string \$message second argument: $params[1]\n";
+	or die "%Error: ".$Last_Parser->fileline.": Non-string \$message second argument: $params[1]\n";
 
     message_header();
 
@@ -457,11 +455,10 @@ sub message {
 sub coverage {
     # Add simulation coverage for these signals
     my @params = @_;
-    my $line = $.;
 
     # Error check
     ($#params >= 1)
-	or die "%Error $Last_Filename:$line: Format of \$coverage boggled.\n";
+	or die "%Error: ".$Last_Parser->fileline.": Format of \$coverage boggled.\n";
 
     message_header();
     for my $par (1 .. $#params) {
@@ -487,7 +484,7 @@ sub coverage {
 	    $realbit_width = $1;
 	    $sig = $2;
 	    ($realbit_high != $realbit_low && $realbit_high > 0)
-		or die "%Error $Last_Filename:$line: \$expand on zero-width signal $sig\n";
+		or die "%Error: ".$Last_Parser->fileline.": \$expand on zero-width signal $sig\n";
 	}
 	my $bit_low;
 	for ($bit_low = $realbit_low; $bit_low<=$realbit_high; $bit_low+=$realbit_width) {
@@ -500,8 +497,8 @@ sub coverage {
 				       ? ("[${text_high}:${text_low}]")
 				       : "");
 	    my $inthash = {"module" => $Last_Module,
-			   "file" => $Last_Filename,
-			   "line" => $line,
+			   "file" => $Last_Parser->filename,
+			   "line" => $Last_Parser->lineno,
 			   "bit_low" => $text_low,
 			   "bit_high" => $text_high,
 			   "cover_signal" => $cover_signal,
@@ -606,15 +603,11 @@ sub vpm_process {
 
     @instance_tests_list = ();
 
-
-    $Last_Filename = $filename;
-    $Message_Filename = $filename;
-    $Message_Filename =~ s/^.*\///g;
-
     # Set up parsing
     my $parser = new Verilog::Vpm::Parser;
     $parser->filename($filename);
     $parser->lineno(1);
+    $Last_Parser = $parser;
 
     # Open file for reading and parse it
     my $fh = IO::File->new("<$filename") or die "%Error: $! $filename.";
@@ -877,7 +870,6 @@ BEGIN {
 	 $Sendout
 	 $Last_Task
 	 $Last_Module
-	 $Last_Filename
 	 $Opt_Chiponly
 	 $Opt_Vericov
 	 $ReqAck_Num
@@ -1104,8 +1096,7 @@ sub string {
 	$Sendout .= $since . $token;
 	if (($Last_Keyword eq "`include")
 	    && ($token =~ /\//)) {
-	    my $line_file = $parser->filename() . ":". $parser->lineno();
-	    print STDERR "%Warning: $line_file: `include has directory,"
+	    print STDERR "%Warning: ".$parser->fileline.": `include has directory,"
 		. " remove and add +incdir+ to input.vc\n";
 	}
     }
