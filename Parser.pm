@@ -26,7 +26,7 @@ Verilog::Parser - Parse Verilog language files
 
   my $parser = new Verilog::Parser;
   $string = $parser->unreadback ();
-  $line   = $parser->line ();
+  $line   = $parser->lineno ();
   $parser->parse ($text);
   $parser->parse_file ($filename);
   $parser->eof();
@@ -273,8 +273,8 @@ sub unreadback {
     }
 }
 
-sub lineno { return line(@_); }
-sub line {
+sub line { return lineno(@_); }
+sub lineno {
     # Return or set line number
     my $self = shift;	# Parser
     if (@_) {
@@ -502,7 +502,7 @@ sub parse_file {
     $fh->open($filename) or croak "%Error: $! $filename";
     $self->reset();
     $self->filename($filename);
-    $self->line(1);
+    $self->lineno(1);
     my $line;
     while ($line = $fh->getline() ) {
 	$self->parse ($line);

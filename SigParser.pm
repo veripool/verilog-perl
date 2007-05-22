@@ -26,7 +26,7 @@ Verilog::SigParser - Signal Parsing for Verilog language files
 
   my $parser = new Verilog::SigParser;
   $string = $parser->unreadback ();
-  $line   = $parser->line ();
+  $line   = $parser->lineno ();
   $parser->parse_preproc_file ($pp);
 
 =head1 DESCRIPTION
@@ -285,7 +285,7 @@ sub keyword {
 
     if ($token =~ /^\`/) {
 	$self->{last_preproc} = $token;
-	$self->{in_preproc_line} = $self->line;
+	$self->{in_preproc_line} = $self->lineno;
 	$self->{in_preproc_file} = $self->filename;
 	if ($token =~ /^\`(end)?celldefine$/) {
 	    $self->{in_celldefine} = !($1 || "");
@@ -631,7 +631,7 @@ sub operator {
 
 sub _non_pp_line {
     my $self = $_[0];
-    return ($self->{in_preproc_line} != $self->line()
+    return ($self->{in_preproc_line} != $self->lineno()
 	    || $self->{in_preproc_file} ne $self->filename());
 }
 

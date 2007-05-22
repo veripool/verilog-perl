@@ -962,7 +962,7 @@ sub symbol {
     my ($parser, $token) = @_;
     my $since = $parser->unreadback(); $parser->unreadback('');
 
-    if ($token eq "__LINE__") { $token = $parser->line(); }
+    if ($token eq "__LINE__") { $token = $parser->lineno(); }
     if ($token eq "__FILE__") { $token = $parser->filename(); }
 
     if ($In_Message) {
@@ -1104,7 +1104,7 @@ sub string {
 	$Sendout .= $since . $token;
 	if (($Last_Keyword eq "`include")
 	    && ($token =~ /\//)) {
-	    my $line_file = $parser->filename() . ":". $parser->line();
+	    my $line_file = $parser->filename() . ":". $parser->lineno();
 	    print STDERR "%Warning: $line_file: `include has directory,"
 		. " remove and add +incdir+ to input.vc\n";
 	}

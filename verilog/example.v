@@ -10,6 +10,8 @@ module example;
 
    integer i;
 
+`define ten 10
+
    initial begin
       $uinfo (0, "Welcome to a VPMed file\n");
       //
@@ -18,6 +20,7 @@ module example;
       //
       i=0;
       $uassert (1==1, "Why doesn't 1==1??\n");
+      $uassert (10==`ten, "Why doesn't 10==10??\n");
       $uassert (/*comm
 		ent*/1==1,
 	       //comment
