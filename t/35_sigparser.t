@@ -77,9 +77,10 @@ sub read_test {
     my $filename = shift;
     my $dump_fh = shift;
 
-    my $pp = Verilog::Preproc->new(keep_comments=>0,);
+    my $pp = Verilog::Preproc->new(keep_comments=>1,);
 
-    my $parser = new MyParser (dump_fh => $dump_fh);
+    my $parser = new MyParser (dump_fh => $dump_fh,
+			       metacomment=>{synopsys=>1},);
     #$parser->debug(9);
 
     # Preprocess

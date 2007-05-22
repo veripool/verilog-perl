@@ -30,6 +30,8 @@ module v_hier_sub (/*AUTOARG*/
    endgenerate
 
    function foo;
+      (* attribute *)
+      /* synopsys metacommenttest */
       input not_part_of_pinlist;
       foo = not_part_of_pinlist;
    endfunction

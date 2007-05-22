@@ -19,3 +19,4 @@ verilog/v_hier_sub.v:028: INSTANT  'v_hier_subsub' 'subsub2' ''
 verilog/v_hier_sub.v:028: PIN  'pin1' 'qvec[2]' '1' '0' undef
 verilog/v_hier_sub.v:028: PIN  'pin2' '1'b0' '2' '0' undef
 verilog/v_hier_sub.v:032: FUNCTION  'function' 'foo'
+verilog/v_hier_sub.v:034: ATTRIBUTE  'function' 'synopsys metacommenttest'
