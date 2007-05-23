@@ -48,6 +48,7 @@ maintainer-clean: distclean
 
 local $! = undef;
 `flex --version`; ($?==0) or die "\n%Error: 'flex' must be installed to build\n";
+`bison --version`; ($?==0) or die "\n%Error: 'bison' must be installed to build\n";
 `g++ --version`; ($?==0) or die "\n%Error: 'gcc/g++' must be installed to build\n";
 
 WriteMakefile(

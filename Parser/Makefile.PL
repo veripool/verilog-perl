@@ -29,6 +29,7 @@ sub MY::postamble {
     $out .= '
 CC = g++
 LEX = flex
+YACC = bison
 PPSRC = ../Preproc/src
 FLEXFIX = $(PPSRC)/flexfix
 YFLAGS = -d -v
@@ -55,6 +56,7 @@ VParseLex.cpp: $(FLEXFIX) VParseLex_prefix.cpp
 
 VParseBison.cpp VParseBison.h:	VParseBison.y
 	-rm -rf VParseBison.c VParseBison.cpp
+	@echo "If the next command fails, you probably need to install Bison 1.875 or newer"
 	${YACC} ${YFLAGS} --debug --verbose -d -k $< -pVParseBison -o VParseBison.c
 	-(grep conflicts VParseBison.output || mv VParseBison.c VParseBison.cpp )
 	-rm -rf VParseBison.c
