@@ -23,7 +23,7 @@ require DynaLoader;
 use strict;
 use vars qw($VERSION $Debug);
 
-$VERSION = '2.373';
+$VERSION = '3.000';
 
 #$Debug sets the default value for debug.  You're better off with the object method though.
 
