@@ -21,7 +21,7 @@ use Verilog::Netlist;
 use Verilog::Netlist::Subclass;
 @ISA = qw(Verilog::Netlist::Net::Struct
 	Verilog::Netlist::Subclass);
-$VERSION = '2.380';
+$VERSION = '3.000';
 use strict;
 
 ######################################################################

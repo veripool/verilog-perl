@@ -3,7 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language **
+* Verilog::Language 3.000 2007/05/23
+
+** 	Note this is a MAJOR release that may have incompatibilities with
+	earlier versions; released applications may want to stay at Version
+	2.*.  Please email any problems to the author.
 
 **	Verilog::SigParser has been completely rewritten.  The good news is
 	it understands almost the entire Verilog 2005 language.  The bad
