@@ -22,6 +22,6 @@ module pinorder4 (
    wire d_o;
    foo foo1 (.abcconst(3'h0), .def(IPCD_const), .noconnect(), .x(a_i), .y(b_i));
    foo2 foo2 (.x(b_i), .y(d_o), .z(a_i[0]));
-   foo foo3 (.abcconst(3'h0), .def(IPCD_const), .noconnect(), .x(a_i), .y(b_i));
+   foo foo3 (.abcconst(3'h0), .def(IPCD_const), .x(a_i), .y(b_i));
 endmodule
 

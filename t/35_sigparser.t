@@ -42,9 +42,11 @@ sub error {
 }
 
 sub attribute {	$_[0]->_common('attribute', @_); }
+sub funcsignal { $_[0]->_common('funcsignal', @_); }
 sub function {	$_[0]->_common('function', @_); }
 sub instant {	$_[0]->_common('instant', @_); }
 sub module {	$_[0]->_common('module', @_); }
+sub parampin {	$_[0]->_common('parampin', @_); }
 sub pin {	$_[0]->_common('pin', @_); }
 sub port {	$_[0]->_common('port', @_); }
 sub signal_decl { $_[0]->_common('signal_decl', @_); }
@@ -65,6 +67,8 @@ my $dump_fh = new IO::File("test_dir/35.dmp","w")
 read_test("/dev/null", $dump_fh);  # Empty files should be ok
 read_test("verilog/v_hier_subprim.v", $dump_fh);
 read_test("verilog/v_hier_sub.v", $dump_fh);
+read_test("verilog/parser_bugs.v", $dump_fh);
+read_test("verilog/pinorder.v", $dump_fh);
 ok(1);
 $dump_fh->close();
 

@@ -3,6 +3,43 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language **
+
+**	Verilog::SigParser has been completely rewritten.  The good news is
+	it understands almost the entire Verilog 2005 language.  The bad
+	news is there are minor incompatibilities with previous versions,
+	and the parser now errors out when it does not understand something
+	rather then ignoring it.
+
+***	The Verilog::SigParser->pin callback now passes "" as the pin name
+	instead of "pin###" if connecting by position instead of by name.
+
+***	Added Verilog::SigParser->funcsignal callback for variables declared
+	inside a function or task.  bug26972.  [Mark Nodine]
+	
+***	Added Verilog::SigParser->instant callbacks for gate primitives.
+	bug26969, bug27062. [Mark Nodine]
+	
+***	Added Verilog::SigParser->parampin callbacks for parameter connections
+	to instantiations.
+	
+**	Verilog::Parser has been replaced with the front end of the
+	SigParser.  The preproc and syscall callbacks were added
+
+***	Require call to Verilog::Parser->eof() at the end of all parsers.
+	
+***	Changed Verilog::Parser->unreadback() method to not clear state.
+	You must now call unreadback('') to clear the unreadback characters.
+
+***	The long depreciated Verilog::Parse module has been removed.
+
+****	Fixed Verilog::Parser mis-parsing spaces in numbers, bug27070.
+
+****	Fixed Verilog::SigParser bug26141, bug26940, bug26968, bug26969,
+	bug26970, bug26972, bug26997, bug27009, bug27010, bug27013,
+	bug27036, bug27037, bug27039, bug27045, bug27062, bug27066,
+	bug27067, bug27072.  [Mark Nodine, et al]
+
 * Verilog::Language 2.380 2007/05/27
 
 ***	Added new Verilog-Perl.pod documentation overview.

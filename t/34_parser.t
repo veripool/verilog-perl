@@ -37,12 +37,14 @@ sub _common {
 			     uc $what, $text);
 }
 
+sub attribute {	$_[0]->_common('attribute', @_); }
 sub comment {	$_[0]->_common('comment', @_); }
-sub string {	$_[0]->_common('string', @_); }
 sub keyword {	$_[0]->_common('keyword', @_); }
-sub symbol {	$_[0]->_common('symbol', @_); }
-sub operator {	$_[0]->_common('operator', @_); }
 sub number {	$_[0]->_common('number', @_); }
+sub operator {	$_[0]->_common('operator', @_); }
+sub preproc {	$_[0]->_common('preproc', @_); }
+sub string {	$_[0]->_common('string', @_); }
+sub symbol {	$_[0]->_common('symbol', @_); }
 
 ######################################################################
 

@@ -13,8 +13,17 @@ Netlist/Net.pm
 Netlist/Pin.pm
 Netlist/Port.pm
 Netlist/Subclass.pm
-Parse.pm
-Parser.pm
+Parser/Makefile.PL
+Parser/Parser.pm
+Parser/Parser.xs
+Parser/SigParser.pm
+Parser/typemap
+Parser/VParse.cpp
+Parser/VParse.h
+Parser/VParseBison.y
+Parser/VParseGrammar.h
+Parser/VParseLex.h
+Parser/VParseLex.l
 Preproc/Makefile.PL
 Preproc/Preproc.pm
 Preproc/Preproc.xs
@@ -30,7 +39,6 @@ Preproc/src/VPreprocLex.h
 Preproc/src/VPreprocLex.l
 Preproc/typemap
 README
-SigParser.pm
 t/00_pod.t
 t/01_manifest.t
 t/10_keywords.t

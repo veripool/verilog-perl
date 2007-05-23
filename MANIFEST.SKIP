@@ -21,6 +21,12 @@ simv
 .*\.tar\.gz
 \bblib\b
 pm_to_blib$
+Parser/Parser.c
+Parser/VParseBison.cpp
+Parser/VParseBison.h
+Parser/VParseBison.output
+Parser/VParseLex.cpp
+Parser/VParseLex_prefix.cpp
 Preproc/Preproc.c
 Preproc/src/example$
 Preproc/src/VPreprocLex_prefix.cpp

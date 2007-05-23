@@ -154,7 +154,6 @@ sub new_pin {
     # @_ params
     # Create a new pin under this cell
     my $pinref = new Verilog::Netlist::Pin (cell=>$self, @_);
-    $self->portname($self->name) if !$self->name;	# Back Version 1.000 compatibility
     $self->_pins ($pinref->name(), $pinref);
     return $pinref;
 }

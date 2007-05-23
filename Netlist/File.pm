@@ -110,8 +110,7 @@ sub port {
 
 sub attribute {
     my $self = shift;
-    my $keyword = shift;
-    my $text = shift;
+    my $text = shift||'';
 
     my $modref = $self->{modref};
     my ($category, $name, $eql, $rest);
@@ -121,13 +120,11 @@ sub attribute {
 	my $cleaned = ($category ." ". $name . $eql . $rest);
 
 	if ($Verilog::Netlist::Debug) {
-	    printf +("%d: Attribute %s, '%s'\n",
-		     $self->lineno, $keyword, $cleaned);
+	    printf +("%d: Attribute '%s'\n",
+		     $self->lineno, $cleaned);
 	}
 	# Treat as module-level if attribute appears before any declarations.
-	if ($keyword eq "module") {
-	    return $self->warn("Ignored '$category $name' attribute before end of '$keyword' statement")
-		unless $modref;
+	if ($modref) {
 	    my $attr = $modref->new_attr ($cleaned);
 	}
     }
@@ -205,12 +202,25 @@ sub instant {
     $self->{_cmtref} = $self->{cellref};
 }
 
+sub parampin {
+    my $self = shift;
+    my $pin = shift;
+    my $conn = shift;
+    my $number = shift;
+
+    my $prev = $self->{cellref}->params();
+    $prev .= ", " if $prev;
+    $prev .= ($pin ? ".$pin($conn)" : $conn);
+    $self->{cellref}->params($prev);
+}
+
 sub pin {
     my $self = shift;
     my $pin = shift;
     my $net = shift;
     my $number = shift;
-    my $hasnamedports = shift;
+    my $hasnamedports = (($pin||'') ne '');
+    $pin = "pin".$number if !$hasnamedports;
 
     print "   Pin $pin  $net $number \n" if $Verilog::Netlist::Debug;
     my $cellref = $self->{cellref};
