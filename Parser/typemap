@@ -12,16 +12,19 @@ O_CTHIS
 	sv_setiv(*svp, PTR2IV( $var ));
 	XSRETURN_UNDEF;
     } else {
-        warn( \"${Package}::$func_name() -- $var is not a blessed HV reference\" );
+        warn( \"${Package}::$func_name() -- $var is not a Verilog::Parser object\" );
         XSRETURN_UNDEF;
     }
 
 INPUT
 O_CTHIS
+    $var = NULL;
     if( sv_isobject($arg) && (SvTYPE(SvRV( $arg )) == SVt_PVHV) ) {
         SV **svp = hv_fetch ((HV*)SvRV(( $arg )), \"_cthis\", 6, 0);
-        $var = INT2PTR($type,SvIV( *svp ));
-    } else {
-        warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
+	$var = NULL;
+	if (svp) { $var = INT2PTR($type,SvIV( *svp )); }
+    }
+    if (!$var || !dynamic_cast<VParserXs*>($var)) {
+        warn( \"${Package}::$func_name() -- $var is not a Verilog::Parser object\" );
         XSRETURN_UNDEF;
     }
