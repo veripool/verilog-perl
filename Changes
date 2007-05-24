@@ -27,6 +27,9 @@ indicates the contributor was also the author of the fix; Thanks!
 ***	Added Verilog::SigParser->parampin callbacks for parameter connections
 	to instantiations.
 	
+***	Added Verilog::SigParser->signal_decl callbacks for all module vars,
+	including parameters and genvars.
+	
 **	Verilog::Parser has been replaced with the front end of the
 	SigParser.  The preproc and syscall callbacks were added
 

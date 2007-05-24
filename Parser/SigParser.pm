@@ -196,8 +196,8 @@ if the first word has a true value in hash C<$self->metacomment>.
 
 =item $self->funcsignal ( $keyword, $signame, $vector, $mem, $signed )
 
-This method is called when a signal is declared inside a function.  See
-signal_decl for more details.
+This method is called when a signal/variable is declared inside a function.
+See signal_decl for more details.
 
 =item $self->function ( $keyword, $name )
 
@@ -205,10 +205,15 @@ This method is called when a function is defined.
 
 =item $self->signal_decl ( $keyword, $signame, $vector, $mem, $signed )
 
-This method is called when a signal is declared.  The first argument,
-$keyword is ('input', 'output', etc), the second argument is the name of
-the signal.  The third argument is the vector bits or "".  The fourth
+This method is called when a signal or variable is declared.  The first
+argument, $keyword is a direction ('input', 'output', 'inout'), or a type
+('reg', 'trireg', 'integer', 'parameter'), the second argument is the name
+of the signal.  The third argument is the vector bits or "".  The fourth
 argument is the memory bits or "".
+
+Note this may be called twice for signals that are declared with both a
+direction and a type.  (IE 'output reg' results in a call with 'output' and
+a call with 'reg'.)
 
 =item $self->instant ( $module, $cell, $range )
 
