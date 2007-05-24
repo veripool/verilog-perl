@@ -502,7 +502,7 @@ escid	\\[^ \t\f\r\n]+
   "`"[a-zA-Z_0-9]+	{ FL; VALTEXT;
 			  if (PARSEP->sigParser()) { yyerrorf("Define or directive not defined: %s",yytext); }
 			  else { CALLBACK(preprocCb); } }
-  "//"[^\n]+		{ FL; VALTEXT; CALLBACK(commentCb); }
+  "//"[^\n]*		{ FL; VALTEXT; CALLBACK(commentCb); }
   "/*"		       	{ yy_push_state(CMTMODE); yymore(); }
   .			{ FL; VALTEXT; CALLBACK(operatorCb); return ygenOPERATOR; } /* return single char ops. */
 }
