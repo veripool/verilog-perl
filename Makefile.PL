@@ -9,11 +9,12 @@ require 5.005;
 use ExtUtils::MakeMaker;
 use Carp;
 
-$DOLLAR = '$$';	# Quoted properly for make
 sub MY::postamble {
     my $out="";
     $out .= "CCFLAGS += -Wall -Wno-unused -Werror\n" if $ENV{VERILATOR_AUTHOR_SITE};
+    $out .= "CCFLAGS  += $ENV{VERILOGPERL_CCFLAGS}\n" if defined $ENV{VERILOGPERL_CCFLAGS};
     $out .= "OPTIMIZE += -Wno-unused\n" if $ENV{VERILATOR_AUTHOR_SITE};  # Makefile has another -Wall
+    $out .= "OPTIMIZE += $ENV{VERILOGPERL_CCFLAGS}\n" if defined $ENV{VERILOGPERL_CCFLAGS};
     $out .= "
 README: Verilog-Perl.pod
 	-rm -rf \$@
