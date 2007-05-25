@@ -37,8 +37,11 @@ LEX = flex
 VPATH += src
 
 .PHONY: src/VFileLine.o src/VPreproc.o src/VPreprocLex.o
+.PHONY: sources
 
-src/VFileLine.o src/VPreproc.o src/VPreprocLex.o:
+src/VFileLine.o src/VPreproc.o src/VPreprocLex.o: sources
+
+sources:
 	cd src && $(MAKE) $(PASSTHRU) example
 
 clean::

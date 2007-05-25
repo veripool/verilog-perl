@@ -56,7 +56,9 @@ VParseLex_prefix.cpp: VParseLex.l
 VParseLex.cpp: $(FLEXFIX) VParseLex_prefix.cpp
 	$(PERL) $(FLEXFIX) < VParseLex_prefix.cpp > $@
 
-VParseBison.cpp VParseBison.h:	VParseBison.y
+VParseBison.h: VParseBison.cpp
+
+VParseBison.cpp:	VParseBison.y
 	-rm -rf VParseBison.c VParseBison.cpp
 	@echo "If the next command fails, you probably need to install Bison 1.875 or newer"
 	${YACC} ${YFLAGS} --debug --verbose -d -k $< -pVParseBison -o VParseBison.c
