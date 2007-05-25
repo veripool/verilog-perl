@@ -72,7 +72,7 @@ public:
 
     // Verilog::SigParser Callback methods
     virtual void attributeCb(VFileLine* fl, const string& kwd, const string& text);
-    virtual void functionCb(VFileLine* fl, const string& kwd, const string& name);
+    virtual void functionCb(VFileLine* fl, const string& kwd, const string& name, const string& type);
     virtual void instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range);
     virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool celldefine);
     virtual void paramPinCb(VFileLine* fl, const string& name, const string& conn, int number);
@@ -170,11 +170,12 @@ void VParserXs::attributeCb(VFileLine* fl, const string& kwd, const string& text
     static string hold2; hold2 = text;
     call(NULL, 2,"attribute",hold1.c_str(), hold2.c_str());
 }
-void VParserXs::functionCb(VFileLine* fl, const string& kwd, const string& name) {
+void VParserXs::functionCb(VFileLine* fl, const string& kwd, const string& name, const string& type) {
     cbFileline(fl);
     static string hold1; hold1 = kwd;
     static string hold2; hold2 = name;
-    call(NULL, 2,"function",hold1.c_str(), hold2.c_str());
+    static string hold3; hold3 = type;
+    call(NULL, 3,"function",hold1.c_str(), hold2.c_str(), hold3.c_str());
 }
 void VParserXs::instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range) {
     cbFileline(fl);

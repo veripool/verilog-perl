@@ -76,6 +76,7 @@ sub function {
     my $self = shift;
     my $keyword = shift;
     my $name = shift;
+    my $type = shift;
 }
 
 sub instant {
@@ -201,9 +202,11 @@ if the first word has a true value in hash C<$self->metacomment>.
 This method is called when a signal/variable is declared inside a function.
 See signal_decl for more details.
 
-=item $self->function ( $keyword, $name )
+=item $self->function ( $keyword, $name, $type )
 
-This method is called when a function is defined.
+This method is called when a function is defined.  Type is the output size
+or typename, plus "signed", for example "", "[3:0]", "integer", or "signed
+[2:0]".
 
 =item $self->instant ( $module, $cell, $range )
 
