@@ -80,6 +80,7 @@ public:
     virtual void portCb(VFileLine* fl, const string& name);
     virtual void signalCb(VFileLine* fl, const string& kwd, const string& name,
 			  const string& vec, const string& mem, const string& signd,
+			  const string& value,
 			  bool inFunc);
     virtual void taskCb(VFileLine* fl, const string& kwd, const string& name);
 
@@ -213,6 +214,7 @@ void VParserXs::portCb(VFileLine* fl, const string& name) {
 }
 void VParserXs::signalCb(VFileLine* fl, const string& kwd, const string& name,
 			 const string& vec, const string& mem, const string& signd,
+			 const string& value,
 			 bool inFunc) {
     cbFileline(fl);
     static string hold1; hold1 = kwd;
@@ -220,9 +222,10 @@ void VParserXs::signalCb(VFileLine* fl, const string& kwd, const string& name,
     static string hold3; hold3 = vec;
     static string hold4; hold4 = mem;
     static string hold5; hold5 = signd;
-    call(NULL, 5, (inFunc?"funcsignal":"signal_decl"),
+    static string hold6; hold6 = value;
+    call(NULL, 6, (inFunc?"funcsignal":"signal_decl"),
 	 hold1.c_str(), hold2.c_str(),
-	 hold3.c_str(), hold4.c_str(), hold5.c_str());
+	 hold3.c_str(), hold4.c_str(), hold5.c_str(), hold6.c_str());
 }
 void VParserXs::taskCb(VFileLine* fl, const string& kwd, const string& name) {
     cbFileline(fl);

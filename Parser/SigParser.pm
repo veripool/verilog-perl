@@ -125,6 +125,7 @@ sub signal_decl {
     my $vector = shift;
     my $mem = shift;
     my $signed = shift;
+    my $value = shift;
 }
 
 sub funcsignal {
@@ -134,6 +135,7 @@ sub funcsignal {
     my $vector = shift;
     my $mem = shift;
     my $signed = shift;
+    my $value = shift;
 }
 
 sub task {
@@ -194,7 +196,7 @@ of each comment line (C<//key rest> to end of line) or comment block
 (C</*key rest */).  It calls C<$self->attribute( meta_text )>
 if the first word has a true value in hash C<$self->metacomment>.
 
-=item $self->funcsignal ( $keyword, $signame, $vector, $mem, $signed )
+=item $self->funcsignal ( $keyword, $signame, $vector, $mem, $signed, $value )
 
 This method is called when a signal/variable is declared inside a function.
 See signal_decl for more details.
@@ -202,18 +204,6 @@ See signal_decl for more details.
 =item $self->function ( $keyword, $name )
 
 This method is called when a function is defined.
-
-=item $self->signal_decl ( $keyword, $signame, $vector, $mem, $signed )
-
-This method is called when a signal or variable is declared.  The first
-argument, $keyword is a direction ('input', 'output', 'inout'), or a type
-('reg', 'trireg', 'integer', 'parameter'), the second argument is the name
-of the signal.  The third argument is the vector bits or "".  The fourth
-argument is the memory bits or "".
-
-Note this may be called twice for signals that are declared with both a
-direction and a type.  (IE 'output reg' results in a call with 'output' and
-a call with 'reg'.)
 
 =item $self->instant ( $module, $cell, $range )
 
@@ -250,12 +240,19 @@ This method is called when a module port is defined.
 
 This method is called when a preprocessor definition is encountered.
 
-=item $self->signal_decl ( $keyword, $signame, $vector, $mem, $signed )
+=item $self->signal_decl ( $keyword, $signame, $vector, $mem, $signed, $value )
 
-This method is called when a signal is declared.  The first argument,
-$keyword is ('input', 'output', etc), the second argument is the name of
-the signal.  The third argument is the vector bits or "".  The fourth
-argument is the memory bits or "".
+This method is called when a signal or variable is declared.  The first
+argument, $keyword is a direction ('input', 'output', 'inout'), or a type
+('reg', 'trireg', 'integer', 'parameter'), the second argument is the name
+of the signal.  The third argument is the vector bits or "".  The fourth
+argument is the memory bits or "".  The fifth argument is "signed" if it is
+signed.  The sixth argument is the value it is assigned to for "parameter"
+or "wire".
+
+Note this may be called twice for signals that are declared with both a
+direction and a type.  (IE 'output reg' results in a call with 'output' and
+a call with 'reg'.)
 
 =item $self->task ( $keyword, $name )
 

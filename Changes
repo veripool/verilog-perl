@@ -30,6 +30,9 @@ indicates the contributor was also the author of the fix; Thanks!
 ***	Added Verilog::SigParser->signal_decl callbacks for all module vars,
 	including parameters and genvars.
 	
+***	Added Verilog::SigParser->signal_decl callback argument with 
+	initial values of parameters and wires. [Mark Nodine]
+	
 **	Verilog::Parser has been replaced with the front end of the
 	SigParser.  The preproc and syscall callbacks were added
 

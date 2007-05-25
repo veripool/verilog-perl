@@ -54,9 +54,9 @@ VParseGrammar*	VParseGrammar::s_grammarp = NULL;
 #define VARIO(type)	 { GRAMMARP->m_varIO   = (type); }
 #define VARSIGNED(value) { GRAMMARP->m_varSigned=(value); }
 #define VARRANGE(range)	 { GRAMMARP->m_varRange=(range); }
-#define VARDONE(fl,name,array) {\
-	if (GRAMMARP->m_varIO!="")   PARSEP->signalCb((fl),GRAMMARP->m_varIO,  (name),GRAMMARP->m_varRange,array, GRAMMARP->m_varSigned, GRAMMARP->m_inFTask); \
-	if (GRAMMARP->m_varDecl!="") PARSEP->signalCb((fl),GRAMMARP->m_varDecl,(name),GRAMMARP->m_varRange,array, GRAMMARP->m_varSigned, GRAMMARP->m_inFTask); \
+#define VARDONE(fl,name,array,value) {\
+	if (GRAMMARP->m_varIO!="")   PARSEP->signalCb((fl),GRAMMARP->m_varIO,  (name),GRAMMARP->m_varRange,array, GRAMMARP->m_varSigned, "",      GRAMMARP->m_inFTask); \
+	if (GRAMMARP->m_varDecl!="") PARSEP->signalCb((fl),GRAMMARP->m_varDecl,(name),GRAMMARP->m_varRange,array, GRAMMARP->m_varSigned, (value), GRAMMARP->m_inFTask); \
 }
 
 #define INSTPREP(cellmod,cellparam) { GRAMMARP->pinNum(1); GRAMMARP->m_cellMod=(cellmod); GRAMMARP->m_cellParam=(cellparam); }
@@ -506,18 +506,18 @@ netSigList:	netSig  				{ }
 	;
 
 netSig:		sigId sigAttrListE			{ }
-	|	sigId sigAttrListE '=' expr		{ }
+	|	yaID  sigAttrListE '=' expr		{ VARDONE($<fl>1, $1, "", $4); }
 	|	sigIdRange sigAttrListE			{ }
 	;
 
-sigIdRange:	yaID rangeList				{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2); }
+sigIdRange:	yaID rangeList				{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2, ""); }
 	;
 
-regSigId:	yaID rangeListE				{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2); }
-	|	yaID rangeListE '=' constExpr		{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2); }
+regSigId:	yaID rangeListE				{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2, ""); }
+	|	yaID rangeListE '=' constExpr		{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2, $4); }
 	;
 
-sigId:		yaID					{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, ""); }
+sigId:		yaID					{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, "", ""); }
 	;
 
 sigList:	sigAndAttr				{ }
@@ -558,7 +558,7 @@ portRangeE:	/* empty */	                   	{ $$ = ""; }
 //************************************************
 // Parameters
 
-param:		sigId sigAttrListE '=' expr		{ }
+param:		yaID sigAttrListE '=' expr		{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, "", $4); }
 	;
 
 paramList:	param					{ }

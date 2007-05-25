@@ -114,6 +114,7 @@ public:
     virtual void portCb(VFileLine* fl, const string& name) = 0;
     virtual void signalCb(VFileLine* fl, const string& kwd, const string& name,
 			  const string& vec, const string& mem, const string& signd,
+			  const string& value,
 			  bool inFunc) = 0;
     virtual void taskCb(VFileLine* fl, const string& kwd, const string& name) = 0;
 
