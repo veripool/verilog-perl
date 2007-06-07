@@ -110,6 +110,8 @@ class VParseLex {
     // Internal Utilities
     static bool symEscapeless(const char* textp, int leng) {
 	// Are \ escapes needed to print this symbol?
+	if (leng<1) return false;  // Probably not a valid identifier, but better then a core dump...
+	if (!isalpha(textp[0]) && textp[0] != '_') return false;
 	while (leng) {
 	    if (!isalnum(*textp) && *textp != '_') return false;
 	    leng--; textp++;

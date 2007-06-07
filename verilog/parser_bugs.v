@@ -174,4 +174,7 @@ module buglocal;
    always val = @ eventid 1'h1;
 
    always dly = # (2:3:4) 5'h6 ;
+
+   wire     \33escapeneeded = 1'b1;
+
 endmodule
