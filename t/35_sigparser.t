@@ -28,7 +28,6 @@ sub _common {
 
     my $args="";
     foreach (@args) { $args .= defined $_ ? " '$_'" : " undef"; }
-    my $urb = $self->unreadback;
     $self->{dump_fh}->printf("%s:%03d: %s %s\n",
 			     $self->filename, $self->lineno,
 			     uc $what,

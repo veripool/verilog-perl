@@ -176,5 +176,10 @@ module buglocal;
    always dly = # (2:3:4) 5'h6 ;
 
    wire     \33escapeneeded = 1'b1;
+   wire     \33escapenewlineend
+	    = 1'b1;
+   wire     \noescapenewlineend
+	    = 1'b1;
+   wire     \noescapespaceend = 1'b1;
 
 endmodule

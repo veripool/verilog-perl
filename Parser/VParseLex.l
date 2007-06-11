@@ -50,10 +50,10 @@ VParseBisonYYSType* VParseLex::s_yylvalp = NULL;		// LValue for current bison ob
 #define FL { VParseLex::s_yylvalp->fl = PARSEP->inFilelinep(); }
 
 // lval.fileline not used yet; here for Verilator parser compatibility
-#define VALTEXTL(text,leng) VParseLex::s_yylvalp->str = string((text),(leng))
-#define VALTEXT   VALTEXTL(yytext,yyleng)
-#define CALLBACKL(whichCb,text,leng) {PARSEP->whichCb(VParseLex::s_yylvalp->fl, string((text),(leng))); }
-#define CALLBACK(whichCb) CALLBACKL(whichCb,yytext,yyleng)
+#define VALTEXTS(strg) VParseLex::s_yylvalp->str = strg
+#define VALTEXT   VALTEXTS(string(yytext,yyleng))
+#define CALLBACKS(whichCb,strg) {PARSEP->whichCb(VParseLex::s_yylvalp->fl, strg); }
+#define CALLBACK(whichCb) CALLBACKS(whichCb,string(yytext,yyleng))
 
 #define YY_INPUT(buf,result,max_size) \
     result = PARSEP->inputToLex(buf,max_size);
@@ -83,6 +83,7 @@ void yyerrorf(const char* format, ...) {
 %s V95 V01 V05 S05
 %s STRING CMTMODE PROTMODE ATTRMODE
 
+space	[ ]
 ws	[ \t\f\r]+
 	/* identifier */
 id	[a-zA-Z_][a-zA-Z0-9_$]*
@@ -401,11 +402,21 @@ escid	\\[^ \t\f\r\n]+
 
   /* Identifiers and numbers */
 <V95,V01,V05,S05>{
-  {escid}		{ if (VParseLex::symEscapeless(yytext+1,yyleng-1)) {
-			      FL; CALLBACKL(symbolCb, yytext+1,yyleng-1); VALTEXTL(yytext+1,yyleng-1);
+  /* Consume a following space, as we're going to add one to the symbol, we'd like to avoid inserting an extra */
+  {escid}{space}	{ if (VParseLex::symEscapeless(yytext+1,yyleng-1-1)) {
+			      string sym = string(yytext+1,yyleng-1-1);
+			      FL; CALLBACKS(symbolCb, sym); VALTEXTS(sym); unput(' ');
 			  } else {
-			      FL; CALLBACK(symbolCb); VALTEXT;
-			      VParseLex::s_yylvalp->str += ' ';   /* SigParser users need to be sure to quote it */
+			      string sym = string(yytext,yyleng-1) + ' ';
+			      FL; CALLBACKS(symbolCb, sym); VALTEXTS(sym);
+			  }
+			  return yaID; }
+  {escid}		{ if (VParseLex::symEscapeless(yytext+1,yyleng-1)) {
+			      string sym = string(yytext+1,yyleng-1);
+			      FL; CALLBACKS(symbolCb, sym); VALTEXTS(sym);
+			  } else {
+			      string sym = string(yytext,yyleng) + ' ';
+			      FL; CALLBACKS(symbolCb, sym); VALTEXTS(sym);
 			  }
 			  return yaID; }
   {id}			{ FL; VALTEXT; CALLBACK(symbolCb); return yaID; }
