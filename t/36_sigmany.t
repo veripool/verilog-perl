@@ -6,6 +6,7 @@
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
 ######################################################################
+# VERILOG_TEST_FILES="$V4/test_regress/t/t_case*.v" VERILOG_TEST_DEBUG=1 t/36_sigmany.t
 #  (delete-matching-lines "^#\\|^ok \\|^1\\.\\.\\|^not ok")
 
 use strict;

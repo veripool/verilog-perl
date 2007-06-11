@@ -751,7 +751,7 @@ taskDecl: 	yTASK taskAutoE taskId ';'             stmtBlock yENDTASK	{ GRAMMARP-
 	| 	yTASK taskAutoE taskId ';' funcVarList stmtBlock yENDTASK	{ GRAMMARP->m_inFTask=false; }
 	;
 
-funcDecl: 	yFUNCTION taskAutoE funcId ';' funcBody yENDFUNCTION 	{ }
+funcDecl: 	yFUNCTION taskAutoE funcId ';' funcBody yENDFUNCTION 		{ GRAMMARP->m_inFTask=false; }
 	;
 
 taskAutoE:	/* empty */		 		{ }
