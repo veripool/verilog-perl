@@ -295,7 +295,7 @@ modParList:	modParDecl				{ }
 modPortsE:	/* empty */					{ }
 	|	'(' ')'						{ }
 	|	'(' {GRAMMARP->pinNum(1);} portList ')'		{ }
-	|	'(' {GRAMMARP->pinNum(1);} portV2kList ')'	{ }
+	|	'(' {GRAMMARP->pinNum(1);} portV2kArgs ')'	{ }
 	;
 
 portList:	port					{ }
@@ -305,8 +305,17 @@ portList:	port					{ }
 port:		yaID portRangeE				{ PARSEP->portCb($<fl>1, $1); }
 	;
 
-portV2kList:	portV2kDecl				{ }
-	|	portV2kList ',' portV2kDecl		{ }
+portV2kArgs:	portV2kDecl				{ }
+	|	portV2kDecl ',' portV2kList		{ }
+	;
+
+portV2kList:	portV2kSecond				{ }
+	|	portV2kList ',' portV2kSecond		{ }
+	;
+
+// Called only after a comma in a v2k list, to allow parsing "input a,b"
+portV2kSecond:	portV2kDecl				{ }
+	|	portV2kSig				{ }
 	;
 
 portV2kSig:	sigAndAttr				{ $<fl>$=$<fl>1; PARSEP->portCb($<fl>1, $1); }

@@ -6,7 +6,7 @@
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
 ######################################################################
-# VERILOG_TEST_FILES="$V4/test_regress/t/t_case*.v" VERILOG_TEST_DEBUG=1 t/36_sigmany.t
+# VERILOG_TEST_FILES="$V4/test_regress/t/t_case*.v" VERILOG_TEST_DEBUGIF=1 t/36_sigmany.t
 #  (delete-matching-lines "^#\\|^ok \\|^1\\.\\.\\|^not ok")
 
 use strict;
@@ -73,7 +73,7 @@ sub check_series {
 sub read_test {
     my $filename = shift;
     my $parser = one_parse($filename, 0);
-    if ($ENV{VERILOG_TEST_DEBUG} && $parser->{_errored}) {
+    if ($ENV{VERILOG_TEST_DEBUGIF} && $parser->{_errored}) {
 	print "======== REPARSING w/debug\n";
 	one_parse($filename, 9);
     }
@@ -93,7 +93,7 @@ sub one_parse {
 				   options=>$opt);
 
     my $parser = new MyParser();
-    $parser->debug($debug);
+    $parser->debug($debug || $ENV{VERILOG_TEST_DEBUG});
     $pp->open($filename);
     if ($ENV{VERILOG_TEST_KEYWORDS}) {
 	$parser->parse("`begin_keywords \"1364-2001\" ");

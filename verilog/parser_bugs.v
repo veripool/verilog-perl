@@ -146,6 +146,9 @@ module bugevent;
    always @ (e && e) $write("Legal\n");
 endmodule
 
+module bugio (input [31:0] a, a2, output [15:0] o, o2, input ibit);
+endmodule
+
 module buglocal;
    always #(cyclehalf) begin
       clk <= ~clk;
