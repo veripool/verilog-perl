@@ -12,6 +12,8 @@ verilog/inc3.v:1:
 verilog/inc3.v:1: `line 5 "verilog/inc2.v" 0
 verilog/inc3.v:1: 
 verilog/inc3.v:1: `line 1 "verilog/inc3.v" 1
+verilog/inc3.v:1: 
+verilog/inc3.v:1: `line 2 "inc3_a_filename_from_line_directive" 0
 inc3_a_filename_from_line_directive:2: // DESCRIPTION: Verilog::Preproc: Example source code
 inc3_a_filename_from_line_directive:3: // This file ONLY is placed into the Public Domain, for any use,
 inc3_a_filename_from_line_directive:4: // without warranty, 2000-2007 by Wilson Snyder.

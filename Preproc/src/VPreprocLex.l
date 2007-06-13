@@ -64,7 +64,8 @@ drop		[\032]
 	/**************************************************************/
 %%
 
-<INITIAL>^{ws}*"`line"{ws}+.*{crnl}	{ VPreprocLex::s_currentLexp->lineDirective(yytext); }
+<INITIAL>^{ws}*"`line"{ws}+.*{crnl}	{ VPreprocLex::s_currentLexp->lineDirective(yytext);
+					  return(VP_LINE); }
 
 	/* Special directives we recognise */
 <INITIAL>"`include"	{ return(VP_INCLUDE); }

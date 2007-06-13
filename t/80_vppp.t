@@ -15,16 +15,16 @@ BEGIN { require "t/test_utils.pl"; }
 
 print "Checking vppp...\n";
 
-vppp ("t/80_vppp_none.out",   "");
-vppp ("t/80_vppp_cmped.out", "--nocomment --pedantic");
-vppp ("t/80_vppp_simple.out", "--simple");
+vppp ("t/80_vppp_none.out",   "test_dir/vppp_none.v",	"");
+vppp ("t/80_vppp_cmped.out",  "test_dir/vppp_cmped.v",	"--nocomment --pedantic");
+vppp ("t/80_vppp_simple.out", "test_dir/vppp_simple.v",	"--simple");
 
 sub vppp {
     my $checkname = shift;
+    my $out = shift;
     my $flags = shift;
 
-    my $out = "test_dir/vppp.v";
     run_system ("${PERL} vppp ${flags} -y verilog inc2.v > $out");
     ok(-r $out);
-    ok(files_identical ($checkname, $out));
+    ok(files_identical ($out, $checkname));
 }
