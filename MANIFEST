@@ -66,6 +66,7 @@ t/42_dumpcheck_2e.out
 t/42_dumpcheck_2v.out
 t/42_dumpcheck_v2k.out
 t/44_create.t
+t/46_link.t
 t/50_vrename.t
 t/60_vpm.t
 t/80_vppp.t
@@ -88,6 +89,7 @@ verilog/pli.v
 verilog/test.v
 verilog/test.vrename
 verilog/v_comments.v
+verilog/v_gate.v
 verilog/v_hier_noport.v
 verilog/v_hier_sub.v
 verilog/v_hier_subprim.v

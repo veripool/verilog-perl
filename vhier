@@ -165,7 +165,7 @@ sub show_missing_module_names {
     my %miss_names;
     foreach my $mod ($nl->modules) {
 	foreach my $cell ($mod->cells_sorted) {
-	    if (!$cell->submod) {
+	    if (!$cell->submod && !$cell->gateprim) {
 		$miss_names{$cell->submodname} = 1;
 	    }
 	}

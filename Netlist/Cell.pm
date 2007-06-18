@@ -40,6 +40,7 @@ structs('new',
 	   byorder 	=> '$',		# True if Cell call uses order based pins
 	   # after link():
 	   submod	=> '$', #'	# Sub Module reference
+	   gateprim	=> '$', #'	# Primitive (and/buf/cmos etc), but not UDPs
 	   # system perl
 	   _autoinst	=> '$', #'	# Marked with AUTOINST tag
 	   ]);
@@ -80,7 +81,11 @@ sub _link_guts {
 sub _link {
     my $self = shift;
     $self->_link_guts();
+    if (!$self->submod && Verilog::Language::is_gateprim($self->submodname)) {
+	$self->gateprim(1);
+    }
     if (!$self->submod()
+	&& !$self->gateprim
 	&& !$self->netlist->{_relink}
 	&& !$self->module->is_libcell()
 	&& $self->netlist->{link_read}) {
@@ -107,7 +112,7 @@ sub _link {
 
 sub lint {
     my $self = shift;
-    if (!$self->submod() && !$self->netlist->{link_read_nonfatal}) {
+    if (!$self->submod() && !$self->gateprim && !$self->netlist->{link_read_nonfatal}) {
         $self->error ($self,"Module reference not found: ",$self->submodname(),,"\n");
     }
     if (!$self->netlist->{skip_pin_interconnect}) {
@@ -210,6 +215,11 @@ passed to Verilog::Netlist::new for comments to be retained.
 =item $self->delete
 
 Delete the cell from the module it's under.
+
+=item $self->gateprim
+
+True if the cell is a gate primitive instantiation (buf/cmos/etc), but not
+a UDP.
 
 =item $self->module
 

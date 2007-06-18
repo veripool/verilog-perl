@@ -9,7 +9,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 14 }
+BEGIN { plan tests => 16 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Language;
@@ -30,3 +30,6 @@ ok (Verilog::Language::strip_comments("he/**/l/**/lo") eq "hello");
 ok (Verilog::Language::strip_comments("he//xx/*\nllo") eq "he\nllo");
 ok (Verilog::Language::strip_comments("he/*xx//..*/llo") eq "hello");
 ok (Verilog::Language::strip_comments("he\"//llo\"") eq "he\"//llo\"");
+
+ok ( Verilog::Language::is_gateprim("buf"));
+ok (!Verilog::Language::is_gateprim("else"));
