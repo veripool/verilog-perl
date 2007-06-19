@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.00***
 
+****	Support V2K function/task argument lists.
+
 ****	Fix Preprocessor dropping some `line directives.  [Mark Nodine]
 
 ****	Fix Netlist "not found" errors on primitives, bug27624. [Jeff Trull]
