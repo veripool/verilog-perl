@@ -152,6 +152,7 @@ sub version {
 sub debug {
     $Debug = 1;
     $Verilog::Parser::Debug = $Debug;
+    $Verilog::Vrename::Reader::Debug = $Debug;
 }
 
 sub parameter {
@@ -485,41 +486,38 @@ sub verilog_change_sig {
 ######################################################################
 
 package Verilog::Vrename::Reader;
-require Exporter;
 
-use strict;
 use Carp;
-use vars qw( $Debug @ISA @EXPORT
-	     $Last_Keyword $Last_Filename
-	     %Modules_Sigs );
 use Verilog::Parser;
-
-BEGIN {
-    @ISA = qw( Verilog::Parser );
-    @EXPORT = qw( $Debug );
-}
+use base qw(Verilog::Parser);
+use vars qw($Debug);
+use strict;
 
 sub new {
     my $class = shift;
-    my $self = $class->SUPER::new(warning_limit=>1);
+    my $self = $class->SUPER::new
+	(_last_keyword=>'',
+	 _file_sigs=>{},
+	 @_);
     bless $self, $class;
     return $self;
 }
 
 sub _track_signal {
+    my $self = shift;
     my $sig = shift;
 
     $sig =~ s/\`//g;	# Remove `s from define usages else won't match define declaration
 
-    if (!$Modules_Sigs{$sig}) {
-	push @{$main::Signal_Locs{$sig}}, $Last_Filename;
+    if (!$self->{_file_sigs}{$sig}) {
+	push @{$main::Signal_Locs{$sig}}, $self->filename;
     }
-    $Modules_Sigs{$sig} = 1;
-    if ($main::Opt_Crypt && ($Last_Keyword eq "module"
-			    || $Last_Keyword eq "function"
-			    || $Last_Keyword eq "task")) {
+    $self->{_file_sigs}{$sig} = 1;
+    if ($main::Opt_Crypt && ($self->{_last_keyword} eq "module"
+			     || $self->{_last_keyword} eq "function"
+			     || $self->{_last_keyword} eq "task")) {
 	$main::Dont_Decrypt{$sig} = 1;
-	$Last_Keyword = "";
+	$self->{_last_keyword} = "";
     }
 }
 
@@ -528,9 +526,9 @@ sub keyword {
     my $self = shift;	# Parser invoked
     my $token = shift;	# What token was parsed
 
-    $Last_Keyword = $token;
+    $self->{_last_keyword} = $token;
     if ($main::Opt_Keywords) {
-	_track_signal($token);
+	$self->_track_signal($token);
     }
 }
 
@@ -540,36 +538,30 @@ sub symbol {
     my $sig = shift;	# What token was parsed
 
     #print "Signal callback $self $token\n" if ($Debug);
-    _track_signal($sig);
+    $self->_track_signal($sig);
 }
 
 sub parse_file {
     # Read all signals in this filename
-    # Overloads Verilog::Parse::parse_file
     @_ == 2 or croak 'usage: $parser->parse_file($filename)';
     my $self = shift;
     my $filename = shift;
 
-    local %Modules_Sigs = ();	# Signals already found in module
-    local $Last_Keyword = "";
-    local $Last_Filename = $filename;
+    $self->{_file_sigs} = {}; # Signals already found in module
+    $self->{_last_keyword} = "";
 
-    my $fh = IO::File->new("<$filename") or die "%Error: $! $filename\n";
-
-    while (my $line = $fh->getline() ) {
-	Verilog::Parser::parse ($self, $line);
-    }
+    $self->SUPER::parse_file($filename);
 
     if ($main::Opt_Crypt) {
-	seek ($fh, 0, 0);
+	my $fh = IO::File->new("<$filename") or die "%Error: $! $filename\n";
 	local $/ = undef;
 	my $filestrg = <$fh>;
 	# Same test below
 	if ($filestrg =~ /ENCRYPT_ME/) {
 	    $main::Encrypt{$filename} = 1;
 	}
+	$fh->close;
     }
-    $fh->close;
 }
 
 ######################################################################

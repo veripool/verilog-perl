@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.00***
+
+****	Fix vrename breakage in 3.00* releases.  [David Price]
+
 * Verilog::Language 3.001 2007/06/20
 
 ****	Support V2K function/task argument lists.
