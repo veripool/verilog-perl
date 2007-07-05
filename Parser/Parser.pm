@@ -263,13 +263,16 @@ parse_file() is a reference to the parser object.
 This method can be called to parse preprocessed text from a predeclared
 Verilog::Preproc object.
 
-=item $parser->unreadback ()
+=item $parser->unreadback ($string)
 
 Return any input string from the file that has not been sent to the
 callback.  This will include whitespace and tokens which did not have a
 callback.  (For example comments, if there is no comment callback.)  This
 is useful for recording the entire contents of the input, for
 preprocessors, pretty-printers, and such.
+
+With the optional argument, set the text to be returned with the next
+unreadback call.  See also unreadbackCat, which is much faster.
 
 To use this option, "use_unreadback => 1" must have been passed to the
 constructor.

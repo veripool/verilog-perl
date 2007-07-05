@@ -396,10 +396,11 @@ PROTOTYPE: $;$
 CODE:
 {
     if (!THIS) XSRETURN_UNDEF;
+    // Set RETVAL before we replace with the new value
+    RETVAL = THIS->unreadback().c_str();
     if (items > 1) {
 	THIS->unreadback(flagp);
     }
-    RETVAL = THIS->unreadback().c_str();
 }
 OUTPUT: RETVAL
 

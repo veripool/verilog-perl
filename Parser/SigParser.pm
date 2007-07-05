@@ -64,6 +64,7 @@ sub comment {
 	    $self->attribute( $text );
 	}
     }
+    $self->SUPER::comment($text);
 }
 
 #######################################################################
