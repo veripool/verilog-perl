@@ -390,14 +390,14 @@ CODE:
 #//**********************************************************************
 #// self->unreadback()
 
-const char *
+SV*
 VParserXs::unreadback (const char* flagp="")
 PROTOTYPE: $;$
 CODE:
 {
     if (!THIS) XSRETURN_UNDEF;
-    // Set RETVAL before we replace with the new value
-    RETVAL = THIS->unreadback().c_str();
+    // Set RETVAL to a SV before we replace with the new value, and c_str may change
+    RETVAL = newSVpv(THIS->unreadback().c_str(), THIS->unreadback().length());
     if (items > 1) {
 	THIS->unreadback(flagp);
     }
