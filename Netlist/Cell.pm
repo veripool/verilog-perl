@@ -166,7 +166,7 @@ sub new_pin {
 sub find_pin {
     my $self = shift;
     my $name = shift;
-    return $self->_pins($name);
+    return $self->_pins($name) || $self->_pins("\\".$name." ");
 }
 
 sub pins {

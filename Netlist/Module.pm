@@ -69,7 +69,7 @@ sub modulename_from_filename {
 sub find_port {
     my $self = shift;
     my $search = shift;
-    return $self->_ports->{$search};
+    return $self->_ports->{$search} || $self->_ports->{"\\".$search." "};
 }
 sub find_port_by_index {
     my $self = shift;
@@ -82,14 +82,14 @@ sub find_port_by_index {
 sub find_cell {
     my $self = shift;
     my $search = shift;
-    return $self->_cells->{$search};
+    return $self->_cells->{$search} || $self->_cells->{"\\".$search." "};
 }
 sub find_net {
     my $self = shift;
     my $search = shift;
     my $rtn = $self->_nets->{$search}||"";
     #print "FINDNET ",$self->name, " SS $search  $rtn\n";
-    return $self->_nets->{$search};
+    return $self->_nets->{$search} || $self->_nets->{"\\".$search." "};
 }
 
 sub attrs_sorted {

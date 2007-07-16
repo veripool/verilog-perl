@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.00***
 
+***	Find functions now search backslash escaped names.  [David Chinnery]
+
 ***	Fix vrename breakage in 3.00* releases.  [David Price]
 
 ****	Fix SigParser::comment to call Parser::Comment. [Mark Nodine]
