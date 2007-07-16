@@ -8,9 +8,18 @@
 require 5.005;
 use ExtUtils::MakeMaker;
 use Carp;
+use Config;
 
 sub MY::postamble {
     my $out="";
+    # Note OPTIMIZE is passed from upper makefile, so this code needed there too.
+    if ($Config{osname} =~ /cygwin/i || $Config{archname} =~ /cygwin/i) {
+	# Cygwin ExtUtils::MakeMaker ignores our LIBS declaration and says
+	# "No library found for -lstdc++".  Force it.
+	$out .= "LDLOADLIBS += -lstdc++\n";
+	# Cygwin: High optimization causes g++ "out of memory"
+	$out .= "OPTIMIZE += -O\n";
+    }
     $out .= "CCFLAGS += -Wall -Wno-unused -Werror\n" if $ENV{VERILATOR_AUTHOR_SITE};
     $out .= "CCFLAGS  += $ENV{VERILOGPERL_CCFLAGS}\n" if defined $ENV{VERILOGPERL_CCFLAGS};
     $out .= "OPTIMIZE += -Wno-unused\n" if $ENV{VERILATOR_AUTHOR_SITE};  # Makefile has another -Wall

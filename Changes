@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix Parser::unreadback to always return value. [Mark Nodine]
 
+****	Fix g++ bug giving "out of memory" on Cygwin.  [Pongstorn]
+
 * Verilog::Language 3.001 2007/06/20
 
 ****	Support V2K function/task argument lists.
