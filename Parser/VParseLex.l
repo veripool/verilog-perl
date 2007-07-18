@@ -241,6 +241,8 @@ escid	\\[^ \t\f\r\n]+
   "assert"		{ FL; VALTEXT; CALLBACK(keywordCb); return yASSERT; }
   "do"			{ FL; VALTEXT; CALLBACK(keywordCb); return yDO; }
   "final"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFINAL; }
+  "join_any"		{ FL; VALTEXT; CALLBACK(keywordCb); return yJOIN; }
+  "join_none"		{ FL; VALTEXT; CALLBACK(keywordCb); return yJOIN; }
   /*     Generic unsupported keywords */
   "alias"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "assume"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
@@ -287,8 +289,6 @@ escid	\\[^ \t\f\r\n]+
   "int"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "interface"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "intersect"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "join_any"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "join_none"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "local"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "logic"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "longint"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
