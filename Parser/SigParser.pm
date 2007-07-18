@@ -73,6 +73,18 @@ sub comment {
 # The my's aren't needed since we do nothing, but are useful if the
 # user copies them from here to their program.
 
+sub endcell {
+    my $self = shift;
+}
+
+sub endtaskfunc {
+    my $self = shift;
+}
+
+sub endmodule {
+    my $self = shift;
+}
+
 sub function {
     my $self = shift;
     my $keyword = shift;
@@ -197,6 +209,21 @@ Scanned an attribute or meta-comment.  The parser inspects the first word
 of each comment line (C<//key rest> to end of line) or comment block
 (C</*key rest */).  It calls C<$self->attribute( meta_text )>
 if the first word has a true value in hash C<$self->metacomment>.
+
+=item $self->endcell ( $token )
+
+This method is called at the end of defining a cell. It is useful for
+writing clean up routines.
+
+=item $self->endtaskfunc ( $token )
+
+This method is called at a endfunction or endtask keyword.  It is useful
+for writing clean up routines.
+
+=item $self->endmodule ( $token )
+
+This method is called at a endmodule keyword. It is useful for writing
+clean up routines.
 
 =item $self->funcsignal ( $keyword, $signame, $vector, $mem, $signed, $value )
 

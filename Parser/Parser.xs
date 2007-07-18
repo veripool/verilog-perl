@@ -62,6 +62,7 @@ public:
     // Verilog::Parser Callback methods
     virtual void attributeCb(VFileLine* fl, const string& text);
     virtual void commentCb(VFileLine* fl, const string& text);
+    virtual void endparseCb(VFileLine* fl);
     virtual void keywordCb(VFileLine* fl, const string& text);
     virtual void numberCb(VFileLine* fl, const string& text);
     virtual void operatorCb(VFileLine* fl, const string& text);
@@ -71,7 +72,9 @@ public:
     virtual void sysfuncCb(VFileLine* fl, const string& text);
 
     // Verilog::SigParser Callback methods
-    virtual void attributeCb(VFileLine* fl, const string& kwd, const string& text);
+    virtual void endcellCb(VFileLine* fl, const string& kwd);
+    virtual void endmoduleCb(VFileLine* fl, const string& kwd);
+    virtual void endtaskfuncCb(VFileLine* fl, const string& kwd);
     virtual void functionCb(VFileLine* fl, const string& kwd, const string& name, const string& type);
     virtual void instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range);
     virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool celldefine);
@@ -127,6 +130,10 @@ void VParserXs::commentCb(VFileLine* fl, const string& text) {
     static string hold1; hold1 = text;
     call(NULL, 1,"comment",hold1.c_str());
 }
+void VParserXs::endparseCb(VFileLine* fl) {
+    cbFileline(fl);
+    call(NULL, 1,"endparse","");
+}
 void VParserXs::keywordCb(VFileLine* fl, const string& text) {
     cbFileline(fl);
     static string hold1; hold1 = text;
@@ -164,11 +171,20 @@ void VParserXs::sysfuncCb(VFileLine* fl, const string& text) {
 }
 
 // Verilog::SigParser Callback methods
-void VParserXs::attributeCb(VFileLine* fl, const string& kwd, const string& text) {
+void VParserXs::endcellCb(VFileLine* fl, const string& kwd) {
     cbFileline(fl);
     static string hold1; hold1 = kwd;
-    static string hold2; hold2 = text;
-    call(NULL, 2,"attribute",hold1.c_str(), hold2.c_str());
+    call(NULL, 1,"endcell",hold1.c_str());
+}
+void VParserXs::endmoduleCb(VFileLine* fl, const string& kwd) {
+    cbFileline(fl);
+    static string hold1; hold1 = kwd;
+    call(NULL, 1,"endmodule",hold1.c_str());
+}
+void VParserXs::endtaskfuncCb(VFileLine* fl, const string& kwd) {
+    cbFileline(fl);
+    static string hold1; hold1 = kwd;
+    call(NULL, 1,"endtaskfunc",hold1.c_str());
 }
 void VParserXs::functionCb(VFileLine* fl, const string& kwd, const string& name, const string& type) {
     cbFileline(fl);

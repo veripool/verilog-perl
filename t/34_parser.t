@@ -39,6 +39,7 @@ sub _common {
 
 sub attribute {	$_[0]->_common('attribute', @_); }
 sub comment {	$_[0]->_common('comment', @_); }
+sub endparse {	$_[0]->_common('endparse', @_); }
 sub keyword {	$_[0]->_common('keyword', @_); }
 sub number {	$_[0]->_common('number', @_); }
 sub operator {	$_[0]->_common('operator', @_); }

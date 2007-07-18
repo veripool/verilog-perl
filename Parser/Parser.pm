@@ -195,6 +195,13 @@ sub sysfunc {
     $self->symbol($token); # Do this for backward compatibility with Version 2.*
 }
 
+sub endparse {
+    # Default Internal callback
+    my $self = shift;	# Parser invoked
+    my $token = shift;	# What token was parsed
+    $self->unreadbackCat($token);
+}
+
 ######################################################################
 #### Package return
 1;
@@ -302,6 +309,12 @@ argument, $token, is the contents of the attribute including the delimiters.
 This method is called when any text in // or /**/ comments are recognized.
 The first argument, $token, is the contents of the comment including the
 comment delimiters.
+
+=item $self->endparse ( $token )
+
+This method is called when the file has been completely parsed, at the
+End-Of-File of the parsed file.  It is useful for writing clean up
+routines.
 
 =item $self->keyword ( $token )
 

@@ -276,7 +276,7 @@ file:		mod 					{ }
 // Module headers
 
 mod:		modHdr modParE modPortsE ';' modItemListE yENDMODULE
-			{ }
+			{ PARSEP->endmoduleCb($<fl>1,$6); }
 	;
 
 modHdr:		yMODULE	yaID				{ PARSEP->moduleCb($<fl>1,$1,$2,PARSEP->inCellDefine()); }
@@ -602,7 +602,7 @@ instnameList:	instnameParen				{ }
 	|	instnameList ',' instnameParen		{ }
 	;
 
-instnameParen:	instname cellpinList ')'		{ }
+instnameParen:	instname cellpinList ')'		{ PARSEP->endcellCb($<fl>1,""); }
 	;
 
 instname:	yaID instRangeE '(' 			{ PARSEP->instantCb($<fl>1, GRAMMARP->m_cellMod, $1, $2); PINPARAMS(); }
@@ -756,10 +756,12 @@ taskRef:	idDotted		 		{ }
 funcRef:	idDotted '(' exprList ')'		{ }
 	;
 
-taskDecl: 	yTASK taskAutoE taskId funcGuts yENDTASK	{ GRAMMARP->m_inFTask=false; }
+taskDecl: 	yTASK taskAutoE taskId funcGuts yENDTASK
+			{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>1,$5); }
 	;
 
-funcDecl: 	yFUNCTION taskAutoE funcId funcGuts yENDFUNCTION 	{ GRAMMARP->m_inFTask=false; }
+funcDecl: 	yFUNCTION taskAutoE funcId funcGuts yENDFUNCTION
+		 	{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>1,$5); }
 	;
 
 taskAutoE:	/* empty */		 		{ }
