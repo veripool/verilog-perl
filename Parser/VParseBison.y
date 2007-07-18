@@ -276,7 +276,7 @@ file:		mod 					{ }
 //**********************************************************************
 // Module headers
 
-mod:		modHdr modParE modPortsE ';' modItemListE yENDMODULE
+mod:		modHdr modParE modPortsE ';' modItemListE yENDMODULE endLabelE
 			{ PARSEP->endmoduleCb($<fl>1,$6); }
 	;
 
@@ -443,8 +443,8 @@ genTopBlock:	genItemList				{ }
 
 genItemBegin:	yBEGIN genItemList yEND			{ }
 	|	yBEGIN yEND				{ }
-	|	yBEGIN ':' yaID genItemList yEND	{ }
-	|	yBEGIN ':' yaID yEND			{ }
+	|	yBEGIN ':' yaID genItemList yEND endLabelE	{ }
+	|	yBEGIN ':' yaID             yEND endLabelE	{ }
 	;
 
 genItemList:	genItem					{ }
@@ -662,12 +662,12 @@ senitemEdge:	yPOSEDGE expr				{ }
 stmtBlock:	stmt					{ }
 	|	yBEGIN stmtList yEND			{ }
 	|	yBEGIN yEND				{ }
-	|	beginNamed stmtList yEND		{ }
-	|	beginNamed yEND				{ }
-	|	yFORK stmtList yJOIN			{ }
-	|	yFORK yJOIN				{ }
-	|	forkNamed stmtList yJOIN		{ }
-	|	forkNamed yJOIN				{ }
+	|	beginNamed stmtList yEND endLabelE	{ }
+	|	beginNamed 	    yEND endLabelE	{ }
+	|	yFORK stmtList	   yJOIN		{ }
+	|	yFORK 		   yJOIN		{ }
+	|	forkNamed stmtList yJOIN endLabelE	{ }
+	|	forkNamed 	   yJOIN endLabelE	{ }
 	;
 
 beginNamed:	yBEGIN ':' yaID varDeclList		{ }
@@ -757,11 +757,11 @@ taskRef:	idDotted		 		{ }
 funcRef:	idDotted '(' exprList ')'		{ }
 	;
 
-taskDecl: 	yTASK taskAutoE taskId funcGuts yENDTASK
+taskDecl: 	yTASK taskAutoE taskId funcGuts yENDTASK endLabelE
 			{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>1,$5); }
 	;
 
-funcDecl: 	yFUNCTION taskAutoE funcId funcGuts yENDFUNCTION
+funcDecl: 	yFUNCTION taskAutoE funcId funcGuts yENDFUNCTION endLabelE
 		 	{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>1,$5); }
 	;
 
@@ -986,6 +986,10 @@ strAsInt:	yaSTRING				{ $<fl>$=$<fl>1; $$ = $1; }
 
 concIdList:	varRefDotBit				{ $<fl>$=$<fl>1; $$ = $1; }
 	|	concIdList ',' varRefDotBit		{ $<fl>$=$<fl>1; $$ = $1+","+$3; }
+	;
+
+endLabelE:	/* empty */				{ }
+	|	':' yaID				{ }
 	;
 
 //************************************************
