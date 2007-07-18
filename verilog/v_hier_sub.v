@@ -18,7 +18,7 @@ module v_hier_sub (/*AUTOARG*/
 	      // Outputs
 	      .q		(qvec[0]),
 	      // Inputs
-	      .a		(a1));
+	      .a		(a1));  // Comment for subsub cell
 
 
    generate

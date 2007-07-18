@@ -102,6 +102,11 @@ sub module {
     $self->{_cmtref} = $self->{modref};
 }
 
+sub endmodule {
+    my $self = shift;
+    $self->{_cmtref} = undef;  # Assume all module comments are inside the module, not after
+}
+
 sub port {
     my $self = shift;
     my $name = shift;
@@ -200,6 +205,11 @@ sub instant {
 	  filename=>$self->filename, lineno=>$self->lineno,
 	  submodname=>$submodname, params=>$params,);
     $self->{_cmtref} = $self->{cellref};
+}
+
+sub endcell {
+    my $self = shift;
+    $self->{_cmtref} = $self->{cellref};  # Comments after cell decl go to the cell
 }
 
 sub parampin {

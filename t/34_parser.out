@@ -201,7 +201,7 @@ verilog/v_hier_sub.v:021: SYMBOL 'a1'
 verilog/v_hier_sub.v:021: OPERATOR ')'
 verilog/v_hier_sub.v:021: OPERATOR ')'
 verilog/v_hier_sub.v:021: OPERATOR ';'
-verilog/v_hier_sub.v:024: unreadback '
+verilog/v_hier_sub.v:024: unreadback '  
 
 
    '

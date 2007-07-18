@@ -5,9 +5,11 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.010***
 
-***	Added Parser::endparse callback.  [Mark Nodine]
+***	Added Parser::endparse callback. [Mark Nodine]
 
 ***	Added SigParser::endmodule, endtaskfunc, and endcell callbacks.
+
+****	Fix attachment of comments to proceeding cells. [David Chinnery]
 
 * Verilog::Language 3.002 2007/07/16
 
