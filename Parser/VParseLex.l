@@ -400,6 +400,12 @@ escid	\\[^ \t\f\r\n]+
   "-:"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSCOLON; }
 }
 
+  /* SystemVerilog Operators */
+<S05>{
+  "==?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDEQUAL; }
+  "!=?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDNOTEQUAL; }
+}
+
   /* Identifiers and numbers */
 <V95,V01,V05,S05>{
   /* Consume a following space, as we're going to add one to the symbol, we'd like to avoid inserting an extra */

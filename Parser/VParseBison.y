@@ -206,7 +206,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %left<str>	'^'
 %left<str>	yP_XNOR
 %left<str>	'&' yP_NAND
-%left<str>	yP_EQUAL yP_NOTEQUAL yP_CASEEQUAL yP_CASENOTEQUAL
+%left<str>	yP_EQUAL yP_NOTEQUAL yP_CASEEQUAL yP_CASENOTEQUAL yP_WILDEQUAL yP_WILDNOTEQUAL
 %left<str>	'>' '<' yP_GTE yP_LTE
 %left<str>	yP_SLEFT yP_SRIGHT yP_SSRIGHT
 %left<str>	'+' '-'
@@ -814,6 +814,8 @@ exprNoStr:	expr yP_OROR expr			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	expr yP_NOTEQUAL expr			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	expr yP_CASEEQUAL expr			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	expr yP_CASENOTEQUAL expr		{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
+	|	expr yP_WILDEQUAL expr			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
+	|	expr yP_WILDNOTEQUAL expr		{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	expr '>' expr				{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	expr '<' expr				{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	expr yP_GTE expr			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
@@ -942,6 +944,7 @@ specifyJunk:	dlyTerm 	{} /* ignored */
 	|	yP_ANDAND {} | yP_GTE {} | yP_LTE {}
 	|	yP_EQUAL {} | yP_NOTEQUAL {}
 	|	yP_CASEEQUAL {} | yP_CASENOTEQUAL {}
+	|	yP_WILDEQUAL {} | yP_WILDNOTEQUAL {}
 	|	yP_XNOR {} | yP_NOR {} | yP_NAND {}
 	|	yP_OROR {}
 	|	yP_SLEFT {} | yP_SRIGHT {} | yP_SSRIGHT {}
