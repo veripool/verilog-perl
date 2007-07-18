@@ -373,7 +373,7 @@ escid	\\[^ \t\f\r\n]+
 }
 
   /************************************************************************/
-  /* Operators */
+  /* Operators and multi-character symbols */
 <V95,V01,V05,S05>{
   "&&"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ANDAND; }
   "||"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_OROR; }
@@ -389,6 +389,7 @@ escid	\\[^ \t\f\r\n]+
   "~^"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_XNOR; }
   "~&"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_NAND; }
   "~|"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_NOR; }
+  "->"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSGT; }
 }
 
   /* Verilog 2001 Operators */

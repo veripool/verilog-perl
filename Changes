@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.01**
+
+***	Added event trigger -> operator. [Mark Nodine]
+
 * Verilog::Language 3.010 2007/07/18
 
 ***	Added Parser::endparse callback. [Mark Nodine]
