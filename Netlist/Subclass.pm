@@ -17,7 +17,7 @@
 package Verilog::Netlist::Subclass;
 use Class::Struct;
 require Exporter;
-$VERSION = '3.002';
+$VERSION = '3.010';
 @ISA = qw(Exporter);
 @EXPORT = qw(structs);
 use strict;
