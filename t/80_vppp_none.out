@@ -1,4 +1,3 @@
-
 `line 1 "verilog/inc2.v" 1
 // DESCRIPTION: Verilog::Preproc: Example source code
 // This file ONLY is placed into the Public Domain, for any use,
@@ -6,9 +5,7 @@
 At file verilog/inc2.v  line 4
  
 `line 5 "verilog/inc2.v" 0
-
 `line 1 "verilog/inc3.v" 1
-
 `line 2 "inc3_a_filename_from_line_directive" 0
 // DESCRIPTION: Verilog::Preproc: Example source code
 // This file ONLY is placed into the Public Domain, for any use,
@@ -30,9 +27,7 @@ At file verilog/inc2.v  line 4
 
 `line 17 "inc3_a_filename_from_line_directive" 0
 
-
 `line 18 "inc3_a_filename_from_line_directive" 2
-
 `line 5 "verilog/inc2.v" 0
 
   

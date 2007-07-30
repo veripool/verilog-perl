@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Added event trigger -> operator. [Mark Nodine]
 
+****	Remove preprocessor adding newlines before `line. [Mark Nodine]
+
 * Verilog::Language 3.010 2007/07/18
 
 ***	Added Parser::endparse callback. [Mark Nodine]

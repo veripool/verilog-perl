@@ -497,7 +497,7 @@ escid	\\[^ \t\f\r\n]+
   "`endcelldefine"		{ FL; VALTEXT; CALLBACK(preprocCb); LEXP->m_inCellDefine=false; }
   "`endprotect"			{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`inline"			{ FL; VALTEXT; CALLBACK(preprocCb); }
-  "`line"{ws}+.*\n		{ PARSEP->inLineDirective(yytext);
+  "`line"{ws}+[^\n]*\n		{ PARSEP->inLineDirective(yytext);
 			  	  FL; VALTEXT; CALLBACK(preprocCb); }
   "`portcoerce"			{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`protect"			{ FL; VALTEXT; CALLBACK(preprocCb); }
@@ -510,7 +510,7 @@ escid	\\[^ \t\f\r\n]+
   "`begin_keywords"[ \t]*\"1364-2001-noconfig\"	{ yy_push_state(V01); CALLBACK(preprocCb); }
   "`begin_keywords"[ \t]*\"1364-2005\"		{ yy_push_state(V05); CALLBACK(preprocCb); }
   "`begin_keywords"[ \t]*\"1800-2005\"		{ yy_push_state(S05); CALLBACK(preprocCb); }
-  "`end_keywords"					{ yy_pop_state();     CALLBACK(preprocCb); }
+  "`end_keywords"				{ yy_pop_state();     CALLBACK(preprocCb); }
 }
 
   /************************************************************************/

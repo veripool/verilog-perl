@@ -53,7 +53,9 @@ struct VPreprocImp : public VPreprocOpaque {
 
     // For getRawToken/ `line insertion
     string	m_lineCmt;	///< Line comment(s) to be returned
+    bool	m_lineCmtNl;	///< Newline needed before inserting lineCmt
     int		m_lineAdd;	///< Empty lines to return to maintain line count
+    bool	m_rawAtBol;	///< Last rawToken left us at beginning of line
 
     // For defines
     string	m_defName;	///< Define last name being defined
@@ -75,6 +77,8 @@ struct VPreprocImp : public VPreprocOpaque {
 	m_lineChars = "";
 	m_lastSym = "";
 	m_lineAdd = 0;
+	m_lineCmtNl = false;
+	m_rawAtBol = true;
 	m_defDepth = 0;
     }
     const char* tokenName(int tok);
@@ -85,7 +89,8 @@ struct VPreprocImp : public VPreprocOpaque {
     string getline();
     bool isEof() const { return (m_lexp==NULL); }
     void open(string filename, VFileLine* filelinep);
-    void insertUnreadback(string text) { m_lineCmt += text; }
+    void insertUnreadback(const string& text) { m_lineCmt += text; }
+    void insertUnreadbackAtBol(const string& text);
 private:
     void error(string msg) { m_filelinep->error(msg); }
     void fatal(string msg) { m_filelinep->fatal(msg); }
@@ -333,14 +338,24 @@ void VPreprocImp::open(string filename, VFileLine* filelinep) {
     yy_switch_to_buffer(m_lexp->m_yyState);
 }
 
+void VPreprocImp::insertUnreadbackAtBol(const string& text) {
+    // Insert insuring we're at the beginning of line, for `line
+    // We don't always add a leading newline, as it may result in extra unreadback(newlines).
+    if (m_lineCmt == "") { m_lineCmtNl = true; }
+    else if (m_lineCmt[m_lineCmt.length()-1]!='\n') {
+	insertUnreadback("\n");
+    }
+    insertUnreadback(text);
+}
+
 void VPreprocImp::addLineComment(int enter_exit_level) {
     if (m_preprocp->lineDirectives()) {
 	char numbuf[20]; sprintf(numbuf, "%d", m_lexp->m_curFilelinep->lineno());
 	char levelbuf[20]; sprintf(levelbuf, "%d", enter_exit_level);
-	string cmt = ((string)"\n`line "+numbuf
+	string cmt = ((string)"`line "+numbuf
 		      +" \""+m_lexp->m_curFilelinep->filename()+"\" "
 		      +levelbuf+"\n");
-	insertUnreadback(cmt);
+	insertUnreadbackAtBol(cmt);
     }
 }
 
@@ -364,6 +379,7 @@ int VPreprocImp::getRawToken() {
       next_tok:
 	if (m_lineAdd) {
 	    m_lineAdd--;
+	    m_rawAtBol = true;
 	    yytext="\n"; yyleng=1;
 	    return (VP_TEXT);
 	}
@@ -371,7 +387,12 @@ int VPreprocImp::getRawToken() {
 	    // We have some `line directive to return to the user.  Do it.
 	    static string rtncmt;  // Keep the c string till next call
 	    rtncmt = m_lineCmt;
+	    if (m_lineCmtNl) {
+		if (!m_rawAtBol) rtncmt = "\n"+rtncmt;
+		m_lineCmtNl = false;
+	    }
 	    yytext=(char*)rtncmt.c_str(); yyleng=rtncmt.length();
+	    if (yyleng) m_rawAtBol = (yytext[yyleng-1]=='\n');
 	    m_lineCmt = "";
 	    if (m_state!=ps_DEFVALUE) return (VP_TEXT);
 	    else {
@@ -380,6 +401,7 @@ int VPreprocImp::getRawToken() {
 	    }
 	}
 	if (isEof()) return (VP_EOF);
+
 	// Snarf next token from the file
 	m_filelinep = m_lexp->m_curFilelinep;  // Remember token start location
 	VPreprocLex::s_currentLexp = m_lexp;   // Tell parser where to get/put data
@@ -400,6 +422,7 @@ int VPreprocImp::getRawToken() {
 	    goto next_tok;  // Parse parent, or find the EOF.
 	}
 
+	if (yyleng) m_rawAtBol = (yytext[yyleng-1]=='\n');
 	return tok;
     }
 }
@@ -718,7 +741,7 @@ string VPreprocImp::getline() {
     while (1) {
 	char* rtnp;
 	bool gotEof = false;
-	while (NULL==(rtnp=strchr(m_lineChars.c_str(),'\n'))) {
+	while (NULL==(rtnp=strchr(m_lineChars.c_str(),'\n')) && !gotEof) {
 	    int tok = getToken();
 	    if (debug()) {
 		string buf = string (yytext, yyleng);
@@ -729,8 +752,11 @@ string VPreprocImp::getline() {
 			 m_filelinep->lineno(), tokenName(tok), buf.c_str());
 	    }
 	    if (tok==VP_EOF) {
-		// Add a final newline, in case the user forgot the final \n.
-		m_lineChars.append("\n");
+		// Add a final newline, if the user forgot the final \n.
+		// Note tok==VP_EOF isn't always seen by us, as isEof() may be set earlier
+		if (m_lineChars != "" && m_lineChars[m_lineChars.length()-1] != '\n') {
+		    m_lineChars.append("\n");
+		}
 		gotEof = true;
 	    }
 	    else {
