@@ -115,7 +115,11 @@ See also Verilog::Netlist::Subclass for additional accessors and methods.
 
 =item $self->array
 
-Any array declaration for the port.
+Any array declaration for the port.  This only applies to Verilog 1995
+style ports which can declare port bits independently from the signal
+declarations.  When using Verilog 2001 style ports, see the matching net
+declaration's lsb and msb methods instead, for example
+C<$module->find_net($port->name)->msb>.
 
 =item $self->comment
 
