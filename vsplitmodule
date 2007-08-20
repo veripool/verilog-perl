@@ -1,0 +1,103 @@
+#!/usr/bin/perl -w
+# $Id$
+######################################################################
+#
+# Copyright 2000-2007 by Wilson Snyder.  This program is free software;
+# you can redistribute it and/or modify it under the terms of either the GNU
+# General Public License or the Perl Artistic License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+######################################################################
+
+use lib 'blib/lib';
+use Verilog::EditFiles;
+use FindBin qw($RealBin $RealScript $Script);
+use strict;
+
+#======================================================================
+# When editing, delete this section up to the next #====
+die <<EOF
+%Error: vsplitmodule is an example program.
+Copy $RealBin/$RealScript
+to a new name and edit that new file.  Then see the comments.
+You should then save the script you create, so that you can easily
+recreate the generated files should the input Verilog files change.
+EOF
+ if !$ENV{HARNESS_ACTIVE};
+#======================================================================
+
+# Create a split object
+my $split = Verilog::EditFiles->new
+    (# Verilog::EditFiles will use the below program name in its comments
+     program => $Script,
+
+     # Name of the directory to write the output modules to.
+     # I like to put all generated files under a dir named "gen"
+     # so it is obvious the files are generated.
+     # (But for the Verilog-Perl internal tests, this needs to be test_dir)
+     outdir => "test_dir",   #"gen",
+
+     # If true, add "`celldefine" before every module statement.
+     #celldefine => 1,
+
+     # For the write_lint method, the name of the linter to use.
+     #lint_command => 'vlint --brief',
+
+     # If defined, add the provided text before every module statement.
+     # Generally used to insert lint off pragmas.
+     #lint_header => "// lint_checking MY_RULES OFF\n",
+
+     # If defined, add the provided text before every module statement.
+     # Generally used to insert lint off pragmas.
+     #include_header => "`include \"my_defines.v\"\n",
+
+     # If defined, add the provided text before every module statement.
+     # Generally used to insert lint off pragmas.
+     #timescale_header => "`include \"my_timescale.v\"\n",
+
+     # If set, remove any `timescales.
+     #timescale_removal => 1,
+
+     # If 1, replace any synopsys translate on/offs with "`ifdef SYNTHESIS" and
+     # "`endif"s.  If set to a string, use that string instead of "SYNTHESIS".
+     translate_synthesis => 'SYNTHESIS',
+
+     # The suffix to add to convert a module name into a filename.  Defaults to
+     #v_suffix => '.v',
+
+     # If set, show what files are being read and written
+     verbose => 1,
+     );
+
+# Remove all existing files under the output.  You might not want to do
+# this if there are files you want to keep from there
+unlink (glob("$split->{outdir}/*.v"));
+
+# Read specified libraries and split them
+$split->read_and_split(glob("t/*.v"));
+
+# And write them out
+$split->write_files();
+
+# And create a lint file
+$split->write_lint();
+
+# If a file needs 'manual' search and replaces, we can do that too.
+$split->edit_file
+    (# The filename to be edited
+     filename=>"$split->{outdir}/a.v",
+     # Callback subroutine that takes file contents as a string
+     # and returns the new file contents
+     cb=>sub {
+	 my $wholefile = shift;
+	 # Globally search and comment out any lines with "pulldown PULLDOWN"
+	 # See "man perlre" for examples.
+	 # The %mg here means to match multiple lines (you can put
+	 # \n in the regexp), and to do it globally
+	 $wholefile =~ s%(pulldown PULLDOWN;)%//vsplitmodule: $1%mg;
+	 return $wholefile;
+     });

@@ -72,7 +72,7 @@ WriteMakefile(
 	      PREREQ_PM => {'Pod::Usage' => 0,
 			},
 	      PMLIBDIRS => ['lib', 'Verilog', 'Netlist',],
-	      EXE_FILES => [qw( vrename vpm vppp vhier )],
+	      EXE_FILES => [qw( vrename vpm vppp vhier vsplitmodule )],
 	      'clean'	=> {FILES => qw (test_dir signals.vrename .vpm simv ),},
 	      'dist'    => {COMPRESS => 'gzip -9f',
 			    SUFFIX   => '.gz', 

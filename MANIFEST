@@ -1,5 +1,6 @@
 Changes
 COPYING
+EditFiles.pm
 Getopt.pm
 Language.pm
 Makefile.PL
@@ -69,6 +70,12 @@ t/44_create.t
 t/46_link.t
 t/50_vrename.out
 t/50_vrename.t
+t/56_editfiles.t
+t/56_editfiles.v
+t/56_editfiles_a.out
+t/56_editfiles_b.out
+t/56_editfiles_edit.out
+t/58_vsplitmodule.t
 t/60_vpm.t
 t/80_vppp.t
 t/80_vppp_cmped.out
@@ -102,3 +109,4 @@ vhier
 vpm
 vppp
 vrename
+vsplitmodule

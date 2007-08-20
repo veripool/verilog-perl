@@ -247,8 +247,9 @@ L<vpm>,
 L<vppp>,
 L<vrename>
 
+L<Verilog::EditFiles>,
 L<Verilog::Getopt>,
-L<Verilog::Language>,
+L<Verilog::Language>
 L<Verilog::Netlist>,
 L<Verilog::Parser>,
 L<Verilog::Preproc>,

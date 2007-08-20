@@ -179,6 +179,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 =head1 SEE ALSO
 
 L<Verilog-Perl>,
+L<Verilog::EditFiles>
 L<Verilog::Parser>, 
 L<Verilog::ParseSig>, 
 L<Verilog::Getopt>
