@@ -186,3 +186,11 @@ module buglocal;
    wire     \noescapespaceend = 1'b1;
 
 endmodule
+
+module v2kparam
+  #(parameter WIDTH = 1 )
+   (output [WIDTH-1:0] myout,
+    input  [WIDTH-1:0] myin
+    );
+assign myout = myin;
+endmodule
