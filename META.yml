@@ -1,6 +1,6 @@
 # http://module-build.sourceforge.net/META-spec.html
 name:         Verilog-Perl
-version:      3.011
+version:      3.012
 version_from: Language.pm
 license:      perl
 installdirs:  site

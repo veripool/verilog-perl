@@ -9,7 +9,12 @@ use File::Path;
 use Carp;
 use strict;
 
-use vars qw ($Debug);
+use vars qw ($VERSION $Debug);
+
+######################################################################
+#### Configuration Section
+
+$VERSION = '3.012';
 
 #######################################################################
 # CONSTRUCTORS
