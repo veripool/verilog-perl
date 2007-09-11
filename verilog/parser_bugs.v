@@ -188,9 +188,10 @@ module buglocal;
 endmodule
 
 module v2kparam
-  #(parameter WIDTH = 1 )
+  #(parameter WIDTH = 1,
+    parameter LENGTH = 1, LENGTH2 = 1)
    (output [WIDTH-1:0] myout,
-    input  [WIDTH-1:0] myin
+    input  [LENGTH-1:0] myin, myinb
     );
-assign myout = myin;
+assign myout = myin ^ myinb;
 endmodule

@@ -285,12 +285,20 @@ modHdr:		yMODULE	yaID				{ PARSEP->moduleCb($<fl>1,$1,$2,PARSEP->inCellDefine())
 
 modParE:	/* empty */				{ }
 	|	'#' '(' ')'				{ }
-	|	'#' '(' modParList ')'			{ }
-	|	'#' '(' modParList ';' ')'		{ }
+	|	'#' '(' modParArgs ')'			{ }
 	;
 
-modParList:	modParDecl				{ }
-	|	modParList ';' modParDecl 		{ }
+modParArgs:	modParDecl				{ }
+	|	modParDecl ',' modParList		{ }
+	;
+
+modParList:	modParSecond				{ }
+	|	modParList ',' modParSecond 		{ }
+	;
+
+// Called only after a comma in a v2k list, to allow parsing "parameter a,b, parameter x"
+modParSecond:	modParDecl				{ }
+	|	param					{ }
 	;
 
 modPortsE:	/* empty */					{ }
@@ -350,7 +358,7 @@ varDecl:	varRESET varReg     varSignedE regrangeE  regsigList ';'	{ }
 	|	varRESET varGenVar  varSignedE                          regsigList ';'	{ }
 	;
 
-modParDecl:	varRESET varGParam  varSignedE regrangeE   paramList 	{ }  /* No semicolon*/
+modParDecl:	varRESET varGParam  varSignedE regrangeE   param 	{ }
 	;
 
 varRESET:	/* empty */ 				{ VARRESET(); }
