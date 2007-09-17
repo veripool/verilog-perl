@@ -857,6 +857,7 @@ exprNoStr:	expr yP_OROR expr			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	'{' constExpr '{' cateList '}' '}'	{ $<fl>$=$<fl>1; $$ = "{"+$2+"{"+$4+"}}"; }
 
 	|	ygenSYSCALL				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	ygenSYSCALL '(' ')'			{ $<fl>$=$<fl>1; $$ = $1; }
 	|	ygenSYSCALL '(' exprList ')'		{ $<fl>$=$<fl>1; $$ = $1+"("+$3+")"; }
 
 	|	funcRef					{ $<fl>$=$<fl>1; $$ = $1; }

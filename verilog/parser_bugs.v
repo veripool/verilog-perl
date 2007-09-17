@@ -193,5 +193,5 @@ module v2kparam
    (output [WIDTH-1:0] myout,
     input  [LENGTH-1:0] myin, myinb
     );
-assign myout = myin ^ myinb;
+   assign myout = myin ^ myinb ^ $callemptyparens();
 endmodule
