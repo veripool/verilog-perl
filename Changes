@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix parsing system functions with empty parens. [Oleg Rodionov]
 
+****	Fix Verilog::Netlist errors having wrong line number. [Oleg Rodionov]
+
 * Verilog::Language 3.012 2007/09/10
 
 **	Added Verilog::EditFiles module and vsplitmodule example.
