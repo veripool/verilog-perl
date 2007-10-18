@@ -202,13 +202,15 @@ or preprocessed input.  It understands all SystemVerilog 2005 keywords.
 Verilog::SigParser is useful when you need a list of modules, signals,
 ports, functions, etc.  It requires a preprocessed file, and can parse most
 Verilog 2005 files, but only provides callbacks on certain interesting
-things.
+things.  It does not have SystemVerilog support yet; try contacting the
+author with your requirements.
 
 =item Verilog::Netlist
 
 Verilog::Netlist is useful for when you need the hierarchy, and a list of
 signals per module, pins per cell, etc.  It builds upon the output of
-Verilog::SigParser, so requires preprocessed files.
+Verilog::SigParser, so requires preprocessed files.  It does not have
+SystemVerilog support yet.
 
 This is probably the most popular choice.
 
