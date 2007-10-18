@@ -411,6 +411,18 @@ escid	\\[^ \t\f\r\n]+
 <S05>{
   "==?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDEQUAL; }
   "!=?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDNOTEQUAL; }
+  "+="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_PLUSEQ; }
+  "-="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSEQ; }
+  "*="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_TIMESEQ; }
+  "/="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_DIVEQ; }
+  "%="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MODEQ; }
+  "&="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ANDEQ; }
+  "|="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_OREQ; }
+  "^="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_XOREQ; }
+  "<<="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_SLEFTEQ; }
+  ">>="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_SRIGHTEQ; }
+  "<<<="		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_SLEFTEQ; }
+  ">>>="		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_SSRIGHTEQ; }
 }
 
   /* Identifiers and numbers */

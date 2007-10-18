@@ -203,6 +203,18 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yP_PLUSASTGT	"+*>"
 %token<str>		yP_MINUSEQGT	"-=>"
 %token<str>		yP_MINUSASTGT	"-*>"
+%token<str>		yP_PLUSEQ	"+="
+%token<str>		yP_MINUSEQ	"-="
+%token<str>		yP_TIMESEQ	"*="
+%token<str>		yP_DIVEQ	"/="
+%token<str>		yP_MODEQ	"%="
+%token<str>		yP_ANDEQ	"&="
+%token<str>		yP_OREQ		"|="
+%token<str>		yP_XOREQ	"^="
+%token<str>		yP_SLEFTEQ	"<<="
+%token<str>		yP_SRIGHTEQ	">>="
+%token<str>		yP_SSRIGHTEQ	">>>="
+
 
 //********************
 // Verilog op precedence
@@ -973,6 +985,13 @@ specifyJunk:	dlyTerm 	{} /* ignored */
 	|	yP_EQGT {}	| yP_ASTGT {}
 	|	yP_PLUSEQGT {}	| yP_PLUSASTGT {}
 	|	yP_MINUSEQGT {} | yP_MINUSASTGT {}
+
+	|	yP_PLUSEQ {}	| yP_MINUSEQ {}
+	|	yP_TIMESEQ {}
+	|	yP_DIVEQ {}	| yP_MODEQ {}
+	|	yP_ANDEQ {}	| yP_OREQ {}
+	|	yP_XOREQ {}
+	|	yP_SLEFTEQ {}	| yP_SRIGHTEQ {} | yP_SSRIGHTEQ {}
 
 	|	error {}
 	;
