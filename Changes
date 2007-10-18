@@ -5,7 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.02*
 
-****	Add specify operators => *> +=> +*> -=> -*>.  [Mark Nodine]
+***	Add specify operators => *> +=> +*> -=> -*>.  [Mark Nodine]
+
+***	Add SystemVerilog times (10ns, etc).
 
 * Verilog::Language 3.013 2007/10/18
 

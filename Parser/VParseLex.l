@@ -454,6 +454,9 @@ escid	\\[^ \t\f\r\n]+
   [0-9][_0-9]*(\.[_0-9]+)?([eE][-+]?[_0-9]+) {
                           FL; VALTEXT; CALLBACK(numberCb); return yaFLOATNUM;
 			}
+  [0-9][_0-9]*(\.[_0-9]+)?(fs|ps|ns|us|ms|s|step) {
+                          FL; VALTEXT; CALLBACK(numberCb); return yaTIMENUM;
+			}
 }
 
   /************************************************************************/

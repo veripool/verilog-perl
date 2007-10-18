@@ -93,6 +93,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yaFLOATNUM	"FLOATING-POINT NUMBER"
 %token<str>		yaID		"IDENTIFIER"
 %token<str>		yaINTNUM	"INTEGER NUMBER"
+%token<str>		yaTIMENUM	"TIME NUMBER"
 %token<str>		yaSTRING	"STRING"
 %token<str>		yaTIMINGSPEC	"TIMING SPEC ELEMENT"
 
@@ -517,6 +518,7 @@ delay:		'#' dlyTerm				{ } /* ignored */
 dlyTerm:	yaID 					{ }
 	|	yaINTNUM 				{ }
 	|	yaFLOATNUM 				{ }
+	|	yaTIMENUM 				{ }
 	;
 
 dlyInParen:	expr 					{ }
@@ -870,6 +872,7 @@ exprNoStr:	expr yP_OROR expr			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 
 	|	yaINTNUM				{ $<fl>$=$<fl>1; $$ = $1; }
 	|	yaFLOATNUM				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	yaTIMENUM				{ $<fl>$=$<fl>1; $$ = $1; }
 
 	|	varRefDotBit	  			{ $<fl>$=$<fl>1; $$ = $1; }
 	;

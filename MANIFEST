@@ -92,6 +92,7 @@ verilog/inc1.v
 verilog/inc2.v
 verilog/inc3.v
 verilog/parser_bugs.v
+verilog/parser_sv.v
 verilog/pinorder.v
 verilog/pli.v
 verilog/test.v
