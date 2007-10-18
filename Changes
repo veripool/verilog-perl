@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.02*
+
+****	Add specify operators => *> +=> +*> -=> -*>.  [Mark Nodine]
+
 * Verilog::Language 3.013 2007/10/18
 
 ****	Fix parsing module #(parameter x,y) declarations. [Oleg Rodionov]

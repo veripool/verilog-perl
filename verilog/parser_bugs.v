@@ -137,6 +137,10 @@ module spec;
       if ( !B & !M )
 	( posedge CLK => (  Q[0] : 1'bx )) = ( Tac, Tcs );
       $width (negedge CLK &&& EN, Tac, 0, notif_clk);
+      ( in1 => q ) = (3, 4);
+      ( in1 +=> q ) = Tac;
+      ( a, b, c *> q1, q2) = 10;
+      ( s +*> q ) = Tcs;
    endspecify
 endmodule
 
