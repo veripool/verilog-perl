@@ -5,6 +5,7 @@ Getopt.pm
 Language.pm
 Makefile.PL
 MANIFEST			This list of files
+MANIFEST.SKIP
 META.yml
 Netlist.pm
 Netlist/Cell.pm
