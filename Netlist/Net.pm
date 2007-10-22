@@ -183,7 +183,8 @@ Verilog::Netlist::Net - Net for a Verilog Module
 =head1 DESCRIPTION
 
 A Verilog::Netlist::Net object is created by Verilog::Netlist::Module for
-every signal and input/output declaration in the current module.
+every signal and input/output declaration, and parameter in the current
+module.
 
 =head1 ACCESSORS
 
@@ -219,7 +220,7 @@ The name of the net.
 
 =item $self->type
 
-The C++ type of the net.
+The C++ or declaration type of the net.  For example "wire" or "parameter".
 
 =item $self->width
 
