@@ -710,14 +710,16 @@ stmtList:	stmtBlock				{ }
 	|	stmtList stmtBlock			{ }
 	;
 
+assignLhs:	varRefDotBit				{ }
+	|	'{' concIdList '}'			{ }
+	;
+
 stmt:		';'					{ }
 	|	labeledStmt				{ }
 	|	yaID ':' labeledStmt			{ }  /*S05 block creation rule*/
 
-	|	varRefDotBit yP_LTE delayOrEvE expr ';'	{ }
-	|	varRefDotBit '=' delayOrEvE expr ';'	{ }
-	|	'{' concIdList '}' yP_LTE delayOrEvE expr ';' { }
-	|	'{' concIdList '}' '=' delayOrEvE expr ';'  { }
+	|	assignLhs yP_LTE delayOrEvE expr ';'	{ }
+	|	assignLhs '=' delayOrEvE expr ';'	{ }
 	|	stateCaseForIf				{ }
 	|	taskRef ';' 				{ }
 
@@ -743,7 +745,7 @@ stmt:		';'					{ }
 stateCaseForIf: caseStmt caseAttrE caseListE yENDCASE	{ }
 	|	yIF expr stmtBlock	%prec prLOWER_THAN_ELSE	{ }
 	|	yIF expr stmtBlock yELSE stmtBlock	{ }
-	|	yFOR '(' varRefDotBit '=' expr ';' expr ';' varRefDotBit '=' expr ')' stmtBlock
+	|	yFOR '(' assignLhs '=' expr ';' expr ';' assignLhs '=' expr ')' stmtBlock
 							{ }
 	|	yWHILE '(' expr ')' stmtBlock		{ }
 	|	yDO stmtBlock yWHILE '(' expr ')'	{ }

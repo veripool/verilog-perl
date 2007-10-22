@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add SystemVerilog times (10ns, etc).
 
+****	Fix concatenates in for loop assignments.  [Mark Nodine]
+
 * Verilog::Language 3.013 2007/10/18
 
 ****	Fix parsing module #(parameter x,y) declarations. [Oleg Rodionov]

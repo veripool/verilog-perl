@@ -199,3 +199,11 @@ module v2kparam
     );
    assign myout = myin ^ myinb ^ $callemptyparens();
 endmodule
+
+module foreqn (in);
+   input [1:0] in;
+   reg        a,b;
+   reg [1:0]  c;
+   always for ({a,c[0]} = in; a < 1'b1; {b,c[1]} = in) begin
+   end
+endmodule
