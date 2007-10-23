@@ -210,6 +210,11 @@ sub files_sorted { return files(@_); }
 
 sub read_file {
     my $self = shift;
+    return $self->read_verilog_file(@_);
+}
+
+sub read_verilog_file {
+    my $self = shift;
     my $fileref = Verilog::Netlist::File::read
 	(netlist=>$self,
 	 @_);
