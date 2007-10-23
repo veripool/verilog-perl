@@ -197,8 +197,20 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yP_PLUSCOLON	"+:"
 %token<str>		yP_MINUSCOLON	"-:"
 %token<str>		yP_MINUSGT	"->"
+%token<str>		yP_MINUSGTGT	"->>"
 %token<str>		yP_EQGT		"=>"
 %token<str>		yP_ASTGT	"*>"
+%token<str>		yP_ANDANDAND	"&&&"
+%token<str>		yP_POUNDPOUND	"##"
+%token<str>		yP_DOTSTAR	".*"
+
+%token<str>		yP_ATAT		"@@"
+%token<str>		yP_COLONCOLON	"::"
+%token<str>		yP_COLONEQ	":="
+%token<str>		yP_COLONDIV	":/"
+%token<str>		yP_ORMINUSGT	"|->"
+%token<str>		yP_OREQGT	"|=>"
+
 %token<str>		yP_PLUSEQ	"+="
 %token<str>		yP_MINUSEQ	"-="
 %token<str>		yP_TIMESEQ	"*="
@@ -211,6 +223,10 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yP_SRIGHTEQ	">>="
 %token<str>		yP_SSRIGHTEQ	">>>="
 
+// [* is not a operator, as "[ * ]" is legal
+// [= and [-> could be repitition operators, but to match [* we don't add them.
+// '( is not a operator, as "' (" is legal
+// '{ could be an operator.  More research needed.
 
 //********************
 // Verilog op precedence
@@ -646,7 +662,7 @@ cellpinItList:	cellpinItemE				{ }
 	;
 
 cellpinItemE:	/* empty: ',,' is legal */		{ GRAMMARP->pinNumInc(); }  /*PINDONE(yylval.fl,"",""); <- No, as then () implys a pin*/
-	|	'.' '*'					{ PINDONE($<fl>1,"*","*");GRAMMARP->pinNumInc(); }
+	|	yP_DOTSTAR				{ PINDONE($<fl>1,"*","*");GRAMMARP->pinNumInc(); }
 	|	'.' yaID				{ PINDONE($<fl>1,$2,$2);  GRAMMARP->pinNumInc(); }
 	|	'.' yaID '(' ')'			{ PINDONE($<fl>1,$2,"");  GRAMMARP->pinNumInc(); }
 	|	'.' yaID '(' expr ')'			{ PINDONE($<fl>1,$2,$4);  GRAMMARP->pinNumInc(); }
@@ -981,6 +997,16 @@ specifyJunk:	dlyTerm 	{} /* ignored */
 	|	yP_POW {}
 	|	yP_MINUSGT {}
 	|	yP_EQGT {}	| yP_ASTGT {}
+	|	yP_ANDANDAND {}
+	|	yP_MINUSGTGT {}
+	|	yP_POUNDPOUND {}
+	|	yP_DOTSTAR {}
+	|	yP_ATAT {}
+	|	yP_COLONCOLON {}
+	|	yP_COLONEQ {}
+	|	yP_COLONDIV {}
+	|	yP_ORMINUSGT {}
+	|	yP_OREQGT {}
 
 	|	yP_PLUSEQ {}	| yP_MINUSEQ {}
 	|	yP_TIMESEQ {}

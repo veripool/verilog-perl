@@ -392,6 +392,7 @@ escid	\\[^ \t\f\r\n]+
   "->"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSGT; }
   "=>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_EQGT; }
   "*>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ASTGT; }
+  "&&&"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ANDANDAND; }
 }
 
   /* Verilog 2001 Operators */
@@ -401,6 +402,7 @@ escid	\\[^ \t\f\r\n]+
   "**"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_POW; }
   "+:"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_PLUSCOLON; }
   "-:"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSCOLON; }
+  ".*"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_DOTSTAR; }
 }
 
   /* SystemVerilog Operators */
@@ -419,6 +421,14 @@ escid	\\[^ \t\f\r\n]+
   ">>="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_SRIGHTEQ; }
   "<<<="		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_SLEFTEQ; }
   ">>>="		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_SSRIGHTEQ; }
+  "->>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSGTGT; }
+  "##"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_POUNDPOUND; }
+  "@@"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ATAT; }
+  "::"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_COLONCOLON; }
+  ":="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_COLONEQ; }
+  ":/"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_COLONDIV; }
+  "|->"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ORMINUSGT; }
+  "|=>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_OREQGT; }
 }
 
   /* Identifiers and numbers */
