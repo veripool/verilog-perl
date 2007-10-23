@@ -392,10 +392,6 @@ escid	\\[^ \t\f\r\n]+
   "->"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSGT; }
   "=>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_EQGT; }
   "*>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ASTGT; }
-  "+=>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_PLUSEQGT; }
-  "+*>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_PLUSASTGT; }
-  "-=>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSEQGT; }
-  "-*>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSASTGT; }
 }
 
   /* Verilog 2001 Operators */

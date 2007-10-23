@@ -199,10 +199,6 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yP_MINUSGT	"->"
 %token<str>		yP_EQGT		"=>"
 %token<str>		yP_ASTGT	"*>"
-%token<str>		yP_PLUSEQGT	"+=>"
-%token<str>		yP_PLUSASTGT	"+*>"
-%token<str>		yP_MINUSEQGT	"-=>"
-%token<str>		yP_MINUSASTGT	"-*>"
 %token<str>		yP_PLUSEQ	"+="
 %token<str>		yP_MINUSEQ	"-="
 %token<str>		yP_TIMESEQ	"*="
@@ -985,8 +981,6 @@ specifyJunk:	dlyTerm 	{} /* ignored */
 	|	yP_POW {}
 	|	yP_MINUSGT {}
 	|	yP_EQGT {}	| yP_ASTGT {}
-	|	yP_PLUSEQGT {}	| yP_PLUSASTGT {}
-	|	yP_MINUSEQGT {} | yP_MINUSASTGT {}
 
 	|	yP_PLUSEQ {}	| yP_MINUSEQ {}
 	|	yP_TIMESEQ {}
