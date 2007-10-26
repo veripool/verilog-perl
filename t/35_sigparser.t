@@ -42,11 +42,13 @@ sub error {
 
 sub attribute {	$_[0]->_common('attribute', @_); }
 sub endcell    { $_[0]->_common('endcell', @_); }
+sub endinterface { $_[0]->_common('endinterface', @_); }
 sub endtaskfunc{ $_[0]->_common('endtaskfunc', @_); }
 sub endmodule  { $_[0]->_common('endmodule', @_); }
 sub funcsignal { $_[0]->_common('funcsignal', @_); }
 sub function {	$_[0]->_common('function', @_); }
 sub instant {	$_[0]->_common('instant', @_); }
+sub interface { $_[0]->_common('interface', @_); }
 sub module {	$_[0]->_common('module', @_); }
 sub parampin {	$_[0]->_common('parampin', @_); }
 sub pin {	$_[0]->_common('pin', @_); }

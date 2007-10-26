@@ -107,10 +107,12 @@ public:
     virtual void sysfuncCb(VFileLine* fl, const string& text) = 0;
 
     virtual void endcellCb(VFileLine* fl, const string& kwd) = 0;
+    virtual void endinterfaceCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endmoduleCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endtaskfuncCb(VFileLine* fl, const string& kwd) = 0;
     virtual void functionCb(VFileLine* fl, const string& kwd, const string& name, const string& type) = 0;
     virtual void instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range) = 0;
+    virtual void interfaceCb(VFileLine* fl, const string& kwd, const string& name) = 0;
     virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool celldefine) = 0;
     virtual void paramPinCb(VFileLine* fl, const string& name, const string& conn, int number) = 0;
     virtual void pinCb(VFileLine* fl, const string& name, const string& conn, int number) = 0;

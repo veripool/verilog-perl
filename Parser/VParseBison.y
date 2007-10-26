@@ -142,6 +142,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yCASEX		"casex"
 %token<str>		yCASEZ		"casez"
 %token<str>		yCLOCK		"clock"
+%token<str>		yCLOCKING	"clocking"
 %token<str>		yCOVER		"cover"
 %token<str>		yDEASSIGN	"deassign"
 %token<str>		yDEFAULT	"default"
@@ -153,10 +154,13 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yENDCASE	"endcase"
 %token<str>		yENDFUNCTION	"endfunction"
 %token<str>		yENDGENERATE	"endgenerate"
+%token<str>		yENDINTERFACE	"endinterface"
 %token<str>		yENDMODULE	"endmodule"
 %token<str>		yENDSPECIFY	"endspecify"
 %token<str>		yENDTABLE	"endtable"
 %token<str>		yENDTASK	"endtask"
+%token<str>		yEXPORT		"export"
+%token<str>		yEXTERN		"extern"
 %token<str>		yFINAL		"final"
 %token<str>		yFOR		"for"
 %token<str>		yFORCE		"force"
@@ -166,12 +170,15 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yGENERATE	"generate"
 %token<str>		yGENVAR		"genvar"
 %token<str>		yIF		"if"
+%token<str>		yIMPORT		"import"
 %token<str>		yINITIAL	"initial"
 %token<str>		yINOUT		"inout"
 %token<str>		yINPUT		"input"
 %token<str>		yINTEGER	"integer"
+%token<str>		yINTERFACE	"interface"
 %token<str>		yJOIN		"join"
 %token<str>		yLOCALPARAM	"localparam"
+%token<str>		yMODPORT	"modport"
 %token<str>		yMODULE		"module"
 %token<str>		yNAND		"nand"
 %token<str>		yNEGEDGE	"negedge"
@@ -183,6 +190,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yPOSEDGE	"posedge"
 %token<str>		yREAL		"real"
 %token<str>		yREALTIME	"realtime"
+%token<str>		yREF		"ref"
 %token<str>		yREG		"reg"
 %token<str>		yRELEASE	"release"
 %token<str>		yREPEAT		"repeat"
@@ -311,14 +319,20 @@ fileE:		/* empty */				{ }
 	|	file					{ }
 	;
 
-file:		mod 					{ }
-	|	file mod 				{ }
+file:		description				{ }
+	|	file description			{ }
+	;
+
+// IEEE: description
+description:	moduleDecl				{ }
+	|	interfaceDecl				{ }
 	;
 
 //**********************************************************************
 // Module headers
 
-mod:		modHdr modParE modPortsE ';' modItemListE yENDMODULE endLabelE
+// IEEE: module_declaration:
+moduleDecl:	modHdr modParE modPortsE ';' modItemListE yENDMODULE endLabelE
 			{ PARSEP->endmoduleCb($<fl>1,$6); }
 	;
 
@@ -349,6 +363,13 @@ modPortsE:	/* empty */					{ }
 	|	'(' {GRAMMARP->pinNum(1);} portV2kArgs ')'	{ }
 	;
 
+modPortsStarE:	/* empty */					{ }
+	|	'(' '*' ')'					{ }
+	|	'(' ')'						{ }
+	|	'(' {GRAMMARP->pinNum(1);} portList ')'		{ }
+	|	'(' {GRAMMARP->pinNum(1);} portV2kArgs ')'	{ }
+	;
+
 portList:	port					{ }
 	|	portList ',' port	  		{ }
 	;
@@ -372,6 +393,92 @@ portV2kSecond:	portV2kDecl				{ }
 portV2kSig:	sigAndAttr				{ $<fl>$=$<fl>1; PARSEP->portCb($<fl>1, $1); }
 	;
 
+//**********************************************************************
+// Interface headers
+
+// IEEE: interface_declaration + interface_nonansi_header + interface_ansi_header:
+interfaceDecl:	intHdr modParE modPortsStarE ';' interfaceItemListE yENDINTERFACE endLabelE
+			{ PARSEP->endinterfaceCb($<fl>6,$6); }
+	|	yEXTERN	intHdr modParE modPortsE ';'	{ }
+	;
+
+intHdr:		yINTERFACE lifetimeE yaID		{ PARSEP->interfaceCb($<fl>1,$1,$3); }
+	;
+
+interfaceItemListE:
+		/* empty */				{ }
+	|	interfaceItemList			{ }
+	;
+
+interfaceItemList:
+		interfaceItem				{ }
+	|	interfaceItemList interfaceItem		{ }
+	;
+
+// IEEE: interface_item + non_port_interface_item
+interfaceItem:	
+		portDecl ';'				{ }
+	|	generateRegion				{ }
+	|	interfaceOrGenerateItem			{ }
+	|	interfaceDecl				{ }
+	//|	program_declaration
+	;
+
+// IEEE: interface_or_generate_item
+interfaceOrGenerateItem:
+		modportDecl				{ }
+	//|	moduleCommonItem			{ }
+	//|	extern_tf_declaration			{ }
+	;
+
+// IEEE: modport_declaration:
+modportDecl:	yMODPORT modportItemList ';'		{ }
+	;
+
+modportItemList: modportItem				{ }
+	|	modportItemList ',' modportItem		{ }
+	;
+
+// IEEE: modport_item
+modportItem:	yaID '(' modportPortsDeclList ')'	{ }
+
+modportPortsDeclList:
+		modportPortsDecl			{ }
+	|	modportPortsDeclList ',' modportPortsDecl	{ }
+	;
+
+// IEEE: modport_ports_declaration  + modport_simple_ports_declaration
+//	+ (modport_tf_ports_declaration+import_export) + modport_clocking_declaration
+// We've expanded the lists each take to instead just have standalone ID ports.
+// We track the type as with the V2k series of defines, then create as each ID is seen.
+modportPortsDecl:
+		portDirection modportSimplePort		{ }
+	|	yCLOCKING yaID				{ }
+	|	yIMPORT modportTfPort			{ }
+	|	yEXPORT modportTfPort			{ }
+	// Continuations of above after a comma.
+	|	modportSimplePort			{ }
+	;
+
+//IEEE: modport_simple_port or modport_tf_port, depending what keyword was earlier
+modportSimplePort:
+		yaID					{ }
+	|	'.' yaID '(' ')'			{ }
+	|	'.' yaID '(' expr ')'			{ }
+
+//IEEE: modport_tf_port
+modportTfPort:	yaID					{ }
+	//|	method_prototype
+	;
+
+//IEEE: port_direction
+portDirection:	varInput				{ }
+	|	varOutput				{ }
+	|	varInout				{ }
+	|	varRef					{ }
+	;
+
+
 //************************************************
 // Variable Declarations
 
@@ -388,7 +495,8 @@ portV2kDecl:	varRESET varInput  signingE v2kNetDeclE regrangeE portV2kSig	{ }
 	|	varRESET varOutput signingE v2kVarDeclE regrangeE portV2kSig	{ }
 	;
 
-ioDecl:		varRESET varInput  signingE v2kVarDeclE regrangeE  sigList ';'	{ }
+// IEEE: port_declaration - plus ';'
+portDecl:	varRESET varInput  signingE v2kVarDeclE regrangeE  sigList ';'	{ }
      	|	varRESET varInout  signingE v2kVarDeclE regrangeE  sigList ';'	{ }
      	|	varRESET varOutput signingE v2kVarDeclE regrangeE  sigList ';'	{ }
 	;
@@ -428,6 +536,8 @@ varOutput:	yOUTPUT					{ VARIO($1); }
 	;
 varInout:	yINOUT					{ VARIO($1); }
 	;
+varRef:		yREF					{ VARIO($1); }
+	;
 
 varTypeKwds:	yINTEGER				{ $<fl>$=$<fl>1; $$=$1; }
 	|	yREAL					{ $<fl>$=$<fl>1; $$=$1; }
@@ -461,9 +571,13 @@ modItemList:	modItem					{ }
 	;
 
 modItem:	modOrGenItem 				{ }
-	|	yGENERATE genTopBlock yENDGENERATE	{ }
+	|	generateRegion				{ }
 	|	ySPECIFY specifyJunkList yENDSPECIFY	{ }
 	|	ySPECIFY yENDSPECIFY			{ }
+	;
+
+// IEEE: generate_region
+generateRegion:	yGENERATE genTopBlock yENDGENERATE	{ }
 	;
 
 // IEEE: ??? + parameter_override
@@ -475,7 +589,7 @@ modOrGenItem:	yALWAYS stmtBlock			{ }
 	|	instDecl 				{ }
 	|	taskDecl 				{ }
 	|	funcDecl 				{ }
-	|	ioDecl	 				{ }
+	|	portDecl	 			{ }
 	|	varDecl 				{ }
 	|	tableDecl 				{ }
 
@@ -853,7 +967,7 @@ funcVarList:	funcVar					{ }
 	|	funcVarList funcVar			{ }
 	;
 
-funcVar: 	ioDecl					{ }
+funcVar: 	portDecl				{ }
 	|	varDecl 				{ }
 	;
 
