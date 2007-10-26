@@ -333,7 +333,7 @@ description:	moduleDecl				{ }
 
 // IEEE: module_declaration:
 moduleDecl:	modHdr modParE modPortsE ';' modItemListE yENDMODULE endLabelE
-			{ PARSEP->endmoduleCb($<fl>1,$6); }
+			{ PARSEP->endmoduleCb($<fl>6,$6); }
 	;
 
 modHdr:		yMODULE	yaID				{ PARSEP->moduleCb($<fl>1,$1,$2,PARSEP->inCellDefine()); }
@@ -772,7 +772,7 @@ instnameList:	instnameParen				{ }
 	|	instnameList ',' instnameParen		{ }
 	;
 
-instnameParen:	instname cellpinList ')'		{ PARSEP->endcellCb($<fl>1,""); }
+instnameParen:	instname cellpinList ')'		{ PARSEP->endcellCb($<fl>3,""); }
 	;
 
 instname:	yaID instRangeE '(' 			{ PARSEP->instantCb($<fl>1, GRAMMARP->m_cellMod, $1, $2); PINPARAMS(); }
@@ -930,11 +930,11 @@ funcRef:	idDotted '(' exprList ')'		{ }
 	;
 
 taskDecl: 	yTASK lifetimeE taskId funcGuts yENDTASK endLabelE
-			{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>1,$5); }
+			{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>5,$5); }
 	;
 
 funcDecl: 	yFUNCTION lifetimeE funcId funcGuts yENDFUNCTION endLabelE
-		 	{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>1,$5); }
+		 	{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>5,$5); }
 	;
 
 // IEEE: lifetime - plus empty
