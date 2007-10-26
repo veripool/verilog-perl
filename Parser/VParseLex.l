@@ -232,6 +232,12 @@ escid	\\[^ \t\f\r\n]+
   "use"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
 }
 
+  /* Verilog 2005 */
+<V05,S05>{
+  /*     Keywords */
+  "uwire"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWIRE; }
+}
+
   /* System Verilog 2005 */
 <S05>{
   /*     Keywords */
@@ -243,6 +249,7 @@ escid	\\[^ \t\f\r\n]+
   "final"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFINAL; }
   "join_any"		{ FL; VALTEXT; CALLBACK(keywordCb); return yJOIN; }
   "join_none"		{ FL; VALTEXT; CALLBACK(keywordCb); return yJOIN; }
+  "static"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTATIC; }
   /*     Generic unsupported keywords */
   "alias"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "assume"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
@@ -313,7 +320,6 @@ escid	\\[^ \t\f\r\n]+
   "shortint"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "shortreal"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "solve"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "static"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "string"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "struct"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "super"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }

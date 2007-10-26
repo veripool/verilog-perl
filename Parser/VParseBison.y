@@ -90,10 +90,20 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token_table
 
 // Generic types used by Verilog::Parser
+// IEEE: real_number
 %token<str>		yaFLOATNUM	"FLOATING-POINT NUMBER"
+
+// IEEE: identifier, class_identifier, class_variable_identifier,
+// covergroup_variable_identifier, dynamic_array_variable_identifier,
+// enum_identifier, interface_identifier, interface_instance_identifier,
+// package_identifier, type_identifier, variable_identifier,
 %token<str>		yaID		"IDENTIFIER"
+
+// IEEE: integral_number
 %token<str>		yaINTNUM	"INTEGER NUMBER"
+// IEEE: time_literal + time_unit
 %token<str>		yaTIMENUM	"TIME NUMBER"
+// IEEE: string_literal
 %token<str>		yaSTRING	"STRING"
 %token<str>		yaTIMINGSPEC	"TIMING SPEC ELEMENT"
 
@@ -179,6 +189,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		ySCALARED	"scalared"
 %token<str>		ySIGNED		"signed"
 %token<str>		ySPECIFY	"specify"
+%token<str>		ySTATIC		"static"
 %token<str>		ySUPPLY0	"supply0"
 %token<str>		ySUPPLY1	"supply1"
 %token<str>		yTABLE		"table"
@@ -372,29 +383,30 @@ regsigList:	regsig  				{ }
 	|	regsigList ',' regsig		       	{ }
 	;
 
-portV2kDecl:	varRESET varInput  varSignedE v2kNetDeclE regrangeE portV2kSig	{ }
-	|	varRESET varInout  varSignedE v2kNetDeclE regrangeE portV2kSig	{ }
-	|	varRESET varOutput varSignedE v2kVarDeclE regrangeE portV2kSig	{ }
+portV2kDecl:	varRESET varInput  signingE v2kNetDeclE regrangeE portV2kSig	{ }
+	|	varRESET varInout  signingE v2kNetDeclE regrangeE portV2kSig	{ }
+	|	varRESET varOutput signingE v2kVarDeclE regrangeE portV2kSig	{ }
 	;
 
-ioDecl:		varRESET varInput  varSignedE v2kVarDeclE regrangeE  sigList ';'	{ }
-     	|	varRESET varInout  varSignedE v2kVarDeclE regrangeE  sigList ';'	{ }
-     	|	varRESET varOutput varSignedE v2kVarDeclE regrangeE  sigList ';'	{ }
+ioDecl:		varRESET varInput  signingE v2kVarDeclE regrangeE  sigList ';'	{ }
+     	|	varRESET varInout  signingE v2kVarDeclE regrangeE  sigList ';'	{ }
+     	|	varRESET varOutput signingE v2kVarDeclE regrangeE  sigList ';'	{ }
 	;
 
-varDecl:	varRESET varReg     varSignedE regrangeE  regsigList ';'	{ }
-	|	varRESET varGParam  varSignedE regrangeE  paramList ';'		{ }
-	|	varRESET varLParam  varSignedE regrangeE  paramList ';'		{ }
-	|	varRESET varNet     strengthSpecE varSignedE delayrange netSigList ';'	{ }
-	|	varRESET varGenVar  varSignedE                          regsigList ';'	{ }
+varDecl:	varRESET varReg     signingE regrangeE  regsigList ';'	{ }
+	|	varRESET varGParam  signingE regrangeE  paramList ';'		{ }
+	|	varRESET varLParam  signingE regrangeE  paramList ';'		{ }
+	|	varRESET varNet     strengthSpecE signingE delayrange netSigList ';'	{ }
+	|	varRESET varGenVar  signingE                          regsigList ';'	{ }
 	;
 
-modParDecl:	varRESET varGParam  varSignedE regrangeE   param 	{ }
+modParDecl:	varRESET varGParam  signingE regrangeE   param 	{ }
 	;
 
 varRESET:	/* empty */ 				{ VARRESET(); }
 	;
 
+// IEEE: net_type
 varNet:		ySUPPLY0				{ VARDECL($1); }
 	|	ySUPPLY1				{ VARDECL($1); }
 	|	yWIRE 					{ VARDECL($1); }
@@ -423,7 +435,8 @@ varTypeKwds:	yINTEGER				{ $<fl>$=$<fl>1; $$=$1; }
 	|	yTIME					{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
-varSignedE:	/*empty*/ 				{ }
+// IEEE: signing - plus empty
+signingE:	/*empty*/ 				{ }
 	|	ySIGNED					{ VARSIGNED("signed"); }
 	|	yUNSIGNED				{ VARSIGNED("unsigned"); }
 	;
@@ -453,6 +466,7 @@ modItem:	modOrGenItem 				{ }
 	|	ySPECIFY yENDSPECIFY			{ }
 	;
 
+// IEEE: ??? + parameter_override
 modOrGenItem:	yALWAYS stmtBlock			{ }
 	|	yFINAL stmtBlock			{ }
 	|	yINITIAL stmtBlock			{ }
@@ -524,7 +538,7 @@ assignOne:	varRefDotBit '=' expr			{ }
 // IEEE: delay_or_event_control
 delayOrEvE:	/* empty */				{ }
 	|	delay					{ } /* ignored */
-	|	sensitivity				{ } /* ignored */
+	|	eventControl				{ } /* ignored */
 	|	yREPEAT '(' expr ')' delayOrEvE		{ } /* ignored */
 	;
 
@@ -615,6 +629,7 @@ paramList:	param					{ }
 	|	paramList ',' param			{ }
 	;
 
+// IEEE: list_of_defparam_assignments
 defpList:	defpOne					{ }
 	|	defpList ',' defpOne			{ }
 	;
@@ -670,16 +685,16 @@ cellpinItemE:	/* empty: ',,' is legal */		{ GRAMMARP->pinNumInc(); }  /*PINDONE(
 	;
 
 //************************************************
-// Sensitivity lists
+// EventControl lists
 
-//IEEE: event_control
-sensitivity:	'@' '(' senList ')'			{ }
+// IEEE: event_control
+eventControl:	'@' '(' senList ')'			{ }
 	|	'@' senitemVar				{ }
 	|	'@' '(' '*' ')'				{ }
 	|	'@' '*'					{ }  /* Verilog 2001 */
 	;
 
-//IEEE: event_expression - split over several
+// IEEE: event_expression - split over several
 senList:	senitem					{ }
 	|	senList yOR senitem			{ }
 	|	senList ',' senitem			{ }	/* Verilog 2001 */
@@ -699,6 +714,7 @@ senitemEdge:	yPOSEDGE expr				{ }
 //************************************************
 // Statements
 
+// IEEE: statement + seq_block + par_block
 stmtBlock:	stmt					{ }
 	|	yBEGIN stmtList yEND			{ }
 	|	yBEGIN yEND				{ }
@@ -742,7 +758,7 @@ stmt:		';'					{ }
 	|	ygenSYSCALL '(' exprList ')' ';'	{ }
 	|	ygenSYSCALL ';'				{ }
 	|	delay stmtBlock				{ }
-	|	sensitivity stmtBlock			{ }
+	|	eventControl stmtBlock			{ }
 	|	yASSIGN expr '=' delayOrEvE expr ';'	{ }
 	|	yDEASSIGN expr ';'			{ }
 	|	yDISABLE expr ';'			{ }
@@ -799,15 +815,17 @@ taskRef:	idDotted		 		{ }
 funcRef:	idDotted '(' exprList ')'		{ }
 	;
 
-taskDecl: 	yTASK taskAutoE taskId funcGuts yENDTASK endLabelE
+taskDecl: 	yTASK lifetimeE taskId funcGuts yENDTASK endLabelE
 			{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>1,$5); }
 	;
 
-funcDecl: 	yFUNCTION taskAutoE funcId funcGuts yENDFUNCTION endLabelE
+funcDecl: 	yFUNCTION lifetimeE funcId funcGuts yENDFUNCTION endLabelE
 		 	{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>1,$5); }
 	;
 
-taskAutoE:	/* empty */		 		{ }
+// IEEE: lifetime - plus empty
+lifetimeE:	/* empty */		 		{ }
+	|	ySTATIC			 		{ }
 	|	yAUTOMATIC		 		{ }
 	;
 
@@ -924,6 +942,9 @@ exprList:	expr					{ $<fl>$=$<fl>1; $$ = $1; }
 // For simplicty, assume everything is a module, perhaps nameless,
 // and deal with it later.
 
+// IEEE: cmos_switchtype + enable_gatetype + mos_switchtype
+//	+ n_input_gatetype + n_output_gatetype + pass_en_switchtype
+//	+ pass_switchtype
 gateKwd:	ygenGATE				{ $<fl>$=$<fl>1; INSTPREP($1,0); }
 	|	yAND					{ $<fl>$=$<fl>1; INSTPREP($1,0); }
 	| 	yBUF					{ $<fl>$=$<fl>1; INSTPREP($1,0); }
@@ -936,11 +957,14 @@ gateKwd:	ygenGATE				{ $<fl>$=$<fl>1; INSTPREP($1,0); }
 	;
 
 // This list is also hardcoded in VParseLex.l
+// IEEE: strength0+strength1 - plus HIGHZ/SMALL/MEDIUM/LARGE
 strength:	ygenSTRENGTH				{ }
 	|	ySUPPLY0				{ }
 	|	ySUPPLY1				{ }
 	;
 
+// IEEE: drive_strength + pullup_strength + pulldown_strength 
+//	+ charge_strength - plus empty
 strengthSpecE:	/* empty */					{ }
 	|	yP_PARSTRENGTH strength ')'			{ }
 	|	yP_PARSTRENGTH strength ',' strength ')'	{ }
