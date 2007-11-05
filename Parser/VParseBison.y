@@ -116,15 +116,29 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 
 %token<str>		'!'
 %token<str>		'#'
+%token<str>		'%'
+%token<str>		'&'
 %token<str>		'('
 %token<str>		')'
+%token<str>		'*'
+%token<str>		'+'
 %token<str>		','
+%token<str>		'-'
 %token<str>		'.'
+%token<str>		'/'
+%token<str>		':'
 %token<str>		';'
+%token<str>		'<'
 %token<str>		'='
+%token<str>		'>'
+%token<str>		'?'
 %token<str>		'@'
 %token<str>		'['
 %token<str>		']'
+%token<str>		'^'
+%token<str>		'{'
+%token<str>		'|'
+%token<str>		'}'
 %token<str>		'~'
 
 // Specific keywords
@@ -212,6 +226,24 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yXNOR		"xnor"
 %token<str>		yXOR		"xor"
 
+%token<str>		yP_OROR		"||"
+%token<str>		yP_ANDAND	"&&"
+%token<str>		yP_NOR		"~|"
+%token<str>		yP_XNOR		"^~"
+%token<str>		yP_NAND		"~&"
+%token<str>		yP_EQUAL	"=="
+%token<str>		yP_NOTEQUAL	"!="
+%token<str>		yP_CASEEQUAL	"==="
+%token<str>		yP_CASENOTEQUAL	"!=="
+%token<str>		yP_WILDEQUAL	"==?"
+%token<str>		yP_WILDNOTEQUAL	"!=?"
+%token<str>		yP_GTE		">="
+%token<str>		yP_LTE		"<="
+%token<str>		yP_SLEFT	"<<"
+%token<str>		yP_SRIGHT	">>"
+%token<str>		yP_SSRIGHT	">>>"
+%token<str>		yP_POW		"**"
+
 %token<str>		yP_PARSTRENGTH	"(-for-strength"
 %token<str>		yP_PLUSCOLON	"+:"
 %token<str>		yP_MINUSCOLON	"-:"
@@ -249,21 +281,21 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 
 //********************
 // Verilog op precedence
-%left<str>	':'
-%left<str>	'?'
-%left<str>	yP_OROR
-%left<str>	yP_ANDAND
-%left<str>	'|' yP_NOR
-%left<str>	'^'
-%left<str>	yP_XNOR
-%left<str>	'&' yP_NAND
-%left<str>	yP_EQUAL yP_NOTEQUAL yP_CASEEQUAL yP_CASENOTEQUAL yP_WILDEQUAL yP_WILDNOTEQUAL
-%left<str>	'>' '<' yP_GTE yP_LTE
-%left<str>	yP_SLEFT yP_SRIGHT yP_SSRIGHT
-%left<str>	'+' '-'
-%left<str>	'*' '/' '%'
-%left<str>	yP_POW
-%left<str>	'{' '}'
+%left		':'
+%left		'?'
+%left		yP_OROR
+%left		yP_ANDAND
+%left		'|' yP_NOR
+%left		'^'
+%left		yP_XNOR
+%left		'&' yP_NAND
+%left		yP_EQUAL yP_NOTEQUAL yP_CASEEQUAL yP_CASENOTEQUAL yP_WILDEQUAL yP_WILDNOTEQUAL
+%left		'>' '<' yP_GTE yP_LTE
+%left		yP_SLEFT yP_SRIGHT yP_SSRIGHT
+%left		'+' '-'
+%left		'*' '/' '%'
+%left		yP_POW
+%left		'{' '}'
 %left<str>	prUNARYARITH
 %left<str>	prREDUCTION
 %left<str>	prNEGATION
@@ -1115,6 +1147,7 @@ specifyJunk:	dlyTerm 	{} /* ignored */
 	|	'[' {} | ']' {}
 	|	'|' {}
 	|	'~' {}
+	|	'@' {}
 
 	|	yIF {}
 	|	yNEGEDGE {}
