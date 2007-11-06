@@ -415,6 +415,8 @@ escid	\\[^ \t\f\r\n]+
 <S05>{
   "==?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDEQUAL; }
   "!=?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDNOTEQUAL; }
+  "++"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_PLUSPLUS; }
+  "--"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSMINUS; }
   "+="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_PLUSEQ; }
   "-="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSEQ; }
   "*="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_TIMESEQ; }

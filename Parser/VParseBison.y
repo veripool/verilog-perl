@@ -262,6 +262,8 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yP_ORMINUSGT	"|->"
 %token<str>		yP_OREQGT	"|=>"
 
+%token<str>		yP_PLUSPLUS	"++"
+%token<str>		yP_MINUSMINUS	"--"
 %token<str>		yP_PLUSEQ	"+="
 %token<str>		yP_MINUSEQ	"-="
 %token<str>		yP_TIMESEQ	"*="
@@ -673,12 +675,16 @@ genCaseList:	caseCondList ':' genItemBlock		{ }
 //************************************************
 // Assignments and register declarations
 
+// IEEE: variable_lvalue
+variableLvalue:	varRefDotBit				{ }
+	|	'{' concIdList '}'			{ }
+ 	;
+
 assignList:	assignOne				{ }
 	|	assignList ',' assignOne		{ }
 	;
 
-assignOne:	varRefDotBit '=' expr			{ }
-	|	'{' concIdList '}' '=' expr		{ }
+assignOne:	variableLvalue '=' expr			{ }
 	;
 
 // IEEE: delay_or_event_control
@@ -1179,6 +1185,7 @@ specifyJunk:	dlyTerm 	{} /* ignored */
 	|	yP_ORMINUSGT {}
 	|	yP_OREQGT {}
 
+	|	yP_PLUSPLUS {}	| yP_MINUSMINUS {}
 	|	yP_PLUSEQ {}	| yP_MINUSEQ {}
 	|	yP_TIMESEQ {}
 	|	yP_DIVEQ {}	| yP_MODEQ {}
