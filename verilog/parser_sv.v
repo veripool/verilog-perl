@@ -4,23 +4,22 @@ module times ();
    initial x = 33ns;	// Note no space
 endmodule : times
 
-// Needs work:
 interface itf;
-//   logic blabla;
-//   logic [7:0] addr, data;
+   logic blabla;
+   logic [7:0] addr, data;
    modport Master(input data, date_delayed, output addr);
 endinterface : itf
 
 module test (
 //	     itf whole_int,
 //	     itf.test modported_int,
-//    input logic clk, rst,
-//    input logic d_in,
-//    output logic d_out
+    input logic clk, rst,
+    input logic d_in,
+    output logic d_out
 	     );
 
-//   logic   d_int;
-//   logic [7:0] data_;
+   logic   d_int;
+   logic [7:0] data_;
    assign      d_int = d_in;
 
    assign  modported_int.data = data_;

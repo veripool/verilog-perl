@@ -451,7 +451,7 @@ interfaceItemList:
 
 // IEEE: interface_item + non_port_interface_item
 interfaceItem:	
-		portDecl ';'				{ }
+		varDecl					{ }
 	|	generateRegion				{ }
 	|	interfaceOrGenerateItem			{ }
 	|	interfaceDecl				{ }

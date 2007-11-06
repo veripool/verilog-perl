@@ -5,7 +5,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.02*
 
-**	Add SystemVerilog interfaces.  [Thomas Ziller]
+**	Add SystemVerilog interfaces and logic types.  [Thomas Ziller]
 
 ***	Add SystemVerilog operators += ## @@ :: etc.
 
