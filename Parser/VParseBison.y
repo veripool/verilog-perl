@@ -527,6 +527,8 @@ regsigList:	regsig  				{ }
 portV2kDecl:	varRESET varInput  signingE v2kNetDeclE regrangeE portV2kSig	{ }
 	|	varRESET varInout  signingE v2kNetDeclE regrangeE portV2kSig	{ }
 	|	varRESET varOutput signingE v2kVarDeclE regrangeE portV2kSig	{ }
+//	|	varRESET yaID          portV2kSig	{ }
+//	|	varRESET yaID '.' yaID portV2kSig	{ }
 	;
 
 // IEEE: port_declaration - plus ';'
