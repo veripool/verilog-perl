@@ -140,7 +140,7 @@ sub include {
 		);
 }
 
-# Note rather then overriding these, a derived Verilog::Getopt class can
+# Note rather than overriding these, a derived Verilog::Getopt class can
 # accomplish the same thing.
 
 sub undef {
@@ -277,7 +277,7 @@ default), insert comments in output streams.  When set to 'sub', call the
 comment() function so that meta-comments can be processed outside of the
 output stream.  Note that some programs use meta-comments to embed useful
 information (synthesis and lint), so use this with caution if feeding to
-tools other then your own.  Defaults to 1.
+tools other than your own.  Defaults to 1.
 
 =item keep_whitespace=>0
 

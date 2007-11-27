@@ -117,7 +117,7 @@ standards apply.  The year is indicates the language standard as per the
 Return the numeric value of a Verilog value stored as a Math::BigInt, or
 undef if incorrectly formed.  You must 'use Math::BigInt' yourself before
 calling this function.  Note bigints do not have an exact size, so NOT of a
-Math::BigInt may return a different value then verilog.  See also
+Math::BigInt may return a different value than verilog.  See also
 number_value and number_bitvector.
 
 =item Verilog::Language::number_bits ($number_string)

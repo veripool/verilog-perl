@@ -1259,7 +1259,7 @@ Report a $uerror if the given case is FALSE.  (Like assert() in C.)
 
 =item $uassert_amone (I<sig>, [I<sig>...], "message", [I<vars>...] )
 
-Report a $uerror if more then one signal is asserted, or any are X.  (None
+Report a $uerror if more than one signal is asserted, or any are X.  (None
 asserted is ok.)  The error message will include a binary display of the
 signal values.
 
@@ -1269,7 +1269,7 @@ Report a $uinfo if the given case is FALSE.  (Like assert() in C.)
 
 =item $uassert_onehot (I<sig>, [I<sig>...], "message", [I<vars>...] )
 
-Report a $uerror if other then one signal is asserted, or any are X.  The
+Report a $uerror if other than one signal is asserted, or any are X.  The
 error message will include a binary display of the signal values.
 
 =item $uassert_req_ack (I<req_sig>, I<ack_sig>, [I<data_sig>,...] )

@@ -287,7 +287,7 @@ constructor.
 =item $parser->unreadbackCat ($text)
 
 Add text to be returned with the next unreadback call.  This is much faster
-then using "$parser->unreadback($parser->unreadback . $text)".
+than using "$parser->unreadback($parser->unreadback . $text)".
 
 =back
 

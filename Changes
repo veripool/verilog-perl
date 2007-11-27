@@ -73,7 +73,7 @@ indicates the contributor was also the author of the fix; Thanks!
 	it understands almost the entire Verilog 2005 language.  The bad
 	news is there are minor incompatibilities with previous versions,
 	and the parser now errors out when it does not understand something
-	rather then ignoring it.
+	rather than ignoring it.
 
 ***	The Verilog::SigParser->pin callback now passes "" as the pin name
 	instead of "pin###" if connecting by position instead of by name.
@@ -284,7 +284,7 @@ indicates the contributor was also the author of the fix; Thanks!
 **	Support Verilog 2001 ansi-style port declarations. [Rudi Rughoonundon]
 
 **	Pins, nets, ports, and cells accessor methods now return lists
-	rather then internal hash references.  This matches earlier
+	rather than internal hash references.  This matches earlier
 	documentation, and behavior of the pins_sorted, etc functions.
 
 ***	SigParser::module callback no longer gets list of ports, instead
@@ -433,7 +433,7 @@ indicates the contributor was also the author of the fix; Thanks!
 * Verilog::Language 2.211 8/19/2002
 
 ***	If Verilog::Getopt list accessors are passed a reference,
-	set the entire list to the reference, rather then adding a element.
+	set the entire list to the reference, rather than adding a element.
 
 * Verilog::Language 2.210 8/8/2002
 
