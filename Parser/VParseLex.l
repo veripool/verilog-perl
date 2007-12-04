@@ -285,7 +285,7 @@ escid	\\[^ \t\f\r\n]+
   "coverpoint"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "cross"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "dist"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "endcass"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
+  "endclass"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "endclocking"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "endgroup"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "endpackage"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }

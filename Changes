@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.02***
+
+****	Fix endclass keyword parsing.  [David Plumb]
+
 * Verilog::Language 3.020 2007/12/03
 
 **	Add SystemVerilog logic types.  [Thomas Ziller]
