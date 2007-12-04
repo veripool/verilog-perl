@@ -1,3 +1,4 @@
+.cvsignore
 Changes
 COPYING
 EditFiles.pm
@@ -15,6 +16,7 @@ Netlist/Net.pm
 Netlist/Pin.pm
 Netlist/Port.pm
 Netlist/Subclass.pm
+Parser/.cvsignore
 Parser/Makefile.PL
 Parser/Parser.pm
 Parser/Parser.xs
@@ -26,9 +28,11 @@ Parser/VParseBison.y
 Parser/VParseGrammar.h
 Parser/VParseLex.h
 Parser/VParseLex.l
+Preproc/.cvsignore
 Preproc/Makefile.PL
 Preproc/Preproc.pm
 Preproc/Preproc.xs
+Preproc/src/.cvsignore
 Preproc/src/example.cpp
 Preproc/src/flexfix
 Preproc/src/Makefile.PL
