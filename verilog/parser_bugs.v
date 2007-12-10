@@ -209,3 +209,14 @@ module foreqn (in);
    always for ({a,c[in]} = 0; a < 1'b1; {b,c[in]} = 2'b10) begin
    end
 endmodule
+
+module colonslash;
+   always @*
+     case (cond&4'b1110)
+       'h0://Error
+	 t = 7;
+       'h2:/*Another comment*/
+	     t = 6;
+       'h4: t = 5;
+     endcase
+endmodule

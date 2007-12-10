@@ -434,7 +434,7 @@ escid	\\[^ \t\f\r\n]+
   "@@"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ATAT; }
   "::"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_COLONCOLON; }
   ":="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_COLONEQ; }
-  ":/"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_COLONDIV; }
+  ":/"[^\/\*]		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_COLONDIV; }  /* : then comment is not ":/" */
   "|->"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ORMINUSGT; }
   "|=>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_OREQGT; }
 }
