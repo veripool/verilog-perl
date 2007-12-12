@@ -1093,7 +1093,7 @@ exprList:	expr					{ $<fl>$=$<fl>1; $$ = $1; }
 // Gate declarations
 
 // We can't tell between UDPs and modules as they aren't declared yet.
-// For simplicty, assume everything is a module, perhaps nameless,
+// For simplicity, assume everything is a module, perhaps nameless,
 // and deal with it later.
 
 // IEEE: cmos_switchtype + enable_gatetype + mos_switchtype

@@ -115,7 +115,7 @@ Verilog/VCS and cc/GCC.
 =item L<Verilog::Language|Verilog::Language>
 
 Verilog::Language provides general utilities for using the Verilog
-Language, such as parsing numbers or determing what keywords exist.
+Language, such as parsing numbers or determining what keywords exist.
 
 =item L<Verilog::Netlist|Verilog::Netlist>
 

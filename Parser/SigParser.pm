@@ -317,7 +317,7 @@ expect a lot, the Parser is still naive, and there are many awkward cases
 that aren't covered.
 
 Note the SigParser is focused on extracting signal information.  It does
-NOT extract enough information to derrive general interconnect; for example
+NOT extract enough information to derive general interconnect; for example
 the contents of 'assign' statements are not parsed.
 
 =head1 DISTRIBUTION
