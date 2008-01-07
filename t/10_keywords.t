@@ -2,7 +2,7 @@
 # $Id$
 # DESCRIPTION: Perl ExtUtils: Type 'make test' to test this package
 #
-# Copyright 2000-2007 by Wilson Snyder.  This program is free software;
+# Copyright 2000-2008 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
 
@@ -19,7 +19,7 @@ ok (Verilog::Language::is_keyword("input"));
 ok (!Verilog::Language::is_keyword("not_input"));
 ok (Verilog::Language::is_compdirect("`define"));
 
-ok (Verilog::Language::language_standard() eq '1800-2005');
+ok (Verilog::Language::language_standard() eq '1800-2008');
 ok (Verilog::Language::is_keyword("do"));
 ok (Verilog::Language::language_standard(2001) eq '1364-2001');
 ok (Verilog::Language::is_keyword("generate"));

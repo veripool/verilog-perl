@@ -14,7 +14,7 @@ use vars qw ($VERSION $Debug);
 ######################################################################
 #### Configuration Section
 
-$VERSION = '3.020';
+$VERSION = '3.021';
 
 #######################################################################
 # CONSTRUCTORS
@@ -355,7 +355,7 @@ Verilog-Perl is part of the L<http://www.veripool.com/> free Verilog EDA
 software tool suite.  The latest version is available from CPAN and from
 L<http://www.veripool.com/verilog-perl.html>.
 
-Copyright 2006-2007 by Wilson Snyder.  This package is free software; you
+Copyright 2006-2008 by Wilson Snyder.  This package is free software; you
 can redistribute it and/or modify it under the terms of either the GNU
 Lesser General Public License or the Perl Artistic License.
 

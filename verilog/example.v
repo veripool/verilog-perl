@@ -1,6 +1,6 @@
 // DESCRIPTION: vpm: Example top verilog file for vpm program
 // This file ONLY is placed into the Public Domain, for any use,
-// without warranty, 2000-2007 by Wilson Snyder.
+// without warranty, 2000-2008 by Wilson Snyder.
 
 `timescale 1ns/1ns
 
