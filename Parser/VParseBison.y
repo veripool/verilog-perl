@@ -173,6 +173,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yENDSPECIFY	"endspecify"
 %token<str>		yENDTABLE	"endtable"
 %token<str>		yENDTASK	"endtask"
+%token<str>		yENUM		"enum"
 %token<str>		yEXPORT		"export"
 %token<str>		yEXTERN		"extern"
 %token<str>		yFINAL		"final"
@@ -218,6 +219,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yTASK		"task"
 %token<str>		yTIME		"time"
 %token<str>		yTRI		"tri"
+%token<str>		yTYPEDEF	"typedef"
 %token<str>		yUNSIGNED	"unsigned"
 %token<str>		yVECTORED	"vectored"
 %token<str>		yWAIT		"wait"
@@ -542,6 +544,7 @@ varDecl:	varRESET varReg     signingE regrangeE  regsigList ';'	{ }
 	|	varRESET varLParam  signingE regrangeE  paramList ';'		{ }
 	|	varRESET varNet     strengthSpecE signingE delayrange netSigList ';'	{ }
 	|	varRESET varGenVar  signingE                          regsigList ';'	{ }
+	|	varRESET enumDecl   sigList ';'		{ }
 	;
 
 modParDecl:	varRESET varGParam  signingE regrangeE   param 	{ }
@@ -596,6 +599,47 @@ v2kVarDeclE:	v2kNetDeclE 				{ }
 	;
 
 //************************************************
+// Enums
+
+// IEEE: part of data_type
+enumDecl:	yENUM enumBaseTypeE '{' enumNameList '}' { }
+	;
+
+// IEEE: enum_base_type
+// Note this isn't correct yet, need integer_atom_type, integer_vector_type, type_identifier
+enumBaseTypeE:	/* empty */				{ VARDECL("enum"); }
+	|	yINTEGER signingE			{ VARDECL($1); }
+	|	ygenNETTYPE regrangeE signingE		{ VARDECL($1); }
+	;
+
+enumNameList:	enumNameDecl				{ }
+	|	enumNameList ',' enumNameDecl		{ }
+	;
+
+// IEEE: enum_name_declaration
+enumNameDecl:	yaID enumNameRangeE enumNameStartE	{ }
+	;
+
+// IEEE: second part of enum_name_declaration
+enumNameRangeE:	/* empty */				{ }
+	|	'[' yaINTNUM ']'			{ }
+	|	'[' yaINTNUM ':' yaINTNUM ']'		{ }
+	;
+
+// IEEE: third part of enum_name_declaration
+enumNameStartE:	/* empty */				{ }
+	|	'=' constExpr				{ }
+	;
+
+
+//************************************************
+// Typedef
+
+// Needs a lot of work
+typedefDecl:	yTYPEDEF enumDecl yaID ';'		{ }
+	;
+
+//************************************************
 // Module Items
 
 modItemListE:	/* empty */				{ }
@@ -628,6 +672,7 @@ modOrGenItem:	yALWAYS stmtBlock			{ }
 	|	portDecl	 			{ }
 	|	varDecl 				{ }
 	|	tableDecl 				{ }
+	|	typedefDecl				{ }
 
 	|	error ';'				{ }
 	;

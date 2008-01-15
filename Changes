@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.02**
 
+***	Add ignoring of SystemVerilog enumerations.  [Thomas Ziller]
+
 ****	Fix begin_keywords 1800-2005 error introduced in last release.
 
 * Verilog::Language 3.021 2008/01/07
