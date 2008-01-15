@@ -94,7 +94,7 @@ parser from scratch.)
 
 Return true if the given symbol string is a Verilog reserved keyword.
 Value indicates the language standard as per the `begin_keywords macro,
-'1364-1995', '1364-2001', '1364-2008', or '1800-2008'.
+'1364-1995', '1364-2001', '1364-2005', or '1800-2005'.
 
 =item Verilog::Language::is_compdirect ($symbol_string)
 
@@ -109,8 +109,8 @@ Return true if the given symbol is a built in gate primitive; for example
 
 Sets the language standard to indicate what are keywords.  If undef, all
 standards apply.  The year is indicates the language standard as per the
-`begin_keywords macro, '1364-1995', '1364-2001', '1364-2008', or
-'1800-2008'.
+`begin_keywords macro, '1364-1995', '1364-2001', '1364-2005', or
+'1800-2005'.
 
 =item Verilog::Language::number_bigint ($number_string)
 
@@ -248,7 +248,7 @@ foreach my $kwd (qw(
 		    struct super tagged this throughout timeprecision
 		    timeunit type typedef union unique var virtual void
 		    wait_order wildcard with within
-		    )) { $Keywords{'1800-2008'}{$kwd} = '1800-2008'; }
+		    )) { $Keywords{'1800-2005'}{$kwd} = '1800-2005'; }
 
 foreach my $kwd (
 		 "`celldefine", "`default_nettype", "`define", "`else",
@@ -264,7 +264,7 @@ foreach my $kwd (
 		 "`file", "`line",
 		 ) { $Keywords{$kwd}{'1364-2001'} = $Compdirect{$kwd} = '1364-2001'; }
 
-language_standard ('1800-2008');  # Default standard
+language_standard ('1800-2005');  # Default standard
 
 foreach my $kwd (qw(
 		    and buf bufif0 bufif1 cmos nand nmos nor not notif0
@@ -283,15 +283,15 @@ sub language_standard {
 	    $Standard = '1364-1995';
 	    @subsets = ('1364-1995');
 	} elsif ($standard eq '2001' || $standard eq '1364-2001' || $standard eq '1364-2001-noconfig'
-		 || $standard eq '1364-2008') {
+		 || $standard eq '1364-2005') {
 	    $Standard = '1364-2001';
 	    @subsets = ('1364-2001', '1364-1995');
-	} elsif ($standard eq '1364-2008') {
-	    $Standard = '1364-2008';
-	    @subsets = ('1364-2008', '1364-2001', '1364-1995');
-	} elsif ($standard eq 'sv31' || $standard eq '1800-2008') {
-	    $Standard = '1800-2008';
-	    @subsets = ('1800-2008', '1364-2008', '1364-2001', '1364-1995');
+	} elsif ($standard eq '1364-2005') {
+	    $Standard = '1364-2005';
+	    @subsets = ('1364-2005', '1364-2001', '1364-1995');
+	} elsif ($standard eq 'sv31' || $standard eq '1800-2005') {
+	    $Standard = '1800-2005';
+	    @subsets = ('1800-2005', '1364-2005', '1364-2001', '1364-1995');
 	} else {
 	    croak "%Error: Verilog::Language::language_standard passed bad value: $standard,";
 	}

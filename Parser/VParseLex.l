@@ -543,8 +543,8 @@ escid	\\[^ \t\f\r\n]+
   "`begin_keywords"[ \t]*\"1364-1995\"		{ yy_push_state(V95); CALLBACK(preprocCb); }
   "`begin_keywords"[ \t]*\"1364-2001\"		{ yy_push_state(V01); CALLBACK(preprocCb); }
   "`begin_keywords"[ \t]*\"1364-2001-noconfig\"	{ yy_push_state(V01); CALLBACK(preprocCb); }
-  "`begin_keywords"[ \t]*\"1364-2008\"		{ yy_push_state(V05); CALLBACK(preprocCb); }
-  "`begin_keywords"[ \t]*\"1800-2008\"		{ yy_push_state(S05); CALLBACK(preprocCb); }
+  "`begin_keywords"[ \t]*\"1364-2005\"		{ yy_push_state(V05); CALLBACK(preprocCb); }
+  "`begin_keywords"[ \t]*\"1800-2005\"		{ yy_push_state(S05); CALLBACK(preprocCb); }
   "`end_keywords"				{ yy_pop_state();     CALLBACK(preprocCb); }
 }
 
