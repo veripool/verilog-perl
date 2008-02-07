@@ -527,20 +527,20 @@ regsigList:	regsig  				{ }
 	|	regsigList ',' regsig		       	{ }
 	;
 
-portV2kDecl:	varRESET varInput  signingE v2kNetDeclE regrangeE portV2kSig	{ }
-	|	varRESET varInout  signingE v2kNetDeclE regrangeE portV2kSig	{ }
-	|	varRESET varOutput signingE v2kVarDeclE regrangeE portV2kSig	{ }
+portV2kDecl:	varRESET varInput  signingE v2kNetDeclE regArRangeE portV2kSig	{ }
+	|	varRESET varInout  signingE v2kNetDeclE regArRangeE portV2kSig	{ }
+	|	varRESET varOutput signingE v2kVarDeclE regArRangeE portV2kSig	{ }
 //	|	varRESET yaID          portV2kSig	{ }
 //	|	varRESET yaID '.' yaID portV2kSig	{ }
 	;
 
 // IEEE: port_declaration - plus ';'
-portDecl:	varRESET varInput  signingE v2kVarDeclE regrangeE  sigList ';'	{ }
-     	|	varRESET varInout  signingE v2kVarDeclE regrangeE  sigList ';'	{ }
-     	|	varRESET varOutput signingE v2kVarDeclE regrangeE  sigList ';'	{ }
+portDecl:	varRESET varInput  signingE v2kVarDeclE regArRangeE  sigList ';'	{ }
+     	|	varRESET varInout  signingE v2kVarDeclE regArRangeE  sigList ';'	{ }
+     	|	varRESET varOutput signingE v2kVarDeclE regArRangeE  sigList ';'	{ }
 	;
 
-varDecl:	varRESET varReg     signingE regrangeE  regsigList ';'	{ }
+varDecl:	varRESET varReg     signingE regArRangeE  regsigList ';'	{ }
 	|	varRESET varGParam  signingE regrangeE  paramList ';'		{ }
 	|	varRESET varLParam  signingE regrangeE  paramList ';'		{ }
 	|	varRESET varNet     strengthSpecE signingE delayrange netSigList ';'	{ }
@@ -804,6 +804,15 @@ rangeList:	anyrange				{ $$ = $1; }
 
 regrangeE:	/* empty */    		               	{ VARRANGE(""); }
 	|	anyrange 				{ VARRANGE($1); }
+	;
+
+regArRangeE:	/* empty */    		               	{ }
+	|	regArRangeList 				{ }
+	;
+
+// Complication here is "[#:#]" is a range, while "[#:#][#:#]" is an array and range.
+regArRangeList:	anyrange				{ VARRANGE($1); }
+        |	regArRangeList anyrange			{ VARARRAY(GRAMMARP->m_varArray+GRAMMARP->m_varRange); VARRANGE($2); }
 	;
 
 anyrange:	'[' constExpr ':' constExpr ']'		{ $$ = "["+$2+":"+$4+"]"; }
