@@ -66,6 +66,7 @@ public: // Only for VParseBison
     string	m_varIO;
     string	m_varSigned;
     string	m_varRange;
+    string	m_varArray;
 
     string	m_cellMod;
     bool	m_cellParam;

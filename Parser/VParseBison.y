@@ -49,14 +49,15 @@ VParseGrammar*	VParseGrammar::s_grammarp = NULL;
 
 #define NEWSTRING(text) (string((text)))
 
-#define VARRESET()	 { VARDECL(""); VARIO(""); VARSIGNED(""); VARRANGE(""); }
+#define VARRESET()	 { VARDECL(""); VARIO(""); VARSIGNED(""); VARRANGE(""); VARARRAY("");}
 #define VARDECL(type)	 { GRAMMARP->m_varDecl = (type); }
 #define VARIO(type)	 { GRAMMARP->m_varIO   = (type); }
 #define VARSIGNED(value) { GRAMMARP->m_varSigned=(value); }
 #define VARRANGE(range)	 { GRAMMARP->m_varRange=(range); }
-#define VARDONE(fl,name,array,value) {\
-	if (GRAMMARP->m_varIO!="")   PARSEP->signalCb((fl),GRAMMARP->m_varIO,  (name),GRAMMARP->m_varRange,array, GRAMMARP->m_varSigned, "",      GRAMMARP->m_inFTask); \
-	if (GRAMMARP->m_varDecl!="") PARSEP->signalCb((fl),GRAMMARP->m_varDecl,(name),GRAMMARP->m_varRange,array, GRAMMARP->m_varSigned, (value), GRAMMARP->m_inFTask); \
+#define VARARRAY(value)	 { GRAMMARP->m_varArray=(value); }
+#define VARDONE(fl,name,value) {\
+	if (GRAMMARP->m_varIO!="")   PARSEP->signalCb((fl),GRAMMARP->m_varIO,  (name),GRAMMARP->m_varRange, GRAMMARP->m_varArray, GRAMMARP->m_varSigned, "",      GRAMMARP->m_inFTask); \
+	if (GRAMMARP->m_varDecl!="") PARSEP->signalCb((fl),GRAMMARP->m_varDecl,(name),GRAMMARP->m_varRange, GRAMMARP->m_varArray, GRAMMARP->m_varSigned, (value), GRAMMARP->m_inFTask); \
 }
 
 #define INSTPREP(cellmod,cellparam) { GRAMMARP->pinNum(1); GRAMMARP->m_cellMod=(cellmod); GRAMMARP->m_cellParam=(cellparam); }
@@ -769,18 +770,18 @@ netSigList:	netSig  				{ }
 	;
 
 netSig:		sigId sigAttrListE			{ }
-	|	yaID  sigAttrListE '=' expr		{ VARDONE($<fl>1, $1, "", $4); }
+	|	yaID  sigAttrListE '=' expr		{ VARDONE($<fl>1, $1, $4); }
 	|	sigIdRange sigAttrListE			{ }
 	;
 
-sigIdRange:	yaID rangeList				{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2, ""); }
+sigIdRange:	yaID rangeList				{ $<fl>$=$<fl>1; VARARRAY($2); VARDONE($<fl>1, $1, ""); }
 	;
 
-regSigId:	yaID rangeListE				{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2, ""); }
-	|	yaID rangeListE '=' constExpr		{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2, $4); }
+regSigId:	yaID rangeListE				{ $<fl>$=$<fl>1; VARARRAY($2); VARDONE($<fl>1, $1, ""); }
+	|	yaID rangeListE '=' constExpr		{ $<fl>$=$<fl>1; VARARRAY($2); VARDONE($<fl>1, $1, $4); }
 	;
 
-sigId:		yaID					{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, "", ""); }
+sigId:		yaID					{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, ""); }
 	;
 
 sigList:	sigAndAttr				{ }
@@ -821,7 +822,7 @@ portRangeE:	/* empty */	                   	{ $$ = ""; }
 //************************************************
 // Parameters
 
-param:		yaID sigAttrListE '=' expr		{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, "", $4); }
+param:		yaID sigAttrListE '=' expr		{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $4); }
 	;
 
 paramList:	param					{ }
