@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix arrayed input/output pins.  [Thomas Ziller]
 
+****	Fix "output reg unsigned" parse error.
+
 * Verilog::Language 3.022 2008/01/15
 
 ***	Add ignoring of SystemVerilog enumerations.  [Thomas Ziller]

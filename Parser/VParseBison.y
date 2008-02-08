@@ -527,17 +527,17 @@ regsigList:	regsig  				{ }
 	|	regsigList ',' regsig		       	{ }
 	;
 
-portV2kDecl:	varRESET varInput  signingE v2kNetDeclE regArRangeE portV2kSig	{ }
-	|	varRESET varInout  signingE v2kNetDeclE regArRangeE portV2kSig	{ }
-	|	varRESET varOutput signingE v2kVarDeclE regArRangeE portV2kSig	{ }
+portV2kDecl:	varRESET varInput  v2kNetDeclE signingE regArRangeE portV2kSig	{ }
+	|	varRESET varInout  v2kNetDeclE signingE regArRangeE portV2kSig	{ }
+	|	varRESET varOutput v2kVarDeclE signingE regArRangeE portV2kSig	{ }
 //	|	varRESET yaID          portV2kSig	{ }
 //	|	varRESET yaID '.' yaID portV2kSig	{ }
 	;
 
 // IEEE: port_declaration - plus ';'
-portDecl:	varRESET varInput  signingE v2kVarDeclE regArRangeE  sigList ';'	{ }
-     	|	varRESET varInout  signingE v2kVarDeclE regArRangeE  sigList ';'	{ }
-     	|	varRESET varOutput signingE v2kVarDeclE regArRangeE  sigList ';'	{ }
+portDecl:	varRESET varInput  v2kVarDeclE signingE regArRangeE  sigList ';'	{ }
+     	|	varRESET varInout  v2kVarDeclE signingE regArRangeE  sigList ';'	{ }
+     	|	varRESET varOutput v2kVarDeclE signingE regArRangeE  sigList ';'	{ }
 	;
 
 varDecl:	varRESET varReg     signingE regArRangeE  regsigList ';'	{ }
