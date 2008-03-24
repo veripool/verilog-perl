@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.02****
+
+****	Fix missing uwire keyword in Verilog::Language. [Jonathan David]
+
 * Verilog::Language 3.023 2008/02/12
 
 ****	Fix arrayed input/output pins.  [Thomas Ziller]

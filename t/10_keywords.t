@@ -9,7 +9,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 16 }
+BEGIN { plan tests => 19 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Language;
@@ -21,7 +21,10 @@ ok (Verilog::Language::is_compdirect("`define"));
 
 ok (Verilog::Language::language_standard() eq '1800-2005');
 ok (Verilog::Language::is_keyword("do"));
+ok (Verilog::Language::language_standard('1364-2005') eq '1364-2005');
+ok (Verilog::Language::is_keyword("uwire"));
 ok (Verilog::Language::language_standard(2001) eq '1364-2001');
+ok (!Verilog::Language::is_keyword("uwire"));
 ok (Verilog::Language::is_keyword("generate"));
 ok (Verilog::Language::language_standard(1995) eq '1364-1995');
 ok (!Verilog::Language::is_keyword("generate"));

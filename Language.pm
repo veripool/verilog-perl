@@ -233,6 +233,10 @@ foreach my $kwd (qw(
 		    )) { $Keywords{'1364-2001'}{$kwd} = '1364-2001'; }
 
 foreach my $kwd (qw(
+		    uwire
+		    )) { $Keywords{'1364-2005'}{$kwd} = '1364-2005'; }
+
+foreach my $kwd (qw(
 		    alias always_comb always_ff always_latch assert assume
 		    before bind bins binsof bit break byte chandle class
 		    clocking const constraint context continue cover
@@ -282,8 +286,7 @@ sub language_standard {
 	if ($standard eq '1995' || $standard eq '1364-1995') {
 	    $Standard = '1364-1995';
 	    @subsets = ('1364-1995');
-	} elsif ($standard eq '2001' || $standard eq '1364-2001' || $standard eq '1364-2001-noconfig'
-		 || $standard eq '1364-2005') {
+	} elsif ($standard eq '2001' || $standard eq '1364-2001' || $standard eq '1364-2001-noconfig') {
 	    $Standard = '1364-2001';
 	    @subsets = ('1364-2001', '1364-1995');
 	} elsif ($standard eq '1364-2005') {
