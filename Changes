@@ -5,6 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.02****
 
+****	Fix SystemVerilog parameterized defines with `` expansion,
+	and fix extra whitespace inserted on substitution. [Vladimir Matveyenko]
+
 ****	Fix missing uwire keyword in Verilog::Language. [Jonathan David]
 
 * Verilog::Language 3.023 2008/02/12
