@@ -456,7 +456,12 @@ sub define {
 	my $params = shift||"";
 	print "Define $token $params= $value\n" if $Debug;
 	my $oldval = $self->{defines}{$token};
-	(!defined $oldval or ($oldval eq $value) or !$self->{define_warnings})
+	my $oldparams;
+	if (ref $oldval eq 'ARRAY') {
+	    ($oldval, $oldparams) = @{$oldval};
+	}
+	(!defined $oldval or (($oldval eq $value) && ($oldparams eq $params))
+	    or !$self->{define_warnings})
 	    or warn "%Warning: ".$self->fileline().": Redefining `$token\n";
 	if ($params) {
 	    $self->{defines}{$token} = [$value, $params];

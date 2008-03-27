@@ -58,16 +58,16 @@ COMMENT: // but not
 verilog/inc1.v:7:  
 COMMENT: /*CMT*/
 COMMENT: /*CMT*/
-verilog/inc1.v:8:  foo   /*CMT*/   bar     /*CMT*/  
+verilog/inc1.v:8: foo   /*CMT*/   bar     /*CMT*/ 
 COMMENT: /*CMT*/
-verilog/inc1.v:9:  foobar2   /*CMT*/  
+verilog/inc1.v:9: foobar2   /*CMT*/ 
 verilog/inc1.v:10: 
 verilog/inc1.v:11:  
 verilog/inc1.v:11: 
 verilog/inc1.v:13: 
 COMMENT: /*******COMMENT*****/
 verilog/inc1.v:14:  /*CMT*/ 
-verilog/inc1.v:15:  first part    		second part 
+verilog/inc1.v:15: first part    		second part
 verilog/inc1.v:16: 
 COMMENT: //===========================================================================
 verilog/inc1.v:17:  /*CMT*/ 
@@ -75,37 +75,37 @@ verilog/inc1.v:18:
 verilog/inc1.v:19: 
 verilog/inc1.v:20:  
 verilog/inc1.v:21:  
-verilog/inc1.v:22:   deep   deep  
+verilog/inc1.v:22: deep deep
 verilog/inc1.v:23: 
 verilog/inc1.v:24:  
 verilog/inc1.v:25:  
 verilog/inc1.v:26: "Inside: `nosubst"
-verilog/inc1.v:27:  "`nosubst" 		  
+verilog/inc1.v:27: "`nosubst"		  
 verilog/inc1.v:28: 
 verilog/inc1.v:29:  
-verilog/inc1.v:30:  x y LLZZ x y 
-verilog/inc1.v:31:   p q LLZZ p q     r   s  LLZZ  r   s   LLZZ  p q LLZZ p q     r   s  LLZZ  r   s   
+verilog/inc1.v:30: x y LLZZ x y
+verilog/inc1.v:31: p q LLZZ p q r  s  LLZZ r  s  LLZZ p q LLZZ p q r  s  LLZZ r  s 
 verilog/inc1.v:32: 
 verilog/inc1.v:33: 
 verilog/inc1.v:34: 
-verilog/inc1.v:35:  firstline	 	comma","line LLZZ firstline	 	comma","line 
+verilog/inc1.v:35: firstline	 comma","line LLZZ firstline	 comma","line
 verilog/inc1.v:36: 
 verilog/inc1.v:37:  
-verilog/inc1.v:38:   x   y LLZZ "a"  y 
+verilog/inc1.v:38: x  y LLZZ "a" y
 verilog/inc1.v:39: 
 verilog/inc1.v:40:  
-verilog/inc1.v:41:  (a,b) (a,b)
+verilog/inc1.v:41: (a,b)(a,b)
 verilog/inc1.v:42: 
 verilog/inc1.v:43:  
-verilog/inc1.v:44: $display( "left side: \" right side\"" )
+verilog/inc1.v:44: $display("left side: \"right side\"")
 verilog/inc1.v:45: 
 verilog/inc1.v:46:  
-verilog/inc1.v:47:  bar_suffix   
+verilog/inc1.v:47: bar_suffix  
 verilog/inc1.v:48: 
 verilog/inc1.v:49:  
 verilog/inc1.v:49: 
-verilog/inc1.v:51:  $c("Zap(\"",bug1,"\");"); ;
-verilog/inc1.v:52:  $c("Zap(\"","bug2","\");"); ;
+verilog/inc1.v:51: $c("Zap(\"",bug1,"\");");;
+verilog/inc1.v:52: $c("Zap(\"","bug2","\");");;
 verilog/inc1.v:53: 
 COMMENT: /* Define inside comment: `DEEPER and `WITHTICK */
 verilog/inc1.v:54:  /*CMT*/ 
@@ -119,12 +119,70 @@ verilog/inc1.v:60:
 verilog/inc1.v:60: `line 60 "verilog/inc1.v" 0
 verilog/inc1.v:60: 
 verilog/inc1.v:61: 
-COMMENT: // Quotes are legal in protected blocks.  Grr.
+COMMENT: //======================================================================
 verilog/inc1.v:62:  /*CMT*/ 
-verilog/inc1.v:63: module prot();
-verilog/inc1.v:64: `protected
-verilog/inc1.v:64:     I!#r#e6<_Q{{E2+]I3<[3s)1@D|'E''i!O?]jD>Jo_![Cl)
-verilog/inc1.v:64:     #nj1]p,3^1~,="E@QZB\T)eU\pC#C|7=\$J$##A[@-@{Qk]
-verilog/inc1.v:67: `endprotected
-verilog/inc1.v:68: endmodule
-verilog/inc1.v:69: `line 69 "verilog/inc1.v" 2
+COMMENT: // RT bug 34429
+verilog/inc1.v:63:  /*CMT*/ 
+verilog/inc1.v:64: 
+verilog/inc1.v:65:  
+verilog/inc1.v:66:  
+verilog/inc1.v:67:  
+verilog/inc1.v:68:  
+COMMENT: // Doesn't expand
+verilog/inc1.v:69:  
+verilog/inc1.v:70:  
+verilog/inc1.v:71:    initial begin
+COMMENT: //$display(`msg( \`, \`));  // Illegal
+verilog/inc1.v:72:        /*CMT*/ 
+verilog/inc1.v:73:       $display("pre thrupre thrumid thrupost post: \"right side\"");
+verilog/inc1.v:74:       $display("left side: \"right side\"");
+verilog/inc1.v:75:       $display("left side : \"right side \"");
+verilog/inc1.v:76:       $display("left_side : \"left_side \"");
+verilog/inc1.v:77:       $display("na : \"left_side \"");
+verilog/inc1.v:78:       $display("prep ( midp1 left_side midp2 ( outp ) ) : \"left_side \"");
+verilog/inc1.v:79:       $display("na: \"nana\"");
+COMMENT: /*CMT*/
+COMMENT: /*CMT*/
+COMMENT: // Results vary between simulators
+verilog/inc1.v:80:       $display("left_side left_side	  /*CMT*/  : \"left_side left_side	  /*CMT*/  \"");    /*CMT*/ 
+COMMENT: // Empty
+verilog/inc1.v:81:       $display(": \"\"");   /*CMT*/ 
+verilog/inc1.v:82:       $display("left side: \"right side\"");
+verilog/inc1.v:83:       $display("left side  : \"right side  \"");
+verilog/inc1.v:84: 
+verilog/inc1.v:85:  
+verilog/inc1.v:85: 
+verilog/inc1.v:87:       $display("twoline: \"first   second\"");
+verilog/inc1.v:88: 
+COMMENT: //$display(`msg(left side, \ right side \ ));  // Not sure \{space} is legal.
+verilog/inc1.v:89:        /*CMT*/ 
+verilog/inc1.v:90:       $write("*-* All Finished *-*\n");
+verilog/inc1.v:91:       $finish;
+verilog/inc1.v:92:    end
+verilog/inc1.v:93: endmodule
+verilog/inc1.v:94: 
+verilog/inc1.v:95:  
+verilog/inc1.v:95: 
+verilog/inc1.v:95: 
+verilog/inc1.v:95: 
+verilog/inc1.v:99: 
+verilog/inc1.v:100: module add1 ( input wire d1, output wire o1);
+COMMENT: // expansion is OK
+verilog/inc1.v:101:  wire  tmp_d1 = d1;  wire  tmp_o1 = tmp_d1 + 1;  assign o1 = tmp_o1 ;    /*CMT*/ 
+verilog/inc1.v:102: endmodule
+verilog/inc1.v:103: module add2 ( input wire d2, output wire o2);
+COMMENT: // expansion is bad
+verilog/inc1.v:104:  wire  tmp_d2  = d2 ;  wire  tmp_o2  = tmp_d2  + 1;  assign o2  = tmp_o2  ;   /*CMT*/ 
+verilog/inc1.v:105: endmodule
+verilog/inc1.v:106: 
+COMMENT: //======================================================================
+verilog/inc1.v:107:  /*CMT*/ 
+COMMENT: // Quotes are legal in protected blocks.  Grr.
+verilog/inc1.v:108:  /*CMT*/ 
+verilog/inc1.v:109: module prot();
+verilog/inc1.v:110: `protected
+verilog/inc1.v:110:     I!#r#e6<_Q{{E2+]I3<[3s)1@D|'E''i!O?]jD>Jo_![Cl)
+verilog/inc1.v:110:     #nj1]p,3^1~,="E@QZB\T)eU\pC#C|7=\$J$##A[@-@{Qk]
+verilog/inc1.v:113: `endprotected
+verilog/inc1.v:114: endmodule
+verilog/inc1.v:115: `line 115 "verilog/inc1.v" 2

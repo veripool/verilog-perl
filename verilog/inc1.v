@@ -59,6 +59,52 @@ $display(`msg(left side, right side))
   `error "Empty is still true"
 `endif
 
+//======================================================================
+// RT bug 34429
+
+`define ls left_side
+`define rs left_side
+`define noarg  na
+`define thru(x) x
+`define thruthru `ls `rs	// Doesn't expand
+`define msg(x,y) `"x: `\`"y`\`"`"
+   initial begin
+      //$display(`msg( \`, \`));  // Illegal
+      $display(`msg(pre `thru(thrupre `thru(thrumid) thrupost) post,right side));
+      $display(`msg(left side,right side));
+      $display(`msg( left side , right side ));
+      $display(`msg( `ls , `rs ));
+      $display(`msg( `noarg , `rs ));
+      $display(`msg( prep ( midp1 `ls midp2 ( outp ) ) , `rs ));
+      $display(`msg(`noarg,`noarg`noarg));
+      $display(`msg( `thruthru , `thruthru ));   // Results vary between simulators
+      $display(`msg(`thru(),));  // Empty
+      $display(`msg(`thru(left side),`thru(right side)));
+      $display(`msg( `thru( left side ) , `thru( right side ) ));
+
+`define twoline first \
+ second
+      $display(`msg(twoline, `twoline));
+
+      //$display(`msg(left side, \ right side \ ));  // Not sure \{space} is legal.
+      $write("*-* All Finished *-*\n");
+      $finish;
+   end
+endmodule
+
+`define ADD_UP(a,c)          \
+wire  tmp_``a = a; \
+wire  tmp_``c = tmp_``a + 1; \
+assign c = tmp_``c ;
+
+module add1 ( input wire d1, output wire o1);
+ `ADD_UP(d1,o1)   // expansion is OK
+endmodule
+module add2 ( input wire d2, output wire o2);
+ `ADD_UP( d2 , o2 )  // expansion is bad
+endmodule
+
+//======================================================================
 // Quotes are legal in protected blocks.  Grr.
 module prot();
 `protected

@@ -131,14 +131,25 @@ drop		[\032]
 <ARGMODE><<EOF>>	{ yyerror("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
 <ARGMODE>{crnl}		{ linenoInc(); yytext="\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
-<ARGMODE>[(]		{ VPreprocLex::s_currentLexp->m_parenLevel++; appendDefValue(yytext,yyleng); }
-<ARGMODE>[,)]		{ if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
+<ARGMODE>[(]		{ VPreprocLex::s_currentLexp->m_parenLevel++;
+			  if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
 			      appendDefValue(yytext,yyleng);
-			      if (yytext[0]==')') VPreprocLex::s_currentLexp->m_parenLevel--;
 			  } else {
-			      unput(yytext[0]); yy_pop_state(); return (VP_DEFARG);
+			      return (VP_TEXT);
  			}}
-<ARGMODE>[^\/\*\n\r\\(,)\"]+	|
+<ARGMODE>[)]		{ VPreprocLex::s_currentLexp->m_parenLevel--;
+			  if (VPreprocLex::s_currentLexp->m_parenLevel>0) {
+			      appendDefValue(yytext,yyleng);
+			  } else {
+			      yy_pop_state(); return (VP_DEFARG);
+ 			}}
+<ARGMODE>[,]		{ if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
+			      appendDefValue(yytext,yyleng);
+			  } else {
+			      yy_pop_state(); return (VP_DEFARG);
+ 			}}
+<ARGMODE>"`"{symb}	{ return (VP_DEFREF); }  /* defref in defref */
+<ARGMODE>[^\/\*\n\r\\(,)\"`]+	|
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }
 
 	/* One line comments. */
@@ -165,21 +176,21 @@ drop		[\032]
 <*>.|\n			{ yymore(); }	/* Prevent hitting ECHO; */
 %%
 
-void VPreprocLex::setStateDefArg() {
+void VPreprocLex::pushStateDefArg() {
     // Enter define substitution argument state
     yy_push_state(ARGMODE);
-    m_parenLevel = 1;
+    m_parenLevel = 0;
     m_defValue = "";
 }
 
-void VPreprocLex::setStateDefValue() {
+void VPreprocLex::pushStateDefValue() {
     // Enter define value state
     yy_push_state(DEFMODE);
     m_parenLevel = 0;
     m_defValue = "";
 }
 
-void VPreprocLex::setStateIncFilename() {
+void VPreprocLex::pushStateIncFilename() {
     // Enter include <> filename state
     yy_push_state(INCMODE);
     yymore();

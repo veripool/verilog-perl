@@ -35,6 +35,28 @@
 //#include <FlexLexer.h>
 
 //*************************************************************************
+
+class VPreDefRef {
+    // One for each pending define substitution
+    string	m_name;		// Define last name being defined
+    string	m_params;	// Define parameter list for next expansion
+    string	m_nextarg;	// String being built for next argument
+    int		m_parenLevel;	// Parenthesis counting inside def args
+    
+    vector<string> m_args;	// List of define arguments
+public:
+    string name() const { return m_name; }
+    string params() const { return m_params; }
+    string nextarg() const { return m_nextarg; }
+    void nextarg(const string& value) { m_nextarg = value; }
+    int parenLevel() const { return m_parenLevel; }
+    vector<string>& args() { return m_args; }
+    VPreDefRef(const string& name, const string& params, int pl)
+	: m_name(name), m_params(params), m_parenLevel(pl) {}
+    ~VPreDefRef() {}
+};
+
+//*************************************************************************
 /// Data for a preprocessor instantiation.
 
 struct VPreprocImp : public VPreprocOpaque {
@@ -58,10 +80,8 @@ struct VPreprocImp : public VPreprocOpaque {
     bool	m_rawAtBol;	///< Last rawToken left us at beginning of line
 
     // For defines
-    string	m_defName;	///< Define last name being defined
-    string	m_defParams;	///< Define parameter list for next expansion
+    stack<VPreDefRef> m_defRefs; // Pending definine substitution
     stack<bool> m_ifdefStack;	///< Stack of true/false emitting evaluations
-    vector<string> m_defArgs;	///< List of define arguments
     unsigned	m_defDepth;	///< How many `defines deep
 
     // For getline()
@@ -72,7 +92,6 @@ struct VPreprocImp : public VPreprocOpaque {
 	m_debug = 0;
 	m_lexp = NULL;	 // Closed.
 	m_state = ps_TOP;
-	m_defName = "";
 	m_off = 0;
 	m_lineChars = "";
 	m_lastSym = "";
@@ -96,8 +115,9 @@ private:
     void fatal(string msg) { m_filelinep->fatal(msg); }
     int debug() const { return m_debug; }
     void eof();
-    string defineSubst();
+    string defineSubst(VPreDefRef* refp);
     void addLineComment(int enter_exit_level);
+    string trimWhitespace(const string& strg);
 
     void parsingOn() { m_off--; assert(m_off>=0); if (!m_off) addLineComment(0); }
     void parsingOff() { m_off++; }
@@ -194,7 +214,15 @@ const char* VPreprocImp::tokenName(int tok) {
     } 
 }
 
-string VPreprocImp::defineSubst() {
+string VPreprocImp::trimWhitespace(const string& strg) {
+    string out = strg;
+    while (out.length()>0 && isspace(out[0])) {
+	out.erase(0,1);
+    }
+    return out;
+}
+
+string VPreprocImp::defineSubst(VPreDefRef* refp) {
     // Substitute out defines in a argumented define reference.
     // We could push the define text back into the lexer, but that's slow
     // and would make recursive definitions and parameter handling nasty.
@@ -203,26 +231,28 @@ string VPreprocImp::defineSubst() {
     // parametrized define is used many, many times, we could cache the
     // parsed result.
     if (debug()) {
-	cout<<"defineSubstIn  `"<<m_defName<<" "<<m_defParams<<endl;
-	for (unsigned i=0; i<m_defArgs.size(); i++) {
-	    cout<<"defineArg["<<i<<"] = "<<m_defArgs[i]<<endl;
+	cout<<"defineSubstIn  `"<<refp->name()<<" "<<refp->params()<<endl;
+	for (unsigned i=0; i<refp->args().size(); i++) {
+	    cout<<"defineArg["<<i<<"] = "<<refp->args()[i]<<endl;
 	}
     }
     // Grab value
-    string value = m_preprocp->defValue(m_defName);
-    if (debug()) cout<<"defineValue    `"<<value<<endl;
+    string value = m_preprocp->defValue(refp->name());
+    if (debug()) cout<<"defineValue    '"<<value<<"'"<<endl;
 
     map<string,string> argValueByName;
     {   // Parse argument list into map
 	unsigned numArgs=0;
 	string argName;
-	for (const char* cp=m_defParams.c_str(); *cp; cp++) {
+	for (const char* cp=refp->params().c_str(); *cp; cp++) {
 	    if (*cp=='(') {
 	    } else if (argName=="" && isspace(*cp)) {
 	    } else if (isspace(*cp) || *cp==')' || *cp==',') {
 		if (argName!="") {
-		    if (m_defArgs.size() >= numArgs) {
-			argValueByName[argName] = m_defArgs[numArgs];
+		    if (refp->args().size() > numArgs) {
+			// A call `def( a ) must be equivelent to `def(a ), so trimWhitespace
+			// Note other sims don't trim trailing whitespace, so we don't either.
+			argValueByName[argName] = trimWhitespace(refp->args()[numArgs]);
 		    }
 		    numArgs++;
 		    //cout << "  arg "<<argName<<endl;
@@ -233,13 +263,13 @@ string VPreprocImp::defineSubst() {
 		argName += *cp;
 	    }
 	}
-	if (m_defArgs.size() != numArgs) {
-	    error("Define passed wrong number of arguments: "+m_defName+"\n");
-	    return " `"+m_defName+" ";
+	if (refp->args().size() != numArgs) {
+	    error("Define passed wrong number of arguments: "+refp->name()+"\n");
+	    return " `"+refp->name()+" ";
 	}
     }
 
-    string out = " ";
+    string out = "";
     {   // Parse substitution define using arguments
 	string argName;
 	string prev;
@@ -295,8 +325,7 @@ string VPreprocImp::defineSubst() {
 	}
     }
 
-    out += " ";
-    if (debug()) cout<<"defineSubstOut "<<out<<endl;
+    if (debug()) cout<<"defineSubstOut '"<<out<<"'"<<endl;
     return out;
 }
 
@@ -392,8 +421,8 @@ int VPreprocImp::getRawToken() {
 		m_lineCmtNl = false;
 	    }
 	    yytext=(char*)rtncmt.c_str(); yyleng=rtncmt.length();
-	    if (yyleng) m_rawAtBol = (yytext[yyleng-1]=='\n');
 	    m_lineCmt = "";
+	    if (yyleng) m_rawAtBol = (yytext[yyleng-1]=='\n');
 	    if (m_state!=ps_DEFVALUE) return (VP_TEXT);
 	    else {
 		VPreprocLex::s_currentLexp->appendDefValue(yytext,yyleng); 
@@ -412,8 +441,9 @@ int VPreprocImp::getRawToken() {
 	    string::size_type pos;
 	    while ((pos=buf.find("\n")) != string::npos) { buf.replace(pos, 1, "\\n"); }
 	    while ((pos=buf.find("\r")) != string::npos) { buf.replace(pos, 1, "\\r"); }
-	    fprintf (stderr,"%d: RAW %d %d:  %-10s: %s\n",
-		     m_filelinep->lineno(), m_off, m_state, tokenName(tok), buf.c_str());
+	    fprintf (stderr, "%d: RAW %s s%d dr%d:  %-10s: %s\n",
+		     m_filelinep->lineno(), m_off?"of":"on", m_state, (int)m_defRefs.size(),
+		     tokenName(tok), buf.c_str());
 	}
     
 	// On EOF, try to pop to upper level includes, as needed.
@@ -499,7 +529,7 @@ int VPreprocImp::getToken() {
 		else if (m_stateFor==VP_DEFINE) {
 		    // m_lastSym already set.
 		    m_state = ps_DEFVALUE;
-		    m_lexp->setStateDefValue();
+		    m_lexp->pushStateDefValue();
 		}
 		else fatalSrc("Bad case\n");
 		goto next_tok;
@@ -546,7 +576,7 @@ int VPreprocImp::getToken() {
 			   && isspace(m_lexp->m_defValue[m_lexp->m_defValue.length()-1-trailspace])) trailspace++;
 		    if (trailspace) m_lexp->m_defValue.erase(m_lexp->m_defValue.length()-trailspace,trailspace);
 		    // Define it
-		    if (debug()) cout<<"Define "<<m_lastSym<<" = "<<m_lexp->m_defValue<<endl;
+		    if (debug()) cout<<"Define "<<m_lastSym<<" = '"<<m_lexp->m_defValue<<"'"<<endl;
 		    m_preprocp->define(m_lastSym, m_lexp->m_defValue, params);
 		}
 	    } else {
@@ -560,40 +590,57 @@ int VPreprocImp::getToken() {
 	}
 	case ps_DEFPAREN: {
 	    if (tok==VP_TEXT && yyleng==1 && yytext[0]=='(') {
-		m_defArgs.clear();
 		m_state = ps_DEFARG;
-		m_lexp->setStateDefArg();
 		goto next_tok;
 	    } else {
 		m_state = ps_TOP;
-		error((string)"Expecting ( to begin argument list for define reference `"+m_defName+"\n");
+		if (m_defRefs.empty()) error("InternalError: Shouldn't be in DEFPAREN w/o active defref");
+		VPreDefRef* refp = &(m_defRefs.top());
+		error((string)"Expecting ( to begin argument list for define reference `"+refp->name()+"\n");
 		goto next_tok;
 	    }
 	}
 	case ps_DEFARG: {
-	    if (tok==VP_DEFARG) {
-		if (debug()) cout<<"   Defarg "<<m_defName<<" arg="<<m_lexp->m_defValue<<endl;
-		goto next_tok;  // Next is a , or )
-	    } else if (tok==VP_TEXT && yyleng==1 && yytext[0]==',') {
-		m_defArgs.push_back(m_lexp->m_defValue);
+	    if (m_defRefs.empty()) error("InternalError: Shouldn't be in DEFARG w/o active defref");
+	    VPreDefRef* refp = &(m_defRefs.top());
+	    refp->nextarg(refp->nextarg()+m_lexp->m_defValue); m_lexp->m_defValue="";
+	    if (tok==VP_DEFARG && yyleng==1 && yytext[0]==',') {
+		refp->args().push_back(refp->nextarg());
 		m_state = ps_DEFARG;
-		m_lexp->setStateDefArg();
+		m_lexp->pushStateDefArg();
+		refp->nextarg("");
 		goto next_tok;
-	    } else if (tok==VP_TEXT && yyleng==1 && yytext[0]==')') {
-		m_defArgs.push_back(m_lexp->m_defValue);
-		string out = defineSubst();
-		m_lexp->m_parenLevel = 0;
+	    } else if (tok==VP_DEFARG && yyleng==1 && yytext[0]==')') {
+		refp->args().push_back(refp->nextarg());
+		string out = defineSubst(refp);
+		// Substitute in and prepare for next action
+		// Similar code in non-parenthesized define (Search for END_OF_DEFARG)
+		m_defRefs.pop();
 		m_lexp->unputString(out.c_str());
-		// Prepare for next action
-		m_defArgs.clear();
-		m_state = ps_TOP;
+		if (m_defRefs.empty()) {
+		    m_state = ps_TOP;
+		    m_lexp->m_parenLevel = 0;
+		}
+		else {  // Finished a defref inside a upper defref
+		    refp = &(m_defRefs.top());  // We popped, so new top
+		    m_lexp->m_parenLevel = refp->parenLevel();
+		    m_state = ps_DEFARG;
+		}
+		goto next_tok;
+	    } else if (tok==VP_DEFREF) {
+		// Expand it, then state will come back here
+		// Value of building argument is data before the lower defref
+		// we'll append it when we push the argument.
+		break;
+	    } else if (tok==VP_SYMBOL || tok==VP_STRING || VP_TEXT || VP_WHITE) {
+		string rtn; rtn.assign(yytext,yyleng);
+		refp->nextarg(refp->nextarg()+rtn);
 		goto next_tok;
 	    } else {
-		error((string)"Expecting ) or , to end argument list for define reference. Found: "+tokenName(tok)+"\n");
+		error((string)"Expecting ) or , to end argument list for define reference. Found: "+tokenName(tok));
 		m_state = ps_TOP;
 		goto next_tok;
 	    }
-	    goto next_tok;
 	}
 	case ps_INCNAME: {
 	    if (tok==VP_STRING) {
@@ -611,7 +658,7 @@ int VPreprocImp::getToken() {
 	    else if (tok==VP_TEXT && yyleng==1 && yytext[0]=='<') {
 		// include <filename>
 		m_state = ps_INCNAME;  // Still
-		m_lexp->setStateIncFilename();
+		m_lexp->pushStateIncFilename();
 		goto next_tok;
 	    }
 	    else if (tok==VP_DEFREF) {
@@ -691,18 +738,17 @@ int VPreprocImp::getToken() {
 		    return (VP_TEXT);
 		}
 		else if (params=="0") {  // Found, as simple substitution
-		    // Pack spaces around the define value, as there must be token boundaries around it.
-		    // It also makes it more obvious where defines got substituted.
-		    string out = " "+m_preprocp->defValue(name)+" ";
-		    if (debug()) cout<<"Defref `"<<name<<" => "<<out<<endl;
+		    string out = m_preprocp->defValue(name);
+		    if (debug()) cout<<"Defref `"<<name<<" => '"<<out<<"'"<<endl;
+		    // Similar code in parenthesized define (Search for END_OF_DEFARG)
 		    m_lexp->unputString(out.c_str());
 		    goto next_tok;
 		}
 		else {  // Found, with parameters
 		    if (debug()) cout<<"Defref `"<<name<<" => parametrized"<<endl;
-		    m_defName = name;
-		    m_defParams = params;
+		    m_defRefs.push(VPreDefRef(name, params, m_lexp->m_parenLevel));
 		    m_state = ps_DEFPAREN;  m_stateFor = tok;
+		    m_lexp->pushStateDefArg();
 		    goto next_tok;
 		}
 		fatalSrc("Bad case\n");
@@ -720,10 +766,11 @@ int VPreprocImp::getToken() {
 	    return tok;
 	case VP_SYMBOL:
 	case VP_STRING:
-	case VP_TEXT:
+	case VP_TEXT: {
 	    m_defDepth = 0;
 	    if (!m_off) return tok;
 	    else goto next_tok;
+	}
 	case VP_WHITE:		// Handled at top of loop
 	case VP_COMMENT:	// Handled at top of loop
 	case VP_DEFVALUE:	// Handled by m_state=ps_DEFVALUE;
