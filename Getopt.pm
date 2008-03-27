@@ -460,9 +460,12 @@ sub define {
 	if (ref $oldval eq 'ARRAY') {
 	    ($oldval, $oldparams) = @{$oldval};
 	}
-	(!defined $oldval or (($oldval eq $value) && ($oldparams eq $params))
-	    or !$self->{define_warnings})
-	    or warn "%Warning: ".$self->fileline().": Redefining `$token\n";
+	if (defined $oldval
+	    && (($oldval ne $value)
+		|| (defined $oldparams && $oldparams ne $params))
+	    && $self->{define_warnings}) {
+	    warn "%Warning: ".$self->fileline().": Redefining `$token\n";
+	}
 	if ($params) {
 	    $self->{defines}{$token} = [$value, $params];
 	} else {
