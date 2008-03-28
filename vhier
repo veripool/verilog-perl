@@ -314,7 +314,7 @@ Show the module name of all cells in top-down order.
 Show all input filenames.  Copying all of these files should result in only
 those files needed to represent the entire design.
 
-=item --language-standard <1995|2001|sv31>
+=item --language <1364-1995|1364-2001|1364-2005|1800-2005>
 
 Set the language standard for the files.  This determines which tokens are
 signals versus keywords, such as the ever-common "do" (data-out signal,
