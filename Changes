@@ -10,6 +10,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix missing uwire keyword in Verilog::Language. [Jonathan David]
 
+****	Fix parse error on min:typ:max delay pairs, bug34575. [Martin Scharrer]
+
 * Verilog::Language 3.023 2008/02/12
 
 ****	Fix arrayed input/output pins.  [Thomas Ziller]
