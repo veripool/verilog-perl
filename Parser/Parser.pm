@@ -58,6 +58,7 @@ sub new {
 		$self->{_sigparser},
 		$self->{use_unreadback},
 		);
+    $self->language(Verilog::Language::language_standard());
     $self->debug($Debug) if $Debug;
     return $self;
 }

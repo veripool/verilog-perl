@@ -540,6 +540,7 @@ escid	\\[^ \t\f\r\n]+
   "`resetall"			{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`timescale"{ws}+.*\n		{ FL; VALTEXT; CALLBACK(preprocCb); NEXTLINE(); }
 
+  /* See also setLanguage below */
   "`begin_keywords"[ \t]*\"1364-1995\"		{ yy_push_state(V95); CALLBACK(preprocCb); }
   "`begin_keywords"[ \t]*\"1364-2001\"		{ yy_push_state(V01); CALLBACK(preprocCb); }
   "`begin_keywords"[ \t]*\"1364-2001-noconfig\"	{ yy_push_state(V01); CALLBACK(preprocCb); }
@@ -615,6 +616,15 @@ void VParseLex::debug(int level) {
 #ifdef FLEX_DEBUG
     yy_flex_debug = level;
 #endif
+}
+
+void VParseLex::language(const char* value) {
+    if (0==strcmp(value,"1364-1995"))		{ BEGIN V95; }
+    else if (0==strcmp(value,"1364-2001"))	{ BEGIN V01; }
+    else if (0==strcmp(value,"1364-2001-noconfig")) { BEGIN V01; }
+    else if (0==strcmp(value,"1364-2005"))	{ BEGIN V05; }
+    else if (0==strcmp(value,"1800-2005"))	{ BEGIN S05; }
+    else yyerrorf("Unknown setLanguage code: %s", value);
 }
 
 /*###################################################################

@@ -389,6 +389,20 @@ CODE:
 OUTPUT: RETVAL
 
 #//**********************************************************************
+#// self->language()
+
+void
+VParserXs::language (valuep)
+const char* valuep
+PROTOTYPE: $$
+CODE:
+{
+    if (items > 1) {
+        THIS->language(valuep);
+    }
+}
+
+#//**********************************************************************
 #// self->lineno([setit])
 
 int

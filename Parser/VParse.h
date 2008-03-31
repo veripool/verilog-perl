@@ -76,6 +76,7 @@ public:
     void parse(const string& text);		///< Add given text to 
     void setEof();				///< Got a end of file
     bool sigParser() const { return m_sigParser; }
+    void language(const char* valuep);
 
     VFileLine* inFilelinep() const;		///< File/Line number for last callback
     void inFileline(const string& filename, int lineno) { m_inFilelinep = m_inFilelinep->create(filename, lineno); }

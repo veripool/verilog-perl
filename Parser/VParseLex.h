@@ -125,6 +125,7 @@ class VParseLex {
 
     void debug(int level);
     int lexToken(VParseBisonYYSType* yylvalp);
+    void language(const char* value);
 };
 
 #endif // Guard

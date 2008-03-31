@@ -65,6 +65,8 @@ VFileLine* VParse::inFilelinep() const { return m_inFilelinep; }
 
 bool VParse::inCellDefine() const { return m_lexp->m_inCellDefine; }
 
+void VParse::language(const char* valuep) { m_lexp->language(valuep); }
+
 void VParse::parse(const string& text) {
     if (debug()>=10) { cout<<"VParse::parse: '"<<text<<"'\n"; }
     // We can't process immediately because bison has no nice way of returning

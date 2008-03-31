@@ -5,6 +5,11 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.02****
 
+***	Verilog::Parser will now start parsing using the keywords
+	based on the Verilog::Language::language_standard setting.
+
+****	Fix vhier ignoring --language option.  [Martin Scharrer]
+
 ****	Fix SystemVerilog parameterized defines with `` expansion,
 	and fix extra whitespace inserted on substitution. [Vladimir Matveyenko]
 
