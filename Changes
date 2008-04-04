@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.02***
+
+****	Fix functions with "input integer".  [Johan Wouters]
+
 * Verilog::Language 3.024 2008/04/02
 
 ***	Verilog::Parser will now start parsing using the keywords

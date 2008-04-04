@@ -527,8 +527,8 @@ regsigList:	regsig  				{ }
 	|	regsigList ',' regsig		       	{ }
 	;
 
-portV2kDecl:	varRESET varInput  v2kNetDeclE signingE regArRangeE portV2kSig	{ }
-	|	varRESET varInout  v2kNetDeclE signingE regArRangeE portV2kSig	{ }
+portV2kDecl:	varRESET varInput  v2kVarDeclE signingE regArRangeE portV2kSig	{ }
+	|	varRESET varInout  v2kVarDeclE signingE regArRangeE portV2kSig	{ }
 	|	varRESET varOutput v2kVarDeclE signingE regArRangeE portV2kSig	{ }
 //	|	varRESET yaID          portV2kSig	{ }
 //	|	varRESET yaID '.' yaID portV2kSig	{ }
@@ -591,11 +591,8 @@ signingE:	/*empty*/ 				{ }
 	|	yUNSIGNED				{ VARSIGNED("unsigned"); }
 	;
 
-v2kNetDeclE:	/*empty*/ 				{ }
+v2kVarDeclE:	/*empty*/ 				{ }
 	|	varNet 					{ }
-	;
-
-v2kVarDeclE:	v2kNetDeclE 				{ }
 	|	varReg 					{ }
 	;
 
