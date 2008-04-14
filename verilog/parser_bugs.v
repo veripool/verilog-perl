@@ -246,3 +246,11 @@ module bug34575;
    assign #(0:1:2,0:1:2) c = 1;
    assign #(0:1:2,0)     d = 1;
 endmodule
+
+module bug34649 (name);
+       output reg name = 0;
+endmodule
+module bug34649b (
+       output reg name = 0
+		 );
+endmodule

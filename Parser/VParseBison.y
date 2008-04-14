@@ -324,15 +324,13 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %type<str>	instModName
 %type<str>	instRangeE
 %type<str>	portRangeE
+%type<str>	portV2kInit
 %type<str>	portV2kSig
 %type<str>	rangeList
 %type<str>	rangeListE
 %type<str>	sigAndAttr
 %type<str>	sigId
 %type<str>	strAsInt
-%type<str>	varInout
-%type<str>	varInput
-%type<str>	varOutput
 %type<str>	varRefBase
 %type<str>	varRefDotBit
 %type<str>	varTypeKwds
@@ -424,7 +422,11 @@ portV2kList:	portV2kSecond				{ }
 
 // Called only after a comma in a v2k list, to allow parsing "input a,b"
 portV2kSecond:	portV2kDecl				{ }
-	|	portV2kSig				{ }
+	|	portV2kInit				{ }
+	;
+
+portV2kInit:	portV2kSig				{ }
+	|	portV2kSig '=' expr			{ }
 	;
 
 portV2kSig:	sigAndAttr				{ $<fl>$=$<fl>1; PARSEP->portCb($<fl>1, $1); }
@@ -453,7 +455,7 @@ interfaceItemList:
 	;
 
 // IEEE: interface_item + non_port_interface_item
-interfaceItem:	
+interfaceItem:
 		varDecl					{ }
 	|	generateRegion				{ }
 	|	interfaceOrGenerateItem			{ }
@@ -508,14 +510,6 @@ modportTfPort:	yaID					{ }
 	//|	method_prototype
 	;
 
-//IEEE: port_direction
-portDirection:	varInput				{ }
-	|	varOutput				{ }
-	|	varInout				{ }
-	|	varRef					{ }
-	;
-
-
 //************************************************
 // Variable Declarations
 
@@ -527,17 +521,13 @@ regsigList:	regsig  				{ }
 	|	regsigList ',' regsig		       	{ }
 	;
 
-portV2kDecl:	varRESET varInput  v2kVarDeclE signingE regArRangeE portV2kSig	{ }
-	|	varRESET varInout  v2kVarDeclE signingE regArRangeE portV2kSig	{ }
-	|	varRESET varOutput v2kVarDeclE signingE regArRangeE portV2kSig	{ }
+portV2kDecl:	varRESET portDirection v2kVarDeclE signingE regArRangeE portV2kInit	{ }
 //	|	varRESET yaID          portV2kSig	{ }
 //	|	varRESET yaID '.' yaID portV2kSig	{ }
 	;
 
 // IEEE: port_declaration - plus ';'
-portDecl:	varRESET varInput  v2kVarDeclE signingE regArRangeE  sigList ';'	{ }
-     	|	varRESET varInout  v2kVarDeclE signingE regArRangeE  sigList ';'	{ }
-     	|	varRESET varOutput v2kVarDeclE signingE regArRangeE  sigList ';'	{ }
+portDecl:	varRESET portDirection v2kVarDeclE signingE regArRangeE regsigList ';'	{ }
 	;
 
 varDecl:	varRESET varReg     signingE regArRangeE  regsigList ';'	{ }
@@ -570,13 +560,12 @@ varGenVar:	yGENVAR					{ VARDECL($1); }
 varReg:		yREG					{ VARDECL($1); }
 	|	varTypeKwds				{ VARDECL($1); }
 	;
-varInput:	yINPUT					{ VARIO($1); }
-	;
-varOutput:	yOUTPUT					{ VARIO($1); }
-	;
-varInout:	yINOUT					{ VARIO($1); }
-	;
-varRef:		yREF					{ VARIO($1); }
+
+//IEEE: port_direction
+portDirection:	yINPUT					{ VARIO($1); }
+	|	yOUTPUT					{ VARIO($1); }
+	|	yINOUT					{ VARIO($1); }
+	|	yREF					{ VARIO($1); }
 	;
 
 varTypeKwds:	yINTEGER				{ $<fl>$=$<fl>1; $$=$1; }
@@ -782,8 +771,12 @@ regSigId:	yaID rangeListE				{ $<fl>$=$<fl>1; VARARRAY($2); VARDONE($<fl>1, $1, 
 sigId:		yaID					{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, ""); }
 	;
 
-sigList:	sigAndAttr				{ }
-	|	sigList ',' sigAndAttr			{ }
+sigList:	sigInit					{ }
+	|	sigList ',' sigInit			{ }
+	;
+
+sigInit:	sigAndAttr				{ }
+	|	sigAndAttr '=' expr			{ }
 	;
 
 regsig:		regSigId sigAttrListE			{}

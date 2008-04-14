@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.02***
 
+****	Fix "output reg name=expr;" bug34649 syntax error.  [Martin Scharrer]
+
 ****	Fix functions with "input integer".  [Johan Wouters]
 
 * Verilog::Language 3.024 2008/04/02
