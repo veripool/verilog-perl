@@ -132,6 +132,9 @@ drop		[\032]
 <ARGMODE>{crnl}		{ linenoInc(); yytext="\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
 <ARGMODE>[(]		{ VPreprocLex::s_currentLexp->m_parenLevel++;
+			  // Note paren level 0 means before "(" of starting args
+			  // Level 1 means "," between arguments
+			  // Level 2+ means one argument's internal () 
 			  if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
 			      appendDefValue(yytext,yyleng);
 			  } else {
@@ -176,10 +179,10 @@ drop		[\032]
 <*>.|\n			{ yymore(); }	/* Prevent hitting ECHO; */
 %%
 
-void VPreprocLex::pushStateDefArg() {
+void VPreprocLex::pushStateDefArg(int level) {
     // Enter define substitution argument state
     yy_push_state(ARGMODE);
-    m_parenLevel = 0;
+    m_parenLevel = level;
     m_defValue = "";
 }
 

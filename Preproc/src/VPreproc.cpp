@@ -607,7 +607,7 @@ int VPreprocImp::getToken() {
 	    if (tok==VP_DEFARG && yyleng==1 && yytext[0]==',') {
 		refp->args().push_back(refp->nextarg());
 		m_state = ps_DEFARG;
-		m_lexp->pushStateDefArg();
+		m_lexp->pushStateDefArg(1);
 		refp->nextarg("");
 		goto next_tok;
 	    } else if (tok==VP_DEFARG && yyleng==1 && yytext[0]==')') {
@@ -748,7 +748,7 @@ int VPreprocImp::getToken() {
 		    if (debug()) cout<<"Defref `"<<name<<" => parametrized"<<endl;
 		    m_defRefs.push(VPreDefRef(name, params, m_lexp->m_parenLevel));
 		    m_state = ps_DEFPAREN;  m_stateFor = tok;
-		    m_lexp->pushStateDefArg();
+		    m_lexp->pushStateDefArg(0);
 		    goto next_tok;
 		}
 		fatalSrc("Bad case\n");
