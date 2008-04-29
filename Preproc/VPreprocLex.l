@@ -31,6 +31,7 @@
 
 #include "VPreprocLex.h"
 #include <stdio.h>
+#include <stdarg.h>
 #include <iostream>
 
 VPreprocLex* VPreprocLex::s_currentLexp = NULL;	// Current lexing point
