@@ -216,6 +216,7 @@ OUTPUT: RETVAL
 
 void
 VPreprocXs::_DESTROY()
+PROTOTYPE: $
 CODE:
 {
     delete THIS;

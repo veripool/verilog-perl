@@ -41,6 +41,17 @@ bool keepWhitespace() { return VPreprocLex::s_currentLexp->m_keepWhitespace; }
 void yyerror(char* msg) { VPreprocLex::s_currentLexp->m_curFilelinep->error(msg); }
 void appendDefValue(char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(t,l); }
 
+void yyerrorf(const char* format, ...) {
+    char msg[1024];
+
+    va_list ap;
+    va_start(ap,format);
+    vsprintf(msg,format,ap);
+    va_end(ap);
+
+    yyerror(msg);
+}
+
 /**********************************************************************/
 %}
 
@@ -91,8 +102,8 @@ drop		[\032]
 
 	/* Pass-through strings */
 <INITIAL>{quote}	{ yy_push_state(STRMODE); yymore(); }
-<STRMODE><<EOF>>	{ linenoInc(); yyerror("EOF in unterminated string"); yyleng=0; yyterminate(); }
-<STRMODE>{crnl}		{ linenoInc(); yyerror("Unterminated string"); BEGIN(INITIAL); }
+<STRMODE><<EOF>>	{ linenoInc(); yyerrorf("EOF in unterminated string"); yyleng=0; yyterminate(); }
+<STRMODE>{crnl}		{ linenoInc(); yyerrorf("Unterminated string"); BEGIN(INITIAL); }
 <STRMODE>[^\"\\]	{ yymore(); }
 <STRMODE>{backslash}.	{ yymore(); }
 <STRMODE>{quote} 	{ yy_pop_state();
@@ -101,14 +112,14 @@ drop		[\032]
 
 	/* Protected blocks */
 <INITIAL>"`protected"	{ yy_push_state(PRTMODE); yymore(); }
-<PRTMODE><<EOF>>	{ linenoInc(); yyerror("EOF in `protected"); yyleng=0; yyterminate(); }
+<PRTMODE><<EOF>>	{ linenoInc(); yyerrorf("EOF in `protected"); yyleng=0; yyterminate(); }
 <PRTMODE>{crnl}		{ linenoInc(); yymore(); }
 <PRTMODE>.	 	{ yymore(); }
 <PRTMODE>"`endprotected" { yy_pop_state(); return (VP_TEXT); }
 
 	/* Pass-through include <> filenames */
-<INCMODE><<EOF>>	{ linenoInc(); yyerror("EOF in unterminated include filename"); yyleng=0; yyterminate(); }
-<INCMODE>{crnl}		{ linenoInc(); yyerror("Unterminated include filename"); BEGIN(INITIAL); }
+<INCMODE><<EOF>>	{ linenoInc(); yyerrorf("EOF in unterminated include filename"); yyleng=0; yyterminate(); }
+<INCMODE>{crnl}		{ linenoInc(); yyerrorf("Unterminated include filename"); BEGIN(INITIAL); }
 <INCMODE>[^\>\\]	{ yymore(); }
 <INCMODE>{backslash}.	{ yymore(); }
 <INCMODE>[\>]	 	{ yy_pop_state(); return (VP_STRING); }
@@ -117,9 +128,9 @@ drop		[\032]
 <DEFMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <DEFMODE>"//"[^\n\r]*	{ return (VP_COMMENT);}
 <DEFMODE>{drop}		{ }
-<DEFMODE><<EOF>>	{ linenoInc(); yy_pop_state(); yytext="\n"; yyleng=1; return (VP_DEFVALUE); } /* Technically illegal, but people complained */
-<DEFMODE>{crnl}		{ linenoInc(); yy_pop_state(); yytext="\n"; yyleng=1; return (VP_DEFVALUE); }
-<DEFMODE>[\\]{crnl}	{ linenoInc(); appendDefValue("\n",1); } /* Include return so can maintain output line count */
+<DEFMODE><<EOF>>	{ linenoInc(); yy_pop_state(); yytext=(char*)"\n"; yyleng=1; return (VP_DEFVALUE); } /* Technically illegal, but people complained */
+<DEFMODE>{crnl}		{ linenoInc(); yy_pop_state(); yytext=(char*)"\n"; yyleng=1; return (VP_DEFVALUE); }
+<DEFMODE>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\n",1); } /* Include return so can maintain output line count */
 <DEFMODE>[^\/\*\n\r\\]+	|
 <DEFMODE>[\\][^\n\r]	|
 <DEFMODE>.		{ appendDefValue(yytext,yyleng); }
@@ -128,8 +139,8 @@ drop		[\032]
 <ARGMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <ARGMODE>"//"[^\n\r]*	{ return (VP_COMMENT);}
 <ARGMODE>{drop}		{ }
-<ARGMODE><<EOF>>	{ yyerror("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
-<ARGMODE>{crnl}		{ linenoInc(); yytext="\n"; yyleng=1; return(VP_WHITE); }
+<ARGMODE><<EOF>>	{ yyerrorf("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
+<ARGMODE>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
 <ARGMODE>[(]		{ VPreprocLex::s_currentLexp->m_parenLevel++;
 			  // Note paren level 0 means before "(" of starting args
@@ -163,16 +174,16 @@ drop		[\032]
 <CMTMODE>"*/"		{ yy_pop_state(); return(VP_COMMENT); }
 <CMTMODE>{crnl}		{ linenoInc(); yymore(); }
 <CMTMODE>.		{ yymore(); }
-<CMTMODE><<EOF>>	{ yyerror("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
+<CMTMODE><<EOF>>	{ yyerrorf("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
 
 	/* Define calls */
 <INITIAL>"`"{symb}	{ return (VP_DEFREF); }
 
 	/* Generics */
-<INITIAL>{crnl}		{ linenoInc(); yytext="\n"; yyleng=1; return(VP_WHITE); }
+<INITIAL>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
 <INITIAL>{symb}		{ return (VP_SYMBOL); }
 <INITIAL>[\r]		{ }
-<INITIAL>{wsn}+		{ if (!keepWhitespace()) { yytext=" "; yyleng=1; } return VP_WHITE; }
+<INITIAL>{wsn}+		{ if (!keepWhitespace()) { yytext=(char*)" "; yyleng=1; } return VP_WHITE; }
 <INITIAL>{drop}		{ }
 <INITIAL>.		{ return (VP_TEXT); }
 

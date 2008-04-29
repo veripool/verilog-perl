@@ -345,6 +345,7 @@ OUTPUT: RETVAL
 
 void
 VParserXs::_DESTROY()
+PROTOTYPE: $
 CODE:
 {
     delete THIS;

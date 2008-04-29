@@ -487,7 +487,7 @@ escid	\\[^ \t\f\r\n]+
 
   /************************************************************************/
   /* STRINGS */
-<STRING>\n 		{ yyerror("Unterminated string\n"); }
+<STRING>\n 		{ yyerrorf("Unterminated string\n"); }
 <STRING>\r		;
 <STRING>[^\"\\]* 	{ yymore(); }
 <STRING>\\.	 	{ yymore(); }
@@ -500,7 +500,7 @@ escid	\\[^ \t\f\r\n]+
 <CMTMODE>\n		{ yymore(); NEXTLINE(); }
 <CMTMODE>"*"+"/"	{ FL; VALTEXT; CALLBACK(commentCb); yy_pop_state(); }
 <CMTMODE>. 		{ yymore(); }
-<CMTMODE><<EOF>>	{ yyerror("EOF in '/* ... */' block comment");
+<CMTMODE><<EOF>>	{ yyerrorf("EOF in '/* ... */' block comment");
 			  yyleng = 0; yy_pop_state(); }
 
   /************************************************************************/
@@ -508,7 +508,7 @@ escid	\\[^ \t\f\r\n]+
 <PROTMODE>\n		{ yymore(); NEXTLINE(); }
 <PROTMODE>"`endprotected"	{ FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); } 
 <PROTMODE>. 		{ yymore(); }
-<PROTMODE><<EOF>>	{ yyerror("EOF in `protected");
+<PROTMODE><<EOF>>	{ yyerrorf("EOF in `protected");
 			  yyleng = 0; yy_pop_state(); }
 
   /************************************************************************/
@@ -516,7 +516,7 @@ escid	\\[^ \t\f\r\n]+
 <ATTRMODE>\n		{ yymore(); NEXTLINE(); }
 <ATTRMODE>"*)"		{ FL; VALTEXT; CALLBACK(attributeCb); yy_pop_state(); }
 <ATTRMODE>. 		{ yymore(); }
-<ATTRMODE><<EOF>>	{ yyerror("EOF in (*");
+<ATTRMODE><<EOF>>	{ yyerrorf("EOF in (*");
 			  yyleng = 0; yy_pop_state(); }
 
   /************************************************************************/

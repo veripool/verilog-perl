@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix bug introduced in 3.024 with parametrized defines.
 
+****	Fix compiler warnings under GCC 4.2.1.
+
 * Verilog::Language 3.024 2008/04/02
 
 ***	Verilog::Parser will now start parsing using the keywords

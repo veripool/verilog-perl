@@ -37,6 +37,7 @@ LEX = flex
 YACC = bison
 PPSRC = ../Preproc
 FLEXFIX = $(PPSRC)/flexfix
+XSUBPPFIX = $(PPSRC)/xsubppfix
 YFLAGS = -d -v
 
 CCFLAGS += -I$(PPSRC)
@@ -68,6 +69,9 @@ VParseBison.cpp:	VParseBison.y
 	-(grep conflicts VParseBison.output || mv VParseBison.c VParseBison.cpp )
 	-rm -rf VParseBison.c
 
+Parser_cleaned.c: Parser.c
+	$(PERL) $(XSUBPPFIX) < $< > $@
+
 clean::
 	-rm -rf test *.d *.o *.output
 	-rm -rf VParseLex*.cpp VParseBison.h VParseBison.cpp
@@ -75,11 +79,15 @@ clean::
     return $out;
 }
 
+# Grr; some flags cause warnings in g++
+(my $ccflags = $Config{ccflags}) =~ s/ *-Wdeclaration-after-statement//;
+
 WriteMakefile(
               NAME => "Verilog::Parser",
 	      LIBS => '-lstdc++',
 	      VERSION_FROM  => 'Parser.pm',
 	      XSOPT => '-C++',
+	      CCFLAGS	=> $ccflags,
     	      OBJECT   => 'VFileLine.o VParseLex.o VParse.o VParseBison.o',
-	      MYEXTLIB => 'Parser.o',
+	      MYEXTLIB => 'Parser_cleaned.o',
 	      );

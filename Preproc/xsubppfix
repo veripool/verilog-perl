@@ -1,0 +1,18 @@
+#!/usr/bin/perl -w
+#
+# Copyright 2008-2008 by Wilson Snyder.  This program is free software;
+# you can redistribute it and/or modify it under the terms of either the GNU
+# General Public License or the Perl Artistic License.
+#                                                                           
+######################################################################
+
+# DESCRIPTION: Edits xsubpp output to get around various issues.
+
+foreach my $line (<STDIN>) {
+    # Fix xsubpp 1.9508 and GCC 4.2.1 warning
+    # "warning: deprecated conversion from string constant to ‘char*’"
+    $line =~ s/^ *char\* file = __FILE__;/char* file = (char*)__FILE__;/;
+    $line =~ s/newXSproto\(\"/newXSproto((char*)\"/;
+    #
+    print "$line";
+}

@@ -37,6 +37,7 @@ LEX = flex
 YACC = bison
 PPSRC = ../Preproc
 FLEXFIX = $(PPSRC)/flexfix
+XSUBPPFIX = $(PPSRC)/xsubppfix
 
 CCFLAGS += -I$(PPSRC)
 #CFLAGS += -DFLEX_DEBUG
@@ -54,6 +55,9 @@ VPreprocLex_prefix.cpp: VPreprocLex.l
 VPreprocLex.cpp: $(FLEXFIX) VPreprocLex_prefix.cpp
 	$(PERL) $(FLEXFIX) < VPreprocLex_prefix.cpp > $@
 
+Preproc_cleaned.c: Preproc.c
+	$(PERL) $(XSUBPPFIX) < $< > $@
+
 clean::
 	-rm -rf test *.d *.o *.output
 	-rm -rf VPreprocLex*.cpp
@@ -61,11 +65,15 @@ clean::
     return $out;
 }
 
+# Grr; some flags cause warnings in g++
+(my $ccflags = $Config{ccflags}) =~ s/ *-Wdeclaration-after-statement//;
+
 WriteMakefile(
               NAME => "Verilog::Preproc",
 	      LIBS => '-lstdc++',
 	      VERSION_FROM  => 'Preproc.pm',
 	      XSOPT => '-C++',
+	      CCFLAGS	=> $ccflags,
     	      OBJECT   => 'VFileLine.o VPreproc.o VPreprocLex.o',
-	      MYEXTLIB => 'Preproc.o',
+	      MYEXTLIB => 'Preproc_cleaned.o',
 	      );
