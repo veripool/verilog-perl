@@ -60,7 +60,7 @@ Preproc_cleaned.c: Preproc.c
 
 clean::
 	-rm -rf test *.d *.o *.output
-	-rm -rf VPreprocLex*.cpp
+	-rm -rf VPreprocLex*.cpp Preproc_cleaned.c
 ';
     return $out;
 }

@@ -74,7 +74,7 @@ Parser_cleaned.c: Parser.c
 
 clean::
 	-rm -rf test *.d *.o *.output
-	-rm -rf VParseLex*.cpp VParseBison.h VParseBison.cpp
+	-rm -rf VParseLex*.cpp VParseBison.h VParseBison.cpp Parser_cleaned.c
 ';
     return $out;
 }
