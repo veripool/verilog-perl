@@ -35,7 +35,7 @@ sub MY::postamble {
 CC = g++
 LEX = flex
 YACC = bison
-PPSRC = ../Preproc/src
+PPSRC = ../Preproc
 FLEXFIX = $(PPSRC)/flexfix
 YFLAGS = -d -v
 
@@ -82,5 +82,4 @@ WriteMakefile(
 	      XSOPT => '-C++',
     	      OBJECT   => 'VFileLine.o VParseLex.o VParse.o VParseBison.o',
 	      MYEXTLIB => 'Parser.o',
-	      INC => (" -I. -Isrc"),
 	      );

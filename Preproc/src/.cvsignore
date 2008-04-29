@@ -1,8 +1,0 @@
-*.o
-*.d
-*.bs
-*.old
-pm_to_blib
-VPreprocLex*.cpp
-Makefile
-example

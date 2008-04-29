@@ -28,8 +28,7 @@ Parser/VParseBison.output
 Parser/VParseLex.cpp
 Parser/VParseLex_prefix.cpp
 Preproc/Preproc.c
-Preproc/src/example$
-Preproc/src/VPreprocLex_prefix.cpp
+Preproc/VPreprocLex_prefix.cpp
 signals.vrename
 test_dir
 \.svn/
