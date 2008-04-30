@@ -36,7 +36,7 @@ dist: maintainer-copy distcheck README
 
 ## Maintainer use:
 preexist:
-	test ! -r \$(HOME)/src/kits/\$(DISTVNAME).tar.gz
+	svnorcvs nexists \$(DISTNAME)_\$(VERSION_SYM)
 	test -s README
 
 tag:
@@ -46,8 +46,7 @@ maintainer-diff:
 	svnorcvs diff \$(DISTNAME)_\$(VERSION_SYM) 
 
 maintainer-dist: preexist dist tag
-	cp \$(DISTVNAME).tar.gz \$(HOME)/src/kits
-	mv \$(DISTVNAME).tar.gz \$(HOME)/backpack
+	svnorcvs release \$(DISTVNAME).tar.gz
 
 maintainer-copy:
 
