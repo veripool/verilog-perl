@@ -486,9 +486,9 @@ Order based pin interconnect is not supported, use name based connections.
 
 =head1 DISTRIBUTION
 
-Verilog-Perl is part of the L<http://www.veripool.com/> free Verilog EDA
+Verilog-Perl is part of the L<http://www.veripool.org/> free Verilog EDA
 software tool suite.  The latest version is available from CPAN and from
-L<http://www.veripool.com/verilog-perl.html>.
+L<http://www.veripool.org/verilog-perl>.
 
 Copyright 2000-2008 by Wilson Snyder.  This package is free software; you
 can redistribute it and/or modify it under the terms of either the GNU
@@ -509,6 +509,6 @@ L<Verilog::Netlist::Pin>,
 L<Verilog::Netlist::Port>,
 L<Verilog::Netlist::Subclass>
 
-And the L<http://www.veripool.com/verilog-mode.html>Verilog-Mode package for Emacs.
+And the L<http://www.veripool.org/verilog-mode>Verilog-Mode package for Emacs.
 
 =cut

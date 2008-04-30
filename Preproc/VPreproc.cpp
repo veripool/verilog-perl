@@ -16,7 +16,7 @@
 ///
 /// Authors: Wilson Snyder
 ///
-/// Code available from: http://www.veripool.com/verilog-perl
+/// Code available from: http://www.veripool.org/verilog-perl
 ///
 //*************************************************************************
 

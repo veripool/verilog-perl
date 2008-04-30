@@ -12,7 +12,7 @@ module example (/*AUTOARG*/
    a, b
    );
 
-   // See http://veripool.com
+   // See http://www.veripool.org
    // for what AUTOARG and friends can do for you!
 
    /*Comment // test*/

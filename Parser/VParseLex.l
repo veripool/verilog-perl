@@ -11,7 +11,7 @@
  * 
  * Author: Wilson Snyder <wsnyder@wsnyder.org>
  * 
- * Code available from: http://www.veripool.com/systemperl
+ * Code available from: http://www.veripool.org/systemperl
  * 
  ******************************************************************************
  * 

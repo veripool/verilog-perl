@@ -15,7 +15,7 @@ Verilog Language.  This file provides an overview of the distribution, for
 specific details on each component, see that component's manpage.
 
 You may also want to try the AUTO features present in
-L<http://www.veripool.com/verilog-mode.html> Verilog-Mode.
+L<http://www.veripool.org/verilog-mode> Verilog-Mode.
 
 =head1 INSTALLATION
 
@@ -55,7 +55,7 @@ Read the rest of this file for details on the programs provided.
 =over 4
 
 Download the latest version from L<http://www.perl.org/CPAN/>, or
-from L<http://www.veripool.com/verilog-perl.html>.
+from L<http://www.veripool.org/verilog-perl>.
 
 C<cd> to the directory containing this README notice.
 
@@ -227,9 +227,9 @@ parser from scratch.)
 
 =head1 DISTRIBUTION
 
-Verilog-Perl is part of the L<http://www.veripool.com/> free Verilog EDA
+Verilog-Perl is part of the L<http://www.veripool.org/> free Verilog EDA
 software tool suite.  The latest version is available from CPAN and from
-L<http://www.veripool.com/verilog-perl.html>.
+L<http://www.veripool.org/verilog-perl>.
 
 Copyright 2000-2008 by Wilson Snyder.  This package is free software; you
 can redistribute it and/or modify it under the terms of either the GNU
@@ -265,6 +265,6 @@ L<Verilog::Netlist::Pin>,
 L<Verilog::Netlist::Port>,
 L<Verilog::Netlist::Subclass>,
 
-And the L<http://www.veripool.com/verilog-mode.html>Verilog-Mode package for Emacs.
+And the L<http://www.veripool.org/verilog-mode>Verilog-Mode package for Emacs.
 
 =cut
