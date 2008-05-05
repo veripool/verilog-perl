@@ -240,7 +240,7 @@ foreach my $kwd (qw(
 		    alias always_comb always_ff always_latch assert assume
 		    before bind bins binsof bit break byte chandle class
 		    clocking const constraint context continue cover
-		    covergroup coverpoint cross dist do endcass endclocking
+		    covergroup coverpoint cross dist do endclass endclocking
 		    endgroup endinterface endpackage endprogram endproperty
 		    endsequence enum expect export extends extern final
 		    first_match foreach forkjoin iff ignore_bins
