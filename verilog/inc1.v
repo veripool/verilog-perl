@@ -63,7 +63,7 @@ $display(`msg(left side, right side))
 // RT bug 34429
 
 `define ls left_side
-`define rs left_side
+`define rs right_side
 `define noarg  na
 `define thru(x) x
 `define thruthru `ls `rs	// Doesn't expand

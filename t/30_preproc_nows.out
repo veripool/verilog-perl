@@ -45,11 +45,11 @@ verilog/inc1.v:71:  initial begin
 verilog/inc1.v:73:  $display("pre thrupre thrumid thrupost post: \"right side\"");
 verilog/inc1.v:74:  $display("left side: \"right side\"");
 verilog/inc1.v:75:  $display("left side : \"right side \"");
-verilog/inc1.v:76:  $display("left_side : \"left_side \"");
-verilog/inc1.v:77:  $display("na : \"left_side \"");
-verilog/inc1.v:78:  $display("prep ( midp1 left_side midp2 ( outp ) ) : \"left_side \"");
+verilog/inc1.v:76:  $display("left_side : \"right_side \"");
+verilog/inc1.v:77:  $display("na : \"right_side \"");
+verilog/inc1.v:78:  $display("prep ( midp1 left_side midp2 ( outp ) ) : \"right_side \"");
 verilog/inc1.v:79:  $display("na: \"nana\"");
-verilog/inc1.v:80:  $display("left_side left_side : \"left_side left_side \""); 
+verilog/inc1.v:80:  $display("left_side right_side : \"left_side right_side \""); 
 verilog/inc1.v:81:  $display(": \"\""); 
 verilog/inc1.v:82:  $display("left side: \"right side\"");
 verilog/inc1.v:83:  $display("left side  : \"right side  \"");

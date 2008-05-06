@@ -194,14 +194,14 @@ verilog/inc1.v:72:        /*CMT*/
 verilog/inc1.v:73:       $display("pre thrupre thrumid thrupost post: \"right side\"");
 verilog/inc1.v:74:       $display("left side: \"right side\"");
 verilog/inc1.v:75:       $display("left side : \"right side \"");
-verilog/inc1.v:76:       $display("left_side : \"left_side \"");
-verilog/inc1.v:77:       $display("na : \"left_side \"");
-verilog/inc1.v:78:       $display("prep ( midp1 left_side midp2 ( outp ) ) : \"left_side \"");
+verilog/inc1.v:76:       $display("left_side : \"right_side \"");
+verilog/inc1.v:77:       $display("na : \"right_side \"");
+verilog/inc1.v:78:       $display("prep ( midp1 left_side midp2 ( outp ) ) : \"right_side \"");
 verilog/inc1.v:79:       $display("na: \"nana\"");
 COMMENT: /*CMT*/
 COMMENT: /*CMT*/
 COMMENT: // Results vary between simulators
-verilog/inc1.v:80:       $display("left_side left_side	  /*CMT*/  : \"left_side left_side	  /*CMT*/  \"");    /*CMT*/ 
+verilog/inc1.v:80:       $display("left_side right_side	  /*CMT*/  : \"left_side right_side	  /*CMT*/  \"");    /*CMT*/ 
 COMMENT: // Empty
 verilog/inc1.v:81:       $display(": \"\"");   /*CMT*/ 
 verilog/inc1.v:82:       $display("left side: \"right side\"");
