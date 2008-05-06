@@ -112,3 +112,18 @@ module prot();
     #nj1]p,3^1~,="E@QZB\T)eU\pC#C|7=\$J$##A[@-@{Qk]
 `endprotected
 endmodule
+//"
+
+//======================================================================
+// macro call with define that has comma
+`define REG_H   6
+`define REG_L   7
+`define _H      regs[`REG_H]
+`define _L      regs[`REG_L]
+`define _HL     {`_H, `_L}
+`define EX_WRITE(ad, da)      begin addr <= (ad); wdata <= (da); wr <= 1; end
+`define EX_READ(ad)           begin addr <= (ad); rd <= 1; end
+
+`EX_READ((`_HL + 1)) and `EX_WRITE((`_HL), rdata)
+`EX_READ(`_HL + 1)
+`EX_WRITE(`_HL, rdata) 

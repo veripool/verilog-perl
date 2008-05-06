@@ -170,7 +170,7 @@ verilog/inc1.v:76:       $display("left_side : \"right_side \"");
 verilog/inc1.v:77:       $display("na : \"right_side \"");
 verilog/inc1.v:78:       $display("prep ( midp1 left_side midp2 ( outp ) ) : \"right_side \"");
 verilog/inc1.v:79:       $display("na: \"nana\"");
-verilog/inc1.v:80:       $display("left_side right_side : \"left_side right_side \"");   // Results vary between simulators
+verilog/inc1.v:80:       $display("`ls `rs : \"`ls `rs \"");   // Results vary between simulators
 verilog/inc1.v:81:       $display(": \"\"");  // Empty
 verilog/inc1.v:82:       $display("left side: \"right side\"");
 verilog/inc1.v:83:       $display("left side  : \"right side  \"");
@@ -205,4 +205,19 @@ verilog/inc1.v:110:     I!#r#e6<_Q{{E2+]I3<[3s)1@D|'E''i!O?]jD>Jo_![Cl)
 verilog/inc1.v:110:     #nj1]p,3^1~,="E@QZB\T)eU\pC#C|7=\$J$##A[@-@{Qk]
 verilog/inc1.v:113: `endprotected
 verilog/inc1.v:114: endmodule
-verilog/inc1.v:115: `line 115 "verilog/inc1.v" 2
+verilog/inc1.v:115: //"
+verilog/inc1.v:116: 
+verilog/inc1.v:117: //======================================================================
+verilog/inc1.v:118: // macro call with define that has comma
+verilog/inc1.v:119:  
+verilog/inc1.v:120:  
+verilog/inc1.v:121:  
+verilog/inc1.v:122:  
+verilog/inc1.v:123:  
+verilog/inc1.v:124:  
+verilog/inc1.v:125:  
+verilog/inc1.v:126: 
+verilog/inc1.v:127: begin addr <= (({regs[6], regs[7]} + 1)); rd <= 1; end and begin addr <= (({regs[6], regs[7]})); wdata <= (rdata); wr <= 1; end
+verilog/inc1.v:128: begin addr <= ({regs[6], regs[7]} + 1); rd <= 1; end
+verilog/inc1.v:129: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end 
+verilog/inc1.v:130: `line 130 "verilog/inc1.v" 2

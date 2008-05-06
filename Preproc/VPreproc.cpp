@@ -758,7 +758,16 @@ int VPreprocImp::getToken() {
 		    string out = m_preprocp->defValue(name);
 		    if (debug()) cout<<"Defref `"<<name<<" => '"<<out<<"'"<<endl;
 		    // Similar code in parenthesized define (Search for END_OF_DEFARG)
-		    m_lexp->unputString(out.c_str());
+		    if (m_defRefs.empty()) {
+			// Just output the substitution
+			m_lexp->unputString(out.c_str());
+		    } else {
+			// Inside another define.  Can't subst now, or
+			// `define a x,y
+			// foo(`a,`b)  would break because a contains comma
+			VPreDefRef* refp = &(m_defRefs.top());
+			refp->nextarg(refp->nextarg()+m_lexp->m_defValue+out); m_lexp->m_defValue="";
+		    }
 		    goto next_tok;
 		}
 		else {  // Found, with parameters
