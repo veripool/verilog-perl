@@ -1,6 +1,18 @@
-verilog/inc2.v:1: `line 1 "verilog/inc1.v" 1
-verilog/inc2.v:1: `line 1 "verilog/inc1.v" 0
-verilog/inc2.v:1: `line 1 "verilog/inc2.v" 1
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc1.v" 1
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc1.v" 0
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc2.v" 1
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc2.v" 0
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc_ifdef.v" 1
+verilog/inc_ifdef.v:8: `line 8 "verilog/inc_ifdef.v" 0
+verilog/inc_ifdef.v:12:  $display("1A");
+verilog/inc_ifdef.v:15: `line 15 "verilog/inc_ifdef.v" 0
+verilog/inc_ifdef.v:16:  $display("2A");
+verilog/inc_ifdef.v:21: `line 21 "verilog/inc_ifdef.v" 0
+verilog/inc_ifdef.v:22:  $display("3AELSE");
+verilog/inc_ifdef.v:26: `line 26 "verilog/inc_ifdef.v" 0
+verilog/inc_ifdef.v:40: `line 40 "verilog/inc_ifdef.v" 0
+verilog/inc_ifdef.v:41: `line 41 "verilog/inc_ifdef.v" 2
+verilog/inc_ifdef.v:41: `line 1 "verilog/inc2.v" 0
 verilog/inc2.v:4: At file verilog/inc2.v line 4
 verilog/inc3.v:1: `line 5 "verilog/inc2.v" 0
 verilog/inc3.v:1: `line 1 "verilog/inc3.v" 1

@@ -1,6 +1,60 @@
-verilog/inc2.v:1: `line 1 "verilog/inc1.v" 1
-verilog/inc2.v:1: `line 1 "verilog/inc1.v" 0
-verilog/inc2.v:1: `line 1 "verilog/inc2.v" 1
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc1.v" 1
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc1.v" 0
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc2.v" 1
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc2.v" 0
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc_ifdef.v" 1
+verilog/inc_ifdef.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
+verilog/inc_ifdef.v:2: // This file ONLY is placed into the Public Domain, for any use,
+verilog/inc_ifdef.v:3: // without warranty, 2000-2008 by Wilson Snyder.
+verilog/inc_ifdef.v:4: 
+verilog/inc_ifdef.v:5:  
+verilog/inc_ifdef.v:6:  
+verilog/inc_ifdef.v:7:    
+verilog/inc_ifdef.v:8: 
+verilog/inc_ifdef.v:8: `line 8 "verilog/inc_ifdef.v" 0
+verilog/inc_ifdef.v:8: 
+verilog/inc_ifdef.v:9: 
+verilog/inc_ifdef.v:10:  
+verilog/inc_ifdef.v:11:  
+verilog/inc_ifdef.v:12:   $display("1A");
+verilog/inc_ifdef.v:13:   
+verilog/inc_ifdef.v:14:   
+verilog/inc_ifdef.v:15:   
+verilog/inc_ifdef.v:15: `line 15 "verilog/inc_ifdef.v" 0
+verilog/inc_ifdef.v:15: 
+verilog/inc_ifdef.v:16:   $display("2A");
+verilog/inc_ifdef.v:17:    
+verilog/inc_ifdef.v:18:   
+verilog/inc_ifdef.v:19:    
+verilog/inc_ifdef.v:20:   
+verilog/inc_ifdef.v:21:   
+verilog/inc_ifdef.v:21: `line 21 "verilog/inc_ifdef.v" 0
+verilog/inc_ifdef.v:21: 
+verilog/inc_ifdef.v:22:   $display("3AELSE");
+verilog/inc_ifdef.v:23:   
+verilog/inc_ifdef.v:24:  
+verilog/inc_ifdef.v:25:   
+verilog/inc_ifdef.v:26:  
+verilog/inc_ifdef.v:26: `line 26 "verilog/inc_ifdef.v" 0
+verilog/inc_ifdef.v:26: 
+verilog/inc_ifdef.v:27:  
+verilog/inc_ifdef.v:28:   
+verilog/inc_ifdef.v:29:    
+verilog/inc_ifdef.v:30:   
+verilog/inc_ifdef.v:31:    
+verilog/inc_ifdef.v:32:   
+verilog/inc_ifdef.v:33:   
+verilog/inc_ifdef.v:34:   
+verilog/inc_ifdef.v:35:   
+verilog/inc_ifdef.v:36:  
+verilog/inc_ifdef.v:37:   
+verilog/inc_ifdef.v:38: 
+verilog/inc_ifdef.v:39:   
+verilog/inc_ifdef.v:40: 
+verilog/inc_ifdef.v:40: `line 40 "verilog/inc_ifdef.v" 0
+verilog/inc_ifdef.v:40: 
+verilog/inc_ifdef.v:41: `line 41 "verilog/inc_ifdef.v" 2
+verilog/inc_ifdef.v:41: `line 1 "verilog/inc2.v" 0
 verilog/inc2.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc2.v:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/inc2.v:3: // without warranty, 2000-2008 by Wilson Snyder.

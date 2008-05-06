@@ -57,6 +57,21 @@ public:
 };
 
 //*************************************************************************
+/// Data for parsing on/off
+
+class VPreIfEntry {
+    // One for each pending ifdef/ifndef
+    bool	m_on;		// Current parse for this ifdef level is "on"
+    bool	m_everOn;	// Some if term in elsif tree has been on
+public:
+    bool on() const { return m_on; }
+    bool everOn() const { return m_everOn; }
+    VPreIfEntry(bool on, bool everOn)
+	: m_on(on), m_everOn(everOn || on) {}  // Note everOn includes new state
+    ~VPreIfEntry() {}
+};
+
+//*************************************************************************
 /// Data for a preprocessor instantiation.
 
 struct VPreprocImp : public VPreprocOpaque {
@@ -81,7 +96,7 @@ struct VPreprocImp : public VPreprocOpaque {
 
     // For defines
     stack<VPreDefRef> m_defRefs; // Pending definine substitution
-    stack<bool> m_ifdefStack;	///< Stack of true/false emitting evaluations
+    stack<VPreIfEntry> m_ifdefStack;	///< Stack of true/false emitting evaluations
     unsigned	m_defDepth;	///< How many `defines deep
 
     // For getline()
@@ -503,7 +518,7 @@ int VPreprocImp::getToken() {
 		    bool enable = m_preprocp->defExists(m_lastSym);
 		    if (debug()) cout<<"Ifdef "<<m_lastSym<<(enable?" ON":" OFF")<<endl;
 		    if (m_stateFor==VP_IFNDEF) enable = !enable;
-		    m_ifdefStack.push(enable);
+		    m_ifdefStack.push(VPreIfEntry(enable,false));
 		    if (!enable) parsingOff();
 		}
 		else if (m_stateFor==VP_ELSIF) {
@@ -511,12 +526,12 @@ int VPreprocImp::getToken() {
 			error("`elsif with no matching `if\n");
 		    } else {
 			// Handle `else portion
-			bool lastEnable = m_ifdefStack.top(); m_ifdefStack.pop();
-			if (!lastEnable) parsingOn();
+			VPreIfEntry lastIf = m_ifdefStack.top(); m_ifdefStack.pop();
+			if (!lastIf.on()) parsingOn();
 			// Handle `if portion
-			bool enable = !lastEnable && m_preprocp->defExists(m_lastSym);
+			bool enable = !lastIf.everOn() && m_preprocp->defExists(m_lastSym);
 			if (debug()) cout<<"Elsif "<<m_lastSym<<(enable?" ON":" OFF")<<endl;
-			m_ifdefStack.push(enable);
+			m_ifdefStack.push(VPreIfEntry(enable, lastIf.everOn()));
 			if (!enable) parsingOff();
 		    }
 		}
@@ -704,21 +719,23 @@ int VPreprocImp::getToken() {
 	    if (m_ifdefStack.empty()) {
 		error("`else with no matching `if\n");
 	    } else {
-		bool lastEnable = m_ifdefStack.top(); m_ifdefStack.pop();
-		bool enable = !lastEnable;
+		VPreIfEntry lastIf = m_ifdefStack.top(); m_ifdefStack.pop();
+		bool enable = !lastIf.everOn();
 		if (debug()) cout<<"Else "<<(enable?" ON":" OFF")<<endl;
-		m_ifdefStack.push(enable);
-		if (!lastEnable) parsingOn();
+		m_ifdefStack.push(VPreIfEntry(enable, lastIf.everOn()));
+		if (!lastIf.on()) parsingOn();
 		if (!enable) parsingOff();
 	    }
 	    goto next_tok;
 	case VP_ENDIF:
+	    if (debug()) cout<<"Endif "<<endl;
 	    if (m_ifdefStack.empty()) {
 		error("`endif with no matching `if\n");
 	    } else {
-		bool lastEnable = m_ifdefStack.top(); m_ifdefStack.pop();
-		if (debug()) cout<<"Endif "<<endl;
-		if (!lastEnable) parsingOn();
+		VPreIfEntry lastIf = m_ifdefStack.top(); m_ifdefStack.pop();
+		if (!lastIf.on()) parsingOn();
+		// parsingOn() really only enables parsing if
+		// all ifdef's above this want it on
 	    }
 	    goto next_tok;
 

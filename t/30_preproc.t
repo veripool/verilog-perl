@@ -73,6 +73,7 @@ sub test {
     my $pp = new MyPreproc (options=>$opt, @args);
     $pp->open("inc1.v");
     $pp->open("inc2.v");
+    $pp->open("inc_ifdef.v");
 
     my $fhout = IO::File->new(">test_dir/inc${id}.out");
     $::OUTTO = $fhout;

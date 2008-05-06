@@ -94,6 +94,7 @@ verilog/example.v
 verilog/inc1.v
 verilog/inc2.v
 verilog/inc3.v
+verilog/inc_ifdef.v
 verilog/parser_bugs.v
 verilog/parser_sv.v
 verilog/pinorder.v
