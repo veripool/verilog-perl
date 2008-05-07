@@ -22,7 +22,7 @@ require DynaLoader;
 use strict;
 use vars qw($VERSION);
 
-$VERSION = '3.024';
+$VERSION = '3.035';
 
 ######################################################################
 #### Configuration Section
