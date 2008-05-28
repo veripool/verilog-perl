@@ -21,6 +21,7 @@
 //*************************************************************************
 
 #include <stdio.h>
+#include <cstdlib>
 
 #include "VFileLine.h"
 
