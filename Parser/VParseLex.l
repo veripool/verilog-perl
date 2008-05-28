@@ -30,9 +30,9 @@
  *****************************************************************************/
 
 #include "VParseLex.h"
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
-#include <stdarg.h>
+#include <cstdarg>
 
 #include "VParseGrammar.h"
 #include "VParseBison.h"

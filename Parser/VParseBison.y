@@ -22,13 +22,13 @@
  *
  *****************************************************************************/
 
-#include <stdio.h>
+#include <cstdio>
 #include <fstream>
 #include <stack>
 #include <vector>
 #include <map>
 #include <deque>
-#include <assert.h>
+#include <cassert>
 
 #include "VParse.h"
 #include "VParseGrammar.h"

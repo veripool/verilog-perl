@@ -20,13 +20,13 @@
 ///
 //*************************************************************************
 
-#include <stdio.h>
+#include <cstdio>
 #include <fstream>
 #include <cstring>
 #include <stack>
 #include <vector>
 #include <map>
-#include <assert.h>
+#include <cassert>
 
 #include "VPreproc.h"
 #include "VPreprocLex.h"

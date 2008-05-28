@@ -20,14 +20,14 @@
 ///
 //*************************************************************************
 
-#include <stdio.h>
-#include <fstream>
+#include <cstdio>
 #include <cstring>
+#include <fstream>
 #include <stack>
 #include <vector>
 #include <map>
 #include <deque>
-#include <assert.h>
+#include <cassert>
 
 #include "VParse.h"
 #include "VParseLex.h"
