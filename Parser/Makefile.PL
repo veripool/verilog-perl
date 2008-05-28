@@ -70,7 +70,7 @@ VParseBison.cpp:	VParseBison.y
 	-rm -rf VParseBison.c
 
 Parser_cleaned.c: Parser.c
-	$(PERL) $(XSUBPPFIX) < $< > $@
+	$(PERL) $(XSUBPPFIX) < Parser.c > Parser_cleaned.c
 
 clean::
 	-rm -rf test *.d *.o *.output

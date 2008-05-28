@@ -56,7 +56,7 @@ VPreprocLex.cpp: $(FLEXFIX) VPreprocLex_prefix.cpp
 	$(PERL) $(FLEXFIX) < VPreprocLex_prefix.cpp > $@
 
 Preproc_cleaned.c: Preproc.c
-	$(PERL) $(XSUBPPFIX) < $< > $@
+	$(PERL) $(XSUBPPFIX) < Preproc.c > Preproc_cleaned.c
 
 clean::
 	-rm -rf test *.d *.o *.output
