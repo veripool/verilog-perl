@@ -41,7 +41,7 @@ Module:v_hier_sub  File:verilog/v_hier_sub.v
 Module:v_hier_subsub  File:verilog/v_hier_subsub.v
   Port:a  Dir:in  Type:wire  Array:
   Port:q  Dir:out  Type:wire  Array:
-  Net:IGNORED    Type:parameter  Array:
+  Net:IGNORED    Type:parameter  Array:  Value:0
   Net:a  O  Type:wire  Array:
   Net:q  I  Type:wire  Array:
 Module:v_hier_top  File:verilog/v_hier_top.v

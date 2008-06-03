@@ -3,7 +3,7 @@ Module:v_v2k  File:verilog/v_v2k.v
   Port:rst  Dir:in  Type:wire  Array:
   Port:sig1  Dir:in  Type:wire  Array:
   Port:sig2  Dir:out  Type:wire  Array:
-  Net:WIDTH    Type:parameter  Array:
+  Net:WIDTH    Type:parameter  Array:  Value:16
   Net:clk  O  Type:wire  Array:
   Net:rst  O  Type:wire  Array:
   Net:sig1  O  Type:wire  Array:  WIDTH:0

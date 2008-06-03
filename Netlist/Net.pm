@@ -39,6 +39,7 @@ structs('new',
 	   array	=> '$', #'	# Vector
 	   module	=> '$', #'	# Module entity belongs to
 	   signed	=> '$', #'	# True if signed
+	   value	=> '$', #'	# For parameters, the value of the parameter
 	   # below only after links()
 	   port		=> '$', #'	# Reference to port connected to
 	   msb		=> '$', #'	# MSB of signal (if known)
@@ -134,6 +135,7 @@ sub dump {
 	,"  ",($self->_used_in() ? "I":""),($self->_used_out() ? "O":""),
 	,"  Type:",$self->type(),"  Array:",$self->array()||"";
     print "  ",($self->msb).":".($self->lsb) if defined $self->msb;
+    print "  Value:",$self->value if defined $self->value && $self->value ne '';
     print "\n";
 }
 
@@ -221,6 +223,11 @@ The name of the net.
 =item $self->type
 
 The C++ or declaration type of the net.  For example "wire" or "parameter".
+
+=item $self->value
+
+If the net's type is 'parameter', the value from the parameter's
+declaration.
 
 =item $self->width
 

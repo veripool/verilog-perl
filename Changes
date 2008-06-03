@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.02**
 
+***	Add Netlist::Net->value containing parameter values.  [Ron D Smith]
+
 ****	Support +=, -=, etc assignment operators.
 
 ****	Fix compile errors under Fedora 9, GCC 4.3.0.  [by Jeremy Bennett]

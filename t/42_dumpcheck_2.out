@@ -17,7 +17,7 @@ Module:foo2  File:verilog/pinorder.v
   Net:y  O  Type:wire  Array:
   Net:z  O  Type:wire  Array:
 Module:pinorder4  File:verilog/pinorder.v
-  Net:IPCD_const  I  Type:wire  Array:  31:0
+  Net:IPCD_const  I  Type:wire  Array:  31:0  Value:32'h1
   Net:a_i  I  Type:wire  Array:  7:0
   Net:b_i  IO  Type:wire  Array:
   Net:d_o  I  Type:wire  Array:
@@ -27,7 +27,7 @@ Module:pinorder4  File:verilog/pinorder.v
               Port:abcconst  Dir:in  Type:wire  Array:
     Pin:def  Net:IPCD_const
               Port:def  Dir:in  Type:wire  Array:
-              Net:IPCD_const  I  Type:wire  Array:  31:0
+              Net:IPCD_const  I  Type:wire  Array:  31:0  Value:32'h1
     Pin:noconnect  Net:
               Port:noconnect  Dir:in  Type:wire  Array:
     Pin:x  Net:a_i
@@ -52,7 +52,7 @@ Module:pinorder4  File:verilog/pinorder.v
               Port:abcconst  Dir:in  Type:wire  Array:
     Pin:def  Net:IPCD_const
               Port:def  Dir:in  Type:wire  Array:
-              Net:IPCD_const  I  Type:wire  Array:  31:0
+              Net:IPCD_const  I  Type:wire  Array:  31:0  Value:32'h1
     Pin:x  Net:a_i
               Port:x  Dir:in  Type:wire  Array:
               Net:a_i  I  Type:wire  Array:  7:0

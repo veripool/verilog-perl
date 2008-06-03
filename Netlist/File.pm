@@ -142,6 +142,7 @@ sub signal_decl {
     my $vector = shift;
     my $array = shift;
     my $signed = shift;
+    my $value = shift;
     print " Sig $netname $inout\n" if $Verilog::Netlist::Debug;
 
     my $msb;
@@ -182,7 +183,7 @@ sub signal_decl {
 	     filename=>$self->filename, lineno=>$self->lineno,
 	     simple_type=>1, type=>$inout, array=>$array,
 	     comment=>undef, msb=>$msb, lsb=>$lsb,
-	     signed=>$signed,
+	     signed=>$signed, value=>$value,
 	     );
 	$net->type($inout);  # If it's already declared as in/out etc, mark the type
 	$self->{_cmtref} = $net;
