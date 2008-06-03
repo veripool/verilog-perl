@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.02**
 
+****	Support +=, -=, etc assignment operators.
+
 ****	Fix compile errors under Fedora 9, GCC 4.3.0.  [by Jeremy Bennett]
 
 * Verilog::Language 3.025 2008/05/07

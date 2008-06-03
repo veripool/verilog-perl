@@ -254,3 +254,25 @@ module bug34649b (
        output reg name = 0
 		 );
 endmodule
+module bugvp10;
+   initial begin
+      x += 1;
+      x -= 1;
+      x /= 1;
+      x *= 1;
+      x |= 1;
+      x ^= 1;
+      x <<= 1;
+      x >>= 1;
+      x <<<= 1;
+      x >>>= 1;
+      //y = x++;  // Part of expression
+      //y = ++x;
+      //y = x--;
+      //y = --x;
+      //x++; // Statement
+      //++x;
+      //x--;
+      //--x;
+   end
+endmodule

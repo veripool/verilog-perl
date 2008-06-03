@@ -286,6 +286,12 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 
 //********************
 // Verilog op precedence
+
+%token<str>	prUNARYARITH
+%token<str>	prREDUCTION
+%token<str>	prNEGATION
+
+
 %left		':'
 %left		'?'
 %left		yP_OROR
@@ -301,15 +307,16 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %left		'*' '/' '%'
 %left		yP_POW
 %left		'{' '}'
-%left<str>	prUNARYARITH
-%left<str>	prREDUCTION
-%left<str>	prNEGATION
+%left		prUNARYARITH yP_MINUSMINUS yP_PLUSPLUS
+%left		prREDUCTION
+%left		prNEGATION
 
 %nonassoc prLOWER_THAN_ELSE
 %nonassoc yELSE
 
 // Types
 %type<str>	anyrange
+%type<str>	assignLhs
 %type<str>	cateList
 %type<str>	concIdList
 %type<str>	constExpr
@@ -938,16 +945,28 @@ stmtList:	stmtBlock				{ }
 	|	stmtList stmtBlock			{ }
 	;
 
-assignLhs:	varRefDotBit				{ }
-	|	'{' concIdList '}'			{ }
+assignLhs:	varRefDotBit				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	'{' concIdList '}'			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	;
 
 stmt:		';'					{ }
 	|	labeledStmt				{ }
 	|	yaID ':' labeledStmt			{ }  /*S05 block creation rule*/
 
-	|	assignLhs yP_LTE delayOrEvE expr ';'	{ }
-	|	assignLhs '=' delayOrEvE expr ';'	{ }
+	|	assignLhs yP_LTE	delayOrEvE expr ';'	{ }
+	|	assignLhs '=' 		delayOrEvE expr ';'	{ }
+	|	assignLhs yP_PLUSEQ	delayOrEvE expr ';'	{ }
+	|	assignLhs yP_MINUSEQ	delayOrEvE expr ';'	{ }
+	|	assignLhs yP_TIMESEQ	delayOrEvE expr ';'	{ }
+	|	assignLhs yP_DIVEQ	delayOrEvE expr ';'	{ }
+	|	assignLhs yP_MODEQ	delayOrEvE expr ';'	{ }
+	|	assignLhs yP_ANDEQ	delayOrEvE expr ';'	{ }
+	|	assignLhs yP_OREQ	delayOrEvE expr ';'	{ }
+	|	assignLhs yP_XOREQ	delayOrEvE expr ';'	{ }
+	|	assignLhs yP_SLEFTEQ	delayOrEvE expr ';'	{ }
+	|	assignLhs yP_SRIGHTEQ	delayOrEvE expr ';'	{ }
+	|	assignLhs yP_SSRIGHTEQ	delayOrEvE expr ';'	{ }
+
 	|	stateCaseForIf				{ }
 	|	taskRef ';' 				{ }
 
