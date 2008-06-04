@@ -143,6 +143,10 @@ drop		[\032]
 <ARGMODE><<EOF>>	{ yyerrorf("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
 <ARGMODE>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
+<ARGMODE>[{\[]		{ VPreprocLex::s_currentLexp->m_parenLevel++;
+			  appendDefValue(yytext,yyleng); }
+<ARGMODE>[}\]]		{ VPreprocLex::s_currentLexp->m_parenLevel--;
+			  appendDefValue(yytext,yyleng); }
 <ARGMODE>[(]		{ VPreprocLex::s_currentLexp->m_parenLevel++;
 			  // Note paren level 0 means before "(" of starting args
 			  // Level 1 means "," between arguments
@@ -164,7 +168,7 @@ drop		[\032]
 			      yy_pop_state(); return (VP_DEFARG);
  			}}
 <ARGMODE>"`"{symb}	{ return (VP_DEFREF); }  /* defref in defref */
-<ARGMODE>[^\/\*\n\r\\(,)\"`]+	|
+<ARGMODE>[^\/\*\n\r\\(,){}\[\]\"`]+	|
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }
 
 	/* One line comments. */

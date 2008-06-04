@@ -290,4 +290,15 @@ verilog/inc1.v:141:
 verilog/inc1.v:142: 
 verilog/inc1.v:142: `line 142 "verilog/inc1.v" 0
 verilog/inc1.v:142: 
-verilog/inc1.v:143: `line 143 "verilog/inc1.v" 2
+verilog/inc1.v:143: 
+COMMENT: //======================================================================
+verilog/inc1.v:144:  /*CMT*/ 
+COMMENT: // macro call with , in {}
+verilog/inc1.v:145:  /*CMT*/ 
+verilog/inc1.v:146: 
+verilog/inc1.v:147:  
+verilog/inc1.v:148: $blah("ab,cd","e,f");
+verilog/inc1.v:149: $blah(this.log,vec);
+verilog/inc1.v:150: $blah(this.log,vec[1,2,3]);
+verilog/inc1.v:151: $blah(this.log,{blah.name(), " is not foo"});
+verilog/inc1.v:152: `line 152 "verilog/inc1.v" 2

@@ -140,3 +140,12 @@ endmodule
 `ifdef NOT_DEFINED_INC
  `include NOT_DEFINED_INC
 `endif
+
+//======================================================================
+// macro call with , in {}
+
+`define xxerror(log, msg) $blah(log,msg)
+`xxerror("ab,cd","e,f");
+`xxerror(this.log, vec);
+`xxerror(this.log, vec[1,2,3]);
+`xxerror(this.log, {blah.name(), " is not foo"});
