@@ -73,4 +73,10 @@ verilog/inc1.v:114: endmodule
 verilog/inc1.v:127: begin addr <= (({regs[6], regs[7]} + 1)); rd <= 1; end and begin addr <= (({regs[6], regs[7]})); wdata <= (rdata); wr <= 1; end
 verilog/inc1.v:128: begin addr <= ({regs[6], regs[7]} + 1); rd <= 1; end
 verilog/inc1.v:129: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end 
-verilog/inc1.v:130: `line 130 "verilog/inc1.v" 2
+verilog/inc4.v:1: `line 134 "verilog/inc1.v" 0
+verilog/inc4.v:1: `line 1 "verilog/inc4.v" 1
+verilog/inc4.v:6: `line 6 "verilog/inc4.v" 2
+verilog/inc4.v:6: `line 134 "verilog/inc1.v" 0
+verilog/inc1.v:137: `line 137 "verilog/inc1.v" 0
+verilog/inc1.v:142: `line 142 "verilog/inc1.v" 0
+verilog/inc1.v:143: `line 143 "verilog/inc1.v" 2

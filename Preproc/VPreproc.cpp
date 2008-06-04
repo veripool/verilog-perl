@@ -661,14 +661,12 @@ int VPreprocImp::getToken() {
 	case ps_INCNAME: {
 	    if (tok==VP_STRING) {
 		m_state = ps_TOP;
-		if (!m_off) {
-		    m_lastSym.assign(yytext,yyleng);
-		    if (debug()) cout<<"Include "<<m_lastSym<<endl;
-		    // Drop leading and trailing quotes.
-		    m_lastSym.erase(0,1);
-		    m_lastSym.erase(m_lastSym.length()-1,1);
-		    m_preprocp->include(m_lastSym);
-		}
+		m_lastSym.assign(yytext,yyleng);
+		if (debug()) cout<<"Include "<<m_lastSym<<endl;
+		// Drop leading and trailing quotes.
+		m_lastSym.erase(0,1);
+		m_lastSym.erase(m_lastSym.length()-1,1);
+		m_preprocp->include(m_lastSym);
 		goto next_tok;
 	    }
 	    else if (tok==VP_TEXT && yyleng==1 && yytext[0]=='<') {
@@ -707,7 +705,9 @@ int VPreprocImp::getToken() {
 	// Default is to do top level expansion of some tokens
 	switch (tok) {
 	case VP_INCLUDE:
-	    m_state = ps_INCNAME;  m_stateFor = tok;
+	    if (!m_off) {
+		m_state = ps_INCNAME;  m_stateFor = tok;
+	    }
 	    goto next_tok;
 	case VP_UNDEF:
 	case VP_DEFINE:

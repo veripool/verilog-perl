@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Support +=, -=, etc assignment operators.
 
+****	Fix syntax error when "`include `defname" is ifdefed.  [John Dickol]
+
 ****	Fix compile errors under Fedora 9, GCC 4.3.0.  [by Jeremy Bennett]
 
 * Verilog::Language 3.025 2008/05/07

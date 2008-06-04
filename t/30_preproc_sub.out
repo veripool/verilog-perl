@@ -258,4 +258,36 @@ verilog/inc1.v:126:
 verilog/inc1.v:127: begin addr <= (({regs[6], regs[7]} + 1)); rd <= 1; end and begin addr <= (({regs[6], regs[7]})); wdata <= (rdata); wr <= 1; end
 verilog/inc1.v:128: begin addr <= ({regs[6], regs[7]} + 1); rd <= 1; end
 verilog/inc1.v:129: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end 
-verilog/inc1.v:130: `line 130 "verilog/inc1.v" 2
+verilog/inc1.v:130: 
+COMMENT: //======================================================================
+verilog/inc1.v:131:  /*CMT*/ 
+COMMENT: // include of parameterized file
+verilog/inc1.v:132:  /*CMT*/ 
+verilog/inc1.v:133:  
+verilog/inc4.v:1:  
+verilog/inc4.v:1: `line 134 "verilog/inc1.v" 0
+verilog/inc4.v:1: `line 1 "verilog/inc4.v" 1
+COMMENT: // DESCRIPTION: Verilog::Preproc: Example source code
+verilog/inc4.v:1:  /*CMT*/ 
+COMMENT: // This file ONLY is placed into the Public Domain, for any use,
+verilog/inc4.v:2:  /*CMT*/ 
+COMMENT: // without warranty, 2000-2008 by Wilson Snyder.
+verilog/inc4.v:3:  /*CMT*/ 
+verilog/inc4.v:4: 
+verilog/inc4.v:5:  
+verilog/inc4.v:6: `line 6 "verilog/inc4.v" 2
+verilog/inc4.v:6: `line 134 "verilog/inc1.v" 0
+verilog/inc1.v:134: 
+verilog/inc1.v:135:  
+verilog/inc1.v:136:   
+verilog/inc1.v:137: 
+verilog/inc1.v:137: `line 137 "verilog/inc1.v" 0
+verilog/inc1.v:137: 
+verilog/inc1.v:138:    
+verilog/inc1.v:139: 
+verilog/inc1.v:140:  
+verilog/inc1.v:141:   
+verilog/inc1.v:142: 
+verilog/inc1.v:142: `line 142 "verilog/inc1.v" 0
+verilog/inc1.v:142: 
+verilog/inc1.v:143: `line 143 "verilog/inc1.v" 2

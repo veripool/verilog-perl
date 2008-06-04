@@ -127,3 +127,16 @@ endmodule
 `EX_READ((`_HL + 1)) and `EX_WRITE((`_HL), rdata)
 `EX_READ(`_HL + 1)
 `EX_WRITE(`_HL, rdata) 
+
+//======================================================================
+// include of parameterized file
+`define INCNAME "inc4.v"
+`include `INCNAME
+`ifndef INC4
+ `error "No Inc4"
+`endif
+`undef INC4  
+
+`ifdef NOT_DEFINED_INC
+ `include NOT_DEFINED_INC
+`endif
