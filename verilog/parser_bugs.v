@@ -266,13 +266,13 @@ module bugvp10;
       x >>= 1;
       x <<<= 1;
       x >>>= 1;
-      //y = x++;  // Part of expression
-      //y = ++x;
-      //y = x--;
-      //y = --x;
-      //x++; // Statement
-      //++x;
-      //x--;
-      //--x;
+      y = x++;  // Part of expression
+      y = ++x;
+      y = x--;
+      y = --x;
+      x++; // Statement
+      ++x;
+      x--;
+      --x;
    end
 endmodule

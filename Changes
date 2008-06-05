@@ -7,7 +7,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add Netlist::Net->value containing parameter values.  [Ron D Smith]
 
-****	Support +=, -=, etc assignment operators.
+****	Support +=, -=, etc, and ++, -- operators. [Sean de la Haye]
 
 ****	Fix syntax error when "`include `defname" is ifdefed.  [John Dickol]
 

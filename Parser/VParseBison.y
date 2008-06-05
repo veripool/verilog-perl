@@ -695,8 +695,8 @@ genItemList:	genItem					{ }
 
 genItem:	modOrGenItem 				{ }
 	|	yCASE  '(' expr ')' genCaseListE yENDCASE	{ }
-	|	yIF expr genItemBlock	%prec prLOWER_THAN_ELSE	{ }
-	|	yIF expr genItemBlock yELSE genItemBlock	{ }
+	|	yIF '(' expr ')' genItemBlock	%prec prLOWER_THAN_ELSE	{ }
+	|	yIF '(' expr ')' genItemBlock yELSE genItemBlock	{ }
 	|	yFOR '(' varRefBase '=' expr ';' expr ';' varRefBase '=' expr ')' genItemBlock
 							{ }
 	;
@@ -967,6 +967,11 @@ stmt:		';'					{ }
 	|	assignLhs yP_SRIGHTEQ	delayOrEvE expr ';'	{ }
 	|	assignLhs yP_SSRIGHTEQ	delayOrEvE expr ';'	{ }
 
+	|	varRefDotBit yP_PLUSPLUS 		{ }
+	|	varRefDotBit yP_MINUSMINUS 		{ }
+	|	yP_PLUSPLUS	varRefDotBit		{ }
+	|	yP_MINUSMINUS	varRefDotBit		{ }
+
 	|	stateCaseForIf				{ }
 	|	taskRef ';' 				{ }
 
@@ -990,8 +995,8 @@ stmt:		';'					{ }
 // Case/If
 
 stateCaseForIf: caseStmt caseAttrE caseListE yENDCASE	{ }
-	|	yIF expr stmtBlock	%prec prLOWER_THAN_ELSE	{ }
-	|	yIF expr stmtBlock yELSE stmtBlock	{ }
+	|	yIF '(' expr ')' stmtBlock	%prec prLOWER_THAN_ELSE	{ }
+	|	yIF '(' expr ')' stmtBlock yELSE stmtBlock	{ }
 	|	yFOR '(' assignLhs '=' expr ';' expr ';' assignLhs '=' expr ')' stmtBlock
 							{ }
 	|	yWHILE '(' expr ')' stmtBlock		{ }
@@ -1120,6 +1125,11 @@ exprNoStr:	expr yP_OROR expr			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	yP_NOR expr	%prec prREDUCTION	{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	'!' expr	%prec prNEGATION	{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	'~' expr	%prec prNEGATION	{ $<fl>$=$<fl>1; $$ = $1+$2; }
+
+	|	varRefDotBit yP_PLUSPLUS		{ $<fl>$=$<fl>1; $$ = $1+$2; }
+	|	varRefDotBit yP_MINUSMINUS		{ $<fl>$=$<fl>1; $$ = $1+$2; }
+	|	yP_PLUSPLUS	varRefDotBit		{ $<fl>$=$<fl>1; $$ = $1+$2; }
+	|	yP_MINUSMINUS	varRefDotBit		{ $<fl>$=$<fl>1; $$ = $1+$2; }
 
 	|	expr '?' expr ':' expr			{ $<fl>$=$<fl>1; $$ = $1+"?"+$3+":"+$5; }
 	|	'(' expr ')'				{ $<fl>$=$<fl>1; $$ = "("+$2+")"; }
