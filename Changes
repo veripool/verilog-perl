@@ -15,7 +15,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix compile errors under Fedora 9, GCC 4.3.0.  [by Jeremy Bennett]
 
-* Verilog::Language 3.025 2008/05/07
+* Verilog::Language 3.035 2008/05/07
 
 ****	Fix "output reg name=expr;" bug34649 syntax error.  [Martin Scharrer]
 
