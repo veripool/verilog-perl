@@ -1,4 +1,4 @@
-.cvsignore
+.gitignore
 Changes
 COPYING
 EditFiles.pm
@@ -16,7 +16,7 @@ Netlist/Net.pm
 Netlist/Pin.pm
 Netlist/Port.pm
 Netlist/Subclass.pm
-Parser/.cvsignore
+Parser/.gitignore
 Parser/Makefile.PL
 Parser/Parser.pm
 Parser/Parser.xs
@@ -28,7 +28,7 @@ Parser/VParseBison.y
 Parser/VParseGrammar.h
 Parser/VParseLex.h
 Parser/VParseLex.l
-Preproc/.cvsignore
+Preproc/.gitignore
 Preproc/flexfix
 Preproc/Makefile.PL
 Preproc/Preproc.pm

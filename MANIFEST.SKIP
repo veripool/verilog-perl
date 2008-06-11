@@ -1,5 +1,6 @@
 ^CVS/
 /CVS/
+^.git/
 ,v$
 \.(bak|old)/
 \.(bak|old)$
