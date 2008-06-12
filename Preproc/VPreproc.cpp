@@ -43,7 +43,7 @@ class VPreDefRef {
     string	m_params;	// Define parameter list for next expansion
     string	m_nextarg;	// String being built for next argument
     int		m_parenLevel;	// Parenthesis counting inside def args
-    
+
     vector<string> m_args;	// List of define arguments
 public:
     string name() const { return m_name; }
@@ -214,20 +214,20 @@ const char* VPreprocImp::tokenName(int tok) {
     case VP_ENDIF	: return("ENDIF");
     case VP_UNDEF	: return("UNDEF");
     case VP_DEFINE	: return("DEFINE");
-    case VP_ELSE	: return("ELSE");	
-    case VP_ELSIF	: return("ELSIF");	
-    case VP_LINE	: return("LINE");	
+    case VP_ELSE	: return("ELSE");
+    case VP_ELSIF	: return("ELSIF");
+    case VP_LINE	: return("LINE");
     case VP_SYMBOL	: return("SYMBOL");
     case VP_STRING	: return("STRING");
     case VP_DEFVALUE	: return("DEFVALUE");
     case VP_COMMENT	: return("COMMENT");
-    case VP_TEXT	: return("TEXT");	
-    case VP_WHITE	: return("WHITE");	
+    case VP_TEXT	: return("TEXT");
+    case VP_WHITE	: return("WHITE");
     case VP_DEFREF	: return("DEFREF");
     case VP_DEFARG	: return("DEFARG");
     case VP_ERROR	: return("ERROR");
     default: return("?");
-    } 
+    }
 }
 
 string VPreprocImp::trimWhitespace(const string& strg) {
@@ -441,7 +441,7 @@ int VPreprocImp::getRawToken() {
 	    if (yyleng) m_rawAtBol = (yytext[yyleng-1]=='\n');
 	    if (m_state!=ps_DEFVALUE) return (VP_TEXT);
 	    else {
-		VPreprocLex::s_currentLexp->appendDefValue(yytext,yyleng); 
+		VPreprocLex::s_currentLexp->appendDefValue(yytext,yyleng);
 		goto next_tok;
 	    }
 	}
@@ -461,7 +461,7 @@ int VPreprocImp::getRawToken() {
 		     m_filelinep->lineno(), m_off?"of":"on", m_state, (int)m_defRefs.size(),
 		     tokenName(tok), buf.c_str());
 	}
-    
+
 	// On EOF, try to pop to upper level includes, as needed.
 	if (tok==VP_EOF) {
 	    eof();
@@ -556,7 +556,7 @@ int VPreprocImp::getToken() {
 	    }
 	}
 	case ps_DEFVALUE: {
- 	    static string newlines;
+	    static string newlines;
 	    newlines = "\n";  // Always start with trailing return
 	    if (tok == VP_DEFVALUE) {
 		// Remove returns
@@ -584,7 +584,7 @@ int VPreprocImp::getToken() {
 		    // Remove leading whitespace
 		    unsigned leadspace = 0;
 		    while (m_lexp->m_defValue.length() > leadspace
-		    	   && isspace(m_lexp->m_defValue[leadspace])) leadspace++;
+			   && isspace(m_lexp->m_defValue[leadspace])) leadspace++;
 		    if (leadspace) m_lexp->m_defValue.erase(0,leadspace);
 		    // Remove trailing whitespace
 		    unsigned trailspace = 0;
@@ -602,7 +602,7 @@ int VPreprocImp::getToken() {
 	    // DEFVALUE is terminated by a return, but lex can't return both tokens.
 	    // Thus, we emit a return here.
 	    yytext=(char*)(newlines.c_str()); yyleng=newlines.length();
-	    return(VP_WHITE); 
+	    return(VP_WHITE);
 	}
 	case ps_DEFPAREN: {
 	    if (tok==VP_TEXT && yyleng==1 && yytext[0]=='(') {

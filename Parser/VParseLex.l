@@ -6,24 +6,24 @@
 /* $Id$
  ******************************************************************************
  * DESCRIPTION: Verilog Parser Lexer
- * 
- * This file is part of Verilog-Perl.  
- * 
+ *
+ * This file is part of Verilog-Perl.
+ *
  * Author: Wilson Snyder <wsnyder@wsnyder.org>
- * 
+ *
  * Code available from: http://www.veripool.org/systemperl
- * 
+ *
  ******************************************************************************
- * 
+ *
  * Copyright 2000-2008 by Wilson Snyder.  This program is free software;
  * you can redistribute it and/or modify it under the terms of either the GNU
  * General Public License or the Perl Artistic License.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  *****************************************************************************
  * Do not use Flex in C++ mode.  It has bugs with yyunput() which result in
  * lost characters.
@@ -506,7 +506,7 @@ escid	\\[^ \t\f\r\n]+
   /************************************************************************/
   /* Protected */
 <PROTMODE>\n		{ yymore(); NEXTLINE(); }
-<PROTMODE>"`endprotected"	{ FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); } 
+<PROTMODE>"`endprotected"	{ FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); }
 <PROTMODE>. 		{ yymore(); }
 <PROTMODE><<EOF>>	{ yyerrorf("EOF in `protected");
 			  yyleng = 0; yy_pop_state(); }
@@ -533,7 +533,7 @@ escid	\\[^ \t\f\r\n]+
   "`endprotect"			{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`inline"			{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`line"{ws}+[^\n]*\n		{ PARSEP->inLineDirective(yytext);
-			  	  FL; VALTEXT; CALLBACK(preprocCb); }
+				  FL; VALTEXT; CALLBACK(preprocCb); }
   "`portcoerce"			{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`protect"			{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`protected"			{ FL; VALTEXT; CALLBACK(preprocCb); yy_push_state(PROTMODE); }

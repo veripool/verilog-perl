@@ -141,24 +141,24 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Added Verilog::SigParser->funcsignal callback for variables declared
 	inside a function or task.  bug26972.  [Mark Nodine]
-	
+
 ***	Added Verilog::SigParser->instant callbacks for gate primitives.
 	bug26969, bug27062. [Mark Nodine]
-	
+
 ***	Added Verilog::SigParser->parampin callbacks for parameter connections
 	to instantiations.
-	
+
 ***	Added Verilog::SigParser->signal_decl callbacks for all module vars,
 	including parameters and genvars.
-	
-***	Added Verilog::SigParser->signal_decl callback argument with 
+
+***	Added Verilog::SigParser->signal_decl callback argument with
 	initial values of parameters and wires. [Mark Nodine]
-	
+
 **	Verilog::Parser has been replaced with the front end of the
 	SigParser.  The preproc and syscall callbacks were added
 
 ***	Require call to Verilog::Parser->eof() at the end of all parsers.
-	
+
 ***	Changed Verilog::Parser->unreadback() method to not clear state.
 	You must now call unreadback('') to clear the unreadback characters.
 
@@ -353,7 +353,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add Verilog::GetOpt GCC -U<define> switch for undefining.
 
-****	Support SUSE Linux and OS-X. [Jose Renau] 
+****	Support SUSE Linux and OS-X. [Jose Renau]
 
 * Verilog::Language 2.303 2004/11/18
 
@@ -500,7 +500,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Cleanups to support GNU Bison 1.35
 
-****	Minor changes for SystemC support  
+****	Minor changes for SystemC support
 
 * Verilog::Language 2.200 2002/5/3
 
@@ -511,7 +511,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fixed `define substitution bug.
 
-* Verilog::Language 2.100 2002/3/11 
+* Verilog::Language 2.100 2002/3/11
 
 **	Installation now requires GCC/G++ and Flex.
 

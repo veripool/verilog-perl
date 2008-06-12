@@ -719,7 +719,7 @@ genCaseList:	caseCondList ':' genItemBlock		{ }
 // IEEE: variable_lvalue
 variableLvalue:	varRefDotBit				{ }
 	|	'{' concIdList '}'			{ }
- 	;
+	;
 
 assignList:	assignOne				{ }
 	|	assignList ',' assignOne		{ }
@@ -1044,7 +1044,7 @@ taskDecl: 	yTASK lifetimeE taskId funcGuts yENDTASK endLabelE
 	;
 
 funcDecl: 	yFUNCTION lifetimeE funcId funcGuts yENDFUNCTION endLabelE
-		 	{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>5,$5); }
+			{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>5,$5); }
 	;
 
 // IEEE: lifetime - plus empty
@@ -1066,7 +1066,7 @@ funcGuts:	'(' {GRAMMARP->pinNum(1);} portV2kArgs ')' ';' funcBody	{ }
 
 funcBody:	funcVarList stmtBlock			{ }
 	|	stmtBlock				{ }
- 	;
+	;
 
 funcTypeE:	/* empty */				{ $$ = ""; }
 	|	varTypeKwds				{ $$ = $1; }
@@ -1192,7 +1192,7 @@ strength:	ygenSTRENGTH				{ }
 	|	ySUPPLY1				{ }
 	;
 
-// IEEE: drive_strength + pullup_strength + pulldown_strength 
+// IEEE: drive_strength + pullup_strength + pulldown_strength
 //	+ charge_strength - plus empty
 strengthSpecE:	/* empty */					{ }
 	|	yP_PARSTRENGTH strength ')'			{ }

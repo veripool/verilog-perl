@@ -7,12 +7,12 @@
 # Copyright 2000-2008 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 ######################################################################
 
 require 5.005;
@@ -590,7 +590,7 @@ Vpm uses a three step process.  First, use
     vrename --list  [<file.v>...]  [<directory>....]
 
 This reads the specified files, or all files below the specified directory,
-and creates a signals.vrename file. 
+and creates a signals.vrename file.
 
 Now, edit the signals.vrename file manually to specify the new signal
 names.  Then, use

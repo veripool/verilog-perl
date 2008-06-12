@@ -5,7 +5,7 @@
 
 module v_hier_subsub (/*AUTOARG*/
    // Outputs
-   q, 
+   q,
    // Inputs
    a
    );

@@ -6,12 +6,12 @@
 # Copyright 2000-2008 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 ######################################################################
 
 package Verilog::Netlist::File;
@@ -37,7 +37,7 @@ structs('new',
 	   # For special procedures
 	   _modules	=> '%',		# For autosubcell_include
 	   ]);
-	
+
 ######################################################################
 ######################################################################
 #### Read class
@@ -61,7 +61,7 @@ sub new {
 				     cellref=>undef,	# Cell being parsed now
 				     _cmtref=>undef,	# Object to attach comments to
 				     );
-    
+
     my @opt;
     push @opt, (options=>$params{netlist}{options}) if $params{netlist}{options};
     my $meta = $params{metacomment};
@@ -202,7 +202,7 @@ sub instant {
 	 return $self->error ("CELL outside of module definition", $instname);
     }
     $self->{cellref} = $modref->new_cell
-	 (name=>$instname, 
+	 (name=>$instname,
 	  filename=>$self->filename, lineno=>$self->lineno,
 	  submodname=>$submodname, params=>$params,);
     $self->{_cmtref} = $self->{cellref};

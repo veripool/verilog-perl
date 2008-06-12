@@ -6,24 +6,24 @@
 /* $Id$
  ******************************************************************************
  * DESCRIPTION: Verilog Preprocessor Lexer
- * 
- * This file is part of Verilog-Perl.  
- * 
+ *
+ * This file is part of Verilog-Perl.
+ *
  * Author: Wilson Snyder <wsnyder@wsnyder.org>
- * 
+ *
  * Code available from: http://www.veripool.org/systemperl
- * 
+ *
  ******************************************************************************
- * 
+ *
  * Copyright 2000-2008 by Wilson Snyder.  This program is free software;
  * you can redistribute it and/or modify it under the terms of either the GNU
  * General Public License or the Perl Artistic License.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  *****************************************************************************
  * Do not use Flex in C++ mode.  It has bugs with yyunput() which result in
  * lost characters.
@@ -91,8 +91,8 @@ drop		[\032]
 
 	/* Optional directives we recognize */
 <INITIAL>"`__FILE__"	{ if (!pedantic()) {
-	    		     yytext = (char*)VPreprocLex::s_currentLexp->m_curFilelinep->cfilename();
-	    		     yyleng = strlen(yytext); return (VP_TEXT);
+			     yytext = (char*)VPreprocLex::s_currentLexp->m_curFilelinep->cfilename();
+			     yyleng = strlen(yytext); return (VP_TEXT);
 	                  } else return(VP_DEFREF); }
 <INITIAL>"`__LINE__"	{ if (!pedantic()) {
 	                     static char buf[10];
@@ -150,23 +150,23 @@ drop		[\032]
 <ARGMODE>[(]		{ VPreprocLex::s_currentLexp->m_parenLevel++;
 			  // Note paren level 0 means before "(" of starting args
 			  // Level 1 means "," between arguments
-			  // Level 2+ means one argument's internal () 
+			  // Level 2+ means one argument's internal ()
 			  if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
 			      appendDefValue(yytext,yyleng);
 			  } else {
 			      return (VP_TEXT);
- 			}}
+			}}
 <ARGMODE>[)]		{ VPreprocLex::s_currentLexp->m_parenLevel--;
 			  if (VPreprocLex::s_currentLexp->m_parenLevel>0) {
 			      appendDefValue(yytext,yyleng);
 			  } else {
 			      yy_pop_state(); return (VP_DEFARG);
- 			}}
+			}}
 <ARGMODE>[,]		{ if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
 			      appendDefValue(yytext,yyleng);
 			  } else {
 			      yy_pop_state(); return (VP_DEFARG);
- 			}}
+			}}
 <ARGMODE>"`"{symb}	{ return (VP_DEFREF); }  /* defref in defref */
 <ARGMODE>[^\/\*\n\r\\(,){}\[\]\"`]+	|
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }

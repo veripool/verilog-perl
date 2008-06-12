@@ -88,6 +88,6 @@ WriteMakefile(
 	      VERSION_FROM  => 'Parser.pm',
 	      XSOPT => '-C++',
 	      CCFLAGS	=> $ccflags,
-    	      OBJECT   => 'VFileLine.o VParseLex.o VParse.o VParseBison.o',
+	      OBJECT   => 'VFileLine.o VParseLex.o VParse.o VParseBison.o',
 	      MYEXTLIB => 'Parser_cleaned.o',
 	      );

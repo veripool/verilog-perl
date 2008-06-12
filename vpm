@@ -6,12 +6,12 @@
 # Copyright 2000-2008 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 ######################################################################
 
 require 5.005;
@@ -50,7 +50,7 @@ $VERSION = '3.035';
 # Hash with key of macro to convert and value of the function to call when it occurs
 # Avoid having a token that is a substring of a standard function, for example
 #     $wr would be bad (beginning of $write).  That would slow down the parsing.
-%Vpm_Conversions  
+%Vpm_Conversions
     = (## U versions, to avoid conflicts with SystemVerilog
        '$uassert' =>		\&assert,
        '$uassert_amone' =>	sub {assert_hot(0,@_); },   # atmost one hot
@@ -236,7 +236,7 @@ sub assert_req_ack {
 	push @dholds, $dhold;
 	$Insure_Symbols{$Last_Module}{$dhold} = ['reg', 0];
     }
-    
+
     # Output it
     message_header();
     sendout("if (`__message_on) begin ");  # Need to wait till after reset, so FSM doesn't start
@@ -249,7 +249,7 @@ sub assert_req_ack {
     sendout(" 3'b11?: "); error(0,"\"Unexpected $req with request already pending\\n\"");
     sendout(" 3'b101: $busy<=1'b0;");
     sendout("endcase ");
-    
+
     if ($#params>=0) {
 	sendout(" if (($req)||($busy)) begin");
 	sendout(" if (($busy)) begin");
@@ -287,7 +287,7 @@ sub assert_hot {
     my $text = "";
     my ($elem,$i,$ptemp,$plist,$pnone);
 
-    my $len = 0; 
+    my $len = 0;
     my @cl = ();
     while ($elem = shift @params){
 	$elem =~ s/^\s*//;
@@ -315,7 +315,7 @@ sub assert_hot {
 	sendout("if ($vec === ${len}'b0 && `__message_on) ");
 	message_write($lineinfo,1,"%%E","",0,0,"NONE ACTIVE %b --> $text".'"',$vec);
     }
-    
+
     message_trailer();
 }
 
@@ -576,7 +576,7 @@ sub form_conversions_regexp {
 	}
     }
     $Vpm_Conversions_Regexp =~ s/\|$ /\)/x;
-    
+
     $Vpm_Conversions_Regexp = "\$NEVER_MATCH_ANYTHING" if $Vpm_Conversions_Regexp eq '\$()';
     #print "CV REGEXP $Vpm_Conversions_Regexp\n" if $Debug;
 }
@@ -618,7 +618,7 @@ sub vpm_process {
 	}
 	print "$filename: No dollars, not processing\n" if ($Debug);
 	return;
-      diff: 
+      diff:
 	$fh->seek(0,0);
 	$. = 1;
     }
@@ -843,7 +843,7 @@ sub vpm_process_one {
 	    }
 	}
 	if (!$Opt_Quiet) {
-	    print "  VPM'ing file ($Total_Files) $srcfile ", 
+	    print "  VPM'ing file ($Total_Files) $srcfile ",
 	    ($dest_mtime ? "(Changed)":"(New)"), ($no_output ? " (no-output)" : ""),"\n";
 	}
     }

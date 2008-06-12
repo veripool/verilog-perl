@@ -4,12 +4,12 @@
 # Copyright 2001-2008 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 ######################################################################
 
 package Verilog::Preproc;
@@ -392,7 +392,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 L<Verilog-Perl>,
 L<Verilog::Language>, L<Verilog::Getopt>
 
-L<IO::File> 
+L<IO::File>
 
 This package is layered on a C++ interface which may be found in the kit.
 

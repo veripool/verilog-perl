@@ -80,7 +80,7 @@ sub _read_split_file {
 		die "%Error: Unhandled translate comment: $line\n";
 	    }
 	}
-	    
+
 	(my $l2 = $line) =~ s!//.*$!!;
 	if ($l2 =~ s!.*?\*/!!) {
 	    $commented = 0;
@@ -91,7 +91,7 @@ sub _read_split_file {
 		$commented = 0;
 	    }
 	}
-	
+
 	if (!$commented
 	    && $line =~ /^\s*(module|primitive)\s+([A-Za-z0-9_]+)/) {
 	    !$modname or die "%Error: $filename:$.: module without previous endmodule\n";
@@ -129,7 +129,7 @@ sub _read_split_file {
 	}
     }
     $fh->close;
-    
+
     if (!$ever_module) {
 	print "$basename:1: No module, must be include file: $basemod\n" if $Debug;
 	push @lines, @trailer;
@@ -205,7 +205,7 @@ sub edit_file {
     my $wholefile;
     my $origwholefile;
     {	# Read it
-	my $fh = IO::File->new ("<$params{filename}") 
+	my $fh = IO::File->new ("<$params{filename}")
 	    or croak "%Error: $! $params{filename},";
 	local $/; undef $/;
 	$wholefile = <$fh>;
@@ -221,7 +221,7 @@ sub edit_file {
 	print "  $params{write_filename} (Changed)\n" if $params{verbose};
 	my ($dev,$ino,$mode) = stat($params{write_filename});
 	chmod 0777, $params{filename};
-	
+
 	my $fh = IO::File->new (">$params{write_filename}")
 	    or croak "%Error: $! writing $params{write_filename},";
 	print $fh $wholefile;

@@ -26,7 +26,7 @@ my @param = qw ( +libext+t
 		 +define+foo=bar
 		 +define+foo2
 		 -v libdir
-		 -y moddir 
+		 -y moddir
 		 -Dbaz=bar
 		 -Iincdir2
 		 -f t/20_getopt.opt

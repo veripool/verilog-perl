@@ -30,6 +30,14 @@ sub run_system {
     ($status == 0) or die "%Error: Command Failed $command, $status, stopped";
 }
 
+sub wholefile {
+    my $file = shift;
+    my $fh = IO::File->new ($file) or die "%Error: $! $file";
+    my $wholefile = join('',$fh->getlines());
+    $fh->close();
+    return $wholefile;
+}
+
 sub files_identical {
     my $fn1 = shift;
     my $fn2 = shift;

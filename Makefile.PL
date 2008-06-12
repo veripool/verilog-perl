@@ -43,7 +43,7 @@ tag:
 	svnorcvs tag  \$(DISTNAME)_\$(VERSION_SYM)
 
 maintainer-diff:
-	svnorcvs diff \$(DISTNAME)_\$(VERSION_SYM) 
+	svnorcvs diff \$(DISTNAME)_\$(VERSION_SYM)
 
 maintainer-dist: preexist dist tag
 	svnorcvs release \$(DISTVNAME).tar.gz
@@ -75,7 +75,7 @@ WriteMakefile(
 	      EXE_FILES => [qw( vrename vpm vppp vhier vsplitmodule )],
 	      'clean'	=> {FILES => qw (test_dir signals.vrename .vpm simv ),},
 	      'dist'    => {COMPRESS => 'gzip -9f',
-			    SUFFIX   => '.gz', 
+			    SUFFIX   => '.gz',
 			    DIST_DEFAULT => 'README all tardist',
 			},
 	      );

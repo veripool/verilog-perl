@@ -30,14 +30,14 @@ verilog/inc1.v:9: foobar2
 verilog/inc1.v:15: first part second part
 verilog/inc1.v:22: deep deep
 verilog/inc1.v:26: "Inside: `nosubst"
-verilog/inc1.v:27: "`nosubst" 
+verilog/inc1.v:27: "`nosubst"
 verilog/inc1.v:30: x y LLZZ x y
 verilog/inc1.v:31: p q LLZZ p q r s LLZZ r s LLZZ p q LLZZ p q r s LLZZ r s 
 verilog/inc1.v:35: firstline comma","line LLZZ firstline comma","line
 verilog/inc1.v:38: x y LLZZ "a" y
 verilog/inc1.v:41: (a,b)(a,b)
 verilog/inc1.v:44: $display("left side: \"right side\"")
-verilog/inc1.v:47: bar_suffix 
+verilog/inc1.v:47: bar_suffix more
 verilog/inc1.v:51: $c("Zap(\"",bug1,"\");");;
 verilog/inc1.v:52: $c("Zap(\"","bug2","\");");;
 verilog/inc1.v:60: `line 60 "verilog/inc1.v" 0
@@ -72,7 +72,7 @@ verilog/inc1.v:113: `endprotected
 verilog/inc1.v:114: endmodule
 verilog/inc1.v:127: begin addr <= (({regs[6], regs[7]} + 1)); rd <= 1; end and begin addr <= (({regs[6], regs[7]})); wdata <= (rdata); wr <= 1; end
 verilog/inc1.v:128: begin addr <= ({regs[6], regs[7]} + 1); rd <= 1; end
-verilog/inc1.v:129: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end 
+verilog/inc1.v:129: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end more
 verilog/inc4.v:1: `line 134 "verilog/inc1.v" 0
 verilog/inc4.v:1: `line 1 "verilog/inc4.v" 1
 verilog/inc4.v:6: `line 6 "verilog/inc4.v" 2

@@ -18,7 +18,7 @@ verilog/v_hier_subprim.v:010: unreadback '
    '
 verilog/v_hier_subprim.v:010: SYMBOL 'q'
 verilog/v_hier_subprim.v:010: OPERATOR ','
-verilog/v_hier_subprim.v:012: unreadback ' 
+verilog/v_hier_subprim.v:012: unreadback '
    
    '
 verilog/v_hier_subprim.v:012: SYMBOL 'a'

@@ -6,12 +6,12 @@
 # Copyright 2000-2008 by Wilson Snyder.  This program is free software;
 # you can redistribute it and/or modify it under the terms of either the GNU
 # General Public License or the Perl Artistic License.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 ######################################################################
 
 package Verilog::Netlist::Subclass;
@@ -160,7 +160,7 @@ and $self->error() will produce consistent results.
 
 =item $self->error (I<Text...>)
 
-Print an error in a standard format.  
+Print an error in a standard format.
 
 =item $self->exit_if_error()
 
@@ -172,7 +172,7 @@ The filename number the entity was created in.
 
 =item $self->info (I<Text...>)
 
-Print a informational in a standard format.  
+Print a informational in a standard format.
 
 =item $self->lineno()
 
@@ -191,7 +191,7 @@ hash.  This may be used to store application data on the specified node.
 
 =item $self->warn (I<Text...>)
 
-Print a warning in a standard format.  
+Print a warning in a standard format.
 
 =back
 

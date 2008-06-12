@@ -73,7 +73,7 @@ public:
     /// Insert given file into this point in input stream
     int debug() const { return m_debug; }	///< Set debugging level
     void debug(int level);			///< Set debugging level
-    void parse(const string& text);		///< Add given text to 
+    void parse(const string& text);		///< Add given text to
     void setEof();				///< Got a end of file
     bool sigParser() const { return m_sigParser; }
     void language(const char* valuep);

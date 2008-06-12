@@ -7,7 +7,7 @@
 
 primitive v_hier_prim (/*AUTOARG*/
    // Outputs
-   q, 
+   q,
    // Inputs
    a
    );

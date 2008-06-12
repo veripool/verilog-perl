@@ -45,6 +45,7 @@ README
 t/00_pod.t
 t/01_manifest.t
 t/02_help.t
+t/03_spaces.t
 t/10_keywords.t
 t/12_splitbus.t
 t/14_numbers.t

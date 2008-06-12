@@ -74,6 +74,6 @@ WriteMakefile(
 	      VERSION_FROM  => 'Preproc.pm',
 	      XSOPT => '-C++',
 	      CCFLAGS	=> $ccflags,
-    	      OBJECT   => 'VFileLine.o VPreproc.o VPreprocLex.o',
+	      OBJECT   => 'VFileLine.o VPreproc.o VPreprocLex.o',
 	      MYEXTLIB => 'Preproc_cleaned.o',
 	      );

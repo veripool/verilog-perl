@@ -7,7 +7,7 @@
 
 module example (/*AUTOARG*/
    // Outputs
-   z, 
+   z,
    // Inputs
    a, b
    );
@@ -17,7 +17,7 @@ module example (/*AUTOARG*/
 
    /*Comment // test*/
    //
-   
+
    input a;
    input b;
 

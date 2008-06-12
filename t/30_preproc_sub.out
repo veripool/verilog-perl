@@ -124,7 +124,7 @@ verilog/inc1.v:11:
 verilog/inc1.v:13: 
 COMMENT: /*******COMMENT*****/
 verilog/inc1.v:14:  /*CMT*/ 
-verilog/inc1.v:15: first part    		second part
+verilog/inc1.v:15: first part  		second part
 verilog/inc1.v:16: 
 COMMENT: //===========================================================================
 verilog/inc1.v:17:  /*CMT*/ 
@@ -137,7 +137,7 @@ verilog/inc1.v:23:
 verilog/inc1.v:24:  
 verilog/inc1.v:25:  
 verilog/inc1.v:26: "Inside: `nosubst"
-verilog/inc1.v:27: "`nosubst"		  
+verilog/inc1.v:27: "`nosubst"
 verilog/inc1.v:28: 
 verilog/inc1.v:29:  
 verilog/inc1.v:30: x y LLZZ x y
@@ -157,7 +157,7 @@ verilog/inc1.v:43:
 verilog/inc1.v:44: $display("left side: \"right side\"")
 verilog/inc1.v:45: 
 verilog/inc1.v:46:  
-verilog/inc1.v:47: bar_suffix  
+verilog/inc1.v:47: bar_suffix  more
 verilog/inc1.v:48: 
 verilog/inc1.v:49:  
 verilog/inc1.v:49: 
@@ -257,7 +257,7 @@ verilog/inc1.v:125:
 verilog/inc1.v:126: 
 verilog/inc1.v:127: begin addr <= (({regs[6], regs[7]} + 1)); rd <= 1; end and begin addr <= (({regs[6], regs[7]})); wdata <= (rdata); wr <= 1; end
 verilog/inc1.v:128: begin addr <= ({regs[6], regs[7]} + 1); rd <= 1; end
-verilog/inc1.v:129: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end 
+verilog/inc1.v:129: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end  more
 verilog/inc1.v:130: 
 COMMENT: //======================================================================
 verilog/inc1.v:131:  /*CMT*/ 
@@ -283,7 +283,7 @@ verilog/inc1.v:136:
 verilog/inc1.v:137: 
 verilog/inc1.v:137: `line 137 "verilog/inc1.v" 0
 verilog/inc1.v:137: 
-verilog/inc1.v:138:    
+verilog/inc1.v:138:  
 verilog/inc1.v:139: 
 verilog/inc1.v:140:  
 verilog/inc1.v:141:   
