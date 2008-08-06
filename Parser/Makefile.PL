@@ -38,7 +38,6 @@ YACC = bison
 PPSRC = ../Preproc
 FLEXFIX = $(PPSRC)/flexfix
 XSUBPPFIX = $(PPSRC)/xsubppfix
-YFLAGS = -d -v
 
 CCFLAGS += -I$(PPSRC)
 #CFLAGS += -DFLEX_DEBUG
@@ -62,18 +61,17 @@ VParseLex.cpp: $(FLEXFIX) VParseLex_prefix.cpp
 
 VParseBison.h: VParseBison.cpp
 
-VParseBison.cpp:	VParseBison.y
+VParseBison.cpp:	VParseBison.y bisonpre
 	-rm -rf VParseBison.c VParseBison.cpp
 	@echo "If the next command fails, you probably need to install Bison 1.875 or newer"
-	${YACC} ${YFLAGS} --debug --verbose -d -k $< -pVParseBison -o VParseBison.c
-	-(grep conflicts VParseBison.output || mv VParseBison.c VParseBison.cpp )
-	-rm -rf VParseBison.c
+	$(PERL) bisonpre --yacc ${YACC} --debug --verbose --d -k $< -p VParseBison -o VParseBison.c
+	mv VParseBison.c VParseBison.cpp
 
 Parser_cleaned.c: Parser.c
 	$(PERL) $(XSUBPPFIX) < Parser.c > Parser_cleaned.c
 
 clean::
-	-rm -rf test *.d *.o *.output
+	-rm -rf test *.d *.o *.output *.pre.*
 	-rm -rf VParseLex*.cpp VParseBison.h VParseBison.cpp Parser_cleaned.c
 ';
     return $out;

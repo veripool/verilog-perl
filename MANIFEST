@@ -21,6 +21,7 @@ Parser/Makefile.PL
 Parser/Parser.pm
 Parser/Parser.xs
 Parser/SigParser.pm
+Parser/bisonpre
 Parser/typemap
 Parser/VParse.cpp
 Parser/VParse.h
