@@ -249,12 +249,16 @@ escid	\\[^ \t\f\r\n]+
   "byte"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
   "chandle"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
   "clocking"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCLOCKING; }
+  "cover"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCOVER; }
   "do"			{ FL; VALTEXT; CALLBACK(keywordCb); return yDO; }
+  "endclocking"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDCLOCKING; }
   "endinterface"	{ FL; VALTEXT; CALLBACK(keywordCb); return yENDINTERFACE; }
+  "endproperty"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDPROPERTY; }
   "enum"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENUM; }
   "export"		{ FL; VALTEXT; CALLBACK(keywordCb); return yEXPORT; }
   "extern"		{ FL; VALTEXT; CALLBACK(keywordCb); return yEXTERN; }
   "final"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFINAL; }
+  "iff"			{ FL; VALTEXT; CALLBACK(keywordCb); return yIFF; }
   "import"		{ FL; VALTEXT; CALLBACK(keywordCb); return yIMPORT; }
   "int"			{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
   "interface"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTERFACE; }
@@ -263,6 +267,7 @@ escid	\\[^ \t\f\r\n]+
   "logic"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
   "longint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
   "modport"		{ FL; VALTEXT; CALLBACK(keywordCb); return yMODPORT; }
+  "property"		{ FL; VALTEXT; CALLBACK(keywordCb); return yPROPERTY; }
   "ref"			{ FL; VALTEXT; CALLBACK(keywordCb); return yREF; }
   "shortint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
   "shortreal"		{ FL; VALTEXT; CALLBACK(keywordCb); return yREAL; }
@@ -282,24 +287,20 @@ escid	\\[^ \t\f\r\n]+
   "constraint"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "context"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "continue"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "cover"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "covergroup"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "coverpoint"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "cross"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "dist"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "endclass"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "endclocking"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "endgroup"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "endpackage"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "endprogram"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "endproperty"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "endsequence"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "expect"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "extends"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "first_match"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "foreach"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "forkjoin"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "iff"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "ignore_bins"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "illegal_bins"	{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "inside"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
@@ -312,7 +313,6 @@ escid	\\[^ \t\f\r\n]+
   "packed"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "priority"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "program"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "property"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "protected"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "pure"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "rand"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }

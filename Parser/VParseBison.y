@@ -169,10 +169,12 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yELSE		"else"
 %token<str>		yEND		"end"
 %token<str>		yENDCASE	"endcase"
+%token<str>		yENDCLOCKING	"endclocking"
 %token<str>		yENDFUNCTION	"endfunction"
 %token<str>		yENDGENERATE	"endgenerate"
 %token<str>		yENDINTERFACE	"endinterface"
 %token<str>		yENDMODULE	"endmodule"
+%token<str>		yENDPROPERTY	"endproperty"
 %token<str>		yENDSPECIFY	"endspecify"
 %token<str>		yENDTABLE	"endtable"
 %token<str>		yENDTASK	"endtask"
@@ -188,6 +190,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yGENERATE	"generate"
 %token<str>		yGENVAR		"genvar"
 %token<str>		yIF		"if"
+%token<str>		yIFF		"iff"
 %token<str>		yIMPORT		"import"
 %token<str>		yINITIAL	"initial"
 %token<str>		yINOUT		"inout"
@@ -206,6 +209,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yOUTPUT		"output"
 %token<str>		yPARAMETER	"parameter"
 %token<str>		yPOSEDGE	"posedge"
+%token<str>		yPROPERTY	"property"
 %token<str>		yREAL		"real"
 %token<str>		yREALTIME	"realtime"
 %token<str>		yREF		"ref"
@@ -647,6 +651,9 @@ modOrGenItem:	yALWAYS stmtBlock			{ }
 	|	varDecl 				{ }
 	|	tableDecl 				{ }
 	|	typedefDecl				{ }
+
+	|	concurrent_assertion_item		{ }  // IEEE puts in modItem, all tools put here
+	|	clocking_declaration			{ }
 
 	|	error ';'				{ }
 	;
@@ -1319,6 +1326,34 @@ endLabelE:	/* empty */				{ }
 
 labeledStmt:	assertStmt				{ }
 	;
+
+clocking_declaration:		// IEEE: clocking_declaration  (INCOMPLETE)
+		yDEFAULT yCLOCKING '@' '(' senList ')' ';' yENDCLOCKING  {}
+	;
+
+concurrent_assertion_item:	// IEEE: concurrent_assertion_item  (complete)
+		concurrent_assertion_statement		{ }
+	|	yaID ':' concurrent_assertion_statement	{ }
+	;
+
+concurrent_assertion_statement:	// IEEE: concurrent_assertion_statement  (INCOMPLETE)
+		cover_property_statement		{ }
+	;
+
+cover_property_statement:	// IEEE: cover_property_statement (complete)
+		yCOVER yPROPERTY '(' property_spec ')' stmtBlock	{ }
+	;
+
+property_spec:			// IEEE: property_spec
+		'@' '(' senitemEdge ')' property_spec_disable expr	{ }
+	|	property_spec_disable expr	 			{ }
+	;
+
+property_spec_disable:
+		/* empty */				{ }
+	|	yDISABLE yIFF '(' expr ')'		{ }
+	;
+
 
 assertStmt:	yASSERT '(' expr ')' stmtBlock %prec prLOWER_THAN_ELSE	{ }
 	|	yASSERT '(' expr ')'           yELSE stmtBlock		{ }
