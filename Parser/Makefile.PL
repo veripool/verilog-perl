@@ -32,7 +32,13 @@ sub MY::postamble {
     $out .= "OPTIMIZE += -Wno-unused\n" if $ENV{VERILATOR_AUTHOR_SITE};  # Makefile has another -Wall
     $out .= "OPTIMIZE += $ENV{VERILOGPERL_CCFLAGS}\n" if defined $ENV{VERILOGPERL_CCFLAGS};
     $out .= '
-CC = g++
+ifeq ($(OBJCACHE_HOSTS_DETERMINANT),)
+OBJCACHE :=
+else
+OBJCACHE := objcache --read --write
+endif
+
+CC = $(OBJCACHE) g++
 LEX = flex
 YACC = bison
 PPSRC = ../Preproc
