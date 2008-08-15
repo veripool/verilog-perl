@@ -122,6 +122,7 @@ if (! GetOptions (
 		  "timeformat-units=s"	=> \$Opt_Timeformat_Units,
 		  "vericov!"	=> \$Opt_Vericov,
 		  "verilator!"	=> \$Opt_Verilator,
+		  "version"	=> sub { print "Version $VERSION\n"; },
 		  "<>"		=> \&parameter,
 		  )) {
     die "%Error: Bad usage, try 'vpm --help'\n";
@@ -152,7 +153,7 @@ exit (0);
 ######################################################################
 
 sub usage {
-    print 'Version: $Id$ ';
+    print "Version $VERSION\n";
     print "\nThe following tokens are converted:\n";
     foreach my $tok (keys %Vpm_Conversions ) {
 	print "\tToken $tok\n";
@@ -1221,13 +1222,18 @@ By default, $error and $warn insert a $stop statement.  With --nostop, this
 is replaced by incrementing a variable, which may then be used to
 conditionally halt simulation.
 
-=item timeformat-units I<units>
+=item --o I<file>
+
+Use the given filename for output instead of the input name .vpm.  If the
+name ends in a / it is used as a output directory with the default name.
+
+=item --timeformat-units I<units>
 
 If specified, include Verilog $timeformat calls before all messages.  Use
 the provided argument as the units.  Units is in powers of 10, so -9
 indicates to use nanoseconds.
 
-=item timeformat-precision I<prec>
+=item --timeformat-precision I<prec>
 
 When using --timeformat-units, use this as the precision value, the number
 of digits after the decimal point.  Defaults to zero.
@@ -1240,10 +1246,9 @@ Special vericov enable/disables added.
 
 Special verilator translation enabled.
 
-=item --o I<file>
+=item --version
 
-Use the given filename for output instead of the input name .vpm.  If the
-name ends in a / it is used as a output directory with the default name.
+Displays program version and exits.
 
 =back
 

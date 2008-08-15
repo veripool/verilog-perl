@@ -26,7 +26,9 @@ use Pod::Usage;
 use Verilog::Netlist;
 use Verilog::Getopt;
 use strict;
-use vars qw ($Debug);
+use vars qw ($Debug $VERSION);
+
+$VERSION = '3.035';
 
 ######################################################################
 # main
@@ -60,6 +62,7 @@ if (! GetOptions (
 		  "language=s"		=> sub { shift; Verilog::Language::language_standard(shift); },
 		  "missing!"		=> \$Opt_Missing,
 		  "missing-modules!"	=> \$Opt_Missing_Modules,
+		  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
 		  "xml!"	=> \$Opt_Xml,
 		  "<>"		=> \&parameter,
 		  )) {
@@ -84,7 +87,7 @@ exit (0);
 ######################################################################
 
 sub usage {
-    print 'Version: $Id$ '."\n";
+    print "Version $VERSION\n";
     pod2usage(-verbose=>2, -exitval => 2);
     exit (1);
 }
@@ -337,6 +340,10 @@ Do not complain about references to missing modules.
 =item --missing-modules
 
 With --nomissing, show all modules that are not found.
+
+=item --version
+
+Displays program version and exits.
 
 =back
 

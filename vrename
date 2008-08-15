@@ -80,7 +80,7 @@ my $output_dir = "";
 if (! GetOptions (
 		  "help"	=> \&usage,
 		  "debug"	=> \&debug,
-		  "version"	=> \&version,
+		  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
 		  "crypt!"	=> \$Opt_Crypt,
 		  "cryptall!"	=> \$Opt_Crypt_All,
 		  "change!"	=> \$opt_change,
@@ -138,14 +138,7 @@ sub nop{}
 
 sub usage {
     print "Version: $VERSION\n";
-    print 'Id: $Id$ ', "\n";
     pod2usage(-verbose=>2, -exitval => 2);
-    exit (1);
-}
-
-sub version {
-    print "Version: $VERSION\n";
-    print '$Id$ ', "\n";
     exit (1);
 }
 
