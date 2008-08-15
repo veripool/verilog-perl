@@ -14,6 +14,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Support "cover property."
 
+****	Eliminated automatic error printing upon application termination.
+	[by Miguel Corazao, AMD]
+
 ****	Fix syntax error when "`include `defname" is ifdefed.  [John Dickol]
 
 ****	Fix error when macro call has commas in concatenate. [John Dickol]

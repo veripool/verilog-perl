@@ -70,7 +70,10 @@ sub exit_if_error {
     my $self = shift;
     my %opts = @_;
     my $allow = $opts{allow} || "";
-    exit(10) if ($Errors || ($Warnings && $allow !~ /warning/));
+    if ($Errors || ($Warnings && $allow !~ /warning/)) {
+	CORE::warn "Exiting due to errors\n";
+	exit(10);
+    }
     return ($Errors + $Warnings);
 }
 
@@ -79,9 +82,8 @@ sub unlink_if_error {
 }
 
 END {
-    $? = 10 if ($Errors || $Warnings);
-    if ($?) {
-	CORE::warn "Exiting due to errors\n";
+    my $has_err = $? || $Errors || $Warnings;
+    if ($has_err) {
 	foreach my $file (keys %_Error_Unlink_Files) { unlink $file; }
     }
 }
