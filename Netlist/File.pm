@@ -51,7 +51,11 @@ use vars qw (@ISA);
 
 sub new {
     my $class = shift;
-    my %params = (@_);	# filename=>
+    my %params = (preproc => "Verilog::Preproc",
+		  @_);	# filename=>
+
+    my $preproc_class = $params{preproc};
+    delete $params{preproc}; # Remove as preproc doesn't need passing down to Preprocessor
 
     # A new file; make new information
     $params{fileref} or die "%Error: No fileref parameter?";
@@ -77,7 +81,7 @@ sub new {
     }
     push @opt, keep_whitespace=>1;  # So we don't loose newlines
     push @opt, include_open_nonfatal=>1 if $params{netlist}{include_open_nonfatal};
-    my $preproc = Verilog::Preproc->new(@opt);
+    my $preproc = $preproc_class->new(@opt);
     $preproc->open($params{filename});
     $parser->parse_preproc_file ($preproc);
     return $parser;
@@ -332,6 +336,7 @@ sub read {
 	  filename=>$filepath,	# for ->read
 	  metacomment=>($params{metacomment} || $netlist->{metacomment}),
 	  keep_comments=>($params{keep_comments} || $netlist->{keep_comments}),
+	  preproc=>($params{preproc} || $netlist->{preproc}),
 	  );
     return $fileref;
 }

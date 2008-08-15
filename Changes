@@ -3,13 +3,16 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.02**
+* Verilog::Language 3.04**
 
 ***	Add Netlist::Net->value containing parameter values.  [Ron D Smith]
 
-****	Support +=, -=, etc, and ++, -- operators. [Sean de la Haye]
+***	Added Verilog::Netlist/Verilog::Parser preproc option.
+	[by Miguel Corazao, AMD]
 
-****	Support "cover property."
+***	Support +=, -=, etc, and ++, -- operators. [Sean de la Haye]
+
+***	Support "cover property."
 
 ****	Fix syntax error when "`include `defname" is ifdefed.  [John Dickol]
 
