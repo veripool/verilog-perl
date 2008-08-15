@@ -1,4 +1,3 @@
-#$Id$
 ######################################################################
 #
 # Copyright 2001-2008 by Wilson Snyder.  This program is free software;

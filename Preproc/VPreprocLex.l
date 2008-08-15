@@ -3,8 +3,7 @@
 %option noc++
 %option prefix="VPreprocLex"
 %{
-/* $Id$
- ******************************************************************************
+/******************************************************************************
  * DESCRIPTION: Verilog Preprocessor Lexer
  *
  * This file is part of Verilog-Perl.

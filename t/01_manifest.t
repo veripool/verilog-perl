@@ -1,5 +1,4 @@
 #!/usr/bin/perl -w
-# $Id$
 # DESCRIPTION: Perl ExtUtils: Type 'make test' to test this package
 #
 # Copyright 2007-2008 by Wilson Snyder.  This program is free software;

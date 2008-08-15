@@ -1,4 +1,3 @@
-// $Id:$
 // DESCRIPTION: Perl ExtUtils: Option file for testing Verilog::Getopt
 
 -Dread_opt_file=1

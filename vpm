@@ -1,6 +1,5 @@
 #!/usr/bin/perl -w
 # vpm - Preprocess Verilog signals
-# $Id$
 ######################################################################
 #
 # Copyright 2000-2008 by Wilson Snyder.  This program is free software;

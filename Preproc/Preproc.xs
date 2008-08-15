@@ -1,5 +1,4 @@
 #/* Verilog.xs -- Verilog Booter  -*- C++ -*-
-#* $Id$
 #*********************************************************************
 #*
 #* DESCRIPTION: Verilog::Preproc Perl XS interface

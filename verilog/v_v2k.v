@@ -1,4 +1,3 @@
-// $Id$
 // DESCRIPTION: Verilog-Perl: Example Verilog for testing package
 // This file ONLY is placed into the Public Domain, for any use,
 // without warranty, 2006-2008 by Wilson Snyder.

@@ -1,6 +1,4 @@
 # Verilog - Verilog Perl Interface
-# $Id$
-# Author: Wilson Snyder <wsnyder@wsnyder.org>
 ######################################################################
 #
 # Copyright 2000-2008 by Wilson Snyder.  This program is free software;

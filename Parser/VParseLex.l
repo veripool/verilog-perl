@@ -3,8 +3,7 @@
 %option noc++
 %option prefix="VParseLex"
 %{
-/* $Id$
- ******************************************************************************
+/******************************************************************************
  * DESCRIPTION: Verilog Parser Lexer
  *
  * This file is part of Verilog-Perl.

@@ -1,6 +1,5 @@
 #!/usr/bin/perl -w
 # vppp - Preprocess Verilog
-# $Id$
 ######################################################################
 #
 # Copyright 2000-2008 by Wilson Snyder <wsnyder@wsnyder.org>.  This
