@@ -23,7 +23,7 @@ use Verilog::Netlist::Pin;
 use Verilog::Netlist::Subclass;
 @ISA = qw(Verilog::Netlist::Module::Struct
 	Verilog::Netlist::Subclass);
-$VERSION = '3.035';
+$VERSION = '3.040';
 use strict;
 
 structs('new',

@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.04**
+* Verilog::Language 3.040 2008/08/20
 
 ***	Add Netlist::Net->value containing parameter values.  [Ron D Smith]
 
