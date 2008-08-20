@@ -23,7 +23,7 @@ use strict;
 use vars qw($Warnings $Errors %_Error_Unlink_Files);
 $Warnings = $Errors = 0;
 
-# Maybe in the future
+# Maybe in the future.  For now all users of this must do it themselves
 #struct ('Verilog::Netlist::Subclass'
 #	 =>[name     	=> '$', #'	# Name of the element
 #	    filename 	=> '$', #'	# Filename this came from
@@ -41,9 +41,17 @@ sub fileline {
 
 ######################################################################
 #### Error Handling
-# Class::Struct is great, but it can't have a @ISA... Sigh.
-# Thus you can't just call a $netlist_object->warn ("message...");
 
+sub errors {
+    my $self = shift;
+    return $Errors;
+}
+sub warnings {
+    my $self = shift;
+    return $Errors;
+}
+
+# Methods
 sub info {
     my $self = shift;
     $self = shift if ref $_[0];	# Optional reference to object
@@ -162,6 +170,10 @@ and $self->error() will produce consistent results.
 
 Print an error in a standard format.
 
+=item $self->errors()
+
+Return number of errors detected.
+
 =item $self->exit_if_error()
 
 Exits the program if any errors were detected.
@@ -192,6 +204,10 @@ hash.  This may be used to store application data on the specified node.
 =item $self->warn (I<Text...>)
 
 Print a warning in a standard format.
+
+=item $self->warnings()
+
+Return number of warnings detected.
 
 =back
 
