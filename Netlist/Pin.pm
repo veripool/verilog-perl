@@ -61,6 +61,9 @@ sub delete {
 ######################################################################
 #### Methods
 
+sub logger {
+    return $_[0]->netlist->logger;
+}
 sub module {
     return $_[0]->cell->module;
 }

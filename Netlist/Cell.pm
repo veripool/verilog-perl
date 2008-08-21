@@ -56,6 +56,10 @@ sub delete {
 ######################################################################
 #### Methods
 
+sub logger {
+    my $self = shift;
+    return $self->netlist->logger;
+}
 sub netlist {
     my $self = shift;
     return $self->module->netlist;

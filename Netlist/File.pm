@@ -310,6 +310,11 @@ package Verilog::Netlist::File;
 ######################################################################
 #### Functions
 
+sub logger {
+    my $self = shift;
+    return $self->netlist->logger;
+}
+
 sub read {
     my %params = (lookup_type=>'module',
 		  @_);	# netlist=>, filename=>, per-file options

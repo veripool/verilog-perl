@@ -13,6 +13,7 @@
 ######################################################################
 
 package Verilog::Netlist::Subclass;
+use Verilog::Netlist::Logger;
 use Class::Struct;
 require Exporter;
 $VERSION = '3.040';
@@ -20,14 +21,12 @@ $VERSION = '3.040';
 @EXPORT = qw(structs);
 use strict;
 
-use vars qw($Warnings $Errors %_Error_Unlink_Files);
-$Warnings = $Errors = 0;
-
 # Maybe in the future.  For now all users of this must do it themselves
 #struct ('Verilog::Netlist::Subclass'
 #	 =>[name     	=> '$', #'	# Name of the element
 #	    filename 	=> '$', #'	# Filename this came from
 #	    lineno	=> '$', #'	# Linenumber this came from
+#	    logger	=> '%',		# Logger object, or undef
 #	    userdata	=> '%',		# User information
 #	    ]);
 
@@ -42,56 +41,58 @@ sub fileline {
 ######################################################################
 #### Error Handling
 
+our $_Subclass_Logger_Warned;
+
+sub logger {
+    my $self = shift;
+    # This provides forward compatibility to derived classes written before
+    # Verilog-Perl 3.041.  At some point this function will be removed; all
+    # new derived classes should provide an override for this function.
+    if (!$_Subclass_Logger_Warned) {
+	warn "-Info: Object class missing logger method, update the package?: ".ref($self)."\n";
+	$_Subclass_Logger_Warned = Verilog::Netlist::Logger->new();
+    }
+    return $_Subclass_Logger_Warned;
+}
+
 sub errors {
     my $self = shift;
-    return $Errors;
+    return $self->logger->errors;
 }
 sub warnings {
     my $self = shift;
-    return $Errors;
+    return $self->logger->warnings;
 }
 
 # Methods
 sub info {
     my $self = shift;
-    $self = shift if ref $_[0];	# Optional reference to object
-    CORE::warn "-Info: ".($self->filename||"").":".($self->lineno||"").": ".join('',@_);
+    my $objref = $self; $objref = shift if ref $_[0];	# Optional reference to object
+    $self->logger->info($objref,@_);
 }
 
 sub warn {
     my $self = shift;
-    $self = shift if ref $_[0];	# Optional reference to object
-    CORE::warn "%Warning: ".($self->filename||"").":".($self->lineno||"").": ".join('',@_);
-    $Warnings++;
+    my $objref = $self; $objref = shift if ref $_[0];	# Optional reference to object
+    $self->logger->warn($objref,@_);
 }
 
 sub error {
     my $self = shift;
-    $self = shift if ref $_[0];	# Optional reference to object
-    CORE::warn "%Error: ".($self->filename||"").":".($self->lineno||"").": ".join('',@_);
-    $Errors++;
+    my $objref = $self; $objref = shift if ref $_[0];	# Optional reference to object
+    $self->logger->error($objref,@_);
 }
 
 sub exit_if_error {
     my $self = shift;
-    my %opts = @_;
-    my $allow = $opts{allow} || "";
-    if ($Errors || ($Warnings && $allow !~ /warning/)) {
-	CORE::warn "Exiting due to errors\n";
-	exit(10);
-    }
-    return ($Errors + $Warnings);
+    return $self->logger->exit_if_error(@_);
 }
 
 sub unlink_if_error {
-    $_Error_Unlink_Files{$_[0]} = 1;
-}
-
-END {
-    my $has_err = $? || $Errors || $Warnings;
-    if ($has_err) {
-	foreach my $file (keys %_Error_Unlink_Files) { unlink $file; }
-    }
+    my $self = shift;
+    # Not documented; Depreciated in Verilog-Perl 3.041.
+    # Applications should call the logger object's unlink_if_error directly.
+    return $self->logger->unlink_if_error(@_);
 }
 
 ######################################################################
@@ -190,10 +191,10 @@ Print a informational in a standard format.
 
 The line number the entity was created on.
 
-=item $self->unlink_if_error (I<filename>)
+=item $self->logger()
 
-Requests the given file be deleted if any errors are detected.  Used for
-temporary files.
+The class to report errors using, generally a Verilog::Netlist::Logger
+object.
 
 =item $self->userdata (I<key>)
 =item $self->userdata (I<key>, I<data>)

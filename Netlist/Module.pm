@@ -57,6 +57,10 @@ structs('new',
 	   lesswarn     => '$',	#'	# True if some warnings should be disabled
 	   ]);
 
+sub logger {
+    return $_[0]->netlist->logger;
+}
+
 sub modulename_from_filename {
     my $filename = shift;
     (my $module = $filename) =~ s/.*\///;

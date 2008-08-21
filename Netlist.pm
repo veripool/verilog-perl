@@ -29,6 +29,7 @@ $VERSION = '3.040';
 #### Error Handling
 
 # Netlist file & line numbers don't apply
+sub logger { return $_[0]->{logger}; }
 sub filename { return 'Verilog::Netlist'; }
 sub lineno { return ''; }
 
@@ -43,6 +44,7 @@ sub new {
 		implicit_wires_ok => 1,
  		preproc => 'Verilog::Preproc',
 		link_read => 1,
+		logger => Verilog::Netlist::Logger->new,
 		#include_open_nonfatal => 0,
 		#keep_comments => 0,
 		_libraries_done => {},
@@ -387,6 +389,13 @@ files.
 
 Indicates whether to allow undeclared wires to be used.
 
+=item logger => object
+
+Specify a message handler object to be used for error handling, this class
+should be a Verilog::Netlist::Logger object, or derived from one.  If
+unspecified, a Verilog::Netlist::Logger local to this netlist will be
+used.
+
 =item preproc => $package_name
 
 The name of the preprocessor class. Defaults to "Verilog::Preproc".
@@ -529,6 +538,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 L<Verilog-Perl>,
 L<Verilog::Netlist::Cell>,
 L<Verilog::Netlist::File>,
+L<Verilog::Netlist::Logger>,
 L<Verilog::Netlist::Module>,
 L<Verilog::Netlist::Net>,
 L<Verilog::Netlist::Pin>,
