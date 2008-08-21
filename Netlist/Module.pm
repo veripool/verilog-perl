@@ -54,6 +54,7 @@ structs('new',
 	   _pintemplates=> '@', #'	# Module SP_TEMPLATEs
 	   _ctor	=> '$', #'	# Module has SC_CTOR in it
 	   _code_symbols=> '$', #'	# Hash ref of symbols found in raw code
+	   _covergroups => '%', #'	# Hash of covergroups found in code
 	   lesswarn     => '$',	#'	# True if some warnings should be disabled
 	   ]);
 
