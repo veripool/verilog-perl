@@ -57,7 +57,6 @@ $VERSION = '3.040';
        '$uassert_req_ack' =>	\&assert_req_ack,
        '$uassert_info' =>	\&assert_info,
        '$ucheck_ilevel' =>	\&check_ilevel,
-       '$ucoverage' =>		\&coverage,
        '$uerror' =>		\&error,
        '$uinfo' =>		\&info,
        '$uwarn' =>		\&warn,
@@ -447,68 +446,6 @@ sub message {
 
     message_write($lineinfo,$show_id,$char,$otherargs,$taskFlag,@params);
 
-    message_trailer();
-}
-
-#----------------------------------------------------------------------
-
-sub coverage {
-    # Add simulation coverage for these signals
-    my @params = @_;
-
-    # Error check
-    ($#params >= 1)
-	or die "%Error: ".$Last_Parser->fileline.": Format of \$coverage boggled.\n";
-
-    message_header();
-    for my $par (1 .. $#params) {
-	my $sig = $params[$par];
-	$sig =~ s/\s+//g;
-	#print "COVERAGE $sig\n" if ($Debug);
-	my $realbit_high = -1;
-	my $realbit_low = -1;
-	my $realbit_width = 1;
-	if ($sig =~ /(.*)\[([0-9]+):([0-9]+)\]/) {
-	    $sig = $1;
-	    $realbit_high = $2;
-	    $realbit_low = $3;
-	    $realbit_width = $realbit_high - $realbit_low + 1;
-	}
-	elsif ($sig =~ /(.*)\[([0-9]+)\]/) {
-	    $sig = $1;
-	    $realbit_high = $2;
-	    $realbit_low = $2;
-	    $realbit_width = 1;
-	}
-	if ($sig =~ /\$u?expand\(([0-9]+),(.*)\)?$/) {
-	    $realbit_width = $1;
-	    $sig = $2;
-	    ($realbit_high != $realbit_low && $realbit_high > 0)
-		or die "%Error: ".$Last_Parser->fileline.": \$expand on zero-width signal $sig\n";
-	}
-	my $bit_low;
-	for ($bit_low = $realbit_low; $bit_low<=$realbit_high; $bit_low+=$realbit_width) {
-	    my $text_low = ($bit_low>=0) ? $bit_low : "";
-	    my $text_high = ($bit_low>=0) ? ($bit_low + $realbit_width - 1) : "";
-	    print "COVERAGESIG ${sig} [${realbit_high}:${realbit_low}::${realbit_width}] [${text_high}:${text_low}]\n" if ($Debug);
-	    my $cover_signal = "__${sig}__${text_high}_${text_low}";
-	    $cover_signal =~ s/\./_/g;
-	    my $check_signal = $sig . (($bit_low>=0)
-				       ? ("[${text_high}:${text_low}]")
-				       : "");
-	    my $inthash = {"module" => $Last_Module,
-			   "file" => $Last_Parser->filename,
-			   "line" => $Last_Parser->lineno,
-			   "bit_low" => $text_low,
-			   "bit_high" => $text_high,
-			   "cover_signal" => $cover_signal,
-			   "signal" => $check_signal};
-	    sendout ("vcoverage." . $cover_signal . "[" . $check_signal . "] = "
-		     . "vcoverage." . $cover_signal . "[" . $check_signal . "] + 1;\n");
-	    $Insure_Symbols{$Last_Module}{__message} = ['integer', 5];	# Make this symbol exist if doesn't
-	    #push @coverages, $inthash;
-	}
-    }
     message_trailer();
 }
 
@@ -1286,12 +1223,6 @@ between the request and acknowledgement.
 
 Return true if the __message level is greater or equal to the given
 level, and that global messages are turned on.
-
-=item $ucoverage (I<signal>, [I<signal>...] )
-
-Add code to perform coverage analysis on all possible values of the given
-signals, or with $uexpand around a signal, the value of each bit
-independently.
 
 =item $uinfo (I<level>, "message", [I<vars>...] )
 
