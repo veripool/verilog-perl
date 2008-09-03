@@ -19,7 +19,7 @@ use Verilog::Netlist;
 use Verilog::Netlist::Subclass;
 @ISA = qw(Verilog::Netlist::Port::Struct
 	Verilog::Netlist::Subclass);
-$VERSION = '3.040';
+$VERSION = '3.041';
 use strict;
 
 structs('new',

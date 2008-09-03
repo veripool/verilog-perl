@@ -23,7 +23,7 @@ use Verilog::Netlist::Subclass;
 use strict;
 use vars qw($Debug $Verbose $VERSION);
 
-$VERSION = '3.040';
+$VERSION = '3.041';
 
 ######################################################################
 #### Error Handling
