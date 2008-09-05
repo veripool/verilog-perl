@@ -15,10 +15,11 @@ BEGIN { require "t/test_utils.pl"; }
 #######################################################################
 package MyPreproc;
 use Verilog::Preproc;
-use vars qw (@ISA);
-@ISA = qw(Verilog::Preproc);
+use base qw(Verilog::Preproc);
+
 sub comment { print $::OUTTO "COMMENT: $_[1]\n";
 	      $_[0]->unreadback(' /*CMT*/ '); }
+
 package main;
 #######################################################################
 

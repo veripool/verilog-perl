@@ -18,11 +18,11 @@ Netlist/Pin.pm
 Netlist/Port.pm
 Netlist/Subclass.pm
 Parser/.gitignore
+Parser/bisonpre
 Parser/Makefile.PL
 Parser/Parser.pm
 Parser/Parser.xs
 Parser/SigParser.pm
-Parser/bisonpre
 Parser/typemap
 Parser/VParse.cpp
 Parser/VParse.h
@@ -48,6 +48,7 @@ t/00_pod.t
 t/01_manifest.t
 t/02_help.t
 t/03_spaces.t
+t/04_critic.t
 t/10_keywords.t
 t/12_splitbus.t
 t/14_numbers.t

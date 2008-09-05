@@ -12,6 +12,8 @@ indicates the contributor was also the author of the fix; Thanks!
 	Verilog::Netlist::Logger class.  This allows errors to be caught or
 	specially handled.  [Miguel Corazao, AMD]
 
+****	Fixed code to be Perl::Critic clean.
+
 * Verilog::Language 3.040 2008/08/20
 
 ***	Add Netlist::Net->value containing parameter values.  [Ron D Smith]

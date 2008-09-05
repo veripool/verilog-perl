@@ -16,8 +16,7 @@ use Carp;
 use Verilog::Getopt;
 
 require DynaLoader;
-@ISA = qw(DynaLoader);
-
+use base qw(DynaLoader);
 use strict;
 use vars qw($VERSION);
 

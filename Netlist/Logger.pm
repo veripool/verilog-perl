@@ -14,8 +14,10 @@
 
 package Verilog::Netlist::Logger;
 require Exporter;
-$VERSION = '3.035';
+use vars qw($VERSION);
 use strict;
+
+$VERSION = '3.035';
 
 # We don't use Verilog::Netlist::Subclass, as this is called from it!
 

@@ -415,10 +415,9 @@ sub verilog_change_sig {
     }
 
     # Read in the whole file in a swath
-    local $/ = undef;
-    open (VFILE, "<$filename") or die "%Error: Can't read $filename.";
-    my $filestrg = <VFILE>;
-    close VFILE;
+    my $fh = IO::File->new ("<$filename") or die "%Error: $! $filename";
+    my $filestrg = join('',$fh->getlines());
+    $fh->close();
 
     if ($Opt_Crypt) {
 	if ($filestrg =~ /ENCRYPT_ME/) {
@@ -464,9 +463,10 @@ sub verilog_change_sig {
 	if (!$Opt_Write) {
 	    print "$filename  ($hadrepl signals matched) (-n: Not written)\n";
 	} else {
-	    open (VFILE, ">$output_dir$filename") or die "%Error: $! $output_dir$filename.\n";
-	    print VFILE $filestrg;
-	    close VFILE;
+	    my $fh = IO::File->new(">$output_dir$filename")
+		or die "%Error: $! $output_dir$filename.\n";
+	    $fh->print($filestrg);
+	    $fh->close;
 	    if ($Encrypt{$filename}) {print "Encrypted ";} else {print "Wrote ";}
 	    print "$filename  ($hadrepl signals matched)\n";
 	}

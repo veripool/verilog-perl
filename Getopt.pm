@@ -300,7 +300,7 @@ sub write_parameters_file {
 # Utility functions
 
 sub remove_duplicates {
-    my $self = shift if ref $_[0];
+    my $self = ref $_[0] && shift;
     # return list in same order, with any duplicates removed
     my @rtn;
     my %hit;

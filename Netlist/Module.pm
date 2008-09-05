@@ -21,10 +21,12 @@ use Verilog::Netlist::Net;
 use Verilog::Netlist::Cell;
 use Verilog::Netlist::Pin;
 use Verilog::Netlist::Subclass;
+use vars qw($VERSION @ISA);
+use strict;
 @ISA = qw(Verilog::Netlist::Module::Struct
 	Verilog::Netlist::Subclass);
+
 $VERSION = '3.041';
-use strict;
 
 structs('new',
 	'Verilog::Netlist::Module::Struct'

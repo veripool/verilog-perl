@@ -19,7 +19,7 @@ use IO::File;
 use Verilog::Netlist::Module;
 use Verilog::Netlist::File;
 use Verilog::Netlist::Subclass;
-@ISA = qw(Verilog::Netlist::Subclass);
+use base qw(Verilog::Netlist::Subclass);
 use strict;
 use vars qw($Debug $Verbose $VERSION);
 

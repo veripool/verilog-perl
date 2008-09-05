@@ -384,9 +384,8 @@ sub number_value {
     }
     elsif ($number =~ /\'s?b([0-1]+)$/i) {
 	my $val = 0;
-	my $bit;
 	$number = $1;
-	foreach $bit (split(//, $number)) {
+	foreach my $bit (split(//, $number)) {
 	    $val = ($val<<1) | ($bit=='1'?1:0);
 	}
 	return ($val);

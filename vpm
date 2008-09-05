@@ -22,7 +22,9 @@ use FindBin qw($RealBin);
 use File::Copy;
 use strict "vars";
 
-use lib "$RealBin/..";
+use lib 'blib/arch';
+use lib 'blib/lib';
+use lib '.';
 use Verilog::Parser;
 use Verilog::Getopt;
 
@@ -218,8 +220,9 @@ sub assert_req_ack {
     ($req && $ack) or die "%Error: ".$Last_Parser->fileline.": Format of \$assert_req_ack boggled.\n";
     @params = map {
 	my $ipar = $_;
-	$_ = check_signame($_);
-	($_) or die "%Error: ".$Last_Parser->fileline.": Parameter $ipar isn't a signal\n";
+	$ipar = check_signame($ipar);
+	($ipar) or die "%Error: ".$Last_Parser->fileline.": Parameter $ipar isn't a signal\n";
+	$ipar;
     } @params;
 
     # Form new variables
@@ -378,8 +381,8 @@ sub message_write {
     my $par = $params[2];
     $par =~ s/^\s*\"//;
     sendout ("$par,\$time$idm$otherargs");
-    for $par (3 .. $#params) {
-	my $p = $params[$par];
+    for my $parn (3 .. $#params) {
+	my $p = $params[$parn];
 	sendout (", $p");
 	print "MESSAGE $char, Parameter $p\n" if ($Debug);
     }
@@ -625,10 +628,10 @@ sub bitwidth {
 sub vpm_db_read_file {
     # Read when the unprocessed files were last known to not need processing
     my $filename = shift;
-    open (PWDFILE,"< $filename")	|| return;  # no error if fails
-    while (<PWDFILE>) {
-	chomp $_;
-	my ($tt_cmd, $tt_file, $tt_mtime) = split(/\t/);
+    my $fh = IO::File->new("<$filename") or return;  # no error if fails
+    while (my $line = $fh->getline) {
+	chomp $line;
+	my ($tt_cmd, $tt_file, $tt_mtime) = split(/\t/,$line);
 	$tt_cmd .= "";	# Warning removal
 	if ($tt_cmd eq "switch") {
 	    if ($tt_file =~ /vericov/) {
@@ -642,19 +645,19 @@ sub vpm_db_read_file {
 	    $File_Mtime_Read_Used{$tt_file} = 0;
 	}
     }
-    close PWDFILE;
+    $fh->close;
 }
 
 sub vpm_db_write_file {
     # Save which unprocessed files did not need processing
     my $filename = shift;
-    open (PWDFILE,"> $filename")	|| die("%Error: Can't write $filename.");
-    print PWDFILE "switch\tvericov\n" if $Opt_Vericov;
-    print PWDFILE "switch\tchiponly\n" if $Opt_Chiponly;
+    my $fh = IO::File->new(">$filename") or die "%Error: $! $filename.\n";
+    $fh->print ("switch\tvericov\n") if $Opt_Vericov;
+    $fh->print ("switch\tchiponly\n") if $Opt_Chiponly;
     foreach my $file (sort (keys %File_Mtime)) {
-	print PWDFILE "unproc\t$file\t$File_Mtime{$file}\n";
+	$fh->print ("unproc\t$file\t$File_Mtime{$file}\n");
     }
-    close PWDFILE;
+    $fh->close;
 }
 
 
@@ -793,7 +796,7 @@ sub vpm_process_one {
 ######################################################################
 # Parser functions called by Verilog::Parser
 
-package Verilog::Vpm::Parser;
+package Verilog::Vpm::Parser; ## no critic
 require Exporter;
 use Verilog::Parser;
 use base qw(Verilog::Parser);

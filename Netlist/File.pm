@@ -18,10 +18,12 @@ use Carp;
 
 use Verilog::Netlist;
 use Verilog::Netlist::Subclass;
+use vars qw($VERSION @ISA);
+use strict;
 @ISA = qw(Verilog::Netlist::File::Struct
 	Verilog::Netlist::Subclass);
+
 $VERSION = '3.041';
-use strict;
 
 structs('new',
 	'Verilog::Netlist::File::Struct'
@@ -43,9 +45,8 @@ structs('new',
 package Verilog::Netlist::File::Parser;
 use Verilog::SigParser;
 use Verilog::Preproc;
+use base qw (Verilog::SigParser);
 use strict;
-use vars qw (@ISA);
-@ISA = qw (Verilog::SigParser);
 
 sub new {
     my $class = shift;

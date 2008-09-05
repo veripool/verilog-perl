@@ -17,7 +17,7 @@ use Verilog::Getopt;
 use Verilog::Language;
 
 require DynaLoader;
-@ISA = qw(DynaLoader);
+use base qw(DynaLoader);
 
 use strict;
 use vars qw($VERSION $Debug);

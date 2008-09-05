@@ -16,8 +16,7 @@ BEGIN { require "t/test_utils.pl"; }
 package MyParser;
 use Verilog::SigParser;
 use strict;
-use vars qw(@ISA);
-@ISA = qw(Verilog::SigParser);
+use base qw(Verilog::SigParser);
 
 sub _common {
     my $self = shift;

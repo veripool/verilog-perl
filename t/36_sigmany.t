@@ -21,8 +21,7 @@ our $Any_Error;
 package MyParser;
 use Verilog::SigParser;
 use strict;
-use vars qw(@ISA);
-@ISA = qw(Verilog::SigParser);
+use base qw(Verilog::SigParser);
 
 sub _common {
 }

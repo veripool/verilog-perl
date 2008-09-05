@@ -16,10 +16,12 @@ package Verilog::Netlist::Subclass;
 use Verilog::Netlist::Logger;
 use Class::Struct;
 require Exporter;
-$VERSION = '3.041';
-@ISA = qw(Exporter);
-@EXPORT = qw(structs);
+use base qw(Exporter);
+use vars qw($VERSION @EXPORT);
 use strict;
+
+$VERSION = '3.041';
+@EXPORT = qw(structs);
 
 # Maybe in the future.  For now all users of this must do it themselves
 #struct ('Verilog::Netlist::Subclass'
@@ -146,9 +148,9 @@ Verilog::Netlist::Subclass - Common routines for all classes
 
 =head1 SYNOPSIS
 
-  use Verilog::Netlist::Subclass;
   package Verilog::Netlist::Something;
-  @ISA = qw(Verilog::Netlist::Subclass);
+  use Verilog::Netlist::Subclass;
+  use base qw(Verilog::Netlist::Subclass);
 
   ...
 
