@@ -54,6 +54,13 @@ structs('new',
 	   sp_autocreated	=> '$', #'	# Created by /*AUTOSIGNAL*/
 	   ]);
 
+sub delete {
+    my $self = shift;
+    my $h = $self->module->_nets;
+    delete $h->{$self->name};
+    return undef;
+}
+
 ######################################################################
 
 sub logger {
@@ -109,6 +116,9 @@ sub lint {
 	flush STDERR;
     }
 }
+
+######################################################################
+## Outputters
 
 sub _decls {
     my $self = shift;

@@ -43,6 +43,15 @@ structs('new',
 	   sp_autocreated	=> '$', #'	# Created by /*AUTOINOUT*/
 	   ]);
 
+sub delete {
+    my $self = shift;
+    my $h = $self->module->_ports;
+    delete $h->{$self->name};
+    return undef;
+}
+
+######################################################################
+
 sub netlist { return $_[0]->module->netlist; }
 
 sub _link {

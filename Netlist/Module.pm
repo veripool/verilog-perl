@@ -60,6 +60,24 @@ structs('new',
 	   lesswarn     => '$',	#'	# True if some warnings should be disabled
 	   ]);
 
+sub delete {
+    my $self = shift;
+    foreach my $oref ($self->nets) {
+	$oref->delete;
+    }
+    foreach my $oref ($self->ports) {
+	$oref->delete;
+    }
+    foreach my $oref ($self->cells) {
+	$oref->delete;
+    }
+    my $h = $self->netlist->{_modules};
+    delete $h->{$self->name};
+    return undef;
+}
+
+######################################################################
+
 sub logger {
     return $_[0]->netlist->logger;
 }
