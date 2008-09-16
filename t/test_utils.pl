@@ -10,6 +10,7 @@ use vars qw($PERL);
 $PERL = "$^X -Iblib/arch -Iblib/lib -IPreproc/blib/arch -IPreproc/blib/lib";
 
 mkdir 'test_dir',0777;
+unlink "test_dir/verilog";   # Symlink made in vpm test will mess up others
 
 if (!$ENV{HARNESS_ACTIVE}) {
     use lib '.';

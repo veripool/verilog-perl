@@ -16,6 +16,7 @@ print "Checking vpm...\n";
 
 # Preprocess the files
 mkdir "test_dir/.vpm", 0777;
+symlink ("../verilog", "test_dir/verilog");  # So `line files are found; ok if fails
 run_system ("${PERL} vpm --minimum --nostop -o test_dir/.vpm --date -y verilog/");
 ok(1);
 ok(-r 'test_dir/.vpm/pli.v');
@@ -73,6 +74,7 @@ sub lines_in {
     my $filename = shift;
     my $fh = IO::File->new($filename) or die "%Error: $! $filename";
     my @lines = $fh->getlines();
+    @lines = grep (!/`line/, @lines);
     return $#lines;
 }
 
@@ -100,6 +102,8 @@ sub compare {
 	    my $f2 = IO::File->new ($fn2) or die "%Error: $! $fn2,";
 	    my @l1 = $f1->getlines();
 	    my @l2 = $f2->getlines();
+	    @l1 = grep (!/`line/, @l1);
+	    @l2 = grep (!/`line/, @l2);
 	    my $nl = $#l1;  $nl = $#l2 if ($#l2 > $nl);
 	    for (my $l=0; $l<=$nl; $l++) {
 		next if $l2[$l] =~ /vpm/;
