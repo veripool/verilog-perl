@@ -16,6 +16,7 @@ print "Checking vpm...\n";
 
 # Preprocess the files
 mkdir "test_dir/.vpm", 0777;
+system ("/bin/rm -rf test_dir/verilog");
 symlink ("../verilog", "test_dir/verilog");  # So `line files are found; ok if fails
 run_system ("${PERL} vpm --minimum --nostop -o test_dir/.vpm --date -y verilog/");
 ok(1);

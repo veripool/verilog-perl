@@ -22,6 +22,7 @@ module example;
       //
       \escaped[10] = 1'b1;
       $uassert (\escaped[10] , "Escaped not 1\n");
+      $uassert_info (\escaped[10] , "Escaped not 1\n");
       //
       i=0;
       $uassert (1==1, "Why doesn't 1==1??\n");

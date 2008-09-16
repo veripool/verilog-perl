@@ -53,15 +53,15 @@ $VERSION = '3.041';
 #     $wr would be bad (beginning of $write).  That would slow down the parsing.
 %Vpm_Conversions
     = (## U versions, to avoid conflicts with SystemVerilog
-       '$uassert' =>		\&assert,
-       '$uassert_amone' =>	sub {assert_hot(0,@_); },   # atmost one hot
-       '$uassert_onehot' =>	sub {assert_hot(1,@_); },
-       '$uassert_req_ack' =>	\&assert_req_ack,
-       '$uassert_info' =>	\&assert_info,
-       '$ucheck_ilevel' =>	\&check_ilevel,
-       '$uerror' =>		\&error,
-       '$uinfo' =>		\&info,
-       '$uwarn' =>		\&warn,
+       '$uassert' =>		\&ins_uassert,
+       '$uassert_amone' =>	sub {ins_uassert_hot(0,@_); },   # atmost one hot
+       '$uassert_onehot' =>	sub {ins_uassert_hot(1,@_); },
+       '$uassert_req_ack' =>	\&ins_uassert_req_ack,
+       '$uassert_info' =>	\&ins_uassert_info,
+       '$ucheck_ilevel' =>	\&ins_ucheck_ilevel,
+       '$uerror' =>		\&ins_uerror,
+       '$uinfo' =>		\&ins_uinfo,
+       '$uwarn' =>		\&ins_uwarn,
        );
 
 # Any tokens appearing here will be removed with the --chiponly option
@@ -187,23 +187,23 @@ sub parameter {
 # Functions that transform the tokens
 
 # Note -I is specially detected below
-sub info   {     message_line ("-I",  1, @_); }
-sub warn   {     message_line ("%%W", 1, @_); }
-sub error  {     message_line ("%%E", 1, @_); }
+sub ins_uinfo   {     message (get_lineinfo(), 1, "-I",  1, "", @_); }
+sub ins_uwarn   {     message (get_lineinfo(), 1, "%%W", 1, "", @_); }
+sub ins_uerror  {     message (get_lineinfo(), 1, "%%E", 1, "", @_); }
 
-sub assert {
+sub ins_uassert {
     shift;
     my $cond = shift;
     my @params = @_;
-    message_line ("%%E", $cond, 0,0, @params);
+    message (get_lineinfo(), 1, "%%E", $cond, "", 0,0, @params);
 }
 
-sub assert_info {
+sub ins_uassert_info {
     shift;
     my $cond = shift;
     my @params = @_;
     # Lower case -i indicates it's a assert vs. a info
-    message_line ("-i", $cond, 0,0, @params);
+    message (get_lineinfo(), 1, "-i", $cond, "", 0,0, @params);
 }
 
 sub check_signame {
@@ -213,14 +213,14 @@ sub check_signame {
     return undef;
 }
 
-sub assert_req_ack {
+sub ins_uassert_req_ack {
     shift;
     my @params = @_;
 
     # Check parameters
     my $req = check_signame(shift @params);
     my $ack = check_signame(shift @params);
-    ($req && $ack) or die "%Error: ".$Last_Parser->fileline.": Format of \$assert_req_ack boggled.\n";
+    ($req && $ack) or die "%Error: ".$Last_Parser->fileline.": Format of \$uassert_req_ack boggled.\n";
     @params = map {
 	my $ipar = $_;
 	$ipar = check_signame($ipar);
@@ -229,7 +229,7 @@ sub assert_req_ack {
     } @params;
 
     # Form new variables
-    $ReqAck_Num or die "%Error: ".$Last_Parser->fileline.": \$assert_req_ack can't find module statement\n";
+    $ReqAck_Num or die "%Error: ".$Last_Parser->fileline.": \$uassert_req_ack can't find module statement\n";
     my $busy = "_assertreqack${ReqAck_Num}_busy_r";
     $Insure_Symbols{$Last_Module}{$busy} = ['reg', 0];	# Make this symbol exist if doesn't
 
@@ -248,10 +248,10 @@ sub assert_req_ack {
     sendout("casez({($busy),($req),($ack)}) ");
     sendout(" 3'b000: ;");
     sendout(" 3'b010: $busy<=1'b1;");
-    sendout(" 3'b011: "); error(0,"\"Unexpected $req coincident with $ack\\n\"");
-    sendout(" 3'b001: "); error(0,"\"Unexpected $ack with no request pending\\n\"");
+    sendout(" 3'b011: "); ins_uerror(0,"\"Unexpected $req coincident with $ack\\n\"");
+    sendout(" 3'b001: "); ins_uerror(0,"\"Unexpected $ack with no request pending\\n\"");
     sendout(" 3'b100: ;");
-    sendout(" 3'b11?: "); error(0,"\"Unexpected $req with request already pending\\n\"");
+    sendout(" 3'b11?: "); ins_uerror(0,"\"Unexpected $req with request already pending\\n\"");
     sendout(" 3'b101: $busy<=1'b0;");
     sendout("endcase ");
 
@@ -260,7 +260,7 @@ sub assert_req_ack {
 	sendout(" if (($busy)) begin");
 	for (my $n=0; $n<=$#params; $n++) {
 	    sendout(" if ($dholds[$n] != ^($params[$n])) ");
-	    error(0,"\"Unexpected transition of $params[$n] during transaction\\n\"");
+	    ins_uerror(0,"\"Unexpected transition of $params[$n] during transaction\\n\"");
 	}
 	sendout(" end");
 	# Save state of signals
@@ -275,8 +275,8 @@ sub assert_req_ack {
     $ReqAck_Num++;
 }
 
-sub check_ilevel {
-    shift;
+sub ins_ucheck_ilevel {
+    shift; # $ucheck_ilevel
     my $level = shift;
     my $chk = "/*vpm*/if ((`__message_on) && ";
     $chk .= ' && (`__message_minimum >= (' . $level . '))' if $Opt_Minimum;
@@ -284,7 +284,7 @@ sub check_ilevel {
     sendout ($chk);
 }
 
-sub assert_hot {
+sub ins_uassert_hot {
     my $check_nohot = shift;
     shift;
     my @params = @_;
@@ -308,20 +308,15 @@ sub assert_hot {
 	};
     }
 
-    my $lineinfo = get_lineinfo();
-    message_header();
-
     # We use === so that x's will properly cause error messages
     my $vec = "({".join(",",@cl)."})";
     sendout("if (($vec & ($vec - ${len}'b1)) !== ${len}'b0 && `__message_on) ");
-    message_write($lineinfo,1,"%%E","",0,0,"MULTIPLE ACTIVE %b --> $text".'"',$vec);
+    ins_uerror(0,"\"MULTIPLE ACTIVE %b --> $text\\n\"",$vec);
 
     if ($check_nohot==1){
 	sendout("if ($vec === ${len}'b0 && `__message_on) ");
-	message_write($lineinfo,1,"%%E","",0,0,"NONE ACTIVE %b --> $text".'"',$vec);
+	ins_uerror(0,"\"NONE ACTIVE %b --> $text\\n\"",$vec);
     }
-
-    message_trailer();
 }
 
 sub get_lineinfo {
@@ -331,16 +326,6 @@ sub get_lineinfo {
     my $lineinfo = substr ($message_filename, 0, 17); # Don't make too long
     $lineinfo = $lineinfo . sprintf(":%04d:", $Last_Parser->lineno );
     $lineinfo = sprintf ("%-21s", $lineinfo);
-}
-
-sub message_line {
-    my $char = shift;
-    my $cond = shift;
-    my $taskFlag = shift;
-    my @params = @_;
-
-    my $lineinfo = get_lineinfo();
-    message ($lineinfo, 1, $char, $cond, "", $taskFlag, @params);
 }
 
 use vars qw($Msg_Header_Level);
@@ -402,7 +387,7 @@ sub message {
     my $cond = shift;
     my $otherargs = shift;
     my $taskFlag = shift;
-    my @params = @_;
+    my @params = @_;	# Task, Level (dropped), printf string, args
 
     if ($params[0] =~ /^\s*\"/) {
 	# No digit in first parameter
@@ -430,7 +415,7 @@ sub message {
     my $is_warn = (($char eq "%%E") || ($char eq "%%W") || ($char eq "-i"));
 
     if ($cond ne "1") {
-	# Conditional code, for $assert
+	# Conditional code, for $uassert
 	# Note this will only work in RTL code!  Chiponly build issues otherwise.
 	my $chk = "if (!($cond) && (`__message_on)) ";
 	sendout ($chk);
