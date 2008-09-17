@@ -140,6 +140,7 @@ sub verilog_text {
 	push @out, " [".$self->msb.":".$self->lsb."]" if defined $self->msb;
 	push @out, " ".$self->name;
 	push @out, " ".$self->array if $self->array;
+        push @out, " = ".$self->value if defined $self->value && $self->value ne '';
 	push @out, ";";
     }
     return (wantarray ? @out : join('',@out));

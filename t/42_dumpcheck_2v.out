@@ -16,7 +16,7 @@ endmodule
 
 module pinorder4 (
    );
-   wire [31:0] IPCD_const;
+   wire [31:0] IPCD_const = 32'h1;
    wire [7:0] a_i;
    wire b_i;
    wire d_o;

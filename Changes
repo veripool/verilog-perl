@@ -13,6 +13,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Vpm now enables `line comments unless using Verilog 1995.
 
+****	Fix verilog_text to output wire values. [by Jeff Short]
+
 * Verilog::Language 3.041 2008/09/03
 
 **	Verilog-Perl development versions are now available from a git server.
