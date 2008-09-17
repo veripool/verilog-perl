@@ -66,6 +66,7 @@ $VERSION = '3.041';
        #'$uassert_clk' =>	sub {shift; my $clk=shift; my $cond=shift; umessage_clk("%%E", $cond,$clk,@_); }, # May be confusing, try without
        '$uerror_clk' =>		sub {shift; umessage_clk("%%E", 0, @_); },
        '$uwarn_clk' =>		sub {shift; umessage_clk("%%W", 0, @_); },
+       '$ucover_clk' =>		sub {shift; ucover_clk(@_); },
        );
 
 # Any tokens appearing here will be removed with the --chiponly option
@@ -343,7 +344,7 @@ sub umessage_clk {
 	sendout("/*vpm*/$sig=!($cond);/*vpm*/");
     }
 
-    _insert_always_begin("/*vpm*/ $sig=1'b0; /*vpm*/");
+    _insert_always_begin('assert', "/*vpm*/ $sig=1'b0; /*vpm*/");
 
     my $bot = (" always @ (posedge $clk) if ($sig) "
 	       .message (get_lineinfo(), 1, $char, 1, "", @_)
@@ -351,7 +352,33 @@ sub umessage_clk {
     push @Endmodule_Inserts, $bot;
 }
 
+sub ucover_clk {
+    my $clk = shift;
+    my $label = shift;
+    $#_==-1
+	or die "%Error: ".$Last_Parser->fileline.": Extra arguments to \$ucover_clk: $_[0]\n";
+
+    ($label =~ /^\s*[a-zA-Z][a-zA-Z0-9_]+\s*$/)
+	or die "%Error: ".$Last_Parser->fileline.": Non-label \$ucover_clk second argument: $label\n";
+
+    $ReqAck_Num or die "%Error: ".$Last_Parser->fileline.": \$ucover_clk can't find module statement\n";
+    my $sig = "_ucoverclk${ReqAck_Num}";
+    $Insure_Symbols{$Last_Module}{$sig} = ['reg', 0];	# Make this symbol exist if doesn't
+    $ReqAck_Num++;
+
+    sendout("/*vpm*/$sig=1'b1;/*vpm*/");
+
+    _insert_always_begin('cover', "/*vpm*/ $sig=1'b0; /*vpm*/");
+
+    # Alas, `line is required to see correct cover point
+    my $bot = ("\n`line ".$Last_Parser->lineno." \"".$Last_Parser->filename."\" 0\n"
+	       ." $label: cover property (@(posedge $clk) ($sig));\n"
+	       ."`line /*vpm_endmod_line*/ \"".$Last_Parser->filename."\" 0\n");
+    push @Endmodule_Inserts, $bot;
+}
+
 sub _insert_always_begin {
+    my $for_assert = shift;
     my $text = shift;
     my $beginl;
     for (my $l = $#Sendout; $l>=0; $l--) {
@@ -367,7 +394,9 @@ sub _insert_always_begin {
 	    $beginl = undef;
 	}
 	if ($tok =~ /\bposedge\b/) {
-	    die "%Error: ".$Last_Parser->fileline.": \$uerror_clk is under a posedge clk, use \$uerror instead\n";
+	    if ($for_assert ne 'cover') {
+		die "%Error: ".$Last_Parser->fileline.": \$uerror_clk is under a posedge clk, use \$uerror instead\n";
+	    }
 	}
 	if ($tok =~ /\balways\b/) {
 	    last if !defined $beginl;  # And die below
@@ -634,7 +663,6 @@ sub vpm_process {
 	}
     }
 
-    print "EMI\n";
     $#Endmodule_Inserts < 0
 	or die "vpm %Error: $filename: Couldn't find endmodule\n";
 
@@ -939,7 +967,10 @@ sub keyword {
     }
     elsif ($token eq "endmodule") {
 	if ($#Endmodule_Inserts >= 0) {
-	    ::sendout ("/*vpm*/ ".join('',@Endmodule_Inserts)." /*vpm*/");
+	    my $ins = join('',@Endmodule_Inserts);
+	    my $lineno = $parser->lineno;
+	    $ins =~ s!/\*vpm_endmod_line\*/!$lineno!g;
+	    ::sendout ("/*vpm*/ ".$ins." /*vpm*/");
 	    @Endmodule_Inserts = ();
 	}
 	push @Sendout, $since . $token;
@@ -1292,6 +1323,12 @@ between the request and acknowledgement.
 
 Return true if the __message level is greater or equal to the given
 level, and that global messages are turned on.
+
+=item $ucover_clk (I<clock>, I<label>)
+
+Similar to $uerror_clk, add a SystemVerilog assertion at the next specified
+clock's edge, with the label specified. This allowes cover properties to be
+specified "inline" with normal RTL code.
 
 =item $uinfo (I<level>, "message", [I<vars>...] )
 

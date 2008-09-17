@@ -50,6 +50,8 @@ if ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
 elsif ($ENV{NC_ROOT} && -d "$ENV{NC_ROOT}/tools") {
     run_system ("ncverilog"
 		." -q"
+		# vpm optionally uses SystemVerilog coverage for $ucover_clk
+		." +sv"
 		# vpm uses `pli to point to the hierarchy of the pli module
 		." +define+pli=pli"
 		# vpm uses `__message_on to point to the message on variable
