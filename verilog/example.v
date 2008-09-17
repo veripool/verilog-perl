@@ -103,4 +103,9 @@ module example;
       if (i==22) $uerror (0, "Guess I'll error out!\n");
    end
 
+   // Moved clock asserts
+   always @* begin
+      if (i==19) $uwarn_clk (clk,"Called at next edge (1 of 2)\n");
+   end
+
 endmodule

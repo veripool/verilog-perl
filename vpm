@@ -32,6 +32,7 @@ use vars qw ($VERSION $Debug $Opt %Vpm_Conversions
 	     $Vpm_Conversions_Regexp
 	     %Vpm_Chiponly_Rename
 	     $Opt_Vericov $Opt_Chiponly
+	     @Endmodule_Inserts
 	     $Last_Parser
 	     $Last_Module
 	     $Last_Task
@@ -54,14 +55,17 @@ $VERSION = '3.041';
 %Vpm_Conversions
     = (## U versions, to avoid conflicts with SystemVerilog
        '$uassert' =>		\&ins_uassert,
-       '$uassert_amone' =>	sub {ins_uassert_hot(0,@_); },   # atmost one hot
-       '$uassert_onehot' =>	sub {ins_uassert_hot(1,@_); },
+       '$uassert_amone' =>	sub {shift; uassert_hot(0,@_); },   # atmost one hot
+       '$uassert_onehot' =>	sub {shift; uassert_hot(1,@_); },
        '$uassert_req_ack' =>	\&ins_uassert_req_ack,
        '$uassert_info' =>	\&ins_uassert_info,
        '$ucheck_ilevel' =>	\&ins_ucheck_ilevel,
        '$uerror' =>		\&ins_uerror,
        '$uinfo' =>		\&ins_uinfo,
        '$uwarn' =>		\&ins_uwarn,
+       #'$uassert_clk' =>	sub {shift; my $clk=shift; my $cond=shift; umessage_clk("%%E", $cond,$clk,@_); }, # May be confusing, try without
+       '$uerror_clk' =>		sub {shift; umessage_clk("%%E", 0, @_); },
+       '$uwarn_clk' =>		sub {shift; umessage_clk("%%W", 0, @_); },
        );
 
 # Any tokens appearing here will be removed with the --chiponly option
@@ -187,15 +191,15 @@ sub parameter {
 # Functions that transform the tokens
 
 # Note -I is specially detected below
-sub ins_uinfo   {     message (get_lineinfo(), 1, "-I",  1, "", @_); }
-sub ins_uwarn   {     message (get_lineinfo(), 1, "%%W", 1, "", @_); }
-sub ins_uerror  {     message (get_lineinfo(), 1, "%%E", 1, "", @_); }
+sub ins_uinfo   { shift; sendout( message (get_lineinfo(), 1, "-I",  1, "", @_)); }
+sub ins_uwarn   { shift; sendout( message (get_lineinfo(), 1, "%%W", 1, "", @_)); }
+sub ins_uerror  { shift; sendout( message (get_lineinfo(), 1, "%%E", 1, "", @_)); }
 
 sub ins_uassert {
     shift;
     my $cond = shift;
     my @params = @_;
-    message (get_lineinfo(), 1, "%%E", $cond, "", 0,0, @params);
+    sendout( message (get_lineinfo(), 1, "%%E", $cond, "", 0, @params));
 }
 
 sub ins_uassert_info {
@@ -203,7 +207,7 @@ sub ins_uassert_info {
     my $cond = shift;
     my @params = @_;
     # Lower case -i indicates it's a assert vs. a info
-    message (get_lineinfo(), 1, "-i", $cond, "", 0,0, @params);
+    sendout( message (get_lineinfo(), 1, "-i", $cond, "", 0, @params));
 }
 
 sub check_signame {
@@ -243,7 +247,7 @@ sub ins_uassert_req_ack {
     }
 
     # Output it
-    message_header();
+    sendout(message_header());
     sendout("if (`__message_on) begin ");  # Need to wait till after reset, so FSM doesn't start
     sendout("casez({($busy),($req),($ack)}) ");
     sendout(" 3'b000: ;");
@@ -271,7 +275,7 @@ sub ins_uassert_req_ack {
     }
     sendout(" end ");
 
-    message_trailer();
+    sendout(message_trailer());
     $ReqAck_Num++;
 }
 
@@ -284,9 +288,8 @@ sub ins_ucheck_ilevel {
     sendout ($chk);
 }
 
-sub ins_uassert_hot {
+sub uassert_hot {
     my $check_nohot = shift;
-    shift;
     my @params = @_;
 
     my $text = "";
@@ -319,6 +322,62 @@ sub ins_uassert_hot {
     }
 }
 
+sub umessage_clk {
+    my $char = shift;
+    my $cond = shift;
+    my $clk = shift;
+    my @params = @_;
+
+    $params[0] = convert_concat_string($params[0]);
+    ($params[0] =~ /^\s*\"/)
+	or die "%Error: ".$Last_Parser->fileline.": Non-string \$message second argument: $params[0]\n";
+
+    $ReqAck_Num or die "%Error: ".$Last_Parser->fileline.": \$uassert_req_ack can't find module statement\n";
+    my $sig = "_umessageclk${ReqAck_Num}";
+    $Insure_Symbols{$Last_Module}{$sig} = ['reg', 0];	# Make this symbol exist if doesn't
+    $ReqAck_Num++;
+
+    if ($cond eq '0') {
+	sendout("/*vpm*/$sig=1'b1;/*vpm*/");
+    } else {
+	sendout("/*vpm*/$sig=!($cond);/*vpm*/");
+    }
+
+    _insert_always_begin("/*vpm*/ $sig=1'b0; /*vpm*/");
+
+    my $bot = (" always @ (posedge $clk) if ($sig) "
+	       .message (get_lineinfo(), 1, $char, 1, "", @_)
+	       ." ");
+    push @Endmodule_Inserts, $bot;
+}
+
+sub _insert_always_begin {
+    my $text = shift;
+    my $beginl;
+    for (my $l = $#Sendout; $l>=0; $l--) {
+	my $tok = $Sendout[$l];
+	#print "HUNT $l: ".($beginl||"").": $tok\n";
+	# Fortunately all comments must be a single array entry
+	$tok =~ s!//.*?\n!!go;
+	$tok =~ s!/\*.*?\*/$!!go;
+	if ($tok =~ /\bbegin\b/) {
+	    $beginl = $l;
+	}
+	if ($tok =~ /\b(if|initial|final)\b/) {
+	    $beginl = undef;
+	}
+	if ($tok =~ /\bposedge\b/) {
+	    die "%Error: ".$Last_Parser->fileline.": \$uerror_clk is under a posedge clk, use \$uerror instead\n";
+	}
+	if ($tok =~ /\balways\b/) {
+	    last if !defined $beginl;  # And die below
+	    $Sendout[$beginl] =~ s/(\bbegin\b)/$1$text/;
+	    return;
+	}
+    }
+    die "%Error: ".$Last_Parser->fileline.": \$uerror_clk is not somewhere under an 'always begin' block\n";
+}
+
 sub get_lineinfo {
     # Align the lineinfo so that right hand sides are aligned
     my $message_filename = $Last_Parser->filename;
@@ -330,54 +389,22 @@ sub get_lineinfo {
 
 use vars qw($Msg_Header_Level);
 sub message_header {
+    my $out = "";
     if (!$Msg_Header_Level) {
-	sendout ("\n/*summit modcovoff -bpen*/\n") if $Vericov_Enabled;
-	sendout ("/*vpm*/");
+	$out .= "\n/*summit modcovoff -bpen*/\n" if $Vericov_Enabled;
+	$out .= "/*vpm*/";
     }
-    sendout ("begin ");
-    sendout ("`coverage_block_off ") if ($Opt_Verilator && !$Msg_Header_Level);
+    $out .= "begin ";
+    $out .= "`coverage_block_off " if ($Opt_Verilator && !$Msg_Header_Level);
     $Msg_Header_Level++;
+    return $out;
 }
+
 sub message_trailer {
-    sendout ('end ');
-    sendout ('/*vpm*/') if ((--$Msg_Header_Level)==0);
-    sendout ("\n/*summit modcovon -bpen*/\n") if $Vericov_Enabled;
-}
-
-sub message_write {
-#    print "ARGS=".join("/",@_)."\n";
-    my $lineinfo = shift;
-    my $show_id = shift;
-    my $char = shift;
-    my $otherargs = shift;
-    my @params = @_;	# Task (dropped), Level (dropped), printf string, args
-
-    my $task;
-    if (($char eq "-I") || ($char eq "-i")) {}
-    elsif ($char eq "%%E") {
-	$task = ($Opt_Stop ? '$stop;' : "`pli.errors = `pli.errors+1;");
-    } elsif ($char eq "%%W") {
-	$task = ($Opt_Stop ? '$stop;' : "`pli.warnings = `pli.warnings+1;");
-    } else { die "%Error: Unknown message character class '$char'\n"; }
-
-    my $ids = "";
-    my $idm = "";
-    sendout ("begin");
-    sendout (" \$timeformat($Opt_Timeformat_Units, $Opt_Timeformat_Precision,\"\",20);")
-	if defined $Opt_Timeformat_Units;
-    sendout (" \$write (\"[%0t] ${char}:$ids${lineinfo} ");
-    my $par = $params[2];
-    $par =~ s/^\s*\"//;
-    sendout ("$par,\$time$idm$otherargs");
-    for my $parn (3 .. $#params) {
-	my $p = $params[$parn];
-	sendout (", $p");
-	print "MESSAGE $char, Parameter $p\n" if ($Debug);
-    }
-    sendout (');');
-    sendout ($task)    if ($task && !$Opt_Chiponly);
-    sendout ('$stop;') if ($task && $Opt_Chiponly);
-    sendout (' end ');
+    my $out = 'end ';
+    $out .= '/*vpm*/' if ((--$Msg_Header_Level)==0);
+    $out .= "\n/*summit modcovon -bpen*/\n" if $Vericov_Enabled;
+    return $out;
 }
 
 sub message {
@@ -386,8 +413,7 @@ sub message {
     my $char = shift;
     my $cond = shift;
     my $otherargs = shift;
-    my $taskFlag = shift;
-    my @params = @_;	# Task, Level (dropped), printf string, args
+    my @params = @_;	# Level, printf string, args
 
     if ($params[0] =~ /^\s*\"/) {
 	# No digit in first parameter
@@ -409,7 +435,7 @@ sub message {
     ($params[1] =~ /^\s*\"/)
 	or die "%Error: ".$Last_Parser->fileline.": Non-string \$message second argument: $params[1]\n";
 
-    message_header();
+    my $out = message_header();
 
     # These long lines without breaks are intentional; I want to preserve line numbers
     my $is_warn = (($char eq "%%E") || ($char eq "%%W") || ($char eq "-i"));
@@ -417,13 +443,11 @@ sub message {
     if ($cond ne "1") {
 	# Conditional code, for $uassert
 	# Note this will only work in RTL code!  Chiponly build issues otherwise.
-	my $chk = "if (!($cond) && (`__message_on)) ";
-	sendout ($chk);
+	$out .= "if (!($cond) && (`__message_on)) ";
     } elsif ($params[0] =~ /^\s*0\s*$/) {
 	# Always enabled
 	if ($is_warn) {
-	    my $chk = "if (`__message_on) ";
-	    sendout ($chk);
+	    $out .= "if (`__message_on) ";
 	}
     } else {
 	# Complex test
@@ -432,12 +456,41 @@ sub message {
 	$chk .= ' && (`__message_minimum >= (' . $params[0] . '))' if $Opt_Minimum;
 	$chk .= " && (`__message_on) " if $is_warn;
 	$chk .= ') ';
-	sendout ($chk);
+	$out .= $chk;
     }
 
-    message_write($lineinfo,$show_id,$char,$otherargs,$taskFlag,@params);
+    my $task;
+    if (($char eq "-I") || ($char eq "-i")) {}
+    elsif ($char eq "%%E") {
+	$task = ($Opt_Stop ? '$stop;' : "`pli.errors = `pli.errors+1;");
+    } elsif ($char eq "%%W") {
+	$task = ($Opt_Stop ? '$stop;' : "`pli.warnings = `pli.warnings+1;");
+    } else { die "%Error: Unknown message character class '$char'\n"; }
 
-    message_trailer();
+    {	# if's body
+	$out .= "begin";
+	$out .= " \$timeformat($Opt_Timeformat_Units, $Opt_Timeformat_Precision,\"\",20);"
+	    if defined $Opt_Timeformat_Units;
+	$out .= " \$write (\"[%0t] ${char}:${lineinfo} ";
+
+	my $par = $params[1];
+	$par =~ s/^\s*\"//;
+
+	$out .= "$par,\$time$otherargs";
+	for my $parn (2 .. $#params) {
+	    my $p = $params[$parn];
+	    $out .= ", $p";
+	    print "MESSAGE $char, Parameter $p\n" if ($Debug);
+	}
+	$out .= ');';
+	$out .= $task    if ($task && !$Opt_Chiponly);
+	$out .= '$stop;' if ($task && $Opt_Chiponly);
+	$out .= ' end ';
+    }
+
+    $out .= message_trailer();
+
+    return $out;
 }
 
 ######################################################################
@@ -575,11 +628,15 @@ sub vpm_process {
 	}
 	if ($insert) {
 	    my $sendout = join('',@Sendout);
-	    $sendout =~ s%/\*vpm symbols $mod\*/%/*vpm*/$insert/*vpm*/%g
+	    $sendout =~ s%/\*vpm beginmodule $mod\*/%/*vpm*/$insert/*vpm*/%g
 		or die "vpm %Error: $filename: Couldn't find symbol insertion point in $mod\n";
 	    @Sendout = ($sendout);
 	}
     }
+
+    print "EMI\n";
+    $#Endmodule_Inserts < 0
+	or die "vpm %Error: $filename: Couldn't find endmodule\n";
 
     # Put out the processed file
     print "Got_Change? $Got_Change  $outname\n"	if ($Debug);
@@ -813,6 +870,7 @@ BEGIN {
 	 %Vpm_Conversions
 	 %Vpm_Chiponly_Rename
 	 %Insure_Symbols
+	 @Endmodule_Inserts
 	 );
     foreach (@GLOBALS) {
 	my ($type,$sym) = /^(.)(.*)$/;
@@ -824,8 +882,7 @@ BEGIN {
 
 use strict;
 use vars (@GLOBALS,
-	  qw ( @EXPORT $VERSION
-	       $Last_Keyword
+	  qw ( $Last_Keyword
 	       @Last_Symbols
 	       @Last_Number_Ops
 	       $Need_Vpm_Symbols
@@ -844,6 +901,7 @@ sub new {
     # State of the parser
     # These could be put under the class, but this is faster and we only parse
     # one file at a time
+    @Endmodule_Inserts = ();
     $Last_Keyword = "";
     @Last_Symbols = ();
     @Last_Number_Ops = ();
@@ -872,12 +930,19 @@ sub keyword {
 
     if ($Opt_Vericov && (($token eq "case") || ($token eq "casex") || ($token eq "casez"))) {
 	push @Sendout, $since;
-	sendout ("\n/*summit implicit off*/\n") if $Vericov_Enabled;
+	::sendout ("\n/*summit implicit off*/\n") if $Vericov_Enabled;
 	push @Sendout, $token;
     }
     elsif ($Opt_Vericov && ($token eq "endcase")) {
 	push @Sendout, $since . $token;
-	sendout ("\n/*summit implicit on*/\n") if $Vericov_Enabled;
+	::sendout ("\n/*summit implicit on*/\n") if $Vericov_Enabled;
+    }
+    elsif ($token eq "endmodule") {
+	if ($#Endmodule_Inserts >= 0) {
+	    ::sendout ("/*vpm*/ ".join('',@Endmodule_Inserts)." /*vpm*/");
+	    @Endmodule_Inserts = ();
+	}
+	push @Sendout, $since . $token;
     }
     else {
 	push @Sendout, $since . $token;
@@ -1002,7 +1067,7 @@ sub operator {
     elsif ($Need_Vpm_Symbols && ($token eq ';')) {
 	$Need_Vpm_Symbols = 0;
 	# Squeeze it after module (..);
-	push @Sendout, $since . $token . '/*vpm symbols ' . $Last_Module . '*/';
+	push @Sendout, $since . $token . '/*vpm beginmodule ' . $Last_Module . '*/';
     }
     else {
 	push @Sendout, $since . $token;
@@ -1237,9 +1302,24 @@ limit exceeded.
 
 Report a error message in standard form.  End test if error limit exceeded.
 
+=item $uerror_clk (I<clock>, "message", [I<vars>...] )
+
+Report a error message in standard form at the next clock edge.  If you
+place a $uerror etc in a combo logic block (always @*), event based
+simulators may misfire the assertion due to glitches.  $uerror_clk fixes
+this by instead creating a temporary signal and then moving the assert
+itself to a new clocked block at the specified edge.  Note any variables
+printed will be the values at the time of the next clock edge, which may
+differ from the value where the $uerror_clk is assigned.
+
 =item $uwarn ("message", [I<vars>...] )
 
 Report a warning message in standard form.
+
+=item $uwarn_clk (I<clock> "message", [I<vars>...] )
+
+Report a warning message in standard form at the next clock edge.  See
+$uerror_clk.
 
 =back
 
