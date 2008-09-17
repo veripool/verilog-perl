@@ -106,7 +106,7 @@ module example;
    // Moved clock asserts
    always @* begin
       if (i==19) $uwarn_clk  (clk,"Called at next edge (1 of 2)\n");
-      if (i==18) $ucover_clk (clk,example_cover_label);
+      if (i==18) $ucover_clk (clk,"example_cover_label");
    end
 
 endmodule

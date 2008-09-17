@@ -358,8 +358,10 @@ sub ucover_clk {
     $#_==-1
 	or die "%Error: ".$Last_Parser->fileline.": Extra arguments to \$ucover_clk: $_[0]\n";
 
-    ($label =~ /^\s*[a-zA-Z][a-zA-Z0-9_]+\s*$/)
-	or die "%Error: ".$Last_Parser->fileline.": Non-label \$ucover_clk second argument: $label\n";
+    # We require quotes around the label so synthesis tools won't gripe if not wrapping in vpm
+    # (Otherwise it would look like a system call with a variable of the name of the label.)
+    ($label =~ s/^\s*\"([a-zA-Z][a-zA-Z0-9_]+)\"\s*$/$1/)
+	or die "%Error: ".$Last_Parser->fileline.": Non-string label \$ucover_clk second argument: $label\n";
 
     $ReqAck_Num or die "%Error: ".$Last_Parser->fileline.": \$ucover_clk can't find module statement\n";
     my $sig = "_ucoverclk${ReqAck_Num}";
