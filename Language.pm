@@ -391,7 +391,7 @@ sub number_value {
 	return ($val);
     }
     elsif ($number =~ /\'s?d?([0-9]+)$/i
-	   || $number =~ /^([0-9]+)$/i) {
+	   || $number =~ /^(-?[0-9]+)$/i) {
 	return ($1);
     }
     return undef;

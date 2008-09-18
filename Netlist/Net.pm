@@ -73,7 +73,7 @@ sub netlist {
 sub _used_in_inc { $_[0]->_used_in(1+($_[0]->_used_in()||0)); }
 sub _used_out_inc { $_[0]->_used_out(1+($_[0]->_used_out()||0)); }
 sub _used_inout_inc { $_[0]->_used_inout(1+($_[0]->_used_inout()||0)); }
-sub stored_lsb { $_[0]->SUPER::stored_lsb || $_[0]->lsb; }
+sub stored_lsb { defined $_[0]->SUPER::stored_lsb ? $_[0]->SUPER::stored_lsb : $_[0]->lsb; }
 
 sub width {
     my $self = shift;
