@@ -26,7 +26,7 @@ use strict;
 @ISA = qw(Verilog::Netlist::Module::Struct
 	Verilog::Netlist::Subclass);
 
-$VERSION = '3.041';
+$VERSION = '3.042';
 
 structs('new',
 	'Verilog::Netlist::Module::Struct'
@@ -45,7 +45,7 @@ structs('new',
 	   _cells	=> '%',		# hash of Verilog::Netlist::Cells
 	   _celldecls	=> '%',		# hash of declared cells (for autocell only)
 	   _cellarray	=> '%',		# hash of declared cell widths (for autocell only)
-	   _level	=> '$',		# Depth in hiearchy (if calculated)
+	   _level	=> '$',		# Depth in hierarchy (if calculated)
 	   is_top	=> '$', #'	# Module is at top of hier (not a child)
 	   is_libcell	=> '$', #'	# Module is a library cell
 	   # SystemPerl:
