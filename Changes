@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add Netlist net, port and module ->delete methods. [Daniel Schoch]
 
+***	Add Netlist modules_sorted_level and ->level method. [Daniel Schoch]
+
 ***	Add vpm $uerror_clk and $uwarn_clk assertions.
 
 ***	Add vpm $ucover_clk coverage expansions.

@@ -45,6 +45,7 @@ structs('new',
 	   _cells	=> '%',		# hash of Verilog::Netlist::Cells
 	   _celldecls	=> '%',		# hash of declared cells (for autocell only)
 	   _cellarray	=> '%',		# hash of declared cell widths (for autocell only)
+	   _level	=> '$',		# Depth in hiearchy (if calculated)
 	   is_top	=> '$', #'	# Module is at top of hier (not a child)
 	   is_libcell	=> '$', #'	# Module is a library cell
 	   # SystemPerl:
@@ -185,6 +186,20 @@ sub new_cell {
     my $cellref = new Verilog::Netlist::Cell (@_, module=>$self,);
     $self->_cells ($cellref->name(), $cellref);
     return $cellref;
+}
+
+sub level {
+    my $self = shift;
+    my $level = $self->_level;
+    return $level if defined $level;
+    $self->_level(1);  # Set before recurse in case there's circular module refs
+    foreach my $cell ($self->cells) {
+	if ($cell->submod) {
+	    my $celllevel = $cell->submod->level;
+	    $self->_level($celllevel+1) if $celllevel >= $self->_level;
+	}
+    }
+    return $self->_level;
 }
 
 sub link {
@@ -370,6 +385,13 @@ Returns Verilog::Netlist::Port matching given name.
 =item $self->find_net(I<name>)
 
 Returns Verilog::Netlist::Net matching given name.
+
+=item $self->level
+
+Returns the reverse depth of this module with respect to other modules.
+Leaf modules (modules with no cells) will be level 1.  Modules which
+instantiate cells of level 1 will be level 2 modules and so forth.  See
+also Netlist's modules_sorted_level.
 
 =item $self->lint
 

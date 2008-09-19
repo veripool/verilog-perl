@@ -67,6 +67,7 @@ t/35_sigparser.out
 t/35_sigparser.t
 t/36_sigmany.t
 t/40_netlist.t
+t/41_example.t
 t/42_dumpcheck.t
 t/42_dumpcheck_1.out
 t/42_dumpcheck_2.out
