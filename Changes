@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.04***
+
+****	Fix cpan-testers mis-reporting FAIL when no flex installed.
+
 * Verilog::Language 3.042 2008/09/19
 
 ***	Add Netlist net, port and module ->delete methods. [Daniel Schoch]

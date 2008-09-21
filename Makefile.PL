@@ -55,10 +55,18 @@ maintainer-clean: distclean
     return $out;
 }
 
+my $fail;
 local $! = undef;
-`flex --version`; ($?==0) or die "\n%Error: 'flex' must be installed to build\n";
-`bison --version`; ($?==0) or die "\n%Error: 'bison' must be installed to build\n";
-`g++ --version`; ($?==0) or die "\n%Error: 'gcc/g++' must be installed to build\n";
+`flex --version`; if ($?) { $fail=1; warn "\n%Error: 'flex' must be installed to build\n"; }
+`bison --version`; if ($?) { $fail=1; warn "\n%Error: 'bison' must be installed to build\n"; }
+`g++ --version`; if ($?) { $fail=1; warn "\n%Error: 'gcc/g++' must be installed to build\n"; }
+if ($fail) {
+    if ($ENV{AUTOMATED_TESTING}) {
+	exit(0);
+    } else {
+	die "%Error: Exiting due to above missing dependencies.\n";
+    }
+}
 
 WriteMakefile(
 	      DISTNAME  => 'Verilog-Perl',
