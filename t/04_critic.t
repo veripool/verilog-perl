@@ -9,18 +9,20 @@ use strict;
 use Test;
 use warnings;
 
-eval { use Test::Perl::Critic; };
-if ($@) {
-    plan tests => 1;
-    skip("Test::Perl::Critic not installed so ignoring check (harmless)",1);
-} elsif (!$ENV{VERILATOR_AUTHOR_SITE}) {
+if (!$ENV{VERILATOR_AUTHOR_SITE}) {
     plan tests => 1;
     skip("author only test (harmless)",1);
 } else {
-    #-profile => "t/04_critic.rc"
-    Test::Perl::Critic->import( -verbose=>9,
-				-exclude=>['ProhibitExplicitReturnUndef',
-					   'ProhibitStringyEval'],
-	);
-    all_critic_ok();
+    eval "use Test::Perl::Critic;";
+    if ($@) {
+	plan tests => 1;
+	skip("Test::Perl::Critic not installed so ignoring check (harmless)",1);
+    } else {
+	#-profile => "t/04_critic.rc"
+	Test::Perl::Critic->import( -verbose=>9,
+				    -exclude=>['ProhibitExplicitReturnUndef',
+					       'ProhibitStringyEval'],
+	    );
+	all_critic_ok();
+    }
 }
