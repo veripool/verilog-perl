@@ -253,13 +253,46 @@ foreach my $kwd (qw(
 		    )) { $Keywords{'1800-2005'}{$kwd} = '1800-2005'; }
 
 foreach my $kwd (
-		 "`celldefine", "`default_nettype", "`define", "`else",
-		 "`endcelldefine", "`endif", "`ifdef", "`include",
-		 "`nounconnected_drive", "`resetall", "`timescale",
-		 "`unconnected_drive", "`undef",
-		 # Commercial Extensions
-		 "`protected", "`endprotected",
-		 ) { $Keywords{$kwd}{'1364-1995'} = $Compdirect{$kwd} = '1364-1995'; }
+    # Speced
+    "`celldefine",
+    "`define",			# Preprocessor
+    "`else",			# Preprocessor
+    "`endcelldefine",
+    "`endif",			# Preprocessor
+    "`ifdef",			# Preprocessor
+    "`include",			# Preprocessor
+    "`nounconnected_drive",
+    "`resetall",
+    "`timescale",
+    "`unconnected_drive",
+    "`undef",			# Preprocessor
+
+    # Commercial Extensions
+    "`accelerate",		# Verilog-XL compatibility
+    "`autoexpand_vectornets",	# Verilog-XL compatibility
+    "`default_decay_time",	# Verilog spec - delays only
+    "`delay_mode_distributed",	# Verilog spec - delays only
+    "`delay_mode_path",		# Verilog spec - delays only
+    "`delay_mode_unit",		# Verilog spec - delays only
+    "`delay_mode_zero",		# Verilog spec - delays only
+    "`disable_portfaults",	# Verilog-XL compatibility
+    "`enable_portfaults",	# Verilog-XL compatibility
+    "`endprotect",		# Many tools - pre encryption
+    "`endprotected",		# Many tools - post encryption
+    "`expand_vectornets",	# Verilog-XL compatibility
+    "`noaccelerate",		# Verilog-XL compatibility
+    "`noexpand_vectornets",	# Verilog-XL compatibility
+    "`noremove_gatenames",	# Verilog-XL compatibility
+    "`noremove_netnames",	# Verilog-XL compatibility
+    "`nosuppress_faults",	# Verilog-XL compatibility
+    "`nounconnected_drive",	# Verilog-XL compatibility
+    "`portcoerce",		# Verilog-XL compatibility
+    "`protect",			# Many tools - pre encryption
+    "`protected",		# Many tools - post encryption
+    "`remove_gatenames",	# Verilog-XL compatibility
+    "`remove_netnames",		# Verilog-XL compatibility
+    "`suppress_faults",		# Verilog-XL compatibility
+    ) { $Keywords{$kwd}{'1364-1995'} = $Compdirect{$kwd} = '1364-1995'; }
 
 foreach my $kwd (
 		 "`default_nettype", "`elsif", "`undef", "`ifndef",

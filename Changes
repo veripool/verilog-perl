@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.04***
 
+***	Ignore Verilog-XL defines (suppress_faults, etc).  [Nicky Ayoub]
+
 ****	Fix cpan-testers mis-reporting FAIL when no flex installed.
 
 ****	Fix Perl Critic error when not installed, rt39654. [Andreas Koening]

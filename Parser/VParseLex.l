@@ -527,17 +527,35 @@ escid	\\[^ \t\f\r\n]+
   /************************************************************************/
   /* Preprocssor */
 <V95,V01,V05,S05>{
+  "`accelerate"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`autoexpand_vectornets"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`celldefine"			{ FL; VALTEXT; CALLBACK(preprocCb); LEXP->m_inCellDefine=true; }
+  "`default_decay_time"{ws}+[^\n]*	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
+  "`delay_mode_distributed"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
+  "`delay_mode_path"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
+  "`delay_mode_unit"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
+  "`delay_mode_zero"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
+  "`disable_portfaults"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`enable_portfaults"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`endcelldefine"		{ FL; VALTEXT; CALLBACK(preprocCb); LEXP->m_inCellDefine=false; }
   "`endprotect"			{ FL; VALTEXT; CALLBACK(preprocCb); }
+  "`expand_vectornets"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`inline"			{ FL; VALTEXT; CALLBACK(preprocCb); }
-  "`line"{ws}+[^\n]*\n		{ PARSEP->inLineDirective(yytext);
-				  FL; VALTEXT; CALLBACK(preprocCb); }
+  "`line"{ws}+[^\n]*\n		{ PARSEP->inLineDirective(yytext); FL; VALTEXT; CALLBACK(preprocCb); }
+  "`noaccelerate"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`noexpand_vectornets"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`noremove_gatenames"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`noremove_netnames"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`nosuppress_faults"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`nounconnected_drive"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`portcoerce"			{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`protect"			{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`protected"			{ FL; VALTEXT; CALLBACK(preprocCb); yy_push_state(PROTMODE); }
+  "`remove_gatenames"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`remove_netnames"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`resetall"			{ FL; VALTEXT; CALLBACK(preprocCb); }
-  "`timescale"{ws}+.*\n		{ FL; VALTEXT; CALLBACK(preprocCb); NEXTLINE(); }
+  "`suppress_faults"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`timescale"{ws}+[^\n]*\n	{ FL; VALTEXT; CALLBACK(preprocCb); NEXTLINE(); }
 
   /* See also setLanguage below */
   "`begin_keywords"[ \t]*\"1364-1995\"		{ yy_push_state(V95); CALLBACK(preprocCb); }
