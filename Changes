@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.04***
 
+****	Expand environment variables in Verilog::Getopt.  [Lawrence Butcher]
+
 ****	Fix Verilog::EditModules when modules wrapped in ifdef.  [Mat Zeno]
 
 * Verilog::Language 3.043 2008/09/28

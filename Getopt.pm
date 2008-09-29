@@ -147,7 +147,7 @@ sub _parameter_parse {
 	    my $pn = $self->{_parameter_next};
 	    $self->{_parameter_next} = undef;
 	    if ($pn eq '-f') {
-		$self->parameter_file ($param);
+		$self->parameter_file ($self->file_substitute($param));
 	    }
 	    elsif ($pn eq '-v') {
 		$self->library ($param);
@@ -332,6 +332,19 @@ sub file_abs {
     return $filename;
 }
 
+sub file_substitute {
+    my $self = shift;
+    my $filename = shift;
+    my $out = $filename;
+    while ($filename =~ /\$([A-Za-z_0-9]+)\b/g) {
+	my $var = $1;
+	if (defined $ENV{$var}) {
+	    $out =~ s/\$$var\b/$ENV{$var}/g;
+	}
+    }
+    return $out;
+}
+
 sub file_path_cache_flush {
     my $self = shift;
     # Clear out a file_path cache, needed if the incdir/module_dirs change
@@ -361,6 +374,9 @@ sub file_path {
     } else {  # all
 	@dirlist = ($self->incdir(), $self->module_dir());
     }
+    # Expand any envvars in incdir/moduledir
+    @dirlist = map {$self->file_substitute($_)} @dirlist;
+
     # Check each search path
     # We use both the incdir and moduledir.  This isn't strictly correct,
     # but it's fairly silly to have to specify both all of the time.
@@ -614,6 +630,11 @@ Using the incdir and libext lists, convert the specified module or filename
 
 Return true if the filename is one that generally should be ignored when
 recursing directories, such as for example, ".", "CVS", and ".svn".
+
+=item $self->file_substitute ( $filename )
+
+Removes existing environment variables from the provided filename.  Any
+undefined variables are not substituted nor cause errors.
 
 =item $self->incdir ()
 

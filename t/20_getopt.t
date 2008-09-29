@@ -9,7 +9,7 @@ use strict;
 use Test;
 use Cwd;
 
-BEGIN { plan tests => 13 }
+BEGIN { plan tests => 14 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Getopt;
@@ -20,6 +20,9 @@ $Verilog::Getopt::Debug = 1;
 my $opt = new Verilog::Getopt;
 ok(1);
 
+$ENV{DOT} = ".";
+ok($opt->file_substitute('Fred/$DOT/$NOT_SET_IN_ENV/$DOT'), 'Fred/./$NOT_SET_IN_ENV/.');
+
 my @param = qw ( +libext+t
 		 +incdir+t
 		 +define+foo=bar
@@ -28,7 +31,7 @@ my @param = qw ( +libext+t
 		 -y moddir
 		 -Dbaz=bar
 		 -Iincdir2
-		 -f t/20_getopt.opt
+		 -f $DOT/t/20_getopt.opt
 		 passthru
 		 );
 
