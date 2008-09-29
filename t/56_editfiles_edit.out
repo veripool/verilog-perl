@@ -10,7 +10,11 @@ endmodule
 
 b_front_matter;
 
+`ifdef B_HAS_X
 module b;
+`elsif
+module b (input x);
+`endif
    wire replaced_inside_module_b;
    // synopsys translate_off
    wire in_translate_off;

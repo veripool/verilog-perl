@@ -37,6 +37,7 @@ sub new {
 	@_,
     };
     $self->{verbose} = 1 if $Debug;
+    $self->{debug} = 1 if $Debug;
     bless $self, $class;
     return $self;
 }
@@ -65,7 +66,6 @@ sub _read_split_file {
     my @lines = (@header);
     my $modname;
     my $ever_module;
-    my $line_after_mod;
     my $commented;
     while (defined(my $line = $fh->getline)) {
 	$line =~ s!\r!!mg;
@@ -93,20 +93,43 @@ sub _read_split_file {
 
 	if (!$commented
 	    && $line =~ /^\s*(module|primitive)\s+([A-Za-z0-9_]+)/) {
-	    !$modname or die "%Error: $filename:$.: module without previous endmodule\n";
-	    $modname = $2;
-	    $line_after_mod = 1;
-	    $ever_module = 1;
-	    print "$basename:$.:  module $1\n" if $Debug;
-	    @lines = (@header);
-	    push @lines, $self->{include_header} if $self->{include_header};
-	    push @lines, $self->{timescale_header} if $self->{timescale_header};
-	    push @lines, "`celldefine\n" if $self->{celldefine};
-	    push @lines, $self->{lint_header} if $self->{lint_header};
+	    my $newmodname = $2;
+	    if ($modname) { # Already in a module
+		# Support code like this
+		# `ifdef x
+		#   module x (...)
+		# `else
+		#   module x (...)
+		($newmodname eq $modname)
+		    or die "%Error: $filename:$.: module without previous endmodule\n";
+		print "$basename:$.:  continue module $1\n" if $self->{debug};
+	    } else {
+		$modname = $newmodname;
+		$ever_module = 1;
+		print "$basename:$.:  module $1\n" if $self->{debug};
+		my @afterif;
+		my @oldlines = (@lines);
+		@lines = (@header);
+		# Insert our new header before any `ifdef's or `includes
+		my $gotifdef;
+		foreach my $oline (@oldlines) {
+		    $gotifdef = 1 if $oline =~ /`ifdef\b|`include\b/;
+		    if (!$gotifdef) {
+			push @lines, $oline;
+		    } else{
+			push @afterif, $oline;
+		    }
+		}
+		push @lines, $self->{include_header} if $self->{include_header};
+		push @lines, $self->{timescale_header} if $self->{timescale_header};
+		push @lines, "`celldefine\n" if $self->{celldefine};
+		push @lines, $self->{lint_header} if $self->{lint_header};
+		push @lines, @afterif;
+	    }
 	    push @lines, $line;
 	}
 	elsif (!$commented && $line =~ /^\s*end(module|primitive)\b/) {
-	    print "$basename:$.:  endmodule $modname\n" if $Debug;
+	    print "$basename:$.:  endmodule $modname\n" if $self->{debug};
 	    $modname or die "%Error: $filename:$.: endmodule without previous module\n";
 	    push @lines, $line;
 	    push @lines, "`endcelldefine\n" if $self->{celldefine};
@@ -121,7 +144,12 @@ sub _read_split_file {
 	elsif (!$commented
 	    && $line =~ /^\s*\`timescale\s.*/
 	    && $self->{timescale_removal}) {
-	    # Strip
+	    # Strip existing timescale
+	}
+	elsif (!$commented
+	       && $line =~ /^\s*\`(end)?celldefine\b/
+	       && $self->{celldefine}) {
+	    # Strip existing celldefine, we'll add a new one
 	}
 	else {
 	    push @lines, $line;
@@ -130,7 +158,7 @@ sub _read_split_file {
     $fh->close;
 
     if (!$ever_module) {
-	print "$basename:1: No module, must be include file: $basemod\n" if $Debug;
+	print "$basename:1: No module, must be include file: $basemod\n" if $self->{debug};
 	push @lines, @trailer;
 	$self->{_files}{$basemod}{created} = 1;
 	$self->{_files}{$basemod}{modname} = $basemod;
