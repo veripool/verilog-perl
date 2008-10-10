@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.04***
 
+***	Support SystemVerilog unique and priority case.  [by Nicky Ayoub]
+
 ****	Expand environment variables in Verilog::Getopt.  [Lawrence Butcher]
 
 ****	Fix Verilog::EditModules when modules wrapped in ifdef.  [Mat Zeno]

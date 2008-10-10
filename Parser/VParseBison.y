@@ -208,6 +208,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yOUTPUT		"output"
 %token<str>		yPARAMETER	"parameter"
 %token<str>		yPOSEDGE	"posedge"
+%token<str>		yPRIORITY	"priority"
 %token<str>		yPROPERTY	"property"
 %token<str>		yREAL		"real"
 %token<str>		yREALTIME	"realtime"
@@ -226,6 +227,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yTIME		"time"
 %token<str>		yTRI		"tri"
 %token<str>		yTYPEDEF	"typedef"
+%token<str>		yUNIQUE		"unique"
 %token<str>		yUNSIGNED	"unsigned"
 %token<str>		yVECTORED	"vectored"
 %token<str>		yWAIT		"wait"
@@ -991,9 +993,14 @@ stmt:		';'					{ }
 //************************************************
 // Case/If
 
+unique_priorityE: /*empty*/				{ }
+	|	yPRIORITY				{ }
+	|	yUNIQUE					{ }
+	;
+
 stateCaseForIf: caseStmt caseAttrE caseListE yENDCASE	{ }
-	|	yIF '(' expr ')' stmtBlock	%prec prLOWER_THAN_ELSE	{ }
-	|	yIF '(' expr ')' stmtBlock yELSE stmtBlock	{ }
+	|	unique_priorityE yIF '(' expr ')' stmtBlock	%prec prLOWER_THAN_ELSE	{ }
+	|	unique_priorityE yIF '(' expr ')' stmtBlock yELSE stmtBlock		{ }
 	|	yFOR '(' assignLhs '=' expr ';' expr ';' assignLhs '=' expr ')' stmtBlock
 							{ }
 	|	yWHILE '(' expr ')' stmtBlock		{ }
@@ -1002,9 +1009,9 @@ stateCaseForIf: caseStmt caseAttrE caseListE yENDCASE	{ }
 	|	yWAIT '(' expr ')' stmtBlock		{ }
 	;
 
-caseStmt: 	yCASE  '(' expr ')' 			{ }
-	|	yCASEX '(' expr ')' 			{ }
-	|	yCASEZ '(' expr ')'	 		{ }
+caseStmt: 	unique_priorityE yCASE  '(' expr ')'	{ }
+	|	unique_priorityE yCASEX '(' expr ')'	{ }
+	|	unique_priorityE yCASEZ '(' expr ')'	{ }
 	;
 
 caseAttrE: 	/*empty*/				{ }
