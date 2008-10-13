@@ -150,9 +150,9 @@ sub signal_decl {
 
     my $msb;
     my $lsb;
-    if ($vector && $vector =~ /\[(.*):(.*)\]/) {
+    if ($vector && $vector =~ /^\[(.*):(.*)\]/) {
 	$msb = $1; $lsb = $2;
-    } elsif ($vector && $vector =~ /\[(.*)\]/) {
+    } elsif ($vector && $vector =~ /^\[(.*)\]/) {
 	$msb = $lsb = $1;
     }
 
@@ -161,7 +161,7 @@ sub signal_decl {
 	return $self->error ("Signal declaration outside of module definition", $netname);
     }
 
-    if ($inout =~ /(inout|in|out)(put|)$/) {
+    if ($inout =~ /^(inout|in|out)(put|)$/) {
 	my $dir = $1;
 	##
 	my $net = $modref->find_net ($netname);

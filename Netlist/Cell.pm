@@ -92,7 +92,9 @@ sub _link {
 	&& !$self->gateprim
 	&& !$self->netlist->{_relink}
 	&& !$self->module->is_libcell()
-	&& $self->netlist->{link_read}) {
+	&& $self->netlist->{link_read}
+	&& !$self->netlist->{_missing_submod}{$self->submodname}
+	) {
 	print "  Link_Read ",$self->submodname,"\n" if $Verilog::Netlist::Debug;
 	# Try 1: Direct filename
 	$self->netlist->read_file(filename=>$self->submodname, error_self=>0);
@@ -100,8 +102,8 @@ sub _link {
 	# Try 2: Libraries
 	if (!$self->submod()) {
 	    $self->netlist->read_libraries();
+	    $self->_link_guts();
 	}
-	$self->_link_guts();
 	# Try 3: Bitch about missing file
 	if (!$self->submod()) {
 	    $self->netlist->read_file(filename=>$self->submodname,
@@ -110,6 +112,9 @@ sub _link {
 	# Got it; ask for another link
 	if ($self->submod()) {
 	    $self->netlist->{_relink} = 1;
+	} else {
+	    # Don't link this file again - speeds up if many common gate-ish missing primitives
+	    $self->netlist->{_missing_submod}{$self->submodname} = 1;
 	}
     }
 }
@@ -162,7 +167,8 @@ sub new_pin {
     my $self = shift;
     # @_ params
     # Create a new pin under this cell
-    my $pinref = new Verilog::Netlist::Pin (cell=>$self, @_);
+    push @_, (cell=>$self);
+    my $pinref = new Verilog::Netlist::Pin (@_);
     $self->_pins ($pinref->name(), $pinref);
     return $pinref;
 }
