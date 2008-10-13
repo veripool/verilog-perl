@@ -276,6 +276,7 @@ module bugvp10;
       --x;
    end
 endmodule
+
 module bugvp33;
    integer i;
    initial begin
@@ -285,4 +286,9 @@ module bugvp33;
       endcase
       if (i) begin end else begin end
    end
+endmodule
+
+module bugvp16;
+   timeunit 0.1ns;
+   timeprecision 1ns;
 endmodule

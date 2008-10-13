@@ -5,7 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.04***
 
-***	Support SystemVerilog unique and priority case.  [by Nicky Ayoub]
+***	Support SystemVerilog unique and priority case, bug33. [by Nicky Ayoub]
+
+***	Support SystemVerilog timeunit and timeprecision, bug34. [by Nicky Ayoub]
 
 ****	Expand environment variables in Verilog::Getopt.  [Lawrence Butcher]
 

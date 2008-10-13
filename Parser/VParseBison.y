@@ -225,6 +225,8 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yTABLE		"table"
 %token<str>		yTASK		"task"
 %token<str>		yTIME		"time"
+%token<str>		yTIMEPRECISION	"timeprecision"
+%token<str>		yTIMEUNIT	"timeunit"
 %token<str>		yTRI		"tri"
 %token<str>		yTYPEDEF	"typedef"
 %token<str>		yUNIQUE		"unique"
@@ -342,7 +344,7 @@ statePop:	/* empty */			 	{ }
 // Files
 
 fileE:		/* empty */				{ }
-	|	file					{ }
+	|       timeunitsDeclE 	file		      	{ }
 	;
 
 file:		description				{ }
@@ -352,19 +354,27 @@ file:		description				{ }
 // IEEE: description
 description:	moduleDecl				{ }
 	|	interfaceDecl				{ }
+//      |       programDecl                             { }
+//      |       packageDecl                             { }
 	;
-
+// IEEE: timeunits_declaration + empty
+timeunitsDeclE: /*empty*/                                                       { }
+        |	yTIMEUNIT  yaTIMENUM ';'					{ }
+	| 	yTIMEPRECISION  yaTIMENUM ';'					{ }
+	| 	yTIMEUNIT  yaTIMENUM ';'  yTIMEPRECISION  yaTIMENUM  ';' 	{ }
+	| 	yTIMEPRECISION yaTIMENUM ';' yTIMEUNIT yaTIMENUM ';'		{ }
+	;
 //**********************************************************************
 // Module headers
 
 // IEEE: module_declaration:
-moduleDecl:	modHdr modParE modPortsE ';' modItemListE yENDMODULE endLabelE
-			{ PARSEP->endmoduleCb($<fl>6,$6); }
+moduleDecl: 	modHeader  timeunitsDeclE modItemListE yENDMODULE endLabelE
+			{ PARSEP->endmoduleCb($<fl>4,$4); }
 	;
-
-modHdr:		yMODULE	yaID				{ PARSEP->moduleCb($<fl>1,$1,$2,PARSEP->inCellDefine()); }
+modHeader:	modHdr  modParE modPortsE ';' { }
 	;
-
+modHdr:		yMODULE lifetimeE yaID		{ PARSEP->moduleCb($<fl>1,$1,$3,PARSEP->inCellDefine()); }
+	;
 modParE:	/* empty */				{ }
 	|	'#' '(' ')'				{ }
 	|	'#' '(' modParArgs ')'			{ }
@@ -427,8 +437,8 @@ portV2kSig:	sigAndAttr				{ $<fl>$=$<fl>1; PARSEP->portCb($<fl>1, $1); }
 // Interface headers
 
 // IEEE: interface_declaration + interface_nonansi_header + interface_ansi_header:
-interfaceDecl:	intHdr modParE modPortsStarE ';' interfaceItemListE yENDINTERFACE endLabelE
-			{ PARSEP->endinterfaceCb($<fl>6,$6); }
+interfaceDecl:	intHdr modParE modPortsStarE ';' timeunitsDeclE interfaceItemListE yENDINTERFACE endLabelE
+			{ PARSEP->endinterfaceCb($<fl>7,$7); }
 	|	yEXTERN	intHdr modParE modPortsE ';'	{ }
 	;
 

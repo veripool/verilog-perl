@@ -273,6 +273,8 @@ escid	\\[^ \t\f\r\n]+
   "shortreal"		{ FL; VALTEXT; CALLBACK(keywordCb); return yREAL; }
   "static"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTATIC; }
   "string"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
+  "timeprecision"	{ FL; VALTEXT; CALLBACK(keywordCb); return yTIMEPRECISION; }
+  "timeunit"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTIMEUNIT; }
   "typedef"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTYPEDEF; }
   "unique"		{ FL; VALTEXT; CALLBACK(keywordCb); return yUNIQUE; }
   /*     Generic unsupported keywords */
@@ -327,8 +329,6 @@ escid	\\[^ \t\f\r\n]+
   "tagged"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "this"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "throughout"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "timeprecision"	{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "timeunit"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "type"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "union"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
   "var"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
