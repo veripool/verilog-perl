@@ -356,6 +356,7 @@ description:	moduleDecl				{ }
 	|	interfaceDecl				{ }
 //      |       programDecl                             { }
 //      |       packageDecl                             { }
+	|	packageItem				{ }
 	;
 // IEEE: timeunits_declaration + empty
 timeunitsDeclE: /*empty*/                                                       { }
@@ -364,6 +365,13 @@ timeunitsDeclE: /*empty*/                                                       
 	| 	yTIMEUNIT  yaTIMENUM ';'  yTIMEPRECISION  yaTIMENUM  ';' 	{ }
 	| 	yTIMEPRECISION yaTIMENUM ';' yTIMEUNIT yaTIMENUM ';'		{ }
 	;
+
+//**********************************************************************
+// Packages
+
+packageItem:	varDecl					{ }
+	;
+
 //**********************************************************************
 // Module headers
 

@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Support SystemVerilog timeunit and timeprecision, bug34. [by Nicky Ayoub]
 
+***	Support SystemVerilog package items, bug39. [by Nick Ayoub]
+
 ****	Expand environment variables in Verilog::Getopt.  [Lawrence Butcher]
 
 ****	Fix Verilog::EditModules when modules wrapped in ifdef.  [Mat Zeno]
