@@ -22,7 +22,7 @@ use strict;
 @ISA = qw(Verilog::Netlist::Net::Struct
 	Verilog::Netlist::Subclass);
 
-$VERSION = '3.043';
+$VERSION = '3.044';
 
 ######################################################################
 
