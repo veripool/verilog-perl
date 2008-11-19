@@ -91,12 +91,12 @@ $Opt_Vericov = 0;	# Add vericov on/off comments (messes up line # counts)
 $Opt_Chiponly = 0;	# Only chip model; apply Vpm_Chiponly_Rename's
 my $Opt_Stop = 1;	# Put $stop in error messages
 my $Opt_Verilator = 0;	# Verilator
-my $Last_Vericov = 0;	# Last run's Opt_Vericov
-my $Last_Chiponly = 0;	# Last run's Opt_Chiponly
+my $Last_ArgsDiffer;	# Last run's Opt_* mismatch
 my $Opt_Minimum;	# Include `__message_minimum
 my @Opt_Exclude;
 my $Opt_Timeformat_Units = undef;
 my $Opt_Timeformat_Precision = 0;
+my $Opt_Line;
 
 my $Total_Files = 0;
 my @files = ();
@@ -120,6 +120,7 @@ if (! GetOptions (
 		  "exclude=s"	=> sub {shift; push @Opt_Exclude, shift;},
 		  "help"	=> \&usage,
 		  "language=s"	=> sub { shift; Verilog::Language::language_standard(shift); },
+	  	  "line!"	=> \$Opt_Line,
 		  "minimum!"	=> \$Opt_Minimum,
 		  "nopli!"	=> \$Opt_NoPli,
 		  "quiet!"	=> \$Opt_Quiet,
@@ -133,8 +134,22 @@ if (! GetOptions (
 		  )) {
     die "%Error: Bad usage, try 'vpm --help'\n";
 }
+sub _switch_line {
+    # If any of these flags change, we must regenerate output
+    my $sw = "";
+    $sw .= " --chiponly" if $Opt_Chiponly;
+    $sw .= " --line" if $Opt_Line;
+    $sw .= " --minimum=$Opt_Minimum" if defined $Opt_Minimum;
+    $sw .= " --nopli" if $Opt_NoPli;
+    $sw .= " --stop" if $Opt_Stop;
+    $sw .= " --vericov" if $Opt_Vericov;
+    $sw .= " --verilator" if $Opt_Verilator;
+    return $sw;
+}
 
-our $Line_Supported = $Opt_Verilator || Verilog::Language::language_standard() ne '1364-1995';
+if (!defined $Opt_Line) {
+    $Opt_Line = $Opt_Verilator || Verilog::Language::is_compdirect("`line"); # uses language_standard()
+}
 
 push @files, ($Opt->incdir(), $Opt->library(), $Opt->module_dir());
 
@@ -373,9 +388,14 @@ sub ucover_clk {
     _insert_always_begin('cover', "/*vpm*/ $sig=1'b0; /*vpm*/");
 
     # Alas, `line is required to see correct cover point
-    my $bot = ("\n`line ".$Last_Parser->lineno." \"".$Last_Parser->filename."\" 0\n"
-	       ." $label: cover property (@(posedge $clk) ($sig));\n"
-	       ."`line /*vpm_endmod_line*/ \"".$Last_Parser->filename."\" 0\n");
+    my $bot = "";
+    if ($Opt_Line) {
+	$bot .= "\n`line ".$Last_Parser->lineno." \"".$Last_Parser->filename."\" 0\n";
+    }
+    $bot .= " $label: cover property (@(posedge $clk) ($sig));\n";
+    if ($Opt_Line) {
+	$bot .= "`line /*vpm_endmod_line*/ \"".$Last_Parser->filename."\" 0\n";
+    }
     push @Endmodule_Inserts, $bot;
 }
 
@@ -673,7 +693,7 @@ sub vpm_process {
     if ($Got_Change) {
 	my $date = localtime;
 	$fh->open(">$outname") or die "%Error: Can't write $outname.";
-	if ($Line_Supported) {
+	if ($Opt_Line) {
 	    print $fh "`line 1 \"$filename\" 0\n";
 	}
 	# No newline so line counts not affected
@@ -714,16 +734,15 @@ sub vpm_db_read_file {
     my $fh = IO::File->new("<$filename") or return;  # no error if fails
     while (my $line = $fh->getline) {
 	chomp $line;
-	my ($tt_cmd, $tt_file, $tt_mtime) = split(/\t/,$line);
-	$tt_cmd .= "";	# Warning removal
-	if ($tt_cmd eq "switch") {
-	    if ($tt_file =~ /vericov/) {
-		$Last_Vericov = 1;
-	    }
-	    if ($tt_file =~ /chiponly/) {
-		$Last_Chiponly = 1;
-	    }
+	if ($line =~ /^switch\s*(.*$)/) {
+	    my $old = $1;
+	    my $now = _switch_line();
+	    $old =~ s/\s+//g;
+	    $now =~ s/\s+//g;
+	    $Last_ArgsDiffer = ($old ne $now);
 	} else {
+	    my ($tt_cmd, $tt_file, $tt_mtime) = split(/\t/,$line);
+	    $tt_cmd .= "";	# Warning removal
 	    $File_Mtime_Read{$tt_file} = $tt_mtime;
 	    $File_Mtime_Read_Used{$tt_file} = 0;
 	}
@@ -735,14 +754,12 @@ sub vpm_db_write_file {
     # Save which unprocessed files did not need processing
     my $filename = shift;
     my $fh = IO::File->new(">$filename") or die "%Error: $! $filename.\n";
-    $fh->print ("switch\tvericov\n") if $Opt_Vericov;
-    $fh->print ("switch\tchiponly\n") if $Opt_Chiponly;
+    $fh->print ("switch\t"._switch_line()."\n");
     foreach my $file (sort (keys %File_Mtime)) {
 	$fh->print ("unproc\t$file\t$File_Mtime{$file}\n");
     }
     $fh->close;
 }
-
 
 #----------------------------------------------------------------------
 
@@ -765,8 +782,7 @@ sub vpm_recursive_prelude {
     my $dest_mtime = $File_Mtime_Read{"vpm"} || 0;
     if (!$Opt_Date
 	|| ($Prog_Mtime > $dest_mtime)
-	|| ($Opt_Chiponly != $Last_Chiponly)
-	|| ($Opt_Vericov != $Last_Vericov)) {
+	|| $Last_ArgsDiffer) {
 	# Flush the whole read cache
 	%File_Mtime_Read = ();
 	print "\t    VPM (or overall flags) changed... Two minutes...\n";
@@ -1242,6 +1258,11 @@ versus a do-while loop keyword).
 
 Include `__message_minimum in the $uinfo test, so that by defining
 __message_minimum=1 some uinfos may be optimized away at compile time.
+
+=item --noline
+
+Do not emit `line directives.  If not specified they will be used under
+--language 1364-2001 and later.
 
 =item --nopli
 
