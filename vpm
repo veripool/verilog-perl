@@ -89,8 +89,9 @@ my $Opt_Date = 0;	# Check dates
 my $Opt_NoPli = 0;	# Delete all pli calls
 $Opt_Vericov = 0;	# Add vericov on/off comments (messes up line # counts)
 $Opt_Chiponly = 0;	# Only chip model; apply Vpm_Chiponly_Rename's
+my $Opt_RealIntent;	# RealIntent
 my $Opt_Stop = 1;	# Put $stop in error messages
-my $Opt_Verilator = 0;	# Verilator
+my $Opt_Verilator;	# Verilator
 my $Last_ArgsDiffer;	# Last run's Opt_* mismatch
 my $Opt_Minimum;	# Include `__message_minimum
 my @Opt_Exclude;
@@ -123,6 +124,7 @@ if (! GetOptions (
 	  	  "line!"	=> \$Opt_Line,
 		  "minimum!"	=> \$Opt_Minimum,
 		  "nopli!"	=> \$Opt_NoPli,
+		  "realintent!"	=> \$Opt_RealIntent,
 		  "quiet!"	=> \$Opt_Quiet,
 		  "stop!"	=> \$Opt_Stop,
 		  "timeformat-precision=s" => \$Opt_Timeformat_Precision,
@@ -141,6 +143,7 @@ sub _switch_line {
     $sw .= " --line" if $Opt_Line;
     $sw .= " --minimum=$Opt_Minimum" if defined $Opt_Minimum;
     $sw .= " --nopli" if $Opt_NoPli;
+    $sw .= " --realintent" if $Opt_RealIntent;
     $sw .= " --stop" if $Opt_Stop;
     $sw .= " --vericov" if $Opt_Vericov;
     $sw .= " --verilator" if $Opt_Verilator;
@@ -443,6 +446,7 @@ sub message_header {
     my $out = "";
     if (!$Msg_Header_Level) {
 	$out .= "\n/*summit modcovoff -bpen*/\n" if $Vericov_Enabled;
+	$out .= "\n/*ri userpass BE on*/\n" if $Opt_RealIntent;
 	$out .= "/*vpm*/";
     }
     $out .= "begin ";
@@ -455,6 +459,7 @@ sub message_trailer {
     my $out = 'end ';
     $out .= '/*vpm*/' if ((--$Msg_Header_Level)==0);
     $out .= "\n/*summit modcovon -bpen*/\n" if $Vericov_Enabled;
+    $out .= "\n/*ri userpass BE off*/\n" if $Opt_RealIntent;
     return $out;
 }
 
@@ -1286,6 +1291,10 @@ conditionally halt simulation.
 Use the given filename for output instead of the input name .vpm.  If the
 name ends in a / it is used as a output directory with the default name.
 
+=item --realintent
+
+Special RealIntent enable/disables added around unreachable code.
+
 =item --timeformat-units I<units>
 
 If specified, include Verilog $timeformat calls before all messages.  Use
@@ -1299,11 +1308,11 @@ of digits after the decimal point.  Defaults to zero.
 
 =item --vericov
 
-Special vericov enable/disables added.
+Special Vericov enable/disables added around unreachable code.
 
 =item --verilator
 
-Special verilator translation enabled.
+Special Verilator translations enabled.
 
 =item --version
 
@@ -1313,7 +1322,7 @@ Displays program version and exits.
 
 =head1 FUNCTIONS
 
-These verilog pseudo-pli calls are expanded:
+These Verilog pseudo-pli calls are expanded:
 
 =over 4
 
