@@ -707,7 +707,8 @@ sub vpm_process {
 		    $tok =~ s%/\*vpm beginmodule $mod\*/%/*vpm*/$insert%g or die;  # Must exist, found above!
 		    $Sendout[$l][1] = $tok;
 		    $hit = 1;
-		    last;
+		    # Don't exit the loop, keep looking for more.
+		    # It's possible there's a `ifdef with multiple "module x" headers
 		}
 	    }
 	    $hit or die "vpm %Error: $filename: Couldn't find symbol insertion point in $mod\n";
