@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Fix vpm making long lines that upset Cadence's NC-Verilog. [Soon Koh]
 
+****	Fix Makefile issues with ActivePerl.  [Jose Ochoa]
+
 * Verilog::Language 3.044 2008/11/10
 
 ***	Support SystemVerilog unique and priority case, bug33. [by Nicky Ayoub]
