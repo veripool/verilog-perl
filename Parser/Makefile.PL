@@ -67,7 +67,7 @@ VParseLex.cpp: $(FLEXFIX) VParseLex_prefix.cpp
 VParseBison.h: VParseBison.cpp
 
 VParseBison.cpp:	VParseBison.y bisonpre
-	-rm -rf VParseBison.c VParseBison.cpp
+	-$(RM_RF) VParseBison.c VParseBison.cpp
 	@echo "If the next command fails, you probably need to install Bison 1.875 or newer"
 	$(PERL) bisonpre --yacc ${YACC} --debug --verbose --d -k VParseBison.y -p VParseBison -o VParseBison.c
 	mv VParseBison.c VParseBison.cpp
@@ -76,8 +76,8 @@ Parser_cleaned.c: Parser.c
 	$(PERL) $(XSUBPPFIX) < Parser.c > Parser_cleaned.c
 
 clean::
-	-rm -rf test *.d *.o *.output *.pre.*
-	-rm -rf VParseLex*.cpp VParseBison.h VParseBison.cpp Parser_cleaned.c
+	-$(RM_RF) test *.d *.o *.output *.pre.*
+	-$(RM_RF) VParseLex*.cpp VParseBison.h VParseBison.cpp Parser_cleaned.c
 ';
     return $out;
 }

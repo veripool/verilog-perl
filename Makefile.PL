@@ -23,35 +23,35 @@ sub MY::postamble {
     $out .= "CCFLAGS  += $ENV{VERILOGPERL_CCFLAGS}\n" if defined $ENV{VERILOGPERL_CCFLAGS};
     $out .= "OPTIMIZE += -Wno-unused\n" if $ENV{VERILATOR_AUTHOR_SITE};  # Makefile has another -Wall
     $out .= "OPTIMIZE += $ENV{VERILOGPERL_CCFLAGS}\n" if defined $ENV{VERILOGPERL_CCFLAGS};
-    $out .= "
+    $out .= '
 README: Verilog-Perl.pod
-	-rm -rf \$@
-	pod2text --loose \$< > \$@
+	-$(RM_RF) $@
+	pod2text --loose $< > $@
 
 clean::
-	-rm -rf simv .vpm test_dir *.tmp
+	-$(RM_RF) simv .vpm test_dir *.tmp
 
 dist: maintainer-copy distcheck README
 
 ## Maintainer use:
 preexist:
-	svnorcvs nexists \$(DISTNAME)_\$(VERSION_SYM)
+	svnorcvs nexists $(DISTNAME)_$(VERSION_SYM)
 	test -s README
 
 tag:
-	svnorcvs tag  \$(DISTNAME)_\$(VERSION_SYM)
+	svnorcvs tag  $(DISTNAME)_$(VERSION_SYM)
 
 maintainer-diff:
-	svnorcvs diff \$(DISTNAME)_\$(VERSION_SYM)
+	svnorcvs diff $(DISTNAME)_$(VERSION_SYM)
 
 maintainer-dist: preexist dist tag
-	svnorcvs release \$(DISTVNAME).tar.gz
+	svnorcvs release $(DISTVNAME).tar.gz
 
 maintainer-copy:
 
 maintainer-clean: distclean
-	-rm -rf README Makefile MANIFEST.bak \$(MAKEFILE_OLD)
-";
+	-$(RM_RF) README Makefile MANIFEST.bak $(MAKEFILE_OLD)
+';
     return $out;
 }
 

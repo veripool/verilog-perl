@@ -64,8 +64,8 @@ Preproc_cleaned.c: Preproc.c
 	$(PERL) $(XSUBPPFIX) < Preproc.c > Preproc_cleaned.c
 
 clean::
-	-rm -rf test *.d *.o *.output
-	-rm -rf VPreprocLex*.cpp Preproc_cleaned.c
+	-$(RM_RF) test *.d *.o *.output
+	-$(RM_RF) VPreprocLex*.cpp Preproc_cleaned.c
 ';
     return $out;
 }
