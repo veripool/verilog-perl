@@ -27,7 +27,7 @@ use strict;
 @ISA = qw(Verilog::Netlist::Pin::Struct
 	Verilog::Netlist::Subclass);
 
-$VERSION = '3.044';
+$VERSION = '3.045';
 
 structs('new',
 	'Verilog::Netlist::Pin::Struct'
