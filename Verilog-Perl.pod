@@ -88,13 +88,13 @@ of all of the filenames, modules, and cells referenced by that file.
 
 =item L<vpm>
 
-Vpm will read the specified Verilog files and preprocess special PLI
-assertions.
+Vperlassert will read the specified Verilog files and preprocess special
+PLI assertions.
 
-=item L<vppp>
+=item L<vperlpp>
 
-Vppp reads the Verilog files passed on the command line and outputs
-preprocessed output.
+Vperlpp (Verilog-Perl Pre Processor) reads the Verilog files passed on the
+command line and outputs preprocessed output.
 
 =item L<vrename>
 
@@ -246,7 +246,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 L<vhier>,
 L<vpm>,
-L<vppp>,
+L<vperlpp>,
 L<vrename>
 
 L<Verilog::EditFiles>,

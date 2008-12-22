@@ -435,6 +435,6 @@ L<Verilog::Netlist>,
 L<Verilog::Getopt>,
 L<vrename>,
 L<vpm>
-L<vppp>
+L<vperlpp>
 
 =cut

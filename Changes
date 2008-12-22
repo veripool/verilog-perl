@@ -5,6 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.050 ****
 
+**	Vppp is now renamed vperlpp.
+	These fix naming conflicts with other packages.  [Chitlesh Goorah]
+
 ***	Fix missing module dependencies and Bison warning.  [Chitlesh Goorah]
 
 * Verilog::Language 3.045 2008/12/19

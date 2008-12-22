@@ -81,9 +81,10 @@ WriteMakefile(
 			    'Test' => 1,
 			    'warnings' => 1,
 			    #'Test::Pod' => 1,  # Required only for author tests
+			    #'Test::Perl::Critic' => 1,  # Required only for author tests
 			},
 	      PMLIBDIRS => ['lib', 'Verilog', 'Netlist',],
-	      EXE_FILES => [qw( vrename vpm vppp vhier vsplitmodule )],
+	      EXE_FILES => [qw( vrename vpm vperlpp vhier vsplitmodule )],
 	      'clean'	=> {FILES => qw (test_dir signals.vrename .vpm simv ),},
 	      'dist'    => {COMPRESS => 'gzip -9f',
 			    SUFFIX   => '.gz',

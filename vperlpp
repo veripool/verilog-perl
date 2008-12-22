@@ -1,17 +1,5 @@
 #!/usr/bin/perl -w
-# vppp - Preprocess Verilog
-######################################################################
-#
-# Copyright 2000-2008 by Wilson Snyder <wsnyder@wsnyder.org>.  This
-# program is free software; you can redistribute it and/or modify it under
-# the terms of either the GNU Lesser General Public License or the Perl
-# Artistic License.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
+# See copyright, etc in below POD section.
 ######################################################################
 
 require 5.005;
@@ -63,11 +51,11 @@ if (! GetOptions (
 		  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
 		  "<>"		=> \&parameter,
 		  )) {
-    die "%Error: Bad usage, try 'vppp --help'\n";
+    die "%Error: Bad usage, try 'vperlpp --help'\n";
 }
 
 if (!@opt_files) {
-    die "%Error: vppp: No input filenames specified.\n";
+    die "%Error: vperlpp: No input filenames specified.\n";
 }
 
 my $fh = IO::File->new;
@@ -106,7 +94,7 @@ sub debug {
 sub parameter {
     my $param = shift;
     if ($param =~ /^--?/) {
-	die "%Error: vppp: Unknown parameter: $param\n";
+	die "%Error: vperlpp: Unknown parameter: $param\n";
     } else {
 	push @opt_files, $param;
     }
@@ -122,16 +110,16 @@ __END__
 
 =head1 NAME
 
-vppp - Preprocess Verilog code using verilog-perl
+vperlpp - Preprocess Verilog code using verilog-perl
 
 =head1 SYNOPSIS
 
-  vppp --help
-  vppp [verilog_options] [-o filename] [verilog_files.v...]
+  vperlpp --help
+  vperlpp [verilog_options] [-o filename] [verilog_files.v...]
 
 =head1 DESCRIPTION
 
-Vppp reads the Verilog files passed on the command line and outputs
+Vperlpp reads the Verilog files passed on the command line and outputs
 preprocessed output to standard out or the filename passed with B<-p>.
 
 =head1 VERILOG ARGUMENTS
@@ -169,7 +157,7 @@ for include directories or libraries.
 
 =back
 
-=head1 VPPP ARGUMENTS
+=head1 VPERLPP ARGUMENTS
 
 =over 4
 
@@ -185,7 +173,7 @@ Use the given filename for output instead of stdout.
 
 Removes empty lines from the output.  Should be used with --noline, as if
 correct line numbers are needed, blank lines must be preserved for proper
-accounting by the program reading the output of vppp.
+accounting by the program reading the output of vperlpp.
 
 =item --nocomment
 
@@ -213,8 +201,8 @@ Displays program version and exits.
 
 =head1 LANGUAGE EXTENSIONS
 
-Vppp supports the preprocessing constructs defined in the Verilog 2001 and
-SystemVerilog 3.1 standards.
+Vperlpp supports the preprocessing constructs defined in the Verilog 2001
+and SystemVerilog 3.1 standards.
 
 The following additional constructs may be added to your Verilog code.
 
