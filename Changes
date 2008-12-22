@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.050 ****
+
+***	Fix missing module dependencies and Bison warning.  [Chitlesh Goorah]
+
 * Verilog::Language 3.045 2008/12/19
 
 ***     Add vpm --noline option. [Vasu Arasanipalai]

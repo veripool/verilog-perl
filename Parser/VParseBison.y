@@ -1059,7 +1059,7 @@ taskRef:	idDotted		 		{ }
 	;
 
 funcRef<str>:
-		idDotted '(' exprList ')'		{ $1+"("+$3+")" }
+		idDotted '(' exprList ')'		{ $1+"("+$3+")"; }
 	;
 
 taskDecl: 	yTASK lifetimeE taskId funcGuts yENDTASK endLabelE

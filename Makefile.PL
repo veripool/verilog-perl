@@ -76,7 +76,11 @@ WriteMakefile(
 	      VERSION_FROM  => 'Language.pm',
 	      NO_META	=> 1,
 	      #OPTIMIZE	=> '-ggdb',
-	      PREREQ_PM => {'Pod::Usage' => 0,
+	      PREREQ_PM => {'Pod::Usage' => 1,
+			    'Data::Dumper' => 1,
+			    'Test' => 1,
+			    'warnings' => 1,
+			    #'Test::Pod' => 1,  # Required only for author tests
 			},
 	      PMLIBDIRS => ['lib', 'Verilog', 'Netlist',],
 	      EXE_FILES => [qw( vrename vpm vppp vhier vsplitmodule )],
