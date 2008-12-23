@@ -1,4 +1,4 @@
-// DESCRIPTION: vpm: Example top verilog file for vpm program
+// DESCRIPTION: Example top verilog file for vpassert program
 // This file ONLY is placed into the Public Domain, for any use,
 // without warranty, 2000-2008 by Wilson Snyder.
 
@@ -15,7 +15,7 @@ module example;
    reg \escaped[10] ;
 
    initial begin
-      $uinfo (0, "Welcome to a VPMed file\n");
+      $uinfo (0, "Welcome to a VPASSERTed file\n");
       //
       $uinfo (1, "Printed only at debug level %0d\n",1);
       $uinfo (9, "Printed only at debug level %0d\n",9);

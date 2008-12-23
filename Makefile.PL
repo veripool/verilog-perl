@@ -29,7 +29,7 @@ README: Verilog-Perl.pod
 	pod2text --loose $< > $@
 
 clean::
-	-$(RM_RF) simv .vpm test_dir *.tmp
+	-$(RM_RF) simv .vpassert test_dir *.tmp
 
 dist: maintainer-copy distcheck README
 
@@ -84,8 +84,8 @@ WriteMakefile(
 			    #'Test::Perl::Critic' => 1,  # Required only for author tests
 			},
 	      PMLIBDIRS => ['lib', 'Verilog', 'Netlist',],
-	      EXE_FILES => [qw( vrename vpm vperlpp vhier vsplitmodule )],
-	      'clean'	=> {FILES => qw (test_dir signals.vrename .vpm simv ),},
+	      EXE_FILES => [qw( vrename vpassert vppreproc vhier vsplitmodule )],
+	      'clean'	=> {FILES => qw (test_dir signals.vrename .vpassert simv ),},
 	      'dist'    => {COMPRESS => 'gzip -9f',
 			    SUFFIX   => '.gz',
 			    DIST_DEFAULT => 'README all tardist',

@@ -10,7 +10,7 @@
 \.texi$
 \.tar\.
 \.bs$
-\.vpm/.*
+\.vpassert/.*
 \.o$
 \.def$
 \.dll$

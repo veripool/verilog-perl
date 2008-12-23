@@ -12,18 +12,18 @@ use Test;
 BEGIN { plan tests => 5 }
 BEGIN { require "t/test_utils.pl"; }
 
-print "Checking vpm...\n";
+print "Checking vpassert...\n";
 
 # Preprocess the files
-mkdir "test_dir/.vpm", 0777;
+mkdir "test_dir/.vpassert", 0777;
 system ("/bin/rm -rf test_dir/verilog");
 symlink ("../verilog", "test_dir/verilog");  # So `line files are found; ok if fails
-run_system ("${PERL} vpm --minimum --nostop -o test_dir/.vpm --date -y verilog/");
+run_system ("${PERL} vpassert --minimum --nostop -o test_dir/.vpassert --date -y verilog/");
 ok(1);
-ok(-r 'test_dir/.vpm/pli.v');
+ok(-r 'test_dir/.vpassert/pli.v');
 
-ok(compare('lines', [glob("test_dir/.vpm/*.v")]));
-ok(compare('diff',  [glob("test_dir/.vpm/*.v")]));
+ok(compare('lines', [glob("test_dir/.vpassert/*.v")]));
+ok(compare('diff',  [glob("test_dir/.vpassert/*.v")]));
 
 # Build the model
 unlink "simv";
@@ -31,16 +31,16 @@ chdir 'test_dir';
 if ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
     run_system (# We use VCS, insert your simulator here
 		"$ENV{VCS_HOME}/bin/vcs"
-		# vpm uses `pli to point to the hierarchy of the pli module
+		# vpassert uses `pli to point to the hierarchy of the pli module
 		." +define+pli=pli"
-		# vpm uses `__message_on to point to the message on variable
+		# vpassert uses `__message_on to point to the message on variable
 		." +define+__message_on=pli.message_on"
-		# vpm --minimum uses `__message_minimum to optimize away some messages
+		# vpassert --minimum uses `__message_minimum to optimize away some messages
 		." +define+__message_minimum=1"
-		# Read files from .vpm BEFORE reading from other directories
-		." +librescan +libext+.v -y .vpm"
+		# Read files from .vpassert BEFORE reading from other directories
+		." +librescan +libext+.v -y .vpassert"
 		# Finally, read the needed top level file
-		." .vpm/example.v"
+		." .vpassert/example.v"
 		);
     # Execute the model (VCS is a compiled simulator)
     run_system ("./simv");
@@ -50,18 +50,18 @@ if ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
 elsif ($ENV{NC_ROOT} && -d "$ENV{NC_ROOT}/tools") {
     run_system ("ncverilog"
 		." -q"
-		# vpm optionally uses SystemVerilog coverage for $ucover_clk
+		# vpassert optionally uses SystemVerilog coverage for $ucover_clk
 		." +sv"
-		# vpm uses `pli to point to the hierarchy of the pli module
+		# vpassert uses `pli to point to the hierarchy of the pli module
 		." +define+pli=pli"
-		# vpm uses `__message_on to point to the message on variable
+		# vpassert uses `__message_on to point to the message on variable
 		." +define+__message_on=pli.message_on"
-		# vpm --minimum uses `__message_minimum to optimize away some messages
+		# vpassert --minimum uses `__message_minimum to optimize away some messages
 		." +define+__message_minimum=1"
-		# Read files from .vpm BEFORE reading from other directories
-		." +librescan +libext+.v -y .vpm"
+		# Read files from .vpassert BEFORE reading from other directories
+		." +librescan +libext+.v -y .vpassert"
 		# Finally, read the needed top level file
-		." .vpm/example.v"
+		." .vpassert/example.v"
 		);
     ok(1);
 }
@@ -93,7 +93,7 @@ sub compare {
 
 
 	my $fn1 = "verilog/$file";
-	my $fn2 = "test_dir/.vpm/$file";
+	my $fn2 = "test_dir/.vpassert/$file";
 	if ($mode eq 'lines') {
 	    my $orig_lines = lines_in($fn1);
 	    my $new_lines = lines_in($fn2);
@@ -109,7 +109,7 @@ sub compare {
 	    @l2 = grep (!/`line/, @l2);
 	    my $nl = $#l1;  $nl = $#l2 if ($#l2 > $nl);
 	    for (my $l=0; $l<=$nl; $l++) {
-		next if $l2[$l] =~ /vpm/;
+		next if $l2[$l] =~ /vpassert/;
 		if (($l1[$l]||"") ne ($l2[$l]||"")) {
 		    warn ("%Warning: Line ".($l+1)." mismatches; diff $fn1 $fn2\n"
 			  ."F1: ".($l1[$l]||"*EOF*\n")

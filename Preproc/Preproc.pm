@@ -188,7 +188,7 @@ Verilog::Preproc - Preprocess Verilog files
 =head1 EXAMPLE
 
     # This is a complete verilog pre-parser!
-    # For a command line version, see vperlpp
+    # For a command line version, see vppreproc
     use Verilog::Getopt;
     use Verilog::Preproc;
 

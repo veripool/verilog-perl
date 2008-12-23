@@ -12,18 +12,18 @@ use Test;
 BEGIN { plan tests => 6 }
 BEGIN { require "t/test_utils.pl"; }
 
-print "Checking vperlpp...\n";
+print "Checking vppreproc...\n";
 
-vperlpp ("t/80_vperlpp_none.out",   "test_dir/vperlpp_none.v",	"");
-vperlpp ("t/80_vperlpp_cmped.out",  "test_dir/vperlpp_cmped.v",	"--nocomment --pedantic");
-vperlpp ("t/80_vperlpp_simple.out", "test_dir/vperlpp_simple.v", "--simple");
+vppreproc ("t/80_vppreproc_none.out",   "test_dir/vppreproc_none.v",	"");
+vppreproc ("t/80_vppreproc_cmped.out",  "test_dir/vppreproc_cmped.v",	"--nocomment --pedantic");
+vppreproc ("t/80_vppreproc_simple.out", "test_dir/vppreproc_simple.v", "--simple");
 
-sub vperlpp {
+sub vppreproc {
     my $checkname = shift;
     my $out = shift;
     my $flags = shift;
 
-    run_system ("${PERL} vperlpp ${flags} -y verilog inc2.v > $out");
+    run_system ("${PERL} vppreproc ${flags} -y verilog inc2.v > $out");
     ok(-r $out);
     ok(files_identical ($out, $checkname));
 }

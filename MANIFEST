@@ -84,11 +84,11 @@ t/56_editfiles_a.out
 t/56_editfiles_b.out
 t/56_editfiles_edit.out
 t/58_vsplitmodule.t
-t/60_vpm.t
-t/80_vperlpp.t
-t/80_vperlpp_cmped.out
-t/80_vperlpp_none.out
-t/80_vperlpp_simple.out
+t/60_vpassert.t
+t/80_vppreproc.t
+t/80_vppreproc_cmped.out
+t/80_vppreproc_none.out
+t/80_vppreproc_simple.out
 t/85_vhier.t
 t/85_vhier_cells.out
 t/85_vhier_inpfiles.out
@@ -117,7 +117,7 @@ verilog/v_hier_top.v
 verilog/v_hier_top2.v
 verilog/v_v2k.v
 vhier
-vpm
-vperlpp
+vpassert
+vppreproc
 vrename
 vsplitmodule

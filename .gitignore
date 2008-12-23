@@ -6,6 +6,7 @@ pm_to_blib
 *.bs
 *.old
 *.tmp
+.vpassert
 .vpm
 simv
 signals.vrename

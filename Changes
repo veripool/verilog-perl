@@ -3,10 +3,13 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.050 ****
+* Verilog::Language 3.100 ****
 
-**	Vppp is now renamed vperlpp.
-	These fix naming conflicts with other packages.  [Chitlesh Goorah]
+**	Vppp is now renamed vppreproc; vpm is renamed vpassert.
+	This fixes naming conflicts with other packages.  [Chitlesh Goorah]
+	Note this breaks backward compatibility and any scripts that call
+	these programs will need updating.  Alternatively, add a symlink in
+	your bin directory from the old name.
 
 ***	Fix missing module dependencies and Bison warning.  [Chitlesh Goorah]
 

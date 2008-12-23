@@ -86,14 +86,14 @@ The following scripts are installed by Verilog-Perl:
 Vhier reads the Verilog files passed on the command line and outputs a tree
 of all of the filenames, modules, and cells referenced by that file.
 
-=item L<vpm>
+=item L<vpassert>
 
-Vperlassert will read the specified Verilog files and preprocess special
+Vpassert will read the specified Verilog files and preprocess special
 PLI assertions.
 
-=item L<vperlpp>
+=item L<vppreproc>
 
-Vperlpp (Verilog-Perl Pre Processor) reads the Verilog files passed on the
+Vppreproc (Verilog-Perl Pre Processor) reads the Verilog files passed on the
 command line and outputs preprocessed output.
 
 =item L<vrename>
@@ -245,8 +245,8 @@ Wilson Snyder <wsnyder@wsnyder.org>
 =head1 SEE ALSO
 
 L<vhier>,
-L<vpm>,
-L<vperlpp>,
+L<vpassert>,
+L<vppreproc>,
 L<vrename>
 
 L<Verilog::EditFiles>,

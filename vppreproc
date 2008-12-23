@@ -51,11 +51,11 @@ if (! GetOptions (
 		  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
 		  "<>"		=> \&parameter,
 		  )) {
-    die "%Error: Bad usage, try 'vperlpp --help'\n";
+    die "%Error: Bad usage, try 'vppreproc --help'\n";
 }
 
 if (!@opt_files) {
-    die "%Error: vperlpp: No input filenames specified.\n";
+    die "%Error: vppreproc: No input filenames specified.\n";
 }
 
 my $fh = IO::File->new;
@@ -94,7 +94,7 @@ sub debug {
 sub parameter {
     my $param = shift;
     if ($param =~ /^--?/) {
-	die "%Error: vperlpp: Unknown parameter: $param\n";
+	die "%Error: vppreproc: Unknown parameter: $param\n";
     } else {
 	push @opt_files, $param;
     }
@@ -110,16 +110,16 @@ __END__
 
 =head1 NAME
 
-vperlpp - Preprocess Verilog code using verilog-perl
+vppreproc - Preprocess Verilog code using verilog-perl
 
 =head1 SYNOPSIS
 
-  vperlpp --help
-  vperlpp [verilog_options] [-o filename] [verilog_files.v...]
+  vppreproc --help
+  vppreproc [verilog_options] [-o filename] [verilog_files.v...]
 
 =head1 DESCRIPTION
 
-Vperlpp reads the Verilog files passed on the command line and outputs
+Vppreproc reads the Verilog files passed on the command line and outputs
 preprocessed output to standard out or the filename passed with B<-p>.
 
 =head1 VERILOG ARGUMENTS
@@ -157,7 +157,7 @@ for include directories or libraries.
 
 =back
 
-=head1 VPERLPP ARGUMENTS
+=head1 VPPREPROC ARGUMENTS
 
 =over 4
 
@@ -173,7 +173,7 @@ Use the given filename for output instead of stdout.
 
 Removes empty lines from the output.  Should be used with --noline, as if
 correct line numbers are needed, blank lines must be preserved for proper
-accounting by the program reading the output of vperlpp.
+accounting by the program reading the output of vppreproc.
 
 =item --nocomment
 
@@ -201,7 +201,7 @@ Displays program version and exits.
 
 =head1 LANGUAGE EXTENSIONS
 
-Vperlpp supports the preprocessing constructs defined in the Verilog 2001
+Vppreproc supports the preprocessing constructs defined in the Verilog 2001
 and SystemVerilog 3.1 standards.
 
 The following additional constructs may be added to your Verilog code.

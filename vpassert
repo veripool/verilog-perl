@@ -1,16 +1,5 @@
 #!/usr/bin/perl -w
-# vpm - Preprocess Verilog signals
-######################################################################
-#
-# Copyright 2000-2008 by Wilson Snyder.  This program is free software;
-# you can redistribute it and/or modify it under the terms of either the GNU
-# General Public License or the Perl Artistic License.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
+# See copyright, etc in below POD section.
 ######################################################################
 
 require 5.005;
@@ -28,9 +17,9 @@ use lib '.';
 use Verilog::Parser;
 use Verilog::Getopt;
 
-use vars qw ($VERSION $Debug $Opt %Vpm_Conversions
-	     $Vpm_Conversions_Regexp
-	     %Vpm_Chiponly_Rename
+use vars qw ($VERSION $Debug $Opt %Vpassert_Conversions
+	     $Vpassert_Conversions_Regexp
+	     %Vpassert_Chiponly_Rename
 	     $Opt_Vericov $Opt_Chiponly
 	     @Endmodule_Inserts
 	     $Last_Parser
@@ -52,7 +41,7 @@ $VERSION = '3.045';
 # Hash with key of macro to convert and value of the function to call when it occurs
 # Avoid having a token that is a substring of a standard function, for example
 #     $wr would be bad (beginning of $write).  That would slow down the parsing.
-%Vpm_Conversions
+%Vpassert_Conversions
     = (## U versions, to avoid conflicts with SystemVerilog
        '$uassert' =>		\&ins_uassert,
        '$uassert_amone' =>	sub {shift; uassert_hot(0,@_); },   # atmost one hot
@@ -72,8 +61,8 @@ $VERSION = '3.045';
 # Any tokens appearing here will be removed with the --chiponly option
 # This allows v files to be given to people that don't have our PLI library, and
 # cah have these "true-PLI" functions to do something simpler.
-%Vpm_Chiponly_Rename = ();
-%Vpm_Chiponly_Rename
+%Vpassert_Chiponly_Rename = ();
+%Vpassert_Chiponly_Rename
     = (#Token	  Convert to (0=remove)
        '$cmd_stop' => '$stop',
        );
@@ -82,13 +71,13 @@ $VERSION = '3.045';
 # main
 
 $Debug = 0;
-my $output_dirname = ".vpm/";
+my $output_dirname = ".vpassert/";
 my $Opt_Quiet = 0;	# Don't blab about what files are being worked on
 my $Opt_AllFiles = 0;	# Preprocess all files
 my $Opt_Date = 0;	# Check dates
 my $Opt_NoPli = 0;	# Delete all pli calls
 $Opt_Vericov = 0;	# Add vericov on/off comments (messes up line # counts)
-$Opt_Chiponly = 0;	# Only chip model; apply Vpm_Chiponly_Rename's
+$Opt_Chiponly = 0;	# Only chip model; apply Vpassert_Chiponly_Rename's
 my $Opt_RealIntent;	# RealIntent
 my $Opt_Stop = 1;	# Put $stop in error messages
 my $Opt_Verilator;	# Verilator
@@ -104,8 +93,8 @@ my @files = ();
 my @instance_tests_list = ();
 
 my $Prog_Mtime = 0;	# Time program last changed, so we bag cache on change
-(-r "$RealBin/vpm") or die "%Error: Where'd the vpm source code go?";
-$Prog_Mtime = (stat("$RealBin/vpm"))[9];
+(-r "$RealBin/vpassert") or die "%Error: Where'd the vpassert source code go?";
+$Prog_Mtime = (stat("$RealBin/vpassert"))[9];
 
 autoflush STDOUT 1;
 
@@ -134,7 +123,7 @@ if (! GetOptions (
 		  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
 		  "<>"		=> \&parameter,
 		  )) {
-    die "%Error: Bad usage, try 'vpm --help'\n";
+    die "%Error: Bad usage, try 'vpassert --help'\n";
 }
 sub _switch_line {
     # If any of these flags change, we must regenerate output
@@ -161,19 +150,19 @@ push @files, ($Opt->incdir(), $Opt->library(), $Opt->module_dir());
 
 if ($#files >= 0) {
     (!-f $output_dirname) or die "%Error: $output_dirname already exists as a file, should be a directory.\n";
-    vpm_recursive_prelude($output_dirname);
+    vpassert_recursive_prelude($output_dirname);
   file:
     foreach my $file (@files) {
 	next if $file eq $output_dirname;
 	foreach my $exclude (@Opt_Exclude) {
 	    next file if $file =~ /^$exclude/;
 	}
-	vpm_recursive ($file, $output_dirname);
+	vpassert_recursive ($file, $output_dirname);
     }
-    vpm_recursive_postlude($output_dirname);
+    vpassert_recursive_postlude($output_dirname);
 }
 
-print "\tVPM generated $Total_Files new file(s)\n";
+print "\tVPASSERT generated $Total_Files new file(s)\n";
 exit (0);
 
 ######################################################################
@@ -181,7 +170,7 @@ exit (0);
 sub usage {
     print "Version $VERSION\n";
     print "\nThe following tokens are converted:\n";
-    foreach my $tok (keys %Vpm_Conversions ) {
+    foreach my $tok (keys %Vpassert_Conversions ) {
 	print "\tToken $tok\n";
     }
     print "\n";
@@ -301,7 +290,7 @@ sub ins_uassert_req_ack {
 sub ins_ucheck_ilevel {
     shift; # $ucheck_ilevel
     my $level = shift;
-    my $chk = "/*vpm*/if ((`__message_on) && ";
+    my $chk = "/*vpassert*/if ((`__message_on) && ";
     $chk .= ' && (`__message_minimum >= (' . $level . '))' if $Opt_Minimum;
     $chk = $chk . '(__message >= (' . $level . ')))';
     sendout ($chk);
@@ -357,12 +346,12 @@ sub umessage_clk {
     $ReqAck_Num++;
 
     if ($cond eq '0') {
-	sendout("/*vpm*/$sig=1'b1;/*vpm*/");
+	sendout("/*vpassert*/$sig=1'b1;/*vpassert*/");
     } else {
-	sendout("/*vpm*/$sig=!($cond);/*vpm*/");
+	sendout("/*vpassert*/$sig=!($cond);/*vpassert*/");
     }
 
-    _insert_always_begin('assert', "/*vpm*/ $sig=1'b0; /*vpm*/");
+    _insert_always_begin('assert', "/*vpassert*/ $sig=1'b0; /*vpassert*/");
 
     my $bot = (" always @ (posedge $clk) if ($sig) "
 	       .message (get_lineinfo(), 1, $char, 1, "", @_)
@@ -376,7 +365,7 @@ sub ucover_clk {
     $#_==-1
 	or die "%Error: ".$Last_Parser->fileline.": Extra arguments to \$ucover_clk: $_[0]\n";
 
-    # We require quotes around the label so synthesis tools won't gripe if not wrapping in vpm
+    # We require quotes around the label so synthesis tools won't gripe if not wrapping in vpassert
     # (Otherwise it would look like a system call with a variable of the name of the label.)
     ($label =~ s/^\s*\"([a-zA-Z][a-zA-Z0-9_]+)\"\s*$/$1/)
 	or die "%Error: ".$Last_Parser->fileline.": Non-string label \$ucover_clk second argument: $label\n";
@@ -386,9 +375,9 @@ sub ucover_clk {
     $Insure_Symbols{$Last_Module}{$sig} = ['reg', 0];	# Make this symbol exist if doesn't
     $ReqAck_Num++;
 
-    sendout("/*vpm*/$sig=1'b1;/*vpm*/");
+    sendout("/*vpassert*/$sig=1'b1;/*vpassert*/");
 
-    _insert_always_begin('cover', "/*vpm*/ $sig=1'b0; /*vpm*/");
+    _insert_always_begin('cover', "/*vpassert*/ $sig=1'b0; /*vpassert*/");
 
     # Alas, `line is required to see correct cover point
     my $bot = "";
@@ -397,7 +386,7 @@ sub ucover_clk {
     }
     $bot .= " $label: cover property (@(posedge $clk) ($sig));\n";
     if ($Opt_Line) {
-	$bot .= "`line /*vpm_endmod_line*/ \"".$Last_Parser->filename."\" 0\n";
+	$bot .= "`line /*vpassert_endmod_line*/ \"".$Last_Parser->filename."\" 0\n";
     }
     push @Endmodule_Inserts, $bot;
 }
@@ -451,7 +440,7 @@ sub message_header {
     if (!$Msg_Header_Level) {
 	$out .= "\n/*summit modcovoff -bpen*/\n" if $Vericov_Enabled;
 	$out .= "\n/*ri userpass BE on*/\n" if $Opt_RealIntent;
-	$out .= "/*vpm*/";
+	$out .= "/*vpassert*/";
     }
     $out .= "begin ";
     $out .= "`coverage_block_off " if ($Opt_Verilator && !$Msg_Header_Level);
@@ -461,7 +450,7 @@ sub message_header {
 
 sub message_trailer {
     my $out = 'end ';
-    $out .= '/*vpm*/' if ((--$Msg_Header_Level)==0);
+    $out .= '/*vpassert*/' if ((--$Msg_Header_Level)==0);
     $out .= "\n/*summit modcovon -bpen*/\n" if $Vericov_Enabled;
     $out .= "\n/*ri userpass BE off*/\n" if $Opt_RealIntent;
     return $out;
@@ -613,26 +602,26 @@ sub sendout_orig {
 ######################################################################
 
 sub form_conversions_regexp {
-    # Create $Vpm_Conversions_Regexp, a regexp that matches any of the conversions
+    # Create $Vpassert_Conversions_Regexp, a regexp that matches any of the conversions
     # This regexp will allow us to quickly look at the file and ignore it if no matches
-    $Vpm_Conversions_Regexp = '\$(';
+    $Vpassert_Conversions_Regexp = '\$(';
     my $last_tok = "\$ignore";
-    foreach my $tok (sort (keys %Vpm_Conversions)) {
-	($tok =~ s/^\$//) or die "%Error: Vpm_Conversion $tok doesn't have leading \$\n";
+    foreach my $tok (sort (keys %Vpassert_Conversions)) {
+	($tok =~ s/^\$//) or die "%Error: Vpassert_Conversion $tok doesn't have leading \$\n";
 	if (substr ($tok, 0, length($last_tok)) eq $last_tok) {
 	    #print "Suppress $tok   $last_tok\n" if $Debug;
 	} else {
-	    $Vpm_Conversions_Regexp .= "${tok}|";
+	    $Vpassert_Conversions_Regexp .= "${tok}|";
 	    $last_tok = $tok;
 	}
     }
-    $Vpm_Conversions_Regexp =~ s/\|$ /\)/x;
+    $Vpassert_Conversions_Regexp =~ s/\|$ /\)/x;
 
-    $Vpm_Conversions_Regexp = "\$NEVER_MATCH_ANYTHING" if $Vpm_Conversions_Regexp eq '\$()';
-    #print "CV REGEXP $Vpm_Conversions_Regexp\n" if $Debug;
+    $Vpassert_Conversions_Regexp = "\$NEVER_MATCH_ANYTHING" if $Vpassert_Conversions_Regexp eq '\$()';
+    #print "CV REGEXP $Vpassert_Conversions_Regexp\n" if $Debug;
 }
 
-sub vpm_process {
+sub vpassert_process {
     # Read all signals in this filename
     # Return TRUE if the file changed
     my $filename = shift;
@@ -646,7 +635,7 @@ sub vpm_process {
 	$outname .= $basename;
     }
 
-    print "vpm_process ($filename, $outname, $Got_Change)\n"	if ($Debug);
+    print "vpassert_process ($filename, $outname, $Got_Change)\n"	if ($Debug);
 
     ($filename ne $outname) or die "%Error: $filename: Would overwrite self.";
 
@@ -655,7 +644,7 @@ sub vpm_process {
     @instance_tests_list = ();
 
     # Set up parsing
-    my $parser = new Verilog::Vpm::Parser;
+    my $parser = new Verilog::Vpassert::Parser;
     $parser->filename($filename);
     $parser->lineno(1);
     $Last_Parser = $parser;
@@ -664,7 +653,7 @@ sub vpm_process {
     my $fh = IO::File->new("<$filename") or die "%Error: $! $filename.";
     if (!$Got_Change) {
 	while (<$fh>) {
-	    goto diff if (/$Vpm_Conversions_Regexp/o);
+	    goto diff if (/$Vpassert_Conversions_Regexp/o);
 	    goto diff if ($Opt_NoPli && /\$/);
 	}
 	print "$filename: No dollars, not processing\n" if ($Debug);
@@ -699,24 +688,24 @@ sub vpm_process {
 	    my $hit;
 	    for (my $l = $#Sendout; $l>=0; $l--) {
 		my $tok = $Sendout[$l][1];
-		if ($tok =~ m%/\*vpm beginmodule $mod\*/%) {
+		if ($tok =~ m%/\*vpassert beginmodule $mod\*/%) {
 		    my $lineno = $Sendout[$l][0];
 		    if ($Opt_Line) {
 			$insert .= "\n`line ".$lineno." \"".$Last_Parser->filename."\" 0\n";
 		    }
-		    $tok =~ s%/\*vpm beginmodule $mod\*/%/*vpm*/$insert%g or die;  # Must exist, found above!
+		    $tok =~ s%/\*vpassert beginmodule $mod\*/%/*vpassert*/$insert%g or die;  # Must exist, found above!
 		    $Sendout[$l][1] = $tok;
 		    $hit = 1;
 		    # Don't exit the loop, keep looking for more.
 		    # It's possible there's a `ifdef with multiple "module x" headers
 		}
 	    }
-	    $hit or die "vpm %Error: $filename: Couldn't find symbol insertion point in $mod\n";
+	    $hit or die "vpassert %Error: $filename: Couldn't find symbol insertion point in $mod\n";
 	}
     }
 
     $#Endmodule_Inserts < 0
-	or die "vpm %Error: $filename: Couldn't find endmodule\n";
+	or die "vpassert %Error: $filename: Couldn't find endmodule\n";
 
     # Put out the processed file
     print "Got_Change? $Got_Change  $outname\n"	if ($Debug);
@@ -727,7 +716,7 @@ sub vpm_process {
 	    print $fh "`line 1 \"$filename\" 0\n";
 	}
 	# No newline so line counts not affected
-	print $fh "/* Generated by vpm; File:\"$filename\" */";
+	print $fh "/* Generated by vpassert; File:\"$filename\" */";
 	my $out = join('',map {$_->[1]} @Sendout);
 	# Simplify redundant `lines to save space
 	$out =~ s%(`line[^\n]*)\n[ \t\n]*(`line[^\n]*\n)%$2%mg;
@@ -761,7 +750,7 @@ sub bitwidth {
 #----------------------------------------------------------------------
 #----------------------------------------------------------------------
 
-sub vpm_db_read_file {
+sub vpassert_db_read_file {
     # Read when the unprocessed files were last known to not need processing
     my $filename = shift;
     my $fh = IO::File->new("<$filename") or return;  # no error if fails
@@ -783,7 +772,7 @@ sub vpm_db_read_file {
     $fh->close;
 }
 
-sub vpm_db_write_file {
+sub vpassert_db_write_file {
     # Save which unprocessed files did not need processing
     my $filename = shift;
     my $fh = IO::File->new(">$filename") or die "%Error: $! $filename.\n";
@@ -796,7 +785,7 @@ sub vpm_db_write_file {
 
 #----------------------------------------------------------------------
 
-sub vpm_recursive_prelude {
+sub vpassert_recursive_prelude {
     # What to do before processing any files
     my $destdir = shift;
 
@@ -804,7 +793,7 @@ sub vpm_recursive_prelude {
 
     %File_Mtime = ();
     %File_Mtime_Read = ();
-    vpm_db_read_file ("${destdir}/.vpm_skipped_times");
+    vpassert_db_read_file ("${destdir}/.vpassert_skipped_times");
     form_conversions_regexp();
 
     if (! -d $destdir) {
@@ -812,21 +801,21 @@ sub vpm_recursive_prelude {
     }
 
     # Don't include directory in time saving, as path may change dep how run
-    my $dest_mtime = $File_Mtime_Read{"vpm"} || 0;
+    my $dest_mtime = $File_Mtime_Read{"vpassert"} || 0;
     if (!$Opt_Date
 	|| ($Prog_Mtime > $dest_mtime)
 	|| $Last_ArgsDiffer) {
 	# Flush the whole read cache
 	%File_Mtime_Read = ();
-	print "\t    VPM (or overall flags) changed... Two minutes...\n";
+	print "\t    VPASSERT (or overall flags) changed... Two minutes...\n";
 	print "\t    Mtime = $Prog_Mtime\n" if $Debug;
     }
     #print "FF $Opt_Date, $Prog_Mtime, $dest_mtime, $Opt_Vericov, $Last_Vericov\n";
-    $File_Mtime{"vpm"} = $Prog_Mtime;
-    $File_Mtime_Read_Used{"vpm"} = 1;
+    $File_Mtime{"vpassert"} = $Prog_Mtime;
+    $File_Mtime_Read_Used{"vpassert"} = 1;
 }
 
-sub vpm_recursive_postlude {
+sub vpassert_recursive_postlude {
     my $destdir = shift;
     $destdir .= "/"		if ($destdir !~ /[\\\/]$/);
     # What to do after processing all files
@@ -840,16 +829,16 @@ sub vpm_recursive_postlude {
 	    # A file with the same basename may now be in a different dir,
 	    # and already processed, so don't delete it.
 	    if (!$File_Dest{$destfile}) {
-		print "\t    vpm: Deleted? $srcfile\n" if !$Opt_Quiet;
+		print "\t    vpassert: Deleted? $srcfile\n" if !$Opt_Quiet;
 		unlink $destfile;
 	    }
 	}
     }
 
-    vpm_db_write_file ("${destdir}/.vpm_skipped_times");
+    vpassert_db_write_file ("${destdir}/.vpassert_skipped_times");
 }
 
-sub vpm_recursive {
+sub vpassert_recursive {
     # Recursively process this directory or file argument
     my $srcdir = shift;
     my $destdir = shift;
@@ -864,19 +853,19 @@ sub vpm_recursive {
 	    my $srcfile = $srcdir . $basefile;
 	    if ($Opt->libext_matches($srcfile)) {
 		next if -d $srcfile;
-		vpm_process_one($srcfile, $destdir);
+		vpassert_process_one($srcfile, $destdir);
 	    }
 	}
 	$dh->close();
     } else {
 	# Plain file
-	vpm_process_one ($srcdir, $destdir, 1);
+	vpassert_process_one ($srcdir, $destdir, 1);
     }
 }
 
 use vars (qw(%file_directory));
 
-sub vpm_process_one {
+sub vpassert_process_one {
     # Process one file, keeping cache consistent
     my $srcfile = shift;
     my $destdir = shift;
@@ -898,24 +887,24 @@ sub vpm_process_one {
 	my $no_output = 0;
 	unlink $destfile;
 	$Total_Files++;
-	if (! vpm_process ($srcfile, $destfile, $Opt_AllFiles)) {
+	if (! vpassert_process ($srcfile, $destfile, $Opt_AllFiles)) {
 	    # Didn't need to do processing
 	    $no_output = 1;
-	    print "nooutput: vpm_process ($srcfile, $destfile,0 )\n" if ($Debug);
+	    print "nooutput: vpassert_process ($srcfile, $destfile,0 )\n" if ($Debug);
 	    copy($srcfile,$destfile);
 	} else {
 	    # Make sure didn't clobber another directory's file
-	    print "madenew:  vpm_process ($srcfile, $destfile,0 )\n" if ($Debug);
+	    print "madenew:  vpassert_process ($srcfile, $destfile,0 )\n" if ($Debug);
 	    if ($file_directory{$destfile}) {
 		my $old = $file_directory{$destfile};
 		die "%Error: Two files with same basename: $srcfile, $old\n";
 		# This warning is to prevent search order dependence in the
 		# verilog search path.  It also makes sure we don't clobber
-		# one file with another by the same name in the .vpm directory
+		# one file with another by the same name in the .vpassert directory
 	    }
 	}
 	if (!$Opt_Quiet) {
-	    print "  VPM'ing file ($Total_Files) $srcfile ",
+	    print "  VPASSERT'ing file ($Total_Files) $srcfile ",
 	    ($dest_mtime ? "(Changed)":"(New)"), ($no_output ? " (no-output)" : ""),"\n";
 	}
     }
@@ -928,7 +917,7 @@ sub vpm_process_one {
 ######################################################################
 # Parser functions called by Verilog::Parser
 
-package Verilog::Vpm::Parser; ## no critic
+package Verilog::Vpassert::Parser; ## no critic
 require Exporter;
 use Verilog::Parser;
 use base qw(Verilog::Parser);
@@ -946,8 +935,8 @@ BEGIN {
 	 $Opt_Vericov
 	 $ReqAck_Num
 	 $Vericov_Enabled
-	 %Vpm_Conversions
-	 %Vpm_Chiponly_Rename
+	 %Vpassert_Conversions
+	 %Vpassert_Chiponly_Rename
 	 %Insure_Symbols
 	 @Endmodule_Inserts
 	 );
@@ -964,7 +953,7 @@ use vars (@GLOBALS,
 	  qw ( $Last_Keyword
 	       @Last_Symbols
 	       @Last_Number_Ops
-	       $Need_Vpm_Symbols
+	       $Need_Vpassert_Symbols
 	       @Params
 	       $Param_Num
 	       $Parens
@@ -987,7 +976,7 @@ sub new {
     $Last_Task = "";
     $Last_Module = "";
     $Vericov_Enabled = $Opt_Vericov;
-    $Need_Vpm_Symbols = 0;
+    $Need_Vpassert_Symbols = 0;
     $Param_Num = 0;
     $Parens = 0;
     $In_Message = 0;
@@ -1020,8 +1009,8 @@ sub keyword {
 	if ($#Endmodule_Inserts >= 0) {
 	    my $ins = join('',@Endmodule_Inserts);
 	    my $lineno = $parser->lineno;
-	    $ins =~ s!/\*vpm_endmod_line\*/!$lineno!g;
-	    ::sendout ("/*vpm*/ ".$ins." /*vpm*/");
+	    $ins =~ s!/\*vpassert_endmod_line\*/!$lineno!g;
+	    ::sendout ("/*vpassert*/ ".$ins." /*vpassert*/");
 	    @Endmodule_Inserts = ();
 	}
 	push @Sendout, [$parser->lineno, $since . $token];
@@ -1042,8 +1031,8 @@ sub symbol {
     if ($In_Message) {
 	$Params[$Param_Num] .= $since . $token;
     } else {
-	if ($Vpm_Conversions {$token}
-		 || ($Opt_Chiponly && defined $Vpm_Chiponly_Rename{$token} && !$Vpm_Chiponly_Rename{$token})
+	if ($Vpassert_Conversions {$token}
+		 || ($Opt_Chiponly && defined $Vpassert_Chiponly_Rename{$token} && !$Vpassert_Chiponly_Rename{$token})
 		 || ($Opt_NoPli && $token =~ /^\$/ && $Parens==0)) {
 	    push @Sendout, [$parser->lineno, $since];
 	    print "Callback SYMBOL $token\n"    if ($Debug);
@@ -1051,9 +1040,9 @@ sub symbol {
 	    $Param_Num = 1;
 	    @Params = ();
 	    $Params[0] = $token;
-	} elsif ($Opt_Chiponly && defined $Vpm_Chiponly_Rename{$token}
-		 && $Vpm_Chiponly_Rename{$token}) {
-	    push @Sendout, [$parser->lineno, $since . $Vpm_Chiponly_Rename{$token}];
+	} elsif ($Opt_Chiponly && defined $Vpassert_Chiponly_Rename{$token}
+		 && $Vpassert_Chiponly_Rename{$token}) {
+	    push @Sendout, [$parser->lineno, $since . $Vpassert_Chiponly_Rename{$token}];
 	} else {
 	    # Actually a keyword; we check for that too
 	    push @Sendout, [$parser->lineno, $since . $token];
@@ -1068,7 +1057,7 @@ sub symbol {
     if ($Last_Keyword eq "module") {
 	$Last_Module = $token;
 	$Last_Keyword = "";
-	$Need_Vpm_Symbols = 1;
+	$Need_Vpassert_Symbols = 1;
 	$ReqAck_Num = 1;
 	$Parens = 0;
     }
@@ -1111,7 +1100,7 @@ sub operator {
 		    for (my $p=0; $p<=$#Params; $p++) {
 			while ($Params[$p]=~/\n/g) { ::sendout("\n"); }
 		    }
-		} elsif (defined $Vpm_Conversions {$Params[0]}) {
+		} elsif (defined $Vpassert_Conversions {$Params[0]}) {
 		    #print " CALLPRE ",join(':',@Params),"\n" if $Debug;
 		    my $nl = "";
 		    for (my $p=0; $p<=$#Params; $p++) {
@@ -1119,7 +1108,7 @@ sub operator {
 			$Params[$p] = Verilog::Language::strip_comments($Params[$p]);
 			$Params[$p]=~ s/\n//g;
 		    }
-		    my $func = $Vpm_Conversions {$Params[0]};
+		    my $func = $Vpassert_Conversions {$Params[0]};
 		    print " CALL ",join(':',@Params),"\n" if $Debug;
 		    &$func (@Params);
 		    ::sendout ($nl) if $nl; # Adjust for \n's in params
@@ -1146,10 +1135,10 @@ sub operator {
 	    $Params[$Param_Num] .= $since . $token;
 	}
     }
-    elsif ($Need_Vpm_Symbols && ($token eq ';')) {
-	$Need_Vpm_Symbols = 0;
+    elsif ($Need_Vpassert_Symbols && ($token eq ';')) {
+	$Need_Vpassert_Symbols = 0;
 	# Squeeze it after module (..);
-	push @Sendout, [$parser->lineno, $since . $token . '/*vpm beginmodule '.$Last_Module.'*/'];
+	push @Sendout, [$parser->lineno, $since . $token . '/*vpassert beginmodule '.$Last_Module.'*/'];
     }
     else {
 	push @Sendout, [$parser->lineno, $since . $token];
@@ -1218,11 +1207,11 @@ __END__
 
 =head1 NAME
 
-vpm - Preprocess Verilog code assertions
+vpassert - Preprocess Verilog code assertions
 
 =head1 SYNOPSIS
 
-B<vpm>
+B<vpassert>
 [ B<--help> ]
 [ B<--date> ]
 [ B<--quiet> ]
@@ -1231,8 +1220,8 @@ B<vpm>
 
 =head1 DESCRIPTION
 
-Vpm will read the specified Verilog files and preprocess special PLI
-assertions.  The files are written to the directory named .vpm unless
+Vpassert will read the specified Verilog files and preprocess special PLI
+assertions.  The files are written to the directory named .vpassert unless
 another name is given with B<-o>.  If a directory is passed, all files in
 that directory will be preprocessed.
 
@@ -1270,8 +1259,8 @@ Special standalone chip compile
 
 =item --date
 
-Check file dates versus the last run of VPM and don't process if the given
-source file has not changed.
+Check file dates versus the last run of VPASSERT and don't process if the
+given source file has not changed.
 
 =item --exclude
 
@@ -1316,8 +1305,9 @@ conditionally halt simulation.
 
 =item --o I<file>
 
-Use the given filename for output instead of the input name .vpm.  If the
-name ends in a / it is used as a output directory with the default name.
+Use the given filename for output instead of the input name .vpassert.  If
+the name ends in a / it is used as a output directory with the default
+name.
 
 =item --realintent
 
