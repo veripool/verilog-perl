@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.100 ****
+* Verilog::Language 3.100 2009/1/2
 
 **	Vppp is now renamed vppreproc; vpm is renamed vpassert.
 	This fixes naming conflicts with other packages.  [Chitlesh Goorah]
@@ -681,7 +681,7 @@ DESCRIPTION: Documentation on change history for this package
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
 
-Copyright 2001-2008 by Wilson Snyder.  This program is free software;
+Copyright 2001-2009 by Wilson Snyder.  This program is free software;
 you can redistribute it and/or modify it under the terms of either the GNU
 General Public License or the Perl Artistic License.
 
