@@ -107,6 +107,7 @@ module example;
    always @* begin
       if (i==19) $uwarn_clk  (clk,"Called at next edge (1 of 2)\n");
       if (i==18) $ucover_clk (clk,"example_cover_label");
+      $ucover_foreach_clk(clk, "foreach_label", "27:3,1,0", (i[$ui]));
    end
 
 endmodule

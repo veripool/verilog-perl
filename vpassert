@@ -50,12 +50,14 @@ $VERSION = '3.100';
        '$uassert_info' =>	\&ins_uassert_info,
        '$ucheck_ilevel' =>	\&ins_ucheck_ilevel,
        '$uerror' =>		\&ins_uerror,
+       #'$ui' =>		# Used inside ucover_foreach_clk
        '$uinfo' =>		\&ins_uinfo,
        '$uwarn' =>		\&ins_uwarn,
        #'$uassert_clk' =>	sub {shift; my $clk=shift; my $cond=shift; umessage_clk("%%E", $cond,$clk,@_); }, # May be confusing, try without
        '$uerror_clk' =>		sub {shift; umessage_clk("%%E", 0, @_); },
        '$uwarn_clk' =>		sub {shift; umessage_clk("%%W", 0, @_); },
        '$ucover_clk' =>		sub {shift; ucover_clk(@_); },
+       '$ucover_foreach_clk' =>	sub {shift; ucover_foreach_clk(@_); },
        );
 
 # Any tokens appearing here will be removed with the --chiponly option
@@ -359,6 +361,31 @@ sub umessage_clk {
     push @Endmodule_Inserts, $bot;
 }
 
+sub ucover_foreach_clk {
+    my $clk = shift;
+    my $label = shift;
+    my $range = shift;
+    my $expr = shift;
+    $#_==-1
+	or die "%Error: ".$Last_Parser->fileline.": Extra arguments to \$ucover_foreach_clk: $_[0]\n";
+
+    # We require quotes around the label so synthesis tools won't gripe if not wrapping in vpassert
+    # (Otherwise it would look like a system call with a variable of the name of the label.)
+    ($label =~ s/^\s*\"([a-zA-Z][a-zA-Z0-9_]+)\"\s*$/$1/)
+	or die "%Error: ".$Last_Parser->fileline.": Non-string label \$ucover_clk second argument: $label\n";
+
+    ($range =~ s/^\s*\"\s*(\d[0-9,:]+)\s*\"\s*$/$1/)
+	or die "%Error: ".$Last_Parser->fileline.": Can't parse msb:lsb in \$ucover_foreach_clk: $range\n";
+
+    my @values = _convert_foreach_comma($range);
+    foreach my $i (@values) {
+	my $nexpr = $expr;
+	$nexpr =~ s/\$ui\b/($i)/g
+	    or die "%Error: ".$Last_Parser->fileline.": No \$ui in \$ucover_foreach_clk expression: $expr\n";
+	_ucover_clk_guts($clk, $label."__".$i, "(${nexpr})");
+    }
+}
+
 sub ucover_clk {
     my $clk = shift;
     my $label = shift;
@@ -370,12 +397,20 @@ sub ucover_clk {
     ($label =~ s/^\s*\"([a-zA-Z][a-zA-Z0-9_]+)\"\s*$/$1/)
 	or die "%Error: ".$Last_Parser->fileline.": Non-string label \$ucover_clk second argument: $label\n";
 
+    _ucover_clk_guts($clk,$label, "1'b1");
+}
+
+sub _ucover_clk_guts {
+    my $clk = shift;
+    my $label = shift;
+    my $expr = shift;
+
     $ReqAck_Num or die "%Error: ".$Last_Parser->fileline.": \$ucover_clk can't find module statement\n";
     my $sig = "_ucoverclk${ReqAck_Num}";
     $Insure_Symbols{$Last_Module}{$sig} = ['reg', 0];	# Make this symbol exist if doesn't
     $ReqAck_Num++;
 
-    sendout("/*vpassert*/$sig=1'b1;/*vpassert*/");
+    sendout("/*vpassert*/$sig=${expr};/*vpassert*/");
 
     _insert_always_begin('cover', "/*vpassert*/ $sig=1'b0; /*vpassert*/");
 
@@ -543,6 +578,31 @@ sub message {
 }
 
 ######################################################################
+
+sub _convert_foreach_comma {
+    my $in = shift;
+    # Similar to Verilog::Language::split_bus
+    my @out;
+    $in =~ s/\s+//g;
+    while ($in =~ s!,?(((\d+):(\d+))|(\d+))!!) {
+	if (defined $3 && defined $4) {
+	    if ($3<$4) {
+		foreach (my $i=$3; $i<=$4; $i++) {
+		    push @out, $i;
+		}
+	    } else {
+		foreach (my $i=$3; $i>=$4; $i--) {
+		    push @out, $i;
+		}
+	    }
+	} elsif (defined $5) {
+	    push @out, $5;
+	}
+    }
+    $in eq ""
+	or die "%Error: ".$Last_Parser->fileline.": Strange range expression: $in\n";
+    return @out;
+}
 
 sub convert_concat_string {
     my $string = shift;
@@ -1377,8 +1437,30 @@ level, and that global messages are turned on.
 =item $ucover_clk (I<clock>, I<label>)
 
 Similar to $uerror_clk, add a SystemVerilog assertion at the next specified
-clock's edge, with the label specified. This allowes cover properties to be
+clock's edge, with the label specified. This allows cover properties to be
 specified "inline" with normal RTL code.
+
+=item $ucover_foreach_clk (I<clock>, I<label>, "I<msb>:I<lsb>", (... $ui ...))
+
+Similar to $ucover_clk, however cover a range where $ui in the expression
+is replaced with the range index.
+
+Range is "I<msb>:I<lsb>" to indicate from I<msb> downto I<lsb> inclusive,
+and/or a comma separated list of values.
+
+Similar to:
+
+   for ($ui=msb; $ui>=lsb; $ui=$ui-1) begin
+        if (expression with $ui)
+            $ucover_clk(clock, label ## "_" ## bit)
+   end
+
+However there's no way to form a label from a for loop (as psudocoded with
+## above), thus this macro.
+
+=item $ui
+
+Loop index used inside $ucover_foreach_clk.
 
 =item $uinfo (I<level>, "message", [I<vars>...] )
 
