@@ -9,14 +9,15 @@ use IO::File;
 use strict;
 use Test;
 
-BEGIN { plan tests => 6 }
+BEGIN { plan tests => 8 }
 BEGIN { require "t/test_utils.pl"; }
 
 print "Checking vhier...\n";
 
-vhier ("t/85_vhier_cells.out",   "--cells");
+vhier ("t/85_vhier_cells.out",	    "--cells");
 vhier ("t/85_vhier_inpfiles.out",   "--input-files");
 vhier ("t/85_vhier_modfiles.out",   "--module-files");
+vhier ("t/85_vhier_topmodule.out",  "--module-files --top-module v_hier_sub");
 
 sub vhier {
     my $checkname = shift;

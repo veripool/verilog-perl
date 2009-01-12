@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.10***
 
+***	Add vhier --top-module option, bug49.  [John Busco]
+
 ***	Add vpassert $ucover_bits_clk. [Mahesh Kumashikar, et al]
 
 * Verilog::Language 3.100 2009/1/2

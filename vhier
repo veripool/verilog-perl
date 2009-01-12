@@ -36,6 +36,7 @@ my $Opt_ModFiles;
 my $Opt_InFiles;
 my $Opt_Missing = 1;
 my $Opt_Missing_Modules;
+my $Opt_TopModule;
 my $Opt_Xml;
 @ARGV = $Opt->parameter(@ARGV);
 Getopt::Long::config ("no_auto_abbrev");
@@ -50,6 +51,7 @@ if (! GetOptions (
 		  "language=s"		=> sub { shift; Verilog::Language::language_standard(shift); },
 		  "missing!"		=> \$Opt_Missing,
 		  "missing-modules!"	=> \$Opt_Missing_Modules,
+		  "top-module=s"	=> \$Opt_TopModule,
 		  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
 		  "xml!"	=> \$Opt_Xml,
 		  "<>"		=> \&parameter,
@@ -114,6 +116,24 @@ sub vhier {
     $nl->lint();
     $nl->exit_if_error();
 
+    if ($Opt_TopModule) {
+	my $topmod = $nl->find_module($Opt_TopModule)
+	    or die "%Error: --top-module '$Opt_TopModule' was not found.\n";
+	$topmod->is_top(1);
+
+	# We could just pass this to all of the following routines,
+	# but each would need a different edit.  Instead, just edit the netlist
+	# to contain only the specified tree.
+	my %marked_modules;
+	_mod_mark_recurse($nl, $topmod, \%marked_modules);
+
+	foreach my $mod ($nl->modules_sorted) {
+	    if (!$marked_modules{$mod->name}) {
+		$mod->delete;
+	    }
+	}
+    }
+
     if ($Opt_Cells) {
 	foreach my $mod ($nl->modules_sorted) {
 	    if ($mod->is_top) {
@@ -169,7 +189,7 @@ sub show_missing_module_names {
 sub show_mod_files {
     my $nl = shift;
     my $fh = shift;
-    # We'll attach a level attribute to each module indicating it's maximum depth
+    # We'll attach a level attribute to each module indicating its maximum depth
     foreach my $mod ($nl->modules) {
 	$mod->attributes("_vhier_level", 0);
     }
@@ -197,6 +217,19 @@ sub show_mod_files {
     }
     foreach my $filename (reverse @files) {
 	print $fh "  $filename\n";
+    }
+}
+
+sub _mod_mark_recurse {
+    my $nl = shift;
+    my $mod = shift;
+    my $marked = shift;
+
+    $marked->{$mod->name} = 1;
+    foreach my $cell ($mod->cells_sorted) {
+	if ($cell->submod) {
+	    _mod_mark_recurse ($nl, $cell->submod, $marked);
+	}
     }
 }
 
@@ -328,6 +361,18 @@ Do not complain about references to missing modules.
 =item --missing-modules
 
 With --nomissing, show all modules that are not found.
+
+=item --top-module I<module>
+
+Start the report at the specified module name, ignoring all modules that
+are not the one specified with --top-module or below, and report an error
+if the --top-module specified does not exist.  Without this option vhier
+will report all modules, starting at the module(s) that have no children
+below them.
+
+Note this option will not change the result of the --input-files list,
+as the files needed to parse any design are independent of which modules
+are used.
 
 =item --version
 
