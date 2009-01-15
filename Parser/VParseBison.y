@@ -159,11 +159,14 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yBIND		"bind"
 %token<str>		yBINS		"bins"
 %token<str>		yBINSOF		"binsof"
+%token<str>		yBIT		"bit"
 %token<str>		yBREAK		"break"
 %token<str>		yBUF		"buf"
+%token<str>		yBYTE		"byte"
 %token<str>		yCASE		"case"
 %token<str>		yCASEX		"casex"
 %token<str>		yCASEZ		"casez"
+%token<str>		yCHANDLE	"chandle"
 %token<str>		yCLASS		"class"
 %token<str>		yCLOCK		"clock"
 %token<str>		yCLOCKING	"clocking"
@@ -199,6 +202,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yENDTABLE	"endtable"
 %token<str>		yENDTASK	"endtask"
 %token<str>		yENUM		"enum"
+%token<str>		yEVENT		"event"
 %token<str>		yEXPECT		"expect"
 %token<str>		yEXPORT		"export"
 %token<str>		yEXTENDS	"extends"
@@ -223,12 +227,15 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yINOUT		"inout"
 %token<str>		yINPUT		"input"
 %token<str>		yINSIDE		"inside"
+%token<str>		yINT		"int"
 %token<str>		yINTEGER	"integer"
 %token<str>		yINTERFACE	"interface"
 %token<str>		yINTERSECT	"intersect"
 %token<str>		yJOIN		"join"
 %token<str>		yLOCAL		"local"
 %token<str>		yLOCALPARAM	"localparam"
+%token<str>		yLOGIC		"logic"
+%token<str>		yLONGINT	"longint"
 %token<str>		yMATCHES	"matches"
 %token<str>		yMODPORT	"modport"
 %token<str>		yMODULE		"module"
@@ -262,10 +269,13 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yRETURN		"return"
 %token<str>		ySCALARED	"scalared"
 %token<str>		ySEQUENCE	"sequence"
+%token<str>		ySHORTINT	"shortint"
+%token<str>		ySHORTREAL	"shortreal"
 %token<str>		ySIGNED		"signed"
 %token<str>		ySOLVE		"solve"
 %token<str>		ySPECIFY	"specify"
 %token<str>		ySTATIC		"static"
+%token<str>		ySTRING		"string"
 %token<str>		ySTRUCT		"struct"
 %token<str>		ySUPER		"super"
 %token<str>		ySUPPLY0	"supply0"
@@ -627,8 +637,7 @@ varLParam:	yLOCALPARAM				{ VARDECL($1); }
 	;
 varGenVar:	yGENVAR					{ VARDECL($1); }
 	;
-varReg:		yREG					{ VARDECL($1); }
-	|	varTypeKwds				{ VARDECL($1); }
+varReg:		varTypeKwds				{ VARDECL($1); }
 	;
 
 port_direction:			// ==IEEE: port_direction
@@ -639,10 +648,34 @@ port_direction:			// ==IEEE: port_direction
 	;
 
 varTypeKwds<str>:
-		yINTEGER				{ $<fl>$=$<fl>1; $$=$1; }
+		integer_type				{ $$=$1; }
+	|	non_integer_type			{ $$=$1; }
+	|	ySTRING					{ $<fl>$=$<fl>1; $$=$1; }
+	|	yEVENT					{ $<fl>$=$<fl>1; $$=$1; }
+	|	yCHANDLE				{ $<fl>$=$<fl>1; $$=$1; }
+	;
+
+// There's no point in subdividing the integer types into atom/vector
+// because once we go through a typedef we can't tell them apart.
+// Later parsing needs to determine if a range is appropriate or not.
+integer_type<str>:		//== IEEE: integer_type (complete)
+	//			// IEEE: integer_atom_type (complete)
+		yBYTE					{ $<fl>$=$<fl>1; $$=$1; }
+	|	ySHORTINT				{ $<fl>$=$<fl>1; $$=$1; }
+	|	yINT					{ $<fl>$=$<fl>1; $$=$1; }
+	|	yLONGINT				{ $<fl>$=$<fl>1; $$=$1; }
+	|	yINTEGER				{ $<fl>$=$<fl>1; $$=$1; }
+	|	yTIME					{ $<fl>$=$<fl>1; $$=$1; }
+	//			// IEEE: integer_vector_type (complete)
+	|	yBIT					{ $<fl>$=$<fl>1; $$=$1; }
+	|	yLOGIC					{ $<fl>$=$<fl>1; $$=$1; }
+	|	yREG					{ $<fl>$=$<fl>1; $$=$1; }
+	;
+
+non_integer_type<str>:		// ==IEEE: non_integer_type (complete)
+		ySHORTREAL				{ $<fl>$=$<fl>1; $$=$1; }
 	|	yREAL					{ $<fl>$=$<fl>1; $$=$1; }
 	|	yREALTIME				{ $<fl>$=$<fl>1; $$=$1; }
-	|	yTIME					{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 signingE:			// IEEE: signing - plus empty (complete)
@@ -663,11 +696,10 @@ v2kVarDeclE:	/*empty*/ 				{ }
 enumDecl:	yENUM enumBaseTypeE '{' enumNameList '}' { }
 	;
 
-// IEEE: enum_base_type
-// Note this isn't correct yet, need integer_atom_type, integer_vector_type, type_identifier
-enumBaseTypeE:	/* empty */				{ VARDECL("enum"); }
-	|	yINTEGER signingE			{ VARDECL($1); }
-	|	ygenNETTYPE regrangeE signingE		{ VARDECL($1); }
+enumBaseTypeE:		// IEEE: enum_base_type (complete)
+		/* empty */				{ VARDECL("enum"); }
+	|	integer_type signingE regrangeE		{ VARDECL($1); }
+	|	yaID regrangeE				{ VARDECL($1); }
 	;
 
 enumNameList:	enum_name_declaration			{ }

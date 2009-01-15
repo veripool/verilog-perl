@@ -120,6 +120,7 @@ escid	\\[^ \t\f\r\n]+
   "endspecify"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDSPECIFY; }
   "endtable"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDTABLE; }
   "endtask"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDTASK; }
+  "event"		{ FL; VALTEXT; CALLBACK(keywordCb); return yEVENT; }
   "for"			{ FL; VALTEXT; CALLBACK(keywordCb); return yFOR; }
   "force"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFORCE; }
   "forever"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFOREVER; }
@@ -166,7 +167,6 @@ escid	\\[^ \t\f\r\n]+
   "bufif0"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenGATE; }
   "bufif1"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenGATE; }
   "cmos"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenGATE; }
-  "event"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
   "highz0"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenSTRENGTH; }
   "highz1"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenSTRENGTH; }
   "large"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenSTRENGTH; }
@@ -250,10 +250,10 @@ escid	\\[^ \t\f\r\n]+
   "bind"		{ FL; VALTEXT; CALLBACK(keywordCb); return yBIND; }
   "bins"		{ FL; VALTEXT; CALLBACK(keywordCb); return yBINS; }
   "binsof"		{ FL; VALTEXT; CALLBACK(keywordCb); return yBINSOF; }
-  "bit"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
+  "bit"			{ FL; VALTEXT; CALLBACK(keywordCb); return yBIT; }
   "break"		{ FL; VALTEXT; CALLBACK(keywordCb); return yBREAK; }
-  "byte"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
-  "chandle"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
+  "byte"		{ FL; VALTEXT; CALLBACK(keywordCb); return yBYTE; }
+  "chandle"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCHANDLE; }
   "class"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCLASS; }
   "clocking"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCLOCKING; }
   "const"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCONST; }
@@ -288,14 +288,14 @@ escid	\\[^ \t\f\r\n]+
   "illegal_bins"	{ FL; VALTEXT; CALLBACK(keywordCb); return yILLEGAL_BINS; }
   "import"		{ FL; VALTEXT; CALLBACK(keywordCb); return yIMPORT; }
   "inside"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINSIDE; }
-  "int"			{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
+  "int"			{ FL; VALTEXT; CALLBACK(keywordCb); return yINT; }
   "interface"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTERFACE; }
   "intersect"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTERSECT; }
   "join_any"		{ FL; VALTEXT; CALLBACK(keywordCb); return yJOIN; }
   "join_none"		{ FL; VALTEXT; CALLBACK(keywordCb); return yJOIN; }
   "local"		{ FL; VALTEXT; CALLBACK(keywordCb); return yLOCAL; }
-  "logic"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
-  "longint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
+  "logic"		{ FL; VALTEXT; CALLBACK(keywordCb); return yLOGIC; }
+  "longint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yLONGINT; }
   "matches"		{ FL; VALTEXT; CALLBACK(keywordCb); return yMATCHES; }
   "modport"		{ FL; VALTEXT; CALLBACK(keywordCb); return yMODPORT; }
   "new"			{ FL; VALTEXT; CALLBACK(keywordCb); return yNEW; }
@@ -314,11 +314,11 @@ escid	\\[^ \t\f\r\n]+
   "ref"			{ FL; VALTEXT; CALLBACK(keywordCb); return yREF; }
   "return"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRETURN; }
   "sequence"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySEQUENCE; }
-  "shortint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
-  "shortreal"		{ FL; VALTEXT; CALLBACK(keywordCb); return yREAL; }
+  "shortint"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySHORTINT; }
+  "shortreal"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySHORTREAL; }
   "solve"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySOLVE; }
   "static"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTATIC; }
-  "string"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
+  "string"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTRING; }
   "struct"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTRUCT; }
   "super"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySUPER; }
   "tagged"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTAGGED; }
