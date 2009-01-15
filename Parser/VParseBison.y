@@ -404,26 +404,27 @@ statePop:	/* empty */			 	{ }
 // Files
 
 fileE:		/* empty */				{ }
-	|       timeunitsDeclE 	file		      	{ }
+	|       timeunits_declarationE 	file	      	{ }
 	;
 
 file:		description				{ }
 	|	file description			{ }
 	;
 
-// IEEE: description
-description:	moduleDecl				{ }
+description:			// ==IEEE: description
+		module_declaration			{ }
 	|	interfaceDecl				{ }
 //      |       programDecl                             { }
 //      |       packageDecl                             { }
 	|	packageItem				{ }
 	;
-// IEEE: timeunits_declaration + empty
-timeunitsDeclE: /*empty*/                                                       { }
-        |	yTIMEUNIT  yaTIMENUM ';'					{ }
+
+timeunits_declarationE:		// IEEE: timeunits_declaration + empty
+		/*empty*/							{ }
+        |	yTIMEUNIT       yaTIMENUM ';'					{ }
 	| 	yTIMEPRECISION  yaTIMENUM ';'					{ }
-	| 	yTIMEUNIT  yaTIMENUM ';'  yTIMEPRECISION  yaTIMENUM  ';' 	{ }
-	| 	yTIMEPRECISION yaTIMENUM ';' yTIMEUNIT yaTIMENUM ';'		{ }
+	| 	yTIMEUNIT       yaTIMENUM ';' yTIMEPRECISION  yaTIMENUM ';' 	{ }
+	| 	yTIMEPRECISION  yaTIMENUM ';' yTIMEUNIT       yaTIMENUM ';'	{ }
 	;
 
 //**********************************************************************
@@ -435,8 +436,8 @@ packageItem:	varDecl					{ }
 //**********************************************************************
 // Module headers
 
-// IEEE: module_declaration:
-moduleDecl: 	modHeader  timeunitsDeclE modItemListE yENDMODULE endLabelE
+module_declaration:		// ==IEEE: module_declaration (incomplete)
+		modHeader  timeunits_declarationE modItemListE yENDMODULE endLabelE
 			{ PARSEP->endmoduleCb($<fl>4,$4); }
 	;
 modHeader:	modHdr  modParE modPortsE ';' { }
@@ -505,7 +506,7 @@ portV2kSig:	sigAndAttr				{ $<fl>$=$<fl>1; PARSEP->portCb($<fl>1, $1); }
 // Interface headers
 
 // IEEE: interface_declaration + interface_nonansi_header + interface_ansi_header:
-interfaceDecl:	intHdr modParE modPortsStarE ';' timeunitsDeclE interfaceItemListE yENDINTERFACE endLabelE
+interfaceDecl:	intHdr modParE modPortsStarE ';' timeunits_declarationE interfaceItemListE yENDINTERFACE endLabelE
 			{ PARSEP->endinterfaceCb($<fl>7,$7); }
 	|	yEXTERN	intHdr modParE modPortsE ';'	{ }
 	;
@@ -526,29 +527,28 @@ interfaceItemList:
 // IEEE: interface_item + non_port_interface_item
 interfaceItem:
 		varDecl					{ }
-	|	generateRegion				{ }
-	|	interfaceOrGenerateItem			{ }
+	|	generate_region				{ }
+	|	interface_or_generate_item		{ }
 	|	interfaceDecl				{ }
 	//|	program_declaration
 	;
 
-// IEEE: interface_or_generate_item
-interfaceOrGenerateItem:
-		modportDecl				{ }
+interface_or_generate_item:	// ==IEEE: interface_or_generate_item
+		modport_declaration			{ }
 	//|	moduleCommonItem			{ }
 	//|	extern_tf_declaration			{ }
 	;
 
-// IEEE: modport_declaration:
-modportDecl:	yMODPORT modportItemList ';'		{ }
+modport_declaration:		// ==IEEE: modport_declaration
+		yMODPORT modportItemList ';'		{ }
 	;
 
-modportItemList: modportItem				{ }
-	|	modportItemList ',' modportItem		{ }
+modportItemList: modport_item				{ }
+	|	modportItemList ',' modport_item	{ }
 	;
 
-// IEEE: modport_item
-modportItem:	yaID '(' modportPortsDeclList ')'	{ }
+modport_item:			// ==IEEE: modport_item
+		yaID '(' modportPortsDeclList ')'	{ }
 
 modportPortsDeclList:
 		modportPortsDecl			{ }
@@ -560,10 +560,10 @@ modportPortsDeclList:
 // We've expanded the lists each take to instead just have standalone ID ports.
 // We track the type as with the V2k series of defines, then create as each ID is seen.
 modportPortsDecl:
-		portDirection modportSimplePort		{ }
+		port_direction modportSimplePort		{ }
 	|	yCLOCKING yaID				{ }
-	|	yIMPORT modportTfPort			{ }
-	|	yEXPORT modportTfPort			{ }
+	|	yIMPORT modport_tf_port			{ }
+	|	yEXPORT modport_tf_port			{ }
 	// Continuations of above after a comma.
 	|	modportSimplePort			{ }
 	;
@@ -574,8 +574,8 @@ modportSimplePort:
 	|	'.' yaID '(' ')'			{ }
 	|	'.' yaID '(' expr ')'			{ }
 
-//IEEE: modport_tf_port
-modportTfPort:	yaID					{ }
+modport_tf_port:		// ==IEEE: modport_tf_port
+		yaID					{ }
 	//|	method_prototype
 	;
 
@@ -590,19 +590,20 @@ regsigList:	regsig  				{ }
 	|	regsigList ',' regsig		       	{ }
 	;
 
-portV2kDecl:	varRESET portDirection v2kVarDeclE signingE regArRangeE portV2kInit	{ }
+portV2kDecl:	varRESET port_direction v2kVarDeclE signingE regArRangeE portV2kInit	{ }
 //	|	varRESET yaID          portV2kSig	{ }
 //	|	varRESET yaID '.' yaID portV2kSig	{ }
 	;
 
-// IEEE: port_declaration - plus ';'
-portDecl:	varRESET portDirection v2kVarDeclE signingE regArRangeE regsigList ';'	{ }
+portDecl:			// IEEE: port_declaration - plus ';'
+		varRESET port_direction v2kVarDeclE signingE regArRangeE regsigList ';'	{ }
 	;
 
-varDecl:	varRESET varReg     signingE regArRangeE  regsigList ';'	{ }
+varDecl:
+		varRESET varReg     signingE regArRangeE  regsigList ';'	{ }
 	|	varRESET varGParam  signingE regrangeE  paramList ';'		{ }
 	|	varRESET varLParam  signingE regrangeE  paramList ';'		{ }
-	|	varRESET varNet     strengthSpecE signingE delayrange netSigList ';'	{ }
+	|	varRESET net_type   strengthSpecE signingE delayrange netSigList ';'	{ }
 	|	varRESET varGenVar  signingE                          regsigList ';'	{ }
 	|	varRESET enumDecl   sigList ';'		{ }
 	;
@@ -613,8 +614,8 @@ modParDecl:	varRESET varGParam  signingE regrangeE   param 	{ }
 varRESET:	/* empty */ 				{ VARRESET(); }
 	;
 
-// IEEE: net_type
-varNet:		ySUPPLY0				{ VARDECL($1); }
+net_type:			// ==IEEE: net_type  (complete)
+		ySUPPLY0				{ VARDECL($1); }
 	|	ySUPPLY1				{ VARDECL($1); }
 	|	yWIRE 					{ VARDECL($1); }
 	|	yTRI 					{ VARDECL($1); }
@@ -630,8 +631,8 @@ varReg:		yREG					{ VARDECL($1); }
 	|	varTypeKwds				{ VARDECL($1); }
 	;
 
-//IEEE: port_direction
-portDirection:	yINPUT					{ VARIO($1); }
+port_direction:			// ==IEEE: port_direction
+		yINPUT					{ VARIO($1); }
 	|	yOUTPUT					{ VARIO($1); }
 	|	yINOUT					{ VARIO($1); }
 	|	yREF					{ VARIO($1); }
@@ -644,14 +645,14 @@ varTypeKwds<str>:
 	|	yTIME					{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
-// IEEE: signing - plus empty
-signingE:	/*empty*/ 				{ }
+signingE:			// IEEE: signing - plus empty (complete)
+		/*empty*/ 				{ }
 	|	ySIGNED					{ VARSIGNED("signed"); }
 	|	yUNSIGNED				{ VARSIGNED("unsigned"); }
 	;
 
 v2kVarDeclE:	/*empty*/ 				{ }
-	|	varNet 					{ }
+	|	net_type				{ }
 	|	varReg 					{ }
 	;
 
@@ -669,12 +670,12 @@ enumBaseTypeE:	/* empty */				{ VARDECL("enum"); }
 	|	ygenNETTYPE regrangeE signingE		{ VARDECL($1); }
 	;
 
-enumNameList:	enumNameDecl				{ }
-	|	enumNameList ',' enumNameDecl		{ }
+enumNameList:	enum_name_declaration			{ }
+	|	enumNameList ',' enum_name_declaration	{ }
 	;
 
-// IEEE: enum_name_declaration
-enumNameDecl:	yaID enumNameRangeE enumNameStartE	{ }
+enum_name_declaration:		// ==IEEE: enum_name_declaration
+		yaID enumNameRangeE enumNameStartE	{ }
 	;
 
 // IEEE: second part of enum_name_declaration
@@ -699,22 +700,25 @@ typedefDecl:	yTYPEDEF enumDecl yaID ';'		{ }
 //************************************************
 // Module Items
 
-modItemListE:	/* empty */				{ }
+modItemListE:
+		/* empty */				{ }
 	|	modItemList				{ }
 	;
 
-modItemList:	modItem					{ }
+modItemList:
+		modItem					{ }
 	|	modItemList modItem			{ }
 	;
 
-modItem:	modOrGenItem 				{ }
-	|	generateRegion				{ }
+modItem:
+		modOrGenItem 				{ }
+	|	generate_region				{ }
 	|	ySPECIFY specifyJunkList yENDSPECIFY	{ }
 	|	ySPECIFY yENDSPECIFY			{ }
 	;
 
-// IEEE: generate_region
-generateRegion:	yGENERATE genTopBlock yENDGENERATE	{ }
+generate_region:		// ==IEEE: generate_region (complete)
+		yGENERATE genTopBlock yENDGENERATE	{ }
 	;
 
 // IEEE: ??? + parameter_override
@@ -722,7 +726,7 @@ modOrGenItem:	yALWAYS stmtBlock			{ }
 	|	yFINAL stmtBlock			{ }
 	|	yINITIAL stmtBlock			{ }
 	|	yASSIGN strengthSpecE delayE assignList ';'	{ }
-	|	yDEFPARAM defpList ';'			{ }
+	|	yDEFPARAM list_of_defparam_assignments ';'	{ }
 	|	instDecl 				{ }
 	|	taskDecl 				{ }
 	|	funcDecl 				{ }
@@ -741,25 +745,30 @@ modOrGenItem:	yALWAYS stmtBlock			{ }
 // Generates
 
 // Because genItemList includes variable declarations, we don't need beginNamed
-genItemBlock:	genItem					{ }
+genItemBlock:
+		genItem					{ }
 	|	genItemBegin				{ }
 	;
 
-genTopBlock:	genItemList				{ }
+genTopBlock:
+		genItemList				{ }
 	|	genItemBegin				{ }
 	;
 
-genItemBegin:	yBEGIN genItemList yEND			{ }
+genItemBegin:
+		yBEGIN genItemList yEND			{ }
 	|	yBEGIN yEND				{ }
 	|	yBEGIN ':' yaID genItemList yEND endLabelE	{ }
 	|	yBEGIN ':' yaID             yEND endLabelE	{ }
 	;
 
-genItemList:	genItem					{ }
+genItemList:
+		genItem					{ }
 	|	genItemList genItem			{ }
 	;
 
-genItem:	modOrGenItem 				{ }
+genItem:
+		modOrGenItem 				{ }
 	|	yCASE  '(' expr ')' genCaseListE yENDCASE	{ }
 	|	yIF '(' expr ')' genItemBlock	%prec prLOWER_THAN_ELSE	{ }
 	|	yIF '(' expr ')' genItemBlock yELSE genItemBlock	{ }
@@ -767,11 +776,13 @@ genItem:	modOrGenItem 				{ }
 							{ }
 	;
 
-genCaseListE:	/* empty */				{ }
+genCaseListE:
+		/* empty */				{ }
 	|	genCaseList				{ }
 	;
 
-genCaseList:	caseCondList ':' genItemBlock		{ }
+genCaseList:
+		caseCondList ':' genItemBlock		{ }
 	|	yDEFAULT ':' genItemBlock		{ }
 	|	yDEFAULT genItemBlock			{ }
 	|	genCaseList caseCondList ':' genItemBlock	{ }
@@ -787,38 +798,43 @@ variableLvalue:	varRefDotBit				{ }
 	|	'{' concIdList '}'			{ }
 	;
 
-assignList:	assignOne				{ }
+assignList:
+		assignOne				{ }
 	|	assignList ',' assignOne		{ }
 	;
 
-assignOne:	variableLvalue '=' expr			{ }
+assignOne:
+		variableLvalue '=' expr			{ }
 	;
 
-// IEEE: delay_or_event_control
-delayOrEvE:	/* empty */				{ }
-	|	delay					{ } /* ignored */
-	|	eventControl				{ } /* ignored */
+delayOrEvE:		// IEEE: delay_or_event_control plus empty (complete)
+		/* empty */				{ }
+	|	delay_control				{ } /* ignored */
+	|	event_control				{ } /* ignored */
 	|	yREPEAT '(' expr ')' delayOrEvE		{ } /* ignored */
 	;
 
 delayE:		/* empty */				{ }
-	|	delay					{ } /* ignored */
+	|	delay_control				{ } /* ignored */
 	;
 
-delay:		'#' dlyTerm				{ } /* ignored */
+delay_control:		//== IEEE: delay_control (complete)
+		'#' dlyTerm				{ } /* ignored */
 	|	'#' '(' minTypMax ')'			{ } /* ignored */
 	|	'#' '(' minTypMax ',' minTypMax ')'		{ } /* ignored */
 	|	'#' '(' minTypMax ',' minTypMax ',' minTypMax ')'	{ } /* ignored */
 	;
 
-dlyTerm:	yaID 					{ }
+dlyTerm:
+		yaID 					{ }
 	|	yaINTNUM 				{ }
 	|	yaFLOATNUM 				{ }
 	|	yaTIMENUM 				{ }
 	;
 
 // IEEE: mintypmax_expression and constant_mintypmax_expression
-minTypMax:	expr 					{ }
+minTypMax:
+		expr 					{ }
 	|	expr ':' expr ':' expr			{ }
 	;
 
@@ -826,16 +842,19 @@ sigAndAttr<str>:
 		sigId sigAttrListE			{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
-netSigList:	netSig  				{ }
+netSigList:
+		netSig  				{ }
 	|	netSigList ',' netSig		       	{ }
 	;
 
-netSig:		sigId sigAttrListE			{ }
+netSig:
+		sigId sigAttrListE			{ }
 	|	yaID  sigAttrListE '=' expr		{ VARDONE($<fl>1, $1, $4); }
 	|	sigIdRange sigAttrListE			{ }
 	;
 
-sigIdRange:	yaID rangeList				{ $<fl>$=$<fl>1; VARARRAY($2); VARDONE($<fl>1, $1, ""); }
+sigIdRange:
+		yaID rangeList				{ $<fl>$=$<fl>1; VARARRAY($2); VARDONE($<fl>1, $1, ""); }
 	;
 
 regSigId<str>:
@@ -889,7 +908,8 @@ anyrange<str>:
 		'[' constExpr ':' constExpr ']'		{ $$ = "["+$2+":"+$4+"]"; }
 	;
 
-delayrange:	regrangeE delayE 			{ }
+delayrange:
+		regrangeE delayE 			{ }
 	|	ySCALARED regrangeE delayE 		{ }
 	|	yVECTORED regrangeE delayE		{ }
 	;
@@ -910,12 +930,13 @@ paramList:	param					{ }
 	|	paramList ',' param			{ }
 	;
 
-// IEEE: list_of_defparam_assignments
-defpList:	defpOne					{ }
-	|	defpList ',' defpOne			{ }
+list_of_defparam_assignments:	//== IEEE: list_of_defparam_assignments (complete)
+		defparam_assignment					{ }
+	|	list_of_defparam_assignments ',' defparam_assignment	{ }
 	;
 
-defpOne:	varRefDotBit '=' expr 			{ }
+defparam_assignment:		// ==IEEE: defparam_assignment (complete)
+		varRefDotBit '=' expr 		{ }
 	;
 
 //************************************************
@@ -924,23 +945,28 @@ defpOne:	varRefDotBit '=' expr 			{ }
 //   modname        [#(params)]  name  (pins) [, name ...]
 //   gate (strong0) [#(delay)]  [name] (pins) [, (pins)...]
 
-instDecl:	instModName {INSTPREP($1,1);} strengthSpecE instparamListE {INSTPREP($1,0);} instnameList ';' 	{ }
+instDecl:
+		instModName {INSTPREP($1,1);} strengthSpecE instparamListE {INSTPREP($1,0);} instnameList ';' 	{ }
+	;
 
 instModName<str>:
 		yaID 					{ $<fl>$=$<fl>1; $$ = $1; }
 	|	gateKwd			 		{ $<fl>$=$<fl>1; $$ = $1; }
 	;
 
-instparamListE:	/* empty */				{ }
+instparamListE:
+		/* empty */				{ }
 	|	'#' '(' cellpinList ')'			{ }
 	|	'#' dlyTerm				{ }
 	;
 
-instnameList:	instnameParen				{ }
+instnameList:
+		instnameParen				{ }
 	|	instnameList ',' instnameParen		{ }
 	;
 
-instnameParen:	instname cellpinList ')'		{ PARSEP->endcellCb($<fl>3,""); }
+instnameParen:
+		instname cellpinList ')'		{ PARSEP->endcellCb($<fl>3,""); }
 	;
 
 instname:	yaID instRangeE '(' 			{ PARSEP->instantCb($<fl>1, GRAMMARP->m_cellMod, $1, $2); PINPARAMS(); }
@@ -952,14 +978,17 @@ instRangeE<str>:
 	|	'[' constExpr ':' constExpr ']'		{ $$ = "["+$2+":"+$4+"]"; }
 	;
 
-cellpinList:	{ } cellpinItList			{ }
+cellpinList:
+		{ } cellpinItList			{ }
 	;
 
-cellpinItList:	cellpinItemE				{ }
+cellpinItList:
+		cellpinItemE				{ }
 	|	cellpinItList ',' cellpinItemE		{ }
 	;
 
-cellpinItemE:	/* empty: ',,' is legal */		{ GRAMMARP->pinNumInc(); }  /*PINDONE(yylval.fl,"",""); <- No, as then () implys a pin*/
+cellpinItemE:
+		/* empty: ',,' is legal */		{ GRAMMARP->pinNumInc(); }  /*PINDONE(yylval.fl,"",""); <- No, as then () implys a pin*/
 	|	yP_DOTSTAR				{ PINDONE($<fl>1,"*","*");GRAMMARP->pinNumInc(); }
 	|	'.' yaID				{ PINDONE($<fl>1,$2,$2);  GRAMMARP->pinNumInc(); }
 	|	'.' yaID '(' ')'			{ PINDONE($<fl>1,$2,"");  GRAMMARP->pinNumInc(); }
@@ -970,27 +999,31 @@ cellpinItemE:	/* empty: ',,' is legal */		{ GRAMMARP->pinNumInc(); }  /*PINDONE(
 //************************************************
 // EventControl lists
 
-// IEEE: event_control
-eventControl:	'@' '(' senList ')'			{ }
+event_control:			// ==IEEE: event_control
+		'@' '(' senList ')'			{ }
 	|	'@' senitemVar				{ }
 	|	'@' '(' '*' ')'				{ }
 	|	'@' '*'					{ }  /* Verilog 2001 */
+//	|	sequence_instance			{ }
 	;
 
-// IEEE: event_expression - split over several
-senList:	senitem					{ }
+senList:			// IEEE: event_expression - split over several
+		senitem					{ }
 	|	senList yOR senitem			{ }
 	|	senList ',' senitem			{ }	/* Verilog 2001 */
 	;
 
-senitem:	senitemEdge				{ }
+senitem:
+		senitemEdge				{ }
 	|	expr					{ }
 	;
 
-senitemVar:	varRefDotBit				{ }
+senitemVar:
+		varRefDotBit				{ }
 	;
 
-senitemEdge:	yPOSEDGE expr				{ }
+senitemEdge:
+		yPOSEDGE expr				{ }
 	|	yNEGEDGE expr				{ }
 	;
 
@@ -1009,15 +1042,18 @@ stmtBlock:	stmt					{ }
 	|	forkNamed 	   yJOIN endLabelE	{ }
 	;
 
-beginNamed:	yBEGIN ':' yaID varDeclList		{ }
+beginNamed:
+		yBEGIN ':' yaID varDeclList		{ }
 	|	yBEGIN ':' yaID 			{ }
 	;
 
-forkNamed:	yFORK ':' yaID varDeclList		{ }
+forkNamed:
+		yFORK ':' yaID varDeclList		{ }
 	|	yFORK ':' yaID 				{ }
 	;
 
-stmtList:	stmtBlock				{ }
+stmtList:
+		stmtBlock				{ }
 	|	stmtList stmtBlock			{ }
 	;
 
@@ -1026,7 +1062,8 @@ assignLhs<str>:
 	|	'{' concIdList '}'			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	;
 
-stmt:		';'					{ }
+stmt:
+		';'					{ }
 	|	labeledStmt				{ }
 	|	yaID ':' labeledStmt			{ }  /*S05 block creation rule*/
 
@@ -1058,8 +1095,8 @@ stmt:		';'					{ }
 	|	ygenSYSCALL '(' ')' ';'			{ }
 	|	ygenSYSCALL '(' exprList ')' ';'	{ }
 	|	ygenSYSCALL ';'				{ }
-	|	delay stmtBlock				{ }
-	|	eventControl stmtBlock			{ }
+	|	delay_control stmtBlock			{ }
+	|	event_control stmtBlock			{ }
 	|	yASSIGN expr '=' delayOrEvE expr ';'	{ }
 	|	yDEASSIGN expr ';'			{ }
 	|	yDISABLE expr ';'			{ }
@@ -1071,12 +1108,14 @@ stmt:		';'					{ }
 //************************************************
 // Case/If
 
-unique_priorityE: /*empty*/				{ }
+unique_priorityE:
+		/*empty*/				{ }
 	|	yPRIORITY				{ }
 	|	yUNIQUE					{ }
 	;
 
-stateCaseForIf: caseStmt caseAttrE caseListE yENDCASE	{ }
+stateCaseForIf:
+		caseStmt caseAttrE caseListE yENDCASE	{ }
 	|	unique_priorityE yIF '(' expr ')' stmtBlock	%prec prLOWER_THAN_ELSE	{ }
 	|	unique_priorityE yIF '(' expr ')' stmtBlock yELSE stmtBlock		{ }
 	|	yFOR '(' assignLhs '=' expr ';' expr ';' assignLhs '=' expr ')' stmtBlock
@@ -1087,7 +1126,8 @@ stateCaseForIf: caseStmt caseAttrE caseListE yENDCASE	{ }
 	|	yWAIT '(' expr ')' stmtBlock		{ }
 	;
 
-caseStmt: 	unique_priorityE yCASE  '(' expr ')'	{ }
+caseStmt:
+	 	unique_priorityE yCASE  '(' expr ')'	{ }
 	|	unique_priorityE yCASEX '(' expr ')'	{ }
 	|	unique_priorityE yCASEZ '(' expr ')'	{ }
 	;
@@ -1099,7 +1139,8 @@ caseListE:	/* empty */				{ }
 	|	caseList				{ }
 	;
 
-caseList:	caseCondList ':' stmtBlock		{ }
+caseList:
+		caseCondList ':' stmtBlock		{ }
 	|	yDEFAULT ':' stmtBlock			{ }
 	|	yDEFAULT stmtBlock			{ }
 	|	caseList caseCondList ':' stmtBlock	{ }
@@ -1107,14 +1148,16 @@ caseList:	caseCondList ':' stmtBlock		{ }
 	|	caseList yDEFAULT ':' stmtBlock		{ }
 	;
 
-caseCondList:	expr 					{ }
+caseCondList:
+		expr 					{ }
 	|	caseCondList ',' expr			{ }
 	;
 
 //************************************************
 // Functions/tasks
 
-taskRef:	idDotted		 		{ }
+taskRef:
+		idDotted		 		{ }
 	|	idDotted '(' exprList ')'		{ }
 	;
 
@@ -1122,16 +1165,18 @@ funcRef<str>:
 		idDotted '(' exprList ')'		{ $1+"("+$3+")"; }
 	;
 
-taskDecl: 	yTASK lifetimeE taskId funcGuts yENDTASK endLabelE
+taskDecl:
+	 	yTASK lifetimeE taskId funcGuts yENDTASK endLabelE
 			{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>5,$5); }
 	;
 
-funcDecl: 	yFUNCTION lifetimeE funcId funcGuts yENDFUNCTION endLabelE
+funcDecl:
+	 	yFUNCTION lifetimeE funcId funcGuts yENDFUNCTION endLabelE
 			{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>5,$5); }
 	;
 
-// IEEE: lifetime - plus empty
-lifetimeE:	/* empty */		 		{ }
+lifetimeE:			// IEEE: lifetime - plus empty (complete)
+		/* empty */		 		{ }
 	|	ySTATIC			 		{ }
 	|	yAUTOMATIC		 		{ }
 	;
@@ -1143,11 +1188,13 @@ funcId: 	funcTypeE yaID				{ GRAMMARP->m_inFTask=true; PARSEP->functionCb($<fl>2
 	|	ySIGNED funcTypeE yaID			{ GRAMMARP->m_inFTask=true; PARSEP->functionCb($<fl>3,"function",$3,"signed "+$2); }
 	;
 
-funcGuts:	'(' {GRAMMARP->pinNum(1);} portV2kArgs ')' ';' funcBody	{ }
+funcGuts:
+		'(' {GRAMMARP->pinNum(1);} portV2kArgs ')' ';' funcBody	{ }
 	|	';' funcBody				{ }
 	;
 
-funcBody:	funcVarList stmtBlock			{ }
+funcBody:
+		funcVarList stmtBlock			{ }
 	|	stmtBlock				{ }
 	;
 
@@ -1157,11 +1204,13 @@ funcTypeE<str>:
 	|	'[' constExpr ':' constExpr ']'		{ $$ = "["+$2+":"+$4+"]"; }
 	;
 
-funcVarList:	funcVar					{ }
+funcVarList:
+		funcVar					{ }
 	|	funcVarList funcVar			{ }
 	;
 
-funcVar: 	portDecl				{ }
+funcVar:
+	 	portDecl				{ }
 	|	varDecl 				{ }
 	;
 
@@ -1408,7 +1457,8 @@ endLabelE:	/* empty */				{ }
 //************************************************
 // Asserts
 
-labeledStmt:	assertStmt				{ }
+labeledStmt:
+		assertStmt				{ }
 	;
 
 clocking_declaration:		// IEEE: clocking_declaration  (INCOMPLETE)
@@ -1439,7 +1489,8 @@ property_spec_disable:
 	;
 
 
-assertStmt:	yASSERT '(' expr ')' stmtBlock %prec prLOWER_THAN_ELSE	{ }
+assertStmt:
+		yASSERT '(' expr ')' stmtBlock %prec prLOWER_THAN_ELSE	{ }
 	|	yASSERT '(' expr ')'           yELSE stmtBlock		{ }
 	|	yASSERT '(' expr ')' stmtBlock yELSE stmtBlock		{ }
 	;
