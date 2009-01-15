@@ -240,104 +240,103 @@ escid	\\[^ \t\f\r\n]+
   /* System Verilog 2005 */
 <S05>{
   /*     Keywords */
+  "alias"		{ FL; VALTEXT; CALLBACK(keywordCb); return yALIAS; }
   "always_comb"		{ FL; VALTEXT; CALLBACK(keywordCb); return yALWAYS; }
   "always_ff"		{ FL; VALTEXT; CALLBACK(keywordCb); return yALWAYS; }
   "always_latch"	{ FL; VALTEXT; CALLBACK(keywordCb); return yALWAYS; }
   "assert"		{ FL; VALTEXT; CALLBACK(keywordCb); return yASSERT; }
+  "assume"		{ FL; VALTEXT; CALLBACK(keywordCb); return yASSUME; }
+  "before"		{ FL; VALTEXT; CALLBACK(keywordCb); return yBEFORE; }
+  "bind"		{ FL; VALTEXT; CALLBACK(keywordCb); return yBIND; }
+  "bins"		{ FL; VALTEXT; CALLBACK(keywordCb); return yBINS; }
+  "binsof"		{ FL; VALTEXT; CALLBACK(keywordCb); return yBINSOF; }
   "bit"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
+  "break"		{ FL; VALTEXT; CALLBACK(keywordCb); return yBREAK; }
   "byte"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
   "chandle"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
+  "class"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCLASS; }
   "clocking"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCLOCKING; }
+  "const"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCONST; }
+  "constraint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCONSTRAINT; }
+  "context"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCONTEXT; }
+  "continue"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCONTINUE; }
   "cover"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCOVER; }
+  "covergroup"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCOVERGROUP; }
+  "coverpoint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCOVERPOINT; }
+  "cross"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCROSS; }
+  "dist"		{ FL; VALTEXT; CALLBACK(keywordCb); return yDIST; }
   "do"			{ FL; VALTEXT; CALLBACK(keywordCb); return yDO; }
+  "endclass"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDCLASS; }
   "endclocking"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDCLOCKING; }
+  "endgroup"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDGROUP; }
   "endinterface"	{ FL; VALTEXT; CALLBACK(keywordCb); return yENDINTERFACE; }
+  "endpackage"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDPACKAGE; }
+  "endprogram"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDPROGRAM; }
   "endproperty"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDPROPERTY; }
+  "endsequence"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDSEQUENCE; }
   "enum"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENUM; }
+  "expect"		{ FL; VALTEXT; CALLBACK(keywordCb); return yEXPECT; }
   "export"		{ FL; VALTEXT; CALLBACK(keywordCb); return yEXPORT; }
+  "extends"		{ FL; VALTEXT; CALLBACK(keywordCb); return yEXTENDS; }
   "extern"		{ FL; VALTEXT; CALLBACK(keywordCb); return yEXTERN; }
   "final"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFINAL; }
+  "first_match"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFIRST_MATCH; }
+  "foreach"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFOREACH; }
+  "forkjoin"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFORKJOIN; }
   "iff"			{ FL; VALTEXT; CALLBACK(keywordCb); return yIFF; }
+  "ignore_bins"		{ FL; VALTEXT; CALLBACK(keywordCb); return yIGNORE_BINS; }
+  "illegal_bins"	{ FL; VALTEXT; CALLBACK(keywordCb); return yILLEGAL_BINS; }
   "import"		{ FL; VALTEXT; CALLBACK(keywordCb); return yIMPORT; }
+  "inside"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINSIDE; }
   "int"			{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
   "interface"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTERFACE; }
+  "intersect"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTERSECT; }
   "join_any"		{ FL; VALTEXT; CALLBACK(keywordCb); return yJOIN; }
   "join_none"		{ FL; VALTEXT; CALLBACK(keywordCb); return yJOIN; }
+  "local"		{ FL; VALTEXT; CALLBACK(keywordCb); return yLOCAL; }
   "logic"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
   "longint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
+  "matches"		{ FL; VALTEXT; CALLBACK(keywordCb); return yMATCHES; }
   "modport"		{ FL; VALTEXT; CALLBACK(keywordCb); return yMODPORT; }
+  "new"			{ FL; VALTEXT; CALLBACK(keywordCb); return yNEW; }
+  "null"		{ FL; VALTEXT; CALLBACK(keywordCb); return yNULL; }
+  "package"		{ FL; VALTEXT; CALLBACK(keywordCb); return yPACKAGE; }
+  "packed"		{ FL; VALTEXT; CALLBACK(keywordCb); return yPACKED; }
   "priority"		{ FL; VALTEXT; CALLBACK(keywordCb); return yPRIORITY; }
+  "program"		{ FL; VALTEXT; CALLBACK(keywordCb); return yPROGRAM; }
   "property"		{ FL; VALTEXT; CALLBACK(keywordCb); return yPROPERTY; }
+  "protected"		{ FL; VALTEXT; CALLBACK(keywordCb); return yPROTECTED; }
+  "pure"		{ FL; VALTEXT; CALLBACK(keywordCb); return yPURE; }
+  "rand"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRAND; }
+  "randc"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDC; }
+  "randcase"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDCASE; }
+  "randsequence"	{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDSEQUENCE; }
   "ref"			{ FL; VALTEXT; CALLBACK(keywordCb); return yREF; }
+  "return"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRETURN; }
+  "sequence"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySEQUENCE; }
   "shortint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTEGER; }
   "shortreal"		{ FL; VALTEXT; CALLBACK(keywordCb); return yREAL; }
+  "solve"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySOLVE; }
   "static"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTATIC; }
   "string"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
+  "struct"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTRUCT; }
+  "super"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySUPER; }
+  "tagged"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTAGGED; }
+  "this"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTHIS; }
+  "throughout"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTHROUGHOUT; }
   "timeprecision"	{ FL; VALTEXT; CALLBACK(keywordCb); return yTIMEPRECISION; }
   "timeunit"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTIMEUNIT; }
+  "type"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTYPE; }
   "typedef"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTYPEDEF; }
+  "union"		{ FL; VALTEXT; CALLBACK(keywordCb); return yUNION; }
   "unique"		{ FL; VALTEXT; CALLBACK(keywordCb); return yUNIQUE; }
-  /*     Generic unsupported keywords */
-  "alias"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "assume"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "before"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "bind"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "bins"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "binsof"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "break"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "class"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "const"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "constraint"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "context"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "continue"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "covergroup"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "coverpoint"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "cross"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "dist"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "endclass"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "endgroup"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "endpackage"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "endprogram"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "endsequence"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "expect"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "extends"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "first_match"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "foreach"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "forkjoin"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "ignore_bins"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "illegal_bins"	{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "inside"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "intersect"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "local"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "matches"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "new"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "null"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "package"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "packed"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "program"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "protected"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "pure"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "rand"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "randc"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "randcase"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "randsequence"	{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "return"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "sequence"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "solve"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "struct"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "super"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "tagged"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "this"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "throughout"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "type"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "union"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "var"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "virtual"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "void"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "wait_order"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "wildcard"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "with"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
-  "within"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; }
+  "var"			{ FL; VALTEXT; CALLBACK(keywordCb); return yVAR; }
+  "virtual"		{ FL; VALTEXT; CALLBACK(keywordCb); return yVIRTUAL; }
+  "void"		{ FL; VALTEXT; CALLBACK(keywordCb); return yVOID; }
+  "wait_order"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWAIT_ORDER; }
+  "wildcard"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWILDCARD; }
+  "with"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWITH; }
+  "within"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWITHIN; }
 }
 
   /* Default PLI rule */
