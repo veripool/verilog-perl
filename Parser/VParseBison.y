@@ -450,9 +450,8 @@ package_item:		// ==IEEE: package_item
  	;
 
 package_or_generate_item_declaration:	// ==IEEE: package_or_generate_item_declaration
-//		net_declaration
+	//				// varDecl == net_declatation | data_declaration
 		varDecl					{ }
-//	|	data_declaration			{ }
 //	|	task_declaration			{ }
 //	|	function_declaration			{ }
 //	|	dpi_import_export			{ }
@@ -634,7 +633,12 @@ portDecl:			// IEEE: port_declaration - plus ';'
 		varRESET port_direction v2kVarDeclE signingE regArRangeE regsigList ';'	{ }
 	;
 
-varDecl:
+varDecl:			// IEEE: net_declaration+reg_declaration due to implicit ambiguity
+		net_declaration				{ }
+	|	data_declaration			{ }
+	;
+
+net_declaration:		// IEEE: net_declaration - excluding implict
 		varRESET varReg     signingE regArRangeE  regsigList ';'	{ }
 	|	varRESET varGParam  signingE regrangeE  paramList ';'		{ }
 	|	varRESET varLParam  signingE regrangeE  paramList ';'		{ }
@@ -761,8 +765,7 @@ interfaceE:
 	|	yINTERFACE				{ }
 	;
 
-
-random_qualifierE:
+random_qualifierE:		// IEEE: random_qualifier + empty
 		/*empty*/				{ }
 	|	yRAND					{ }
 	|	yRANDC					{ }
@@ -811,12 +814,12 @@ enumNameStartE:	/* empty */				{ }
 //************************************************
 // Typedef
 
-//data_declaration:		// ==IEEE: data_declaration (INCOMPLETE)
-//	[ yCONST ] [ yVAR ] [ lifetime ] data_type_or_implicit list_of_variable_decl_assignments ';'
-//	|	type_declaration			{ }
+data_declaration:		// ==IEEE: data_declaration (INCOMPLETE)
+//	[ yCONST ] [ yVAR ] lifetimeE data_type_or_implicit list_of_variable_decl_assignments ';'
+		type_declaration			{ }
 //	|	package_import_declaration
 //	|	virtual_interface_declaration
-//	;
+	;
 
 // Needs a lot of work
 type_declaration:		// ==IEEE: type_declaration (INCOMPLETE)
@@ -858,9 +861,14 @@ generate_region:		// ==IEEE: generate_region (complete)
 	;
 
 // IEEE: ??? + parameter_override
-modOrGenItem:	yALWAYS stmtBlock			{ }
-	|	yFINAL stmtBlock			{ }
+modOrGenItem:
+	//			// IEEE: always_construct (complete)
+		yALWAYS stmtBlock			{ }
+	//			// IEEE: initial_construct (complete)
 	|	yINITIAL stmtBlock			{ }
+	//			// IEEE: final_construct (complete)
+	|	yFINAL stmtBlock			{ }
+
 	|	yASSIGN strengthSpecE delayE assignList ';'	{ }
 	|	yDEFPARAM list_of_defparam_assignments ';'	{ }
 	|	instDecl 				{ }
@@ -869,7 +877,6 @@ modOrGenItem:	yALWAYS stmtBlock			{ }
 	|	portDecl	 			{ }
 	|	varDecl 				{ }
 	|	tableDecl 				{ }
-	|	type_declaration			{ }
 
 	|	concurrent_assertion_item		{ }  // IEEE puts in modItem, all tools put here
 	|	clocking_declaration			{ }
@@ -1143,7 +1150,7 @@ event_control:			// ==IEEE: event_control
 //	|	sequence_instance			{ }
 	;
 
-senList:			// IEEE: event_expression - split over several
+senList:			// IEEE: event_expression - split over several (complete)
 		senitem					{ }
 	|	senList yOR senitem			{ }
 	|	senList ',' senitem			{ }	/* Verilog 2001 */
@@ -1158,9 +1165,11 @@ senitemVar:
 		varRefDotBit				{ }
 	;
 
-senitemEdge:
+senitemEdge:			// IEEE: part of event_expression
 		yPOSEDGE expr				{ }
+	|	yPOSEDGE expr yIFF expr			{ }
 	|	yNEGEDGE expr				{ }
+	|	yNEGEDGE expr yIFF expr			{ }
 	;
 
 //************************************************
@@ -1198,6 +1207,7 @@ assignLhs<str>:
 	|	'{' concIdList '}'			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	;
 
+// IEEE: statement_or_null (may include more stuff, not analyzed)
 stmt:
 		';'					{ }
 	|	labeledStmt				{ }
@@ -1233,11 +1243,22 @@ stmt:
 	|	ygenSYSCALL ';'				{ }
 	|	delay_control stmtBlock			{ }
 	|	event_control stmtBlock			{ }
+
+	//			// IEEE: disable_statement (complete)
+	|	yDISABLE expr ';'			{ }
+	|	yDISABLE yFORK ';'			{ }
+
+	//			// IEEE: procedural_continuous_assignment (complete)
 	|	yASSIGN expr '=' delayOrEvE expr ';'	{ }
 	|	yDEASSIGN expr ';'			{ }
-	|	yDISABLE expr ';'			{ }
 	|	yFORCE expr '=' expr ';'		{ }
 	|	yRELEASE expr ';'			{ }
+
+	//			// IEEE: jump_statement (complete)
+	|	yRETURN ';'				{ }
+	|	yRETURN expr ';'			{ }
+	|	yBREAK ';'				{ }
+	|	yCONTINUE ';'				{ }
 
 	|	error ';'				{ }
 	;
@@ -1253,8 +1274,12 @@ unique_priorityE:
 
 stateCaseForIf:
 		caseStmt caseAttrE caseListE yENDCASE	{ }
+	//			// IEEE: randcase_statement (complete)
+	|	yRANDCASE caseList yENDCASE		{ }
+	//			// IEEE: conditional_statement
 	|	unique_priorityE yIF '(' expr ')' stmtBlock	%prec prLOWER_THAN_ELSE	{ }
 	|	unique_priorityE yIF '(' expr ')' stmtBlock yELSE stmtBlock		{ }
+
 	|	yFOR '(' assignLhs '=' expr ';' expr ';' assignLhs '=' expr ')' stmtBlock
 							{ }
 	|	yWHILE '(' expr ')' stmtBlock		{ }
