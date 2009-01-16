@@ -422,11 +422,14 @@ file:		description				{ }
 	;
 
 description:			// ==IEEE: description
+//	|	udp_declaration				{ }
 		module_declaration			{ }
 	|	interfaceDecl				{ }
-//      |       programDecl                             { }
-//      |       packageDecl                             { }
-	|	packageItem				{ }
+//	|	program_declaration			{ }
+//	|	package_declaration			{ }
+	|	package_item				{ }
+//	|	bind_directive				{ }
+	|	error					{ }
 	;
 
 timeunits_declarationE:		// IEEE: timeunits_declaration + empty
@@ -440,7 +443,28 @@ timeunits_declarationE:		// IEEE: timeunits_declaration + empty
 //**********************************************************************
 // Packages
 
-packageItem:	varDecl					{ }
+package_item:		// ==IEEE: package_item
+		package_or_generate_item_declaration	{ }
+//	|	anonymous_program			{ }
+//	|	timeunits_declaration			{ }
+ 	;
+
+package_or_generate_item_declaration:	// ==IEEE: package_or_generate_item_declaration
+//		net_declaration
+		varDecl					{ }
+//	|	data_declaration			{ }
+//	|	task_declaration			{ }
+//	|	function_declaration			{ }
+//	|	dpi_import_export			{ }
+//	|	extern_constraint_declaration		{ }
+	|	class_declaration			{ }
+//	|	class_constructor_declaration		{ }
+//	|	parameter_declaration ';'		{ }
+//	|	local_parameter_declaration		{ }
+//	|	covergroup_declaration			{ }
+//	|	overload_declaration			{ }
+//	|	concurrent_assertion_item_declaration	{ }
+	|	';'					{ }
 	;
 
 //**********************************************************************
@@ -450,11 +474,12 @@ module_declaration:		// ==IEEE: module_declaration (incomplete)
 		modHeader  timeunits_declarationE modItemListE yENDMODULE endLabelE
 			{ PARSEP->endmoduleCb($<fl>4,$4); }
 	;
-modHeader:	modHdr  modParE modPortsE ';' { }
+modHeader:	modHdr  parameter_port_listE modPortsE ';' { }
 	;
 modHdr:		yMODULE lifetimeE yaID		{ PARSEP->moduleCb($<fl>1,$1,$3,PARSEP->inCellDefine()); }
 	;
-modParE:	/* empty */				{ }
+parameter_port_listE:		// IEEE: parameter_port_list + empty (complete)
+		/* empty */				{ }
 	|	'#' '(' ')'				{ }
 	|	'#' '(' modParArgs ')'			{ }
 	;
@@ -516,9 +541,9 @@ portV2kSig:	sigAndAttr				{ $<fl>$=$<fl>1; PARSEP->portCb($<fl>1, $1); }
 // Interface headers
 
 // IEEE: interface_declaration + interface_nonansi_header + interface_ansi_header:
-interfaceDecl:	intHdr modParE modPortsStarE ';' timeunits_declarationE interfaceItemListE yENDINTERFACE endLabelE
+interfaceDecl:	intHdr parameter_port_listE modPortsStarE ';' timeunits_declarationE interfaceItemListE yENDINTERFACE endLabelE
 			{ PARSEP->endinterfaceCb($<fl>7,$7); }
-	|	yEXTERN	intHdr modParE modPortsE ';'	{ }
+	|	yEXTERN	intHdr parameter_port_listE modPortsE ';'	{ }
 	;
 
 intHdr:		yINTERFACE lifetimeE yaID		{ PARSEP->interfaceCb($<fl>1,$1,$3); }
@@ -692,6 +717,67 @@ v2kVarDeclE:	/*empty*/ 				{ }
 //************************************************
 // Enums
 
+data_type:			// ==IEEE: data_type (INCOMPLETE)
+		enumDecl				{ }
+//	|	integer_vector_type [ signing ] { packed_dimension }		{ }
+//	|	integer_atom_type [ signing ]		{ }
+//	|	non_integer_type			{ }
+	|	ySTRUCT        packedSigningE '{' struct_union_memberList '}'	{ }
+	|	yUNION taggedE packedSigningE '{' struct_union_memberList '}'	{ }
+//	|	{ packed_dimension }			{ }
+	|	ySTRING					{ }
+	|	yCHANDLE				{ }
+	|	yVIRTUAL interfaceE yaID		{ }
+//	|	[ class_scope | package_scope ] type_identifier { packed_dimension }		 { }
+//	|	class_type				{ }
+	|	yEVENT					{ }
+//	|	ps_covergroup_identifier		{ }
+//	|	type_reference				{ }
+	;
+
+//IEEE: struct_union - not needed, expanded in data_type
+
+data_type_or_void:		// ==IEEE: data_type_or_void (complete)
+		data_type				{ }
+	|	yVOID					{ }
+	;
+
+struct_union_memberList:
+		struct_union_member				{ }
+	|	struct_union_memberList struct_union_member	{ }
+	;
+
+struct_union_member:		// ==IEEE: struct_union_member
+		random_qualifierE data_type_or_void list_of_variable_decl_assignments ';'
+	;
+
+list_of_variable_decl_assignments:	// ==IEEE: list_of_variable_decl_assignments
+		/*empty*/				{ }
+//		FIX lots
+	;
+
+interfaceE:
+		/*empty*/				{ }
+	|	yINTERFACE				{ }
+	;
+
+
+random_qualifierE:
+		/*empty*/				{ }
+	|	yRAND					{ }
+	|	yRANDC					{ }
+	;
+
+taggedE:
+		/*empty*/				{ }
+	|	yTAGGED					{ }
+	;
+
+packedSigningE:
+		/*empty*/				{ }
+	|	yPACKED signingE			{ }
+	;
+
 // IEEE: part of data_type
 enumDecl:	yENUM enumBaseTypeE '{' enumNameList '}' { }
 	;
@@ -725,8 +811,26 @@ enumNameStartE:	/* empty */				{ }
 //************************************************
 // Typedef
 
+//data_declaration:		// ==IEEE: data_declaration (INCOMPLETE)
+//	[ yCONST ] [ yVAR ] [ lifetime ] data_type_or_implicit list_of_variable_decl_assignments ';'
+//	|	type_declaration			{ }
+//	|	package_import_declaration
+//	|	virtual_interface_declaration
+//	;
+
 // Needs a lot of work
-typedefDecl:	yTYPEDEF enumDecl yaID ';'		{ }
+type_declaration:		// ==IEEE: type_declaration (INCOMPLETE)
+		yTYPEDEF data_type yaID variable_dimensionE ';'
+//	|	yTYPEDEF yaID '.' yaID yaID ';'
+	|	yTYPEDEF yENUM yaID ';'
+	|	yTYPEDEF ySTRUCT yaID ';'
+	|	yTYPEDEF yUNION yaID ';'
+	|	yTYPEDEF yCLASS yaID ';'
+	;
+
+variable_dimensionE:
+		/* empty */				{ }
+//	|	variable_dimension			{ }
 	;
 
 //************************************************
@@ -765,7 +869,7 @@ modOrGenItem:	yALWAYS stmtBlock			{ }
 	|	portDecl	 			{ }
 	|	varDecl 				{ }
 	|	tableDecl 				{ }
-	|	typedefDecl				{ }
+	|	type_declaration			{ }
 
 	|	concurrent_assertion_item		{ }  // IEEE puts in modItem, all tools put here
 	|	clocking_declaration			{ }
@@ -1134,6 +1238,7 @@ stmt:
 	|	yDISABLE expr ';'			{ }
 	|	yFORCE expr '=' expr ';'		{ }
 	|	yRELEASE expr ';'			{ }
+
 	|	error ';'				{ }
 	;
 
@@ -1525,6 +1630,42 @@ assertStmt:
 		yASSERT '(' expr ')' stmtBlock %prec prLOWER_THAN_ELSE	{ }
 	|	yASSERT '(' expr ')'           yELSE stmtBlock		{ }
 	|	yASSERT '(' expr ')' stmtBlock yELSE stmtBlock		{ }
+	;
+
+//**********************************************************************
+// Class
+
+virtualE:
+		/* empty */				{ }
+	|	yVIRTUAL				{ }
+	;
+
+class_declaration:	//== IEEE: class_declaration (INCOMPLETE)
+		virtualE yCLASS lifetimeE yaID parameter_port_listE classExtendsE ';'
+			class_itemListE
+			yENDCLASS endLabelE {
+			PARSEP->unsupportedCb($<fl>4, "Unsupported class", "class"); }
+	;
+
+classExtendsE:		// IEEE: part of class_declaration
+		/* empty */				{ }
+	|	yEXTENDS yaID 				{ }
+//	|	yEXTENDS yaID '(' list_of_arguments ')'	{ }
+	;
+
+class_itemListE:
+		/* empty */				{ }
+	|	class_itemList				{ }
+	;
+
+class_itemList:
+		class_item				{ }
+	|	class_itemList class_item  		{ }
+	;
+
+class_item:		//== IEEE: class_item (UNSUPPORTED)
+		BISONPRE_NOT(yCLASS,yENDCLASS)		{ }
+	|	yCLASS class_itemListE yENDCLASS	{ }
 	;
 
 //**********************************************************************

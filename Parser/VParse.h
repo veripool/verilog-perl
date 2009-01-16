@@ -123,6 +123,7 @@ public:
 			  const string& value,
 			  bool inFunc) = 0;
     virtual void taskCb(VFileLine* fl, const string& kwd, const string& name) = 0;
+    virtual void unsupportedCb(VFileLine* fl, const string& text, const string& token) = 0;
 
     // UTILITIES
     void error(string msg) { inFilelinep()->error(msg); }	///< Report a error

@@ -188,7 +188,44 @@ sub clean_input {
     my @lines = $fh->getlines;
     $fh->close;
 
-    # Find "rule<type>:"
+    # Find "%tokens<type>:"
+    my %tokens;
+    foreach my $line (@lines) {
+	if ($line =~ /^%token\s*<(\S+)>\s*(\S+)/) {
+	    $tokens{$2} = $1;
+	}
+    }
+
+    # Replace BISONPRE_NOT(type,...) with expanded list
+    {
+	my @linesin = @lines;  @lines=();  my $l=0;
+	foreach my $line (@linesin) {
+	    if ($line =~ /BISONPRE_NOT/) {
+		($line =~ s/BISONPRE_NOT\((\S+)\)\s*({[^}]+})\s*$//)
+		    or die "%Error: $filename:$l: Bad form of BISONPRE_NOT: $line\n";
+		my $endtok = $1;  my $action = $2;
+		my @endtoks = split (/,/, $endtok);
+		map { $tokens{$_} or die "%Error: $filename:$l: Can't find definition for token: $_\n"
+		} @endtoks;
+		# Push it all onto one line to avoid error messages changing
+		my $bar = "";
+	      tok:
+		foreach my $tok (sort keys %tokens) {
+		    foreach (@endtoks) {
+			next tok if $tok eq $_;
+		    }
+		    if ($endtok ne $tok) {
+			$line .= "\t$bar $tok $action";
+			$bar = "|";
+		    }
+		}
+		$line .= "\n";
+	    }
+	    push @lines, $line;
+	}
+    }
+
+    # Find "rule<type>:" and replace with just "rule:"
     my %types;
     {
 	my @linesin = @lines;  @lines=();  my $l=0;
@@ -269,6 +306,10 @@ This is expanded into %type declarations.
 
 This allows the label declaring a rule to also specify the type of the
 rule.  The type will be inserted where /*BISONPRE_TYPES*/ is encountered.
+
+=item BISONPRE_NOT(token[, token...])
+
+Create a rule that matches every token except for those specified.
 
 =back
 

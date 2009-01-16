@@ -53,6 +53,7 @@ sub pin {	$_[0]->_common('pin', @_); }
 sub port {	$_[0]->_common('port', @_); }
 sub signal_decl { $_[0]->_common('signal_decl', @_); }
 sub task {	$_[0]->_common('task', @_); }
+sub unsupported { $_[0]->_common('unsupported', @_); }
 
 ######################################################################
 
