@@ -230,7 +230,8 @@ sub clean_input {
     {
 	my @linesin = @lines;  @lines=();  my $l=0;
 	foreach my $line (@linesin) {
-	    if ($line =~ s/^(\S+)<(\S+)>:/$1:/) {
+	    #  ^/ to prevent comments from matching
+	    if ($line =~ s/^([^<\/ \t\n]+)<(\S+)>:/$1:/) {
 		$types{$2}{$1} = 1;
 	    }
 	    push @lines, $line;

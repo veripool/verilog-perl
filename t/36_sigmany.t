@@ -43,6 +43,14 @@ sub error {
 	} else {
 	    warn ("-Silent-Warning: $fileline: $text\n");
 	}
+	# Try to print source line
+	if (my $fh=IO::File->new("<".$self->filename)) {
+	    my @lines = $fh->getlines;
+	    my $line = $lines[$self->lineno-1] || "";
+	    $line =~ s/^\s+//;
+	    warn ("\t".$line) if $line;
+	    $fh->close();
+	}
     }
 }
 
