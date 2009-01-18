@@ -288,6 +288,10 @@ foreach my $kwd (
 		 "`file", "`line",
 		 ) { $Keywords{$kwd}{'1364-2001'} = $Compdirect{$kwd} = '1364-2001'; }
 
+foreach my $kwd (
+		 "`pragma",
+		 ) { $Keywords{$kwd}{'1364-2005'} = $Compdirect{$kwd} = '1364-2005'; }
+
 language_standard ('1800-2005');  # Default standard
 
 foreach my $kwd (qw(

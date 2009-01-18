@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add vpassert $ucover_bits_clk. [Mahesh Kumashikar, et al]
 
+***	Support `pragma and `default_nettype.
+
 * Verilog::Language 3.100 2009/1/2
 
 **	Vppp is now renamed vppreproc; vpm is renamed vpassert.

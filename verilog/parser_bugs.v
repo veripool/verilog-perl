@@ -294,3 +294,7 @@ module bugvp16;
 endmodule
 
 parameter bugvp39 = 0;
+
+`default_nettype none
+`pragma foo = bar
+`default_nettype wire

@@ -149,3 +149,10 @@ endmodule
 `xxerror(this.log, vec);
 `xxerror(this.log, vec[1,2,3]);
 `xxerror(this.log, {blah.name(), " is not foo"});
+
+//======================================================================
+// pragma/default net type
+
+`pragma foo = 1
+`default_nettype none
+`default_nettype uwire

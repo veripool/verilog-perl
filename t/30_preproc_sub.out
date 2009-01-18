@@ -301,4 +301,13 @@ verilog/inc1.v:148: $blah("ab,cd","e,f");
 verilog/inc1.v:149: $blah(this.log,vec);
 verilog/inc1.v:150: $blah(this.log,vec[1,2,3]);
 verilog/inc1.v:151: $blah(this.log,{blah.name(), " is not foo"});
-verilog/inc1.v:152: `line 152 "verilog/inc1.v" 2
+verilog/inc1.v:152: 
+COMMENT: //======================================================================
+verilog/inc1.v:153:  /*CMT*/ 
+COMMENT: // pragma/default net type
+verilog/inc1.v:154:  /*CMT*/ 
+verilog/inc1.v:155: 
+verilog/inc1.v:156: `pragma foo = 1
+verilog/inc1.v:157: `default_nettype none
+verilog/inc1.v:158: `default_nettype uwire
+verilog/inc1.v:159: `line 159 "verilog/inc1.v" 2

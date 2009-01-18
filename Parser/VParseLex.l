@@ -530,6 +530,7 @@ escid	\\[^ \t\f\r\n]+
   "`autoexpand_vectornets"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`celldefine"			{ FL; VALTEXT; CALLBACK(preprocCb); LEXP->m_inCellDefine=true; }
   "`default_decay_time"{ws}+[^\n]*	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
+  "`default_nettype"{ws}+[a-zA-Z0-9]*	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog 2001
   "`delay_mode_distributed"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
   "`delay_mode_path"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
   "`delay_mode_unit"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
@@ -548,6 +549,7 @@ escid	\\[^ \t\f\r\n]+
   "`nosuppress_faults"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`nounconnected_drive"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`portcoerce"			{ FL; VALTEXT; CALLBACK(preprocCb); }
+  "`pragma"{ws}+[^\n]*\n	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog 2005
   "`protect"			{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`protected"			{ FL; VALTEXT; CALLBACK(preprocCb); yy_push_state(PROTMODE); }
   "`remove_gatenames"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
