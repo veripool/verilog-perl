@@ -48,6 +48,7 @@ sub new {
 		fileline => 'Command_Line',
 		unparsed => [],
 		define_warnings => 1,
+		depend_files => {},
 		@_
 		};
     bless $self, $class;
