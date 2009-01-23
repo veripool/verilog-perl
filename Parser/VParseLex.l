@@ -239,6 +239,9 @@ escid	\\[^ \t\f\r\n]+
 
   /* System Verilog 2005 */
 <S05>{
+  /*     System Tasks */
+  "$root"		{ FL; VALTEXT; CALLBACK(keywordCb); return yD_ROOT; }
+  "$unit"		{ FL; VALTEXT; CALLBACK(keywordCb); return yD_UNIT; }
   /*     Keywords */
   "alias"		{ FL; VALTEXT; CALLBACK(keywordCb); return yALIAS; }
   "always_comb"		{ FL; VALTEXT; CALLBACK(keywordCb); return yALWAYS; }
@@ -411,6 +414,7 @@ escid	\\[^ \t\f\r\n]+
 
   /* SystemVerilog Operators */
 <S05>{
+  "'"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_TICK; }
   "==?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDEQUAL; }
   "!=?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDNOTEQUAL; }
   "++"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_PLUSPLUS; }
@@ -628,6 +632,9 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	}
 	if (token == yVIRTUAL && (nexttok == yCLASS)) {
 	    token = yVIRTUAL__CLASS;
+	}
+	if (token == yaID && (nexttok == yP_COLONCOLON)) {
+	    token = yaID__COLONCOLON;
 	}
     }
     return token;

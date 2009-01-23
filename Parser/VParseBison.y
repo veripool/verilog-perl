@@ -100,6 +100,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 // enum_identifier, interface_identifier, interface_instance_identifier,
 // package_identifier, type_identifier, variable_identifier,
 %token<str>		yaID		"IDENTIFIER"
+%token<str>		yaID__COLONCOLON "IDENTIFIER (then ::)"
 
 // IEEE: integral_number
 %token<str>		yaINTNUM	"INTEGER NUMBER"
@@ -297,6 +298,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yVAR		"var"
 %token<str>		yVECTORED	"vectored"
 %token<str>		yVIRTUAL	"virtual"
+%token<str>		yVIRTUAL__CLASS	"virtual-for-class"
 %token<str>		yVOID		"void"
 %token<str>		yWAIT		"wait"
 %token<str>		yWAIT_ORDER	"wait_order"
@@ -308,9 +310,10 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yXNOR		"xnor"
 %token<str>		yXOR		"xor"
 
-// Two token lookahead in VParseLex.l
-%token<str>		yVIRTUAL__CLASS	"virtual-for-class"
+%token<str>		yD_ROOT		"$root"
+%token<str>		yD_UNIT		"$unit"
 
+%token<str>		yP_TICK		"'"
 %token<str>		yP_OROR		"||"
 %token<str>		yP_ANDAND	"&&"
 %token<str>		yP_NOR		"~|"
@@ -383,7 +386,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %left		yP_XNOR
 %left		'&' yP_NAND
 %left		yP_EQUAL yP_NOTEQUAL yP_CASEEQUAL yP_CASENOTEQUAL yP_WILDEQUAL yP_WILDNOTEQUAL
-%left		'>' '<' yP_GTE yP_LTE
+%left		'>' '<' yP_GTE yP_LTE yINSIDE yDIST
 %left		yP_SLEFT yP_SRIGHT yP_SSRIGHT
 %left		'+' '-'
 %left		'*' '/' '%'
@@ -478,14 +481,18 @@ package_or_generate_item_declaration:	// ==IEEE: package_or_generate_item_declar
 // Module headers
 
 module_declaration:		// ==IEEE: module_declaration (incomplete)
-		modHeader  timeunits_declarationE modItemListE yENDMODULE endLabelE
+		modHeader  timeunits_declarationE module_itemListE yENDMODULE endLabelE
 			{ PARSEP->endmoduleCb($<fl>4,$4); }
 	;
-modHeader:	modHdr  parameter_port_listE modPortsE ';' { }
+
+modHeader:			// IEEE: module_nonansi_header + module_ansi_header
+		modHdr  parameter_port_listE modPortsE ';' { }
 	;
+
 modHdr:		yMODULE lifetimeE yaID		{ PARSEP->moduleCb($<fl>1,$1,$3,PARSEP->inCellDefine()); }
 	;
-parameter_port_listE:		// IEEE: parameter_port_list + empty (complete)
+
+parameter_port_listE:		// IEEE: parameter_port_list + empty (complete) == parameter_value_assignment
 		/* empty */				{ }
 	|	'#' '(' ')'				{ }
 	|	'#' '(' modParArgs ')'			{ }
@@ -849,19 +856,21 @@ variable_dimensionE:
 //************************************************
 // Module Items
 
-modItemListE:
+module_itemListE:		// IEEE: Part of module_declaration
 		/* empty */				{ }
-	|	modItemList				{ }
+	|	module_itemList				{ }
 	;
 
-modItemList:
-		modItem					{ }
-	|	modItemList modItem			{ }
+module_itemList:		// IEEE: Part of module_declaration
+		module_item				{ }
+	|	module_itemList module_item		{ }
 	;
 
-modItem:
-		modOrGenItem 				{ }
-	|	generate_region				{ }
+module_item:			// ==IEEE: module_item
+	//			// IEEE: non_port_module_item
+		generate_region				{ }
+	|	modOrGenItem 				{ }
+	//			// IEEE: specify_block
 	|	ySPECIFY specifyJunkList yENDSPECIFY	{ }
 	|	ySPECIFY yENDSPECIFY			{ }
 	;
@@ -870,7 +879,7 @@ generate_region:		// ==IEEE: generate_region (complete)
 		yGENERATE genTopBlock yENDGENERATE	{ }
 	;
 
-// IEEE: ??? + parameter_override
+// IEEE: module_or_generate_item + module_common_item + parameter_override
 modOrGenItem:
 	//			// IEEE: always_construct (complete)
 		yALWAYS stmtBlock			{ }
@@ -884,12 +893,12 @@ modOrGenItem:
 	|	yDEFPARAM list_of_defparam_assignments ';'	{ }
 	|	instDecl 				{ }
 	|	taskDecl 				{ }
-	|	funcDecl 				{ }
+	|	function_declaration			{ }
 	|	portDecl	 			{ }
 	|	varDecl 				{ }
 	|	tableDecl 				{ }
 
-	|	concurrent_assertion_item		{ }  // IEEE puts in modItem, all tools put here
+	|	concurrent_assertion_item		{ }  // IEEE puts in module_item, all tools put here
 	|	clocking_declaration			{ }
 
 	|	error ';'				{ }
@@ -909,9 +918,11 @@ genTopBlock:
 	|	genItemBegin				{ }
 	;
 
-genItemBegin:
+genItemBegin:		// IEEE: part of generate_block
 		yBEGIN genItemList yEND			{ }
 	|	yBEGIN yEND				{ }
+	|	yaID ':' yBEGIN genItemList yEND endLabelE	{ }
+	|	yaID ':' yBEGIN             yEND endLabelE	{ }
 	|	yBEGIN ':' yaID genItemList yEND endLabelE	{ }
 	|	yBEGIN ':' yaID             yEND endLabelE	{ }
 	;
@@ -922,6 +933,7 @@ genItemList:
 	;
 
 genItem:
+	//			// IEEE: module_or_interface_or_generate_item (INCOMPLETE)
 		modOrGenItem 				{ }
 	|	yCASE  '(' expr ')' genCaseListE yENDCASE	{ }
 	|	yIF '(' expr ')' genItemBlock	%prec prLOWER_THAN_ELSE	{ }
@@ -1220,6 +1232,7 @@ assignLhs<str>:
 	;
 
 // IEEE: statement_or_null (may include more stuff, not analyzed)
+//	== function_statement_or_null
 stmt:
 		';'					{ }
 	|	labeledStmt				{ }
@@ -1282,16 +1295,16 @@ stmt:
 //************************************************
 // Case/If
 
-unique_priorityE:
+unique_priorityE:		// IEEE: unique_priority + empty (complete)
 		/*empty*/				{ }
 	|	yPRIORITY				{ }
 	|	yUNIQUE					{ }
 	;
 
 stateCaseForIf:
-		caseStmt caseAttrE caseListE yENDCASE	{ }
+		caseStmt caseAttrE case_itemListE yENDCASE	{ }
 	//			// IEEE: randcase_statement (complete)
-	|	yRANDCASE caseList yENDCASE		{ }
+	|	yRANDCASE case_itemList yENDCASE		{ }
 	//			// IEEE: conditional_statement
 	|	unique_priorityE yIF '(' expr ')' stmtBlock	%prec prLOWER_THAN_ELSE	{ }
 	|	unique_priorityE yIF '(' expr ')' stmtBlock yELSE stmtBlock		{ }
@@ -1314,20 +1327,21 @@ caseStmt:
 caseAttrE: 	/*empty*/				{ }
 	;
 
-caseListE:	/* empty */				{ }
-	|	caseList				{ }
+case_itemListE:			// IEEE: [ { case_item } ]
+		/* empty */				{ }
+	|	case_itemList				{ }
 	;
 
-caseList:
+case_itemList:			// IEEE: { case_item + ... }
 		caseCondList ':' stmtBlock		{ }
 	|	yDEFAULT ':' stmtBlock			{ }
 	|	yDEFAULT stmtBlock			{ }
-	|	caseList caseCondList ':' stmtBlock	{ }
-	|       caseList yDEFAULT stmtBlock		{ }
-	|	caseList yDEFAULT ':' stmtBlock		{ }
+	|	case_itemList caseCondList ':' stmtBlock	{ }
+	|       case_itemList yDEFAULT stmtBlock		{ }
+	|	case_itemList yDEFAULT ':' stmtBlock		{ }
 	;
 
-caseCondList:
+caseCondList:			// IEEE: part of case_item
 		expr 					{ }
 	|	caseCondList ',' expr			{ }
 	;
@@ -1335,12 +1349,12 @@ caseCondList:
 //************************************************
 // Functions/tasks
 
-taskRef:
+taskRef:			// IEEE: part of tf_call
 		idDotted		 		{ }
 	|	idDotted '(' exprList ')'		{ }
 	;
 
-funcRef<str>:
+funcRef<str>:			// IEEE: part of tf_call
 		idDotted '(' exprList ')'		{ $1+"("+$3+")"; }
 	;
 
@@ -1349,7 +1363,7 @@ taskDecl:
 			{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>5,$5); }
 	;
 
-funcDecl:
+function_declaration:		// IEEE: function_declaration + function_body_declaration
 	 	yFUNCTION lifetimeE funcId funcGuts yENDFUNCTION endLabelE
 			{ GRAMMARP->m_inFTask=false; PARSEP->endtaskfuncCb($<fl>5,$5); }
 	;
@@ -1363,7 +1377,8 @@ lifetimeE:			// IEEE: lifetime - plus empty (complete)
 taskId:		yaID 					{ GRAMMARP->m_inFTask=true; PARSEP->taskCb($<fl>1,"task",$1); }
 	;
 
-funcId: 	funcTypeE yaID				{ GRAMMARP->m_inFTask=true; PARSEP->functionCb($<fl>2,"function",$2,$1); }
+funcId:				// IEEE: function_data_type_or_implicit + part of function_body_declaration
+	 	funcTypeE yaID				{ GRAMMARP->m_inFTask=true; PARSEP->functionCb($<fl>2,"function",$2,$1); }
 	|	ySIGNED funcTypeE yaID			{ GRAMMARP->m_inFTask=true; PARSEP->functionCb($<fl>3,"function",$3,"signed "+$2); }
 	;
 
@@ -1448,6 +1463,8 @@ exprNoStr<str>:
 	|	expr '?' expr ':' expr			{ $<fl>$=$<fl>1; $$ = $1+"?"+$3+":"+$5; }
 	|	'(' expr ')'				{ $<fl>$=$<fl>1; $$ = "("+$2+")"; }
 	|	'_' '(' statePushVlg expr statePop ')'	{ $<fl>$=$<fl>1; $$ = "_("+$4+")"; }	// Arbitrary Verilog inside PSL
+
+	//			// IEEE: concatenation/constant_concatenation
 	|	'{' cateList '}'			{ $<fl>$=$<fl>1; $$ = "{"+$2+"}"; }
 	|	'{' constExpr '{' cateList '}' '}'	{ $<fl>$=$<fl>1; $$ = "{"+$2+"{"+$4+"}}"; }
 
@@ -1609,8 +1626,10 @@ idDotted<str>:
 // we'll assume so and cleanup later.
 idArrayed<str>:
 		yaID						{ $<fl>$=$<fl>1; $$ = $1; }
+	//			// IEEE: id + part_select_range/constant_part_select_range
 	|	idArrayed '[' expr ']'				{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"]"; }
 	|	idArrayed '[' constExpr ':' constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+":"+$5+"]"; }
+	//			// IEEE: id + indexed_range/constant_indexed_range
 	|	idArrayed '[' expr yP_PLUSCOLON  constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"+:"+$5+"]"; }
 	|	idArrayed '[' expr yP_MINUSCOLON constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"-:"+$5+"]"; }
 	;
