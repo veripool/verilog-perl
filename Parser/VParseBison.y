@@ -309,7 +309,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yXOR		"xor"
 
 // Two token lookahead in VParseLex.l
-%token<str>		yVIRTUAL_CLASS	"virtual-for-class"
+%token<str>		yVIRTUAL__CLASS	"virtual-for-class"
 
 %token<str>		yP_OROR		"||"
 %token<str>		yP_ANDAND	"&&"
@@ -329,7 +329,7 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yP_SSRIGHT	">>>"
 %token<str>		yP_POW		"**"
 
-%token<str>		yP_PARSTRENGTH	"(-for-strength"
+%token<str>		yP_PAR__STRENGTH "(-for-strength"
 %token<str>		yP_PLUSCOLON	"+:"
 %token<str>		yP_MINUSCOLON	"-:"
 %token<str>		yP_MINUSGT	"->"
@@ -1513,8 +1513,8 @@ strength:	ygenSTRENGTH				{ }
 // IEEE: drive_strength + pullup_strength + pulldown_strength
 //	+ charge_strength - plus empty
 strengthSpecE:	/* empty */					{ }
-	|	yP_PARSTRENGTH strength ')'			{ }
-	|	yP_PARSTRENGTH strength ',' strength ')'	{ }
+	|	yP_PAR__STRENGTH strength ')'			{ }
+	|	yP_PAR__STRENGTH strength ',' strength ')'	{ }
 	;
 
 //************************************************
@@ -1677,19 +1677,18 @@ assertStmt:
 //**********************************************************************
 // Class
 
-class_declaration:	//== IEEE: part of class_declaration (INCOMPLETE)
+class_declaration:		// ==IEEE: part of class_declaration (INCOMPLETE)
 		classHeader parameter_port_listE classExtendsE ';'
 			class_itemListE
-			yENDCLASS endLabelE {
-			PARSEP->unsupportedCb($<fl>4, "Unsupported class", "class"); }
+			yENDCLASS endLabelE { }
 	;
 
-classHeader:		// IEEE: part of class_declaration
-		yVIRTUAL_CLASS yCLASS lifetimeE yaID	{ }
-	|	               yCLASS lifetimeE yaID	{ }
+classHeader:			// IEEE: part of class_declaration
+		yVIRTUAL__CLASS yCLASS lifetimeE yaID	{ }
+	|	                yCLASS lifetimeE yaID	{ }
 	;
 
-classExtendsE:		// IEEE: part of class_declaration
+classExtendsE:			// IEEE: part of class_declaration
 		/* empty */				{ }
 	|	yEXTENDS yaID 				{ }
 //	|	yEXTENDS yaID '(' list_of_arguments ')'	{ }
@@ -1705,7 +1704,7 @@ class_itemList:
 	|	class_itemList class_item  		{ }
 	;
 
-class_item:		//== IEEE: class_item (UNSUPPORTED)
+class_item:			//== IEEE: class_item (UNSUPPORTED)
 		BISONPRE_NOT(yCLASS,yENDCLASS)		{ }
 	|	yCLASS class_itemListE yENDCLASS	{ }
 	;

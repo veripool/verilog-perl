@@ -624,10 +624,10 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	if (token == '(' && (nexttok == ygenSTRENGTH
 			     || nexttok == ySUPPLY0
 			     || nexttok == ySUPPLY1)) {
-	    token = yP_PARSTRENGTH;
+	    token = yP_PAR__STRENGTH;
 	}
 	if (token == yVIRTUAL && (nexttok == yCLASS)) {
-	    token = yVIRTUAL_CLASS;
+	    token = yVIRTUAL__CLASS;
 	}
     }
     return token;

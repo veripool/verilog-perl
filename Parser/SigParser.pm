@@ -156,13 +156,6 @@ sub task {
     my $name = shift;
 }
 
-sub unsupported {
-    my $self = shift;
-    my $text = shift;
-    my $token = shift;
-    $self->error($text,$token);
-}
-
 ######################################################################
 ### Package return
 1;
@@ -302,13 +295,6 @@ a call with 'reg'.)
 =item $self->task ( $keyword, $name )
 
 This method is called when a module is defined.
-
-=item $self->unsupported ( $text, $token )
-
-This method is called when an unsupported language feature is encountered.
-The default hander will call the error method.  If you are not interested
-in parsing unsupported contructs, you may simply make a NOP callback for
-this.
 
 =back
 

@@ -87,7 +87,6 @@ public:
 			  const string& value,
 			  bool inFunc);
     virtual void taskCb(VFileLine* fl, const string& kwd, const string& name);
-    virtual void unsupportedCb(VFileLine* fl, const string& text, const string& token);
 
     void call(string* rtnStrp, int params, const char* method, ...);
 };
@@ -262,12 +261,6 @@ void VParserXs::taskCb(VFileLine* fl, const string& kwd, const string& name) {
     static string hold1; hold1 = kwd;
     static string hold2; hold2 = name;
     call(NULL, 2,"task",hold1.c_str(), hold2.c_str());
-}
-void VParserXs::unsupportedCb(VFileLine* fl, const string& text, const string& token) {
-    cbFileline(fl);
-    static string hold1; hold1 = text;
-    static string hold2; hold2 = token;
-    call(NULL, 2,"unsupported",hold1.c_str(), hold2.c_str());
 }
 
 
