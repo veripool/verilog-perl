@@ -132,6 +132,7 @@ sub verilog_text {
 	push @out, " ".$self->array if $self->array;
         push @out, " = ".$self->value if defined $self->value && $self->value ne '';
 	push @out, ";";
+	push @out, " ".$self->comment if defined $self->comment && $self->comment ne ''
     }
     return (wantarray ? @out : join('',@out));
 }
