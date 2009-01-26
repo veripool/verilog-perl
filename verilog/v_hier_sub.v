@@ -22,7 +22,7 @@ module v_hier_sub (/*AUTOARG*/
 
 
    generate
-      genvar 	K;
+      genvar 	K, K_UNUSED;
       for (K=0; K<1; K=K+1) begin : genloop
 	 // By pin position, inside generate
 	 v_hier_subsub subsub2 (qvec[2], 1'b0);

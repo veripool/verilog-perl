@@ -21,6 +21,7 @@ Module:v_hier_sub  File:verilog/v_hier_sub.v
   Port:clk  Dir:in  Type:wire  Array:
   Port:qvec  Dir:out  Type:wire  Array:
   Net:K    Type:genvar  Array:
+  Net:K_UNUSED    Type:genvar  Array:
   Net:a1  I  Type:supply1  Array:
   Net:avec  O  Type:wire  Array:  3:0
   Net:clk  O  Type:wire  Array:
