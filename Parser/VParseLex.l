@@ -150,7 +150,7 @@ escid	\\[^ \t\f\r\n]+
   "repeat"		{ FL; VALTEXT; CALLBACK(keywordCb); return yREPEAT; }
   "scalared"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySCALARED; }
   "specify"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySPECIFY; }
-  "specparam"		{ FL; VALTEXT; CALLBACK(keywordCb); return yaTIMINGSPEC; }
+  "specparam"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySPECPARAM; }
   "supply0"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySUPPLY0; }
   "supply1"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySUPPLY1; }
   "table"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTABLE; }
@@ -313,6 +313,7 @@ escid	\\[^ \t\f\r\n]+
   "rand"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRAND; }
   "randc"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDC; }
   "randcase"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDCASE; }
+  "randomize"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDOMIZE; }
   "randsequence"	{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDSEQUENCE; }
   "ref"			{ FL; VALTEXT; CALLBACK(keywordCb); return yREF; }
   "return"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRETURN; }
@@ -630,11 +631,11 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 			     || nexttok == ySUPPLY1)) {
 	    token = yP_PAR__STRENGTH;
 	}
-	if (token == yVIRTUAL && (nexttok == yCLASS)) {
-	    token = yVIRTUAL__CLASS;
-	}
-	if (token == yaID && (nexttok == yP_COLONCOLON)) {
+	else if (token == yaID && (nexttok == yP_COLONCOLON)) {
 	    token = yaID__COLONCOLON;
+	}
+	else if (token == yVIRTUAL && (nexttok == yCLASS)) {
+	    token = yVIRTUAL__CLASS;
 	}
     }
     return token;
