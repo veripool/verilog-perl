@@ -77,11 +77,21 @@ sub endmodule {
     my $self = shift;
 }
 
+sub endpackage {
+    my $self = shift;
+}
+
 sub function {
     my $self = shift;
     my $keyword = shift;
     my $name = shift;
     my $type = shift;
+}
+
+sub import {
+    my $self = shift;
+    my $module = shift;
+    my $name = shift;
 }
 
 sub instant {
@@ -110,6 +120,12 @@ sub pin {
     my $name = shift;
     my $conn = shift;
     my $number = shift;
+}
+
+sub package {
+    my $self = shift;
+    my $kwd = shift;
+    my $name = shift;
 }
 
 sub parampin {
@@ -228,6 +244,11 @@ for writing clean up routines.
 This method is called at a endmodule keyword. It is useful for writing
 clean up routines.
 
+=item $self->endprogram ( $token )
+
+This method is called at a endprogram keyword. It is useful for writing
+clean up routines.
+
 =item $self->funcsignal ( $keyword, $signame, $vector, $mem, $signed, $value )
 
 This method is called when a signal/variable is declared inside a function.
@@ -238,6 +259,10 @@ See signal_decl for more details.
 This method is called when a function is defined.  Type is the output size
 or typename, plus "signed", for example "", "[3:0]", "integer", or "signed
 [2:0]".
+
+=item $self->import ( $name )
+
+This method is called when an import is defined.
 
 =item $self->instant ( $module, $cell, $range )
 
@@ -277,6 +302,10 @@ This method is called when a module port is defined.
 =item $self->ppdefine ( $defvar, $definition )
 
 This method is called when a preprocessor definition is encountered.
+
+=item $self->program ( $keyword, $name )
+
+This method is called when a program is defined.
 
 =item $self->signal_decl ( $keyword, $signame, $vector, $mem, $signed, $value )
 

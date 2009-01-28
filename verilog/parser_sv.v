@@ -1,26 +1,32 @@
+package mypackage;
+     bit [7:0] pkg_addr;
+     bit [7:0] pkg_data;
+endpackage
 
 module times ();
    time x;
    initial x = 33ns;	// Note no space
 endmodule : times
 
-interface itf;
+interface itf #(parameter num_of_cli = 0);
    logic blabla;
    logic [7:0] addr, data;
    modport Master(input data, date_delayed, output addr);
 endinterface : itf
 
 module test (
-//	     itf whole_int,
-//	     itf.test modported_int,
-    input logic clk, rst,
-    input logic d_in,
-    output logic d_out
-	     );
+   itf whole_int,
+   itf.test modported_int,
+   input logic clk, rst,
+   input logic d_in,
+   output logic d_out
+   );
 
-   logic   d_int;
-   logic [7:0] data_;
-   assign      d_int = d_in;
+   import mypackage::*;
+
+   logic 	d_int;
+   logic [7:0] 	data_;
+   assign      d_int = d_in + pkg_data;
 
    assign  modported_int.data = data_;
 

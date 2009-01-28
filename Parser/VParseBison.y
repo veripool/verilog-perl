@@ -443,7 +443,7 @@ description:			// ==IEEE: description
 		module_declaration			{ }
 	|	interface_declaration			{ }
 //	|	program_declaration			{ }
-//	|	package_declaration			{ }
+	|	package_declaration			{ }
 	|	package_item				{ }
 //	|	bind_directive				{ }
 	//	unsupported	// IEEE: config_declaration
@@ -461,11 +461,30 @@ timeunits_declarationE:		// IEEE: timeunits_declaration + empty
 //**********************************************************************
 // Packages
 
-package_item:		// ==IEEE: package_item
+package_declaration:		// ==IEEE: package_declaration
+		packageHdr package_itemListE yENDPACKAGE endLabelE
+			{ PARSEP->endpackageCb($<fl>3,$3); }
+	;
+
+packageHdr:
+		yPACKAGE yaID ';'			{ PARSEP->packageCb($<fl>1,$1, $2); }
+	;
+
+package_itemListE:		// IEEE: [{ package_item }]
+		/* empty */				{ }
+	|	package_itemList			{ }
+	;
+
+package_itemList:		// IEEE: { package_item }
+		package_item				{ }
+	|	package_itemList package_item		{ }
+	;
+
+package_item:			// ==IEEE: package_item
 		package_or_generate_item_declaration	{ }
 //	|	anonymous_program			{ }
 //	|	timeunits_declaration			{ }
- 	;
+	;
 
 package_or_generate_item_declaration:	// ==IEEE: package_or_generate_item_declaration
 	//			// varDecl == net_declatation | data_declaration
@@ -482,6 +501,20 @@ package_or_generate_item_declaration:	// ==IEEE: package_or_generate_item_declar
 //	|	overload_declaration			{ }
 //	|	concurrent_assertion_item_declaration	{ }
 	|	';'					{ }
+	;
+
+package_import_declaration:	// ==IEEE: package_import_declaration
+		yIMPORT package_importItemList ';'	{ }
+	;
+
+package_importItemList:
+		package_importItem			{ }
+	|	package_importItemList ',' package_importItem { }
+	;
+
+package_importItem:
+		yaID yP_COLONCOLON yaID			{ PARSEP->importCb($<fl>1,$1);}
+	|	yaID yP_COLONCOLON '*'			{ }
 	;
 
 //**********************************************************************
@@ -514,7 +547,7 @@ modParArgs:
 
 modParList:
 		modParSecond				{ }
-	|	modParList ',' modParSecond 		{ }
+	|	modParList ',' modParSecond		{ }
 	;
 
 // Called only after a comma in a v2k list, to allow parsing "parameter a,b, parameter x"
@@ -528,13 +561,21 @@ modPortsStarE:
 	|	'(' ')'						{ }
 	//			// .* expanded from module_declaration
 	|	'(' yP_DOTSTAR ')'				{ }
-	|	'(' {GRAMMARP->pinNum(1);} portList ')'		{ }
+	|	'(' {GRAMMARP->pinNum(1);} portOrIfList ')'	{ }
 	|	'(' {GRAMMARP->pinNum(1);} portV2kArgs ')'	{ }
+	;
+
+portOrIfList:
+		portList					{ }
+	|	portIfList					{ }
+	|	portIfList ',' portList				{ }
+	|	portIfList ',' portV2kArgs			{ }
+	|	portIfList ',' portList ',' portV2kArgs		{ }
 	;
 
 portList:
 		port					{ }
-	|	portList ',' port	  		{ }
+	|	portList ',' port	 		{ }
 	;
 
 port:
@@ -564,6 +605,17 @@ portV2kInit:
 
 portV2kSig:
 		sigAndAttr				{ $<fl>$=$<fl>1; PARSEP->portCb($<fl>1, $1); }
+	;
+
+portIfList:
+		portIf					{ }
+	|	portIfList ',' portIf			{ }
+	;
+
+portIf:
+		yaID yaID				{ PARSEP->instantCb($<fl>1, $1, $2, ""); PARSEP->portCb($<fl>1, $2); }
+	|	yINTERFACE yaID				{ PARSEP->portCb($<fl>1, $2); }
+	|	yaID '.' yaID yaID			{ PARSEP->instantCb($<fl>1, $1, "*", ""); PARSEP->portCb($<fl>1, $3); }
 	;
 
 //**********************************************************************
@@ -655,8 +707,8 @@ varDeclList:
 	;
 
 regsigList:
-		regsig  				{ }
-	|	regsigList ',' regsig		       	{ }
+		regsig 					{ }
+	|	regsigList ',' regsig			{ }
 	;
 
 portV2kDecl:
@@ -858,7 +910,7 @@ enumNameStartE:			// IEEE: third part of enum_name_declaration
 data_declaration:		// ==IEEE: data_declaration (INCOMPLETE)
 //		dataDeclarationType  list_of_variable_decl_assignments ';'	{ }
 		type_declaration			{ }
-//	|	package_import_declaration
+//	|	package_import_declaration		{ }
 //	|	virtual_interface_declaration
 	;
 
@@ -910,6 +962,7 @@ module_or_generate_item:
 	|	final_construct				{ }
 
 	|	yDEFPARAM list_of_defparam_assignments ';'	{ }
+	|	package_import_declaration		{ }
 	|	instDecl 				{ }
 	|	task_declaration			{ }
 	|	function_declaration			{ }
@@ -1647,6 +1700,7 @@ idDotted<str>:
 // we'll assume so and cleanup later.
 idArrayed<str>:
 		yaID						{ $<fl>$=$<fl>1; $$ = $1; }
+	|	yaID__COLONCOLON yP_COLONCOLON			{ PARSEP->importCb($<fl>1,$1); $<fl>$=$<fl>1; $$ = $1+"::"; }
 	//			// IEEE: id + part_select_range/constant_part_select_range
 	|	idArrayed '[' expr ']'				{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"]"; }
 	|	idArrayed '[' constExpr ':' constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+":"+$5+"]"; }

@@ -5,6 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.10***
 
+**	Support interface and import. [by Sandeep Gor]
+	Add new SigParser::interface, endinterface and import callbacks.
+
 ***	Add vhier --top-module option, bug49.  [John Busco]
 
 ***	Add vpassert $ucover_bits_clk. [Mahesh Kumashikar, et al]

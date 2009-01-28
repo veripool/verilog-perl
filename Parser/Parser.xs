@@ -74,11 +74,14 @@ public:
     virtual void endcellCb(VFileLine* fl, const string& kwd);
     virtual void endinterfaceCb(VFileLine* fl, const string& kwd);
     virtual void endmoduleCb(VFileLine* fl, const string& kwd);
+    virtual void endpackageCb(VFileLine* fl, const string& kwd);
     virtual void endtaskfuncCb(VFileLine* fl, const string& kwd);
     virtual void functionCb(VFileLine* fl, const string& kwd, const string& name, const string& type);
+    virtual void importCb(VFileLine* fl, const string& name);
     virtual void instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range);
     virtual void interfaceCb(VFileLine* fl, const string& kwd, const string& name);
     virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool celldefine);
+    virtual void packageCb(VFileLine* fl, const string& kwd, const string& name);
     virtual void paramPinCb(VFileLine* fl, const string& name, const string& conn, int number);
     virtual void pinCb(VFileLine* fl, const string& name, const string& conn, int number);
     virtual void portCb(VFileLine* fl, const string& name);
@@ -187,6 +190,11 @@ void VParserXs::endmoduleCb(VFileLine* fl, const string& kwd) {
     static string hold1; hold1 = kwd;
     call(NULL, 1,"endmodule",hold1.c_str());
 }
+void VParserXs::endpackageCb(VFileLine* fl, const string& kwd) {
+    cbFileline(fl);
+    static string hold1; hold1 = kwd;
+    call(NULL, 1,"endpackage",hold1.c_str());
+}
 void VParserXs::endtaskfuncCb(VFileLine* fl, const string& kwd) {
     cbFileline(fl);
     static string hold1; hold1 = kwd;
@@ -198,6 +206,11 @@ void VParserXs::functionCb(VFileLine* fl, const string& kwd, const string& name,
     static string hold2; hold2 = name;
     static string hold3; hold3 = type;
     call(NULL, 3,"function",hold1.c_str(), hold2.c_str(), hold3.c_str());
+}
+void VParserXs::importCb(VFileLine* fl, const string& name) {
+    cbFileline(fl);
+    static string hold1; hold1 = name;
+    call(NULL, 1,"import",hold1.c_str());
 }
 void VParserXs::instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range) {
     cbFileline(fl);
@@ -219,6 +232,13 @@ void VParserXs::moduleCb(VFileLine* fl, const string& kwd, const string& name, b
     //Unused
     static string hold4; hold4 = celldefine?"1":"0";
     call(NULL, 4,"module",hold1.c_str(), hold2.c_str(), NULL, hold4.c_str());
+}
+void VParserXs::packageCb(VFileLine* fl, const string& kwd, const string& name) {
+    cbFileline(fl);
+    static string hold1; hold1 = kwd;
+    static string hold2; hold2 = name;
+    //Unused
+    call(NULL, 2,"package",hold1.c_str(), hold2.c_str());
 }
 void VParserXs::paramPinCb(VFileLine* fl, const string& name, const string& conn, int number) {
     cbFileline(fl);
