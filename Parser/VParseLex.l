@@ -617,7 +617,8 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
     s_yylvalp = yylvalp;
     int token = yylex();
     // If a paren, read another
-    if (token == '(') {
+    if (token == '('
+	|| token == yVIRTUAL) {
 #ifdef FLEX_DEBUG
 	if (yy_flex_debug) { cout<<"   lexToken: reading ahead to find possible strength"<<endl; }
 #endif
@@ -631,12 +632,10 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 			     || nexttok == ySUPPLY1)) {
 	    token = yP_PAR__STRENGTH;
 	}
-	else if (token == yaID && (nexttok == yP_COLONCOLON)) {
-	    token = yaID__COLONCOLON;
-	}
 	else if (token == yVIRTUAL && (nexttok == yCLASS)) {
 	    token = yVIRTUAL__CLASS;
 	}
+	// If add to above "else if", also add to "if (token" further above
     }
     return token;
 }

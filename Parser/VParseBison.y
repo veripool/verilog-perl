@@ -103,7 +103,6 @@ void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 // enum_identifier, interface_identifier, interface_instance_identifier,
 // package_identifier, type_identifier, variable_identifier,
 %token<str>		yaID		"IDENTIFIER"
-%token<str>		yaID__COLONCOLON "IDENTIFIER (then ::)"
 
 // IEEE: integral_number
 %token<str>		yaINTNUM	"INTEGER NUMBER"
@@ -695,7 +694,7 @@ modportSimplePort:
 
 modport_tf_port:		// ==IEEE: modport_tf_port
 		yaID					{ }
-	//|	method_prototype
+//	|	method_prototype
 	;
 
 //************************************************
@@ -945,7 +944,7 @@ module_itemList:		// IEEE: Part of module_declaration
 module_item:			// ==IEEE: module_item
 	//			// IEEE: non_port_module_item
 		generate_region				{ }
-	|	module_or_generate_item 		{ }
+	|	module_or_generate_item			{ }
 	|	specify_block				{ }
 	;
 
@@ -992,7 +991,7 @@ final_construct:		// IEEE: final_construct
 // Generates
 
 // Because genItemList includes variable declarations, we don't need beginNamed
-generate_block_or_null:
+generate_block_or_null:		// IEEE: generate_block_or_null
 		genItem					{ }
 	|	genItemBegin				{ }
 	;
@@ -1002,7 +1001,7 @@ genTopBlock:
 	|	genItemBegin				{ }
 	;
 
-genItemBegin:		// IEEE: part of generate_block
+genItemBegin:			// IEEE: part of generate_block
 		yBEGIN genItemList yEND			{ }
 	|	yBEGIN yEND				{ }
 	|	yaID ':' yBEGIN genItemList yEND endLabelE	{ }
@@ -1016,15 +1015,14 @@ genItemList:
 	|	genItemList genItem			{ }
 	;
 
-genItem:
-	//			// IEEE: module_or_interface_or_generate_item (INCOMPLETE)
+genItem:			// IEEE: module_or_interface_or_generate_item (INCOMPLETE)
 		module_or_generate_item			{ }
 	|	conditional_generate_construct		{ }
 	|	loop_generate_construct			{ }
 	;
 
 conditional_generate_construct:	// ==IEEE: conditional_generate_construct
-		yCASE  '(' expr ')' genCaseListE yENDCASE	{ }
+		yCASE  '(' expr ')' case_generate_itemListE yENDCASE	{ }
 	|	yIF '(' expr ')' generate_block_or_null	%prec prLOWER_THAN_ELSE	{ }
 	|	yIF '(' expr ')' generate_block_or_null yELSE generate_block_or_null	{ }
 	;
@@ -1034,25 +1032,26 @@ loop_generate_construct:	// ==IEEE: loop_generate_construct
 			{ }
 	;
 
-genCaseListE:
+case_generate_itemListE:	// IEEE: [{ case_generate_itemList }]
 		/* empty */				{ }
-	|	genCaseList				{ }
+	|	case_generate_itemList			{ }
 	;
 
-genCaseList:
-		caseCondList ':' generate_block_or_null		{ }
-	|	yDEFAULT ':' generate_block_or_null		{ }
-	|	yDEFAULT generate_block_or_null			{ }
-	|	genCaseList caseCondList ':' generate_block_or_null	{ }
-	|       genCaseList yDEFAULT generate_block_or_null		{ }
-	|	genCaseList yDEFAULT ':' generate_block_or_null		{ }
+case_generate_itemList:		// IEEE: { case_generate_itemList }
+		case_generate_item			{ }
+	|	case_generate_itemList case_generate_item	{ }
+	;
+
+case_generate_item:		// ==IEEE: case_generate_item
+		caseCondList ':' generate_block_or_null	{ }
+	|	yDEFAULT ':' generate_block_or_null	{ }
+	|	yDEFAULT generate_block_or_null		{ }
 	;
 
 //************************************************
 // Assignments and register declarations
 
-// IEEE: variable_lvalue or net_lvalue
-variableLvalue:
+variableLvalue:			// IEEE: variable_lvalue or net_lvalue
 		varRefDotBit				{ }
 	|	'{' identifier_listLvalue '}'		{ }
 	;
@@ -1630,16 +1629,13 @@ gateKwd<str>:
 	;
 
 // This list is also hardcoded in VParseLex.l
-// IEEE: strength0+strength1 - plus HIGHZ/SMALL/MEDIUM/LARGE
-strength:
+strength:			// IEEE: strength0+strength1 - plus HIGHZ/SMALL/MEDIUM/LARGE
 		ygenSTRENGTH				{ }
 	|	ySUPPLY0				{ }
 	|	ySUPPLY1				{ }
 	;
 
-// IEEE: drive_strength + pullup_strength + pulldown_strength
-//	+ charge_strength - plus empty
-strengthSpecE:
+strengthSpecE:			// IEEE: drive_strength + pullup_strength + pulldown_strength + charge_strength - plus empty
 		/* empty */					{ }
 	|	yP_PAR__STRENGTH strength ')'			{ }
 	|	yP_PAR__STRENGTH strength ',' strength ')'	{ }
@@ -1700,7 +1696,7 @@ idDotted<str>:
 // we'll assume so and cleanup later.
 idArrayed<str>:
 		yaID						{ $<fl>$=$<fl>1; $$ = $1; }
-	|	yaID__COLONCOLON yP_COLONCOLON			{ PARSEP->importCb($<fl>1,$1); $<fl>$=$<fl>1; $$ = $1+"::"; }
+	|	yaID yP_COLONCOLON				{ PARSEP->importCb($<fl>1,$1); $<fl>$=$<fl>1; $$ = $1+"::"; }
 	//			// IEEE: id + part_select_range/constant_part_select_range
 	|	idArrayed '[' expr ']'				{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"]"; }
 	|	idArrayed '[' constExpr ':' constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+":"+$5+"]"; }
