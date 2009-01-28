@@ -504,15 +504,15 @@ package_or_generate_item_declaration:	// ==IEEE: package_or_generate_item_declar
 	;
 
 package_import_declaration:	// ==IEEE: package_import_declaration
-		yIMPORT package_importItemList ';'	{ }
+		yIMPORT package_import_itemList ';'	{ }
 	;
 
-package_importItemList:
-		package_importItem			{ }
-	|	package_importItemList ',' package_importItem { }
+package_import_itemList:
+		package_import_item			{ }
+	|	package_import_itemList ',' package_import_item { }
 	;
 
-package_importItem:
+package_import_item:		// ==IEEE: package_import_item
 		yaID yP_COLONCOLON yaID			{ PARSEP->importCb($<fl>1,$1);}
 	|	yaID yP_COLONCOLON '*'			{ }
 	;
