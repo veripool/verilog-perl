@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.1**
+
+***     Support "parameter integer" etc, bug64. [Jeff Kurtze]
+
 * Verilog::Language 3.110 2009/1/28
 
 **	Support interface and import. [by Sandeep Gor]

@@ -298,3 +298,10 @@ parameter bugvp39 = 0;
 `default_nettype none
 `pragma foo = bar
 `default_nettype wire
+
+module bugvp64;
+   parameter integer  a=1,b=2;
+   parameter real     c=3.0;
+   parameter realtime d=4.0;
+   parameter time     e=5.0;
+endmodule

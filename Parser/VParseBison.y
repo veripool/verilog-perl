@@ -729,8 +729,10 @@ net_declaration:		// IEEE: net_declaration - excluding implict
 		varRESET varReg     signingE regArRangeE  regsigList ';'	{ }
 	//			// IEEE: parameter_declaration plus ';' (INCOMPLETE)
 	|	varRESET varGParam  signingE regrangeE  paramList ';'		{ }
+	|	varRESET varGParam  parameter_type      paramList ';'		{ }
 	//			// IEEE: local_parameter_declaration (INCOMPLETE)
 	|	varRESET varLParam  signingE regrangeE  paramList ';'		{ }
+	|	varRESET varLParam  parameter_type      paramList ';'		{ }
 
 	|	varRESET net_type   strengthSpecE signingE delayrange netSigList ';'	{ }
 	|	varRESET enumDecl   sigList ';'		{ }
@@ -767,6 +769,13 @@ port_direction:			// ==IEEE: port_direction
 	|	yOUTPUT					{ VARIO($1); }
 	|	yINOUT					{ VARIO($1); }
 	|	yREF					{ VARIO($1); }
+	;
+
+parameter_type<str>:
+		yINTEGER				{ $$=$1; }
+	|	yREAL					{ $$=$1; }
+	|	yREALTIME				{ $$=$1; }
+	|	yTIME					{ $$=$1; }
 	;
 
 varTypeKwds<str>:
