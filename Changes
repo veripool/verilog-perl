@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.1**
 
+***	Add vhier --resolve-files option. [by Vasu Arasanipalai]
+
 ***     Support "parameter integer" etc, bug64. [Jeff Kurtze]
 
 * Verilog::Language 3.110 2009/1/28

@@ -38,6 +38,7 @@ my $Opt_Missing = 1;
 my $Opt_Missing_Modules;
 my $Opt_TopModule;
 my $Opt_Xml;
+my $Opt_ResolveFiles;
 @ARGV = $Opt->parameter(@ARGV);
 Getopt::Long::config ("no_auto_abbrev");
 if (! GetOptions (
@@ -48,6 +49,7 @@ if (! GetOptions (
 		  "module-files!"	=> \$Opt_ModFiles,
 		  "modules!"		=> \$Opt_Modules,
 		  "input-files!"	=> \$Opt_InFiles,
+		  "resolve-files!"	=> \$Opt_ResolveFiles,
 		  "language=s"		=> sub { shift; Verilog::Language::language_standard(shift); },
 		  "missing!"		=> \$Opt_Missing,
 		  "missing-modules!"	=> \$Opt_Missing_Modules,
@@ -107,6 +109,13 @@ sub vhier {
 				   link_read_nonfatal => !$Opt_Missing,
 				   );
 
+    if ($Opt_ResolveFiles) {
+	$nl->read_libraries();
+	foreach my $file (@files) {
+	    print $fh $nl->resolve_filename ($file, "all"), "\n";
+	}
+	return;
+    }
     foreach my $file (@files) {
 	print "   Reading $file\n" if $Debug;
 	$nl->read_file (filename=>$file);
@@ -343,6 +352,14 @@ those files needed to represent the entire design.
 Set the language standard for the files.  This determines which tokens are
 signals versus keywords, such as the ever-common "do" (data-out signal,
 versus a do-while loop keyword).
+
+=item --resolve-files
+
+Show resolved filenames passed on the command line.  This will convert raw
+module and filenames without paths to include the library search path
+directory.  Output filenames will be in the same order as passed on the
+command line.  Unlike --input-files or --module-files, hierarchy is not
+traversed.
 
 =item --module-files
 
