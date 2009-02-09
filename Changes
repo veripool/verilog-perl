@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***     Support "parameter integer" etc, bug64. [Jeff Kurtze]
 
+****	Fix "assign {{x,y},z}", bugrt43138. [Devendra Singh]
+
 * Verilog::Language 3.110 2009/1/28
 
 **	Support interface and import. [by Sandeep Gor]

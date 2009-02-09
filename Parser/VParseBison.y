@@ -1060,9 +1060,14 @@ case_generate_item:		// ==IEEE: case_generate_item
 //************************************************
 // Assignments and register declarations
 
-variableLvalue:			// IEEE: variable_lvalue or net_lvalue
-		varRefDotBit				{ }
-	|	'{' identifier_listLvalue '}'		{ }
+variable_lvalue<str>:		// IEEE: variable_lvalue or net_lvalue
+		varRefDotBit				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	'{' variable_lvalueList '}'		{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
+	;
+
+variable_lvalueList<str>:	// IEEE: part of variable_lvalue: variable_lvalue { ',' variable_lvalue }
+		variable_lvalue				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	variable_lvalueList ',' variable_lvalue	{ $<fl>$=$<fl>1; $$ = $1+","+$3; }
 	;
 
 assignList:
@@ -1071,7 +1076,7 @@ assignList:
 	;
 
 assignOne:
-		variableLvalue '=' expr			{ }
+		variable_lvalue '=' expr		{ }
 	;
 
 delayOrEvE:		// IEEE: delay_or_event_control plus empty
@@ -1336,11 +1341,6 @@ stmtList:
 	|	stmtList stmtBlock			{ }
 	;
 
-assignLhs<str>:
-		varRefDotBit				{ $<fl>$=$<fl>1; $$ = $1; }
-	|	'{' identifier_listLvalue '}'		{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
-	;
-
 // IEEE: statement_or_null (may include more stuff, not analyzed)
 //	== function_statement_or_null
 stmt:
@@ -1351,27 +1351,27 @@ stmt:
 
 	//			// IEEE: operator_assignment
 	//			// added delayOrEvE as code found that expected it - maybe Verilog-XL accepted it?
-	|	assignLhs '=' 		delayOrEvE expr ';'	{ }
-	|	assignLhs yP_PLUSEQ	expr ';'	{ }
-	|	assignLhs yP_MINUSEQ	expr ';'	{ }
-	|	assignLhs yP_TIMESEQ	expr ';'	{ }
-	|	assignLhs yP_DIVEQ	expr ';'	{ }
-	|	assignLhs yP_MODEQ	expr ';'	{ }
-	|	assignLhs yP_ANDEQ	expr ';'	{ }
-	|	assignLhs yP_OREQ	expr ';'	{ }
-	|	assignLhs yP_XOREQ	expr ';'	{ }
-	|	assignLhs yP_SLEFTEQ	expr ';'	{ }
-	|	assignLhs yP_SRIGHTEQ	expr ';'	{ }
-	|	assignLhs yP_SSRIGHTEQ	expr ';'	{ }
+	|	variable_lvalue '=' 		delayOrEvE expr ';'	{ }
+	|	variable_lvalue yP_PLUSEQ	expr ';'	{ }
+	|	variable_lvalue yP_MINUSEQ	expr ';'	{ }
+	|	variable_lvalue yP_TIMESEQ	expr ';'	{ }
+	|	variable_lvalue yP_DIVEQ	expr ';'	{ }
+	|	variable_lvalue yP_MODEQ	expr ';'	{ }
+	|	variable_lvalue yP_ANDEQ	expr ';'	{ }
+	|	variable_lvalue yP_OREQ	expr ';'	{ }
+	|	variable_lvalue yP_XOREQ	expr ';'	{ }
+	|	variable_lvalue yP_SLEFTEQ	expr ';'	{ }
+	|	variable_lvalue yP_SRIGHTEQ	expr ';'	{ }
+	|	variable_lvalue yP_SSRIGHTEQ	expr ';'	{ }
 
 	//			// IEEE: nonblocking_assignment
-	|	assignLhs yP_LTE	delayOrEvE expr ';'	{ }
+	|	variable_lvalue yP_LTE	delayOrEvE expr ';'	{ }
 
 	//			// IEEE: procedural_continuous_assignment
 	|	yASSIGN expr '=' delayOrEvE expr ';'	{ }
-	|	yDEASSIGN expr ';'			{ }
+	|	yDEASSIGN variable_lvalue ';'		{ }
 	|	yFORCE expr '=' expr ';'		{ }
-	|	yRELEASE expr ';'			{ }
+	|	yRELEASE variable_lvalue ';'		{ }
 
 	//			// IEEE: case_statement
 	|	caseStart caseAttrE case_itemListE yENDCASE	{ }
@@ -1405,7 +1405,7 @@ stmt:
 	|	yFOREVER stmtBlock			{ }
 	|	yREPEAT '(' expr ')' stmtBlock		{ }
 	|	yWHILE '(' expr ')' stmtBlock		{ }
-	|	yFOR '(' assignLhs '=' expr ';' expr ';' assignLhs '=' expr ')' stmtBlock
+	|	yFOR '(' variable_lvalue '=' expr ';' expr ';' variable_lvalue '=' expr ')' stmtBlock
 	|	yDO stmtBlock yWHILE '(' expr ')'	{ }
 //	|	yFOREACH ( varRefDotBit [ loop_variables ] ) stmt	{ }
 
@@ -1721,11 +1721,6 @@ varRefBase<str>:
 
 strAsInt<str>:
 		yaSTRING				{ $<fl>$=$<fl>1; $$ = $1; }
-	;
-
-identifier_listLvalue<str>:	// IEEE: identifier_list for lvalue only
-		varRefDotBit				{ $<fl>$=$<fl>1; $$ = $1; }
-	|	identifier_listLvalue ',' varRefDotBit	{ $<fl>$=$<fl>1; $$ = $1+","+$3; }
 	;
 
 endLabelE:
