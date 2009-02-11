@@ -69,7 +69,7 @@ sub width {
     my $self = shift;
     # Return bit width (if known)
     if (defined $self->msb && defined $self->lsb) {
-	return ($self->msb - $self->lsb + 1);
+	return (abs($self->msb - $self->lsb) + 1);
     }
     return undef;
 }
