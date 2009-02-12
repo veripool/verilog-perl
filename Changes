@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Support big-endian bit vectors, i.e. [0:2], bug65. [Devendra Singh]
 
+***	Return width() of 1 for non-vectored signals, bug65. [Devendra Singh]
+
 ****	Fix "assign {{x,y},z}", bugrt43138. [Devendra Singh]
 
 * Verilog::Language 3.110 2009/1/28

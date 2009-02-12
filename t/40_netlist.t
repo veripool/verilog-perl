@@ -8,7 +8,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 10 }
+BEGIN { plan tests => 19 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::Netlist::Debug = 1;
@@ -48,4 +48,33 @@ ok ($mods[2], 'v_hier_sub');
 ok ($mods[3], 'v_hier_top2');
 ok ($mods[4], 'v_hier_top');
 
+# Width checks
+{
+    my $mod = $nl->find_module("v_hier_top");
+    ok (_width_of($mod,"WC_w1"), 1);
+    ok (_width_of($mod,"WC_w1b"), 1);
+    ok (_width_of($mod,"WC_w3"), 3);
+    ok (_width_of($mod,"WC_w4"), 4);
+    ok (_width_of($mod,"WC_p32"), 32);
+    ok (_width_of($mod,"WC_p1"), 1);
+    ok (_width_of($mod,"WC_p3"), 3);
+    ok (_width_of($mod,"WC_p4"), 4);
+    ok (_width_of($mod,"WC_pint"), 32);
+}
+
 ok(1);
+
+sub _width_of {
+    my $mod = shift;
+    my $name = shift;
+    if (!$mod) {
+	warn "%Warning: No module found,";
+	return;
+    }
+    my $sig = $mod->find_net($name);
+    if (!$sig) {
+	warn "%Warning: No signal '$name' found,";
+	return;
+    }
+    return $sig->width;
+}

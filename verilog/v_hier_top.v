@@ -18,6 +18,17 @@ module v_hier_top (/*AUTOARG*/
 
    missing missing ();
 
+   // Width checks, bugvp65
+   wire  	WC_w1;
+   wire [0:0]   WC_w1b;
+   wire [2:0]   WC_w3;
+   wire [-1:2]  WC_w4;
+   localparam         WC_p32=0;
+   localparam [0:0]   WC_p1=0;
+   localparam [2:0]   WC_p3=0;
+   localparam [-1:2]  WC_p4=0;
+   localparam integer WC_pint=0;
+
 endmodule
 
 // Local Variables:

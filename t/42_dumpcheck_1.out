@@ -47,6 +47,15 @@ Module:v_hier_subsub  File:verilog/v_hier_subsub.v
   Net:q  I  Type:wire  Array:
 Module:v_hier_top  File:verilog/v_hier_top.v
   Port:clk  Dir:in  Type:wire  Array:
+  Net:WC_p1    Type:localparam  Array:  0:0  Value:0
+  Net:WC_p3    Type:localparam  Array:  2:0  Value:0
+  Net:WC_p32    Type:localparam  Array:  Value:0
+  Net:WC_p4    Type:localparam  Array:  -1:2  Value:0
+  Net:WC_pint    Type:localparam  Array:  Value:0
+  Net:WC_w1    Type:wire  Array:
+  Net:WC_w1b    Type:wire  Array:  0:0
+  Net:WC_w3    Type:wire  Array:  2:0
+  Net:WC_w4    Type:wire  Array:  -1:2
   Net:clk  O  Type:wire  Array:
   Cell:missing  is-a:missing
   Cell:sub  is-a:v_hier_sub
