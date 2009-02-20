@@ -54,11 +54,11 @@ VPreprocLex.o:	VPreprocLex.h VPreproc.h VFileLine.h
 VPreproc.o:	VPreprocLex.h VPreproc.h VFileLine.h
 VFileLine.o:	                         VFileLine.h
 
-VPreprocLex_prefix.cpp: VPreprocLex.l
+VPreprocLex_pretmp.cpp: VPreprocLex.l
 	$(LEX) $(LEXFLAGS) -o$@ $<
 
-VPreprocLex.cpp: $(FLEXFIX) VPreprocLex_prefix.cpp
-	$(PERL) $(FLEXFIX) < VPreprocLex_prefix.cpp > $@
+VPreprocLex.cpp: $(FLEXFIX) VPreprocLex_pretmp.cpp
+	$(PERL) $(FLEXFIX) < VPreprocLex_pretmp.cpp > $@
 
 Preproc_cleaned.c: Preproc.c
 	$(PERL) $(XSUBPPFIX) < Preproc.c > Preproc_cleaned.c

@@ -17,6 +17,7 @@
 \.exp$
 \.tmp$
 \.pre\..*$
+_pretmp\..*$
 VPreprocLex\.cpp$
 simv
 .*\.tar\.gz
@@ -28,9 +29,9 @@ Parser/VParseBison.*\.h
 Parser/VParseBison.*\.tab.c
 Parser/VParseBison.*\.output
 Parser/VParseLex.cpp
-Parser/VParseLex_prefix.cpp
+Parser/VParseLex_pretmp.cpp
 Preproc/Preproc.c
-Preproc/VPreprocLex_prefix.cpp
+Preproc/VPreprocLex_pretmp.cpp
 signals.vrename
 test_dir
 \.svn/

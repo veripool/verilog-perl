@@ -9,6 +9,7 @@
 *.output
 *.xsc
 *.pre.*
+*_pretmp.*
 Makefile
 VParseLex*.cpp
 VParseBison.c

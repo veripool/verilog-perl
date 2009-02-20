@@ -111,7 +111,7 @@ sub process {
 }
 
 sub tmp_prefix {
-    return output_prefix().".pre";
+    return output_prefix()."_pretmp";
 }
 
 sub output_prefix {

@@ -58,11 +58,11 @@ VFileLine.o:	        VFileLine.cpp     VFileLine.h
 VFileLine.o: $(PPSRC)/VFileLine.cpp
 	$(CCCMD) $(CCCDLFLAGS) "-I$(PERL_INC)" $(PASTHRU_DEFINE) $(DEFINE) $<
 
-VParseLex_prefix.cpp: VParseLex.l
+VParseLex_pretmp.cpp: VParseLex.l
 	$(LEX) $(LEXFLAGS) -o$@ $<
 
-VParseLex.cpp: $(FLEXFIX) VParseLex_prefix.cpp
-	$(PERL) $(FLEXFIX) < VParseLex_prefix.cpp > $@
+VParseLex.cpp: $(FLEXFIX) VParseLex_pretmp.cpp
+	$(PERL) $(FLEXFIX) < VParseLex_pretmp.cpp > $@
 
 VParseBison.h: VParseBison.cpp
 
@@ -76,7 +76,7 @@ Parser_cleaned.c: Parser.c
 	$(PERL) $(XSUBPPFIX) < Parser.c > Parser_cleaned.c
 
 clean::
-	-$(RM_RF) test *.d *.o *.output *.pre.*
+	-$(RM_RF) test *.d *.o *.output *.pre.* *_pretmp.*
 	-$(RM_RF) VParseLex*.cpp VParseBison.h VParseBison.cpp Parser_cleaned.c
 ';
     return $out;
