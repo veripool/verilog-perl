@@ -733,7 +733,7 @@ net_declaration:		// IEEE: net_declaration - excluding implict
 	//			// IEEE: local_parameter_declaration (INCOMPLETE)
 	|	varRESET varLParam  signingE regrangeE  paramList ';'		{ }
 	|	varRESET varLParam  parameter_type      paramList ';'		{ }
-
+	//
 	|	varRESET net_type   strengthSpecE signingE delayrange netSigList ';'	{ }
 	|	varRESET enumDecl   sigList ';'		{ }
 
@@ -968,7 +968,7 @@ module_or_generate_item:
 	|	continuous_assign			{ }
 	|	initial_construct			{ }
 	|	final_construct				{ }
-
+	//
 	|	yDEFPARAM list_of_defparam_assignments ';'	{ }
 	|	package_import_declaration		{ }
 	|	instDecl 				{ }
@@ -977,10 +977,10 @@ module_or_generate_item:
 	|	portDecl	 			{ }
 	|	varDecl 				{ }
 	|	combinational_body			{ }
-
+	//
 	|	concurrent_assertion_item		{ }  // IEEE puts in module_item, all tools put here
 	|	clocking_declaration			{ }
-
+	//
 	|	error ';'				{ }
 	;
 
@@ -1379,7 +1379,7 @@ stmt:
 	//			// IEEE: conditional_statement
 	|	unique_priorityE yIF '(' expr ')' stmtBlock	%prec prLOWER_THAN_ELSE	{ }
 	|	unique_priorityE yIF '(' expr ')' stmtBlock yELSE stmtBlock		{ }
-
+	//
 	|	varRefDotBit yP_PLUSPLUS 		{ }
 	|	varRefDotBit yP_MINUSMINUS 		{ }
 	|	yP_PLUSPLUS	varRefDotBit		{ }
@@ -1387,7 +1387,7 @@ stmt:
 
 	//			// IEEE: subroutine_call_statement (INCOMPLETE)
 	|	taskRef ';' 				{ }
-
+	//
 	|	ygenSYSCALL '(' ')' ';'			{ }
 	|	ygenSYSCALL '(' exprList ')' ';'	{ }
 	|	ygenSYSCALL ';'				{ }
@@ -1420,7 +1420,7 @@ stmt:
 
 	//			// IEEE: randcase_statement
 	|	yRANDCASE case_itemList yENDCASE	{ }
-
+	//
 	|	error ';'				{ }
 	;
 
@@ -1560,7 +1560,7 @@ exprNoStr<str>:
 	|	expr '/' expr				{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	expr '%' expr				{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	expr yP_POW expr			{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
-
+	//
 	|	'-' expr	%prec prUNARYARITH	{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	'+' expr	%prec prUNARYARITH	{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	'&' expr	%prec prREDUCTION	{ $<fl>$=$<fl>1; $$ = $1+$2; }
@@ -1571,30 +1571,30 @@ exprNoStr<str>:
 	|	yP_NOR expr	%prec prREDUCTION	{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	'!' expr	%prec prNEGATION	{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	'~' expr	%prec prNEGATION	{ $<fl>$=$<fl>1; $$ = $1+$2; }
-
+	//
 	|	varRefDotBit yP_PLUSPLUS		{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	varRefDotBit yP_MINUSMINUS		{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	yP_PLUSPLUS	varRefDotBit		{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	yP_MINUSMINUS	varRefDotBit		{ $<fl>$=$<fl>1; $$ = $1+$2; }
-
+	//
 	|	expr '?' expr ':' expr			{ $<fl>$=$<fl>1; $$ = $1+"?"+$3+":"+$5; }
 	|	'(' expr ')'				{ $<fl>$=$<fl>1; $$ = "("+$2+")"; }
 	|	'_' '(' statePushVlg expr statePop ')'	{ $<fl>$=$<fl>1; $$ = "_("+$4+")"; }	// Arbitrary Verilog inside PSL
-
+	//
 	//			// IEEE: concatenation/constant_concatenation
 	|	'{' cateList '}'			{ $<fl>$=$<fl>1; $$ = "{"+$2+"}"; }
 	|	'{' constExpr '{' cateList '}' '}'	{ $<fl>$=$<fl>1; $$ = "{"+$2+"{"+$4+"}}"; }
-
+	//
 	|	ygenSYSCALL				{ $<fl>$=$<fl>1; $$ = $1; }
 	|	ygenSYSCALL '(' ')'			{ $<fl>$=$<fl>1; $$ = $1; }
 	|	ygenSYSCALL '(' exprList ')'		{ $<fl>$=$<fl>1; $$ = $1+"("+$3+")"; }
-
+	//
 	|	funcRef					{ $<fl>$=$<fl>1; $$ = $1; }
-
+	//
 	|	yaINTNUM				{ $<fl>$=$<fl>1; $$ = $1; }
 	|	yaFLOATNUM				{ $<fl>$=$<fl>1; $$ = $1; }
 	|	yaTIMENUM				{ $<fl>$=$<fl>1; $$ = $1; }
-
+	//
 	|	varRefDotBit	  			{ $<fl>$=$<fl>1; $$ = $1; }
 	;
 

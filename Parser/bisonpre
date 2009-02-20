@@ -40,7 +40,6 @@ if (! GetOptions (
 	  "d"			=> \$Opt_Definitions,
 	  "k|token-table"	=> \$Opt_Token_Table,
 	  "o=s"			=> \$Opt_Output,
-	  "p|name-prefix=s"	=> \$Opt_Name_Prefix,
 	  "v|verbose"		=> \$Opt_Verbose,
 	  "<>"			=> \&parameter,
     )) {
@@ -83,9 +82,9 @@ sub process {
 		   .($Opt_Debug?" -t":"")
 		   .($Opt_Definitions?" -d":"")
 		   .($Opt_Token_Table?" -k":"")
-		   .($Opt_Name_Prefix?" -p $Opt_Name_Prefix":"")
 		   .($Opt_Verbose?" -v":"")
 		   .(($Opt_Verbose && $supports_report)?" --report=itemset --report=lookahead":"")
+		   ." -p ".tmp_prefix()		# Unfortunately newer bisons/GLR write to -p basename, not -o
 		   ." -b ".tmp_prefix()
 		   ." -o ".tmp_prefix().".c"
 		   ." ".tmp_prefix().".y" );
@@ -158,9 +157,9 @@ sub clean_output {
     my @lines = $fh->getlines;
     $fh->close;
 
-    (my $basename = tmp_prefix().".y") =~ s!.*/!!;
+    (my $basename = tmp_prefix()) =~ s!.*/!!;
     $basename = quotemeta($basename);
-    (my $newbase = output_prefix().".y") =~ s!.*/!!;
+    (my $newbase = output_prefix()) =~ s!.*/!!;
 
     if ($is_output) {
 	my %state_line; my $l=0;
@@ -436,16 +435,6 @@ Passed to bison.
 This switch causes the name.tab.c output to include a list of token names
 in order by their token numbers; this is defined in the array yytname.
 Also generated are #defines for YYNTOKENS, YYNNTS, YYNRULES, and YYNSTATES.
-
-=item -p prefix
-=item --name-prefix=prefix
-
-Passed to bison.
-
-Rename the external symbols used in the parser so that they start with
-prefix instead of yy.  The precise list of symbols renamed is yyparse,
-yylex, yyerror, yylval, yychar, and yydebug.  For example, if you use -p c,
-the names become cparse, clex, and so on.
 
 ==item -t
 ==item --debug
