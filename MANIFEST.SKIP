@@ -23,10 +23,10 @@ simv
 \bblib\b
 pm_to_blib$
 Parser/Parser.c
-Parser/VParseBison.cpp
-Parser/VParseBison.h
-Parser/VParseBison.tab.c
-Parser/VParseBison.output
+Parser/VParseBison.*\.cpp
+Parser/VParseBison.*\.h
+Parser/VParseBison.*\.tab.c
+Parser/VParseBison.*\.output
 Parser/VParseLex.cpp
 Parser/VParseLex_prefix.cpp
 Preproc/Preproc.c
