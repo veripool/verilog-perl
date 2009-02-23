@@ -26,6 +26,8 @@ our $Opt_Verbose;
 our $Opt_Yacc = "bison";
 our $Opt_Input;
 
+our $Pragma_Edit_Unions;
+
 autoflush STDOUT 1;
 autoflush STDERR 1;
 Getopt::Long::config ("no_auto_abbrev");
@@ -180,12 +182,27 @@ sub clean_output {
 	@lines = @out; @out = ();
     }
 
+    if ($Pragma_Edit_Unions) {
+	my @out;
+	my $in_struct = "";
+	foreach my $line (@lines) {
+	    $in_struct = $1 if $line =~ /^struct\s+(\S+)/;
+	    # glr-parser in bison 2.3
+	    $line =~ s!union\s+(yyGLRStackItem)!struct $1!g;
+	    $line =~ s!\bunion\b!struct!g if $in_struct eq 'yyGLRState';
+	    push @out, $line;
+	}
+	@lines = @out; @out = ();
+    }
+
     $fh = IO::File->new(">$outname") or die "%Error: $! writing $outname\n";
     foreach my $line (@lines) {
-	# Fix bison 2.3 and GCC 4.2.1
-	$line =~ s!\(YY_\("!(YY_((char*)"!g;
 	# Fix filename refs
 	$line =~ s!$basename!$newbase!g;
+	# Fix bison 2.3 and GCC 4.2.1
+	$line =~ s!\(YY_\("!(YY_((char*)"!g;
+	# Fix bison 2.3 glr-parser warning about yyerrorloc.YYTYPE::yydummy uninit
+	$line =~ s!(YYLTYPE yyerrloc;)!$1 yyerrloc.yydummy=0;/*bisonpre*/!g;
 	$fh->write($line);
     }
     $fh->close;
@@ -236,6 +253,10 @@ sub clean_input {
 		$rules{$1}{name} = $1;
 		$rules{$1}{type} = "";
 		$last_rule = $1;
+	    }
+	    if ($line =~ /^\s*BISONPRE_EDIT_UNIONS/) {
+		$Pragma_Edit_Unions = 1;
+		$line = "//$line";
 	    }
 	    push @lines, $line;
 	    # Now clean the line and extract some more info

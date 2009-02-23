@@ -41,8 +41,6 @@
 // See VParseGrammar.h for the C++ interface to this parser
 // Include that instead of VParseBison.h
 
-VParseGrammar*	VParseGrammar::s_grammarp = NULL;
-
 //*************************************************************************
 
 #define GRAMMARP VParseGrammar::staticGrammarp()
@@ -82,9 +80,9 @@ static void PINPARAMS() {
 }
 
 /* Yacc */
-int  VParseBisonlex(VParseBisonYYSType* yylvalp) { return PARSEP->lexToBison(yylvalp); }
+static int  VParseBisonlex(VParseBisonYYSType* yylvalp) { return PARSEP->lexToBison(yylvalp); }
 
-void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
+static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 
 %}
 

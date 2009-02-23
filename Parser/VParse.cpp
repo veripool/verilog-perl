@@ -33,6 +33,8 @@
 #include "VParseLex.h"
 #include "VParseGrammar.h"
 
+VParseGrammar*	VParseGrammar::s_grammarp = NULL;
+
 //*************************************************************************
 
 VParse::VParse(VFileLine* filelinep, bool sigParser, bool useUnreadbackFlag) {
