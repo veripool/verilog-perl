@@ -15,6 +15,10 @@ plan tests => (1 + (keys %{$manifest}));
 ok(1);
 
 foreach my $filename (keys %{$manifest}) {
+    if ($filename =~ /README/) {  # May not even exist
+	skip("File doesn't need check (harmless)",1);
+	next;
+    }
     print "Space test of: $filename\n";
     my $wholefile = wholefile($filename);
     if ($wholefile
