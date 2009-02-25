@@ -148,6 +148,8 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 // yKEYWORD means match "keyword"
 // Other cases are yXX_KEYWORD where XX makes it unique,
 // for example yP_ for punctuation based operators.
+// Double underscores "yX__Y" means token X followed by Y,
+// and "yX__ETC" means X folled by everything but Y(s).
 %token<str>		yALIAS		"alias"
 %token<str>		yALWAYS		"always"
 %token<str>		yAND		"and"
@@ -316,6 +318,7 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yD_UNIT		"$unit"
 
 %token<str>		yP_TICK		"'"
+%token<str>		yP_TICKBRA	"'{"
 %token<str>		yP_OROR		"||"
 %token<str>		yP_ANDAND	"&&"
 %token<str>		yP_NOR		"~|"
@@ -369,7 +372,6 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 // [* is not a operator, as "[ * ]" is legal
 // [= and [-> could be repitition operators, but to match [* we don't add them.
 // '( is not a operator, as "' (" is legal
-// '{ could be an operator.  More research needed.
 
 //********************
 // Verilog op precedence
@@ -417,9 +419,11 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 // Feedback to the Lexer
 // Note we read a parenthesis ahead, so this may not change the lexer at the right point.
 
-statePushVlg:	/* empty */			 	{ }
+statePushVlg:			// For PSL lexing, escape current state into Verilog state
+		/* empty */			 	{ }
 	;
-statePop:	/* empty */			 	{ }
+statePop:			// Return to previous lexing state
+		/* empty */			 	{ }
 	;
 
 //**********************************************************************
@@ -563,11 +567,11 @@ modPortsStarE:
 	;
 
 portOrIfList:
-		portList					{ }
-	|	portIfList					{ }
-	|	portIfList ',' portList				{ }
-	|	portIfList ',' portV2kArgs			{ }
-	|	portIfList ',' portList ',' portV2kArgs		{ }
+		portList				{ }
+	|	portIfList				{ }
+	|	portIfList ',' portList			{ }
+	|	portIfList ',' portV2kArgs		{ }
+	|	portIfList ',' portList ',' portV2kArgs	{ }
 	;
 
 portList:

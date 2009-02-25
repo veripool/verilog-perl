@@ -416,6 +416,7 @@ escid	\\[^ \t\f\r\n]+
   /* SystemVerilog Operators */
 <S05>{
   "'"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_TICK; }
+  "'{"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_TICKBRA; }
   "==?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDEQUAL; }
   "!=?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDNOTEQUAL; }
   "++"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_PLUSPLUS; }
@@ -606,6 +607,7 @@ void VParseLex::unused() {
 }
 
 int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
+    // Fetch next token from prefetch or real lexer
     s_currentLexp = this;
     if (m_ahead) {
 	// We prefetched a extra token, give it back

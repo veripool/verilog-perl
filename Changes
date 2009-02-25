@@ -13,6 +13,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Return width() of 1 for non-vectored signals, bug65. [Devendra Singh]
 
+***	Add "'{" as an operator.
+
 ****	Fix "assign {{x,y},z}", bugrt43138. [Devendra Singh]
 
 ****	Fix documentation on ports_ordered, bug66.  [Nicky Ayoub]
