@@ -32,6 +32,7 @@
 #include <cstdio>
 #include <iostream>
 #include <cstdarg>
+#include <cstring>
 
 #include "VParseGrammar.h"
 #include "VParseBison.h"

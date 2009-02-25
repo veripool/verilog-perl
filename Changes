@@ -19,6 +19,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix documentation on ports_ordered, bug66.  [Nicky Ayoub]
 
+****	Fix compile issues with GCC 4.3.  [Donavan Miller]
+
 ****	Fix Bison 2.4 compile issues.
 
 * Verilog::Language 3.110 2009/1/28
