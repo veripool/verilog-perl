@@ -92,7 +92,7 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 // When writing Bison patterns we use yTOKEN instead of "token",
 // so Bison will error out on unknown "token"s.
 
-// Generic types used by Verilog::Parser
+// Generic lexer tokens, for example a number
 // IEEE: real_number
 %token<str>		yaFLOATNUM	"FLOATING-POINT NUMBER"
 
@@ -527,7 +527,8 @@ module_declaration:		// ==IEEE: module_declaration (incomplete)
 	;
 
 modHeader:			// IEEE: module_nonansi_header + module_ansi_header
-		modHdr parameter_port_listE modPortsStarE ';' { }
+		modHdr parameter_port_listE modPortsStarE ';'
+			{ }
 	;
 
 modHdr:
@@ -747,7 +748,8 @@ modParDecl:
 		varRESET varGParam  signingE regrangeE   param 	{ }
 	;
 
-varRESET:	/* empty */ 				{ VARRESET(); }
+varRESET:
+		/* empty */ 				{ VARRESET(); }
 	;
 
 net_type:			// ==IEEE: net_type
