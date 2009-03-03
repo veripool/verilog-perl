@@ -410,6 +410,11 @@ Indicates that include files that do not exist should be ignored.
 
 Indicates that comments should be preserved in the structure (slower).
 
+=item link_read_nonfatal => $true_or_false
+
+Indicates that modules that referenced but not found should be ignored,
+rather than causing an error message.
+
 =back
 
 =item $netlist->dump
