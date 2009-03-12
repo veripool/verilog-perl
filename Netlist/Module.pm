@@ -171,10 +171,21 @@ sub new_port {
 
 sub new_cell {
     my $self = shift;
-    # @_ params
+    my %params = @_; # name=>, filename=>, lineno=>, submodname=>, params=>
     # Create a new cell under this module
-    my $cellref = new Verilog::Netlist::Cell (@_, module=>$self,);
-    $self->_cells ($cellref->name(), $cellref);
+    if (!defined $params{name} || $params{name} eq '') {
+	# Blank instance name; invent a new one; use the next instance number in this module t$
+	$params{name} = '__unnamed_instance_' . (scalar $self->cells() + 1);
+    }
+    my $preexist = $self->find_cell($params{name});
+    # Create a new cell; pass the potentially modified options
+    my $cellref = new Verilog::Netlist::Cell(%params, module=>$self,);
+    # Add the new cell to the hash of cells in this module
+    $self->_cells($params{name}, $cellref);
+    if ($preexist) { # Cell instance name already exists?
+	# We check AFTER making cellref so the line number reported is right
+	$cellref->warn("Duplicate instance name: $params{name}\n");
+    }
     return $cellref;
 }
 
