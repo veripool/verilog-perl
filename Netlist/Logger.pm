@@ -65,9 +65,8 @@ sub error {
 
 sub exit_if_error {
     my $self = shift;
-    my $objref = shift;
-    my %opts = @_;
-    my $allow = $opts{allow} || "";
+    my %params = @_;
+    my $allow = $params{allow} || "";
     if ($self->errors || ($self->warnings && $allow !~ /warning/)) {
 	CORE::warn "Exiting due to errors\n";
 	exit(10);
@@ -136,9 +135,10 @@ messages.
 Print an error about the object in a standard format.  The object must have
 a fileline method.
 
-=item $self->exit_if_error()
+=item $self->exit_if_error([allow=>'warning'])
 
-Exits the program if any errors were detected.
+Exits the program if any errors were detected.  Optionally specify
+allow=>'warning' to ignore warnings.
 
 =item $self->info (I<Text...>)
 

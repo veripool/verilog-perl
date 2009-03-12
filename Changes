@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Report an error when duplicate cells encountered. [by Paul Janson]
 
+****	Remove unused parameter in exit_if_error.  [Paul Janson]
+
 * Verilog::Language 3.120 2009/2/25
 
 ***	Add vhier --resolve-files option. [by Vasu Arasanipalai]
