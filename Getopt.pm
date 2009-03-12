@@ -362,7 +362,8 @@ sub file_path {
     } elsif ($lookup_type eq 'include') {
 	@dirlist = $self->incdir();
     } else {  # all
-	@dirlist = ($self->incdir(), $self->module_dir());
+	# Seems more obvious that -y ... would have preference, since +incdir+ is less standard
+	@dirlist = ($self->module_dir(), $self->incdir());
     }
     # Expand any envvars in incdir/moduledir
     @dirlist = map {$self->file_substitute($_)} @dirlist;
