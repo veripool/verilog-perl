@@ -5,7 +5,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.1***
 
-****	Report an error when duplicate cells encountered. [by Paul Janson]
+****	Make cell names unique when duplicate cells encountered. [Paul Janson]
 
 ****	Remove unused parameter in exit_if_error.  [Paul Janson]
 
