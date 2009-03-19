@@ -35,19 +35,21 @@ sub _common {
     my $self = shift;
     my $what = shift;
     my $call_self = shift;
-    my $text = shift;
+    my @args = @_;
     my $urb = $self->unreadback;
 
     $_TestCoverage{$what}++;
+    my $args="";
+    foreach (@args) { $args .= defined $_ ? " '$_'" : " undef"; }
     if ($urb &&  $urb ne '') {
 	$self->{dump_fh}->printf("%s:%03d: unreadback '%s'\n",
 				 $self->filename, $self->lineno,
 				 $urb);
 	$self->unreadback('');
     }
-    $self->{dump_fh}->printf("%s:%03d: %s '%s'\n",
+    $self->{dump_fh}->printf("%s:%03d: %s%s\n",
 			     $self->filename, $self->lineno,
-			     uc $what, $text);
+			     uc $what, $args);
 }
 
 ######################################################################

@@ -19,6 +19,7 @@ Netlist/Port.pm
 Netlist/Subclass.pm
 Parser/.gitignore
 Parser/bisonpre
+Parser/callbackgen
 Parser/Makefile.PL
 Parser/Parser.pm
 Parser/Parser.xs

@@ -30,6 +30,7 @@ Parser/VParseBison.*\.tab.c
 Parser/VParseBison.*\.output
 Parser/VParseLex.cpp
 Parser/VParseLex_pretmp.cpp
+Parser/.*_callbackgen\..*
 Preproc/Preproc.c
 Preproc/VPreprocLex_pretmp.cpp
 signals.vrename

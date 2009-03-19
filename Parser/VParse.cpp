@@ -90,7 +90,7 @@ void VParse::setEof() {
 	fakeBison();
     }
     // End of parsing callback
-    endparseCb(inFilelinep());
+    endparseCb(inFilelinep(),"");
     if (debug()) { cout<<"VParse::setEof: DONE\n"; }
 }
 

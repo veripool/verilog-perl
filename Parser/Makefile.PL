@@ -50,6 +50,10 @@ LEXFLAGS += -d
 
 VPATH += . $(PPSRC)
 
+# Prep work
+config ::
+	$(PERL) callbackgen
+
 VParseLex.o:		VParseLex.cpp     VParseLex.h VParseGrammar.h VParse.h VFileLine.h VParseBison.h
 VParseGrammar.o:	VParseGrammar.cpp VParseLex.h VParseGrammar.h VParse.h VFileLine.h VParseBison.h
 VParse.o:		VParse.cpp        VParseLex.h VParseGrammar.h VParse.h VFileLine.h VParseBison.h

@@ -58,10 +58,12 @@ public:
 	{}
     virtual ~VParserXs() {}
 
+    // CALLBACKGEN_H_VIRTUAL
+    // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen
     // Verilog::Parser Callback methods
     virtual void attributeCb(VFileLine* fl, const string& text);
     virtual void commentCb(VFileLine* fl, const string& text);
-    virtual void endparseCb(VFileLine* fl);
+    virtual void endparseCb(VFileLine* fl, const string& text);
     virtual void keywordCb(VFileLine* fl, const string& text);
     virtual void numberCb(VFileLine* fl, const string& text);
     virtual void operatorCb(VFileLine* fl, const string& text);
@@ -69,7 +71,6 @@ public:
     virtual void stringCb(VFileLine* fl, const string& text);
     virtual void symbolCb(VFileLine* fl, const string& text);
     virtual void sysfuncCb(VFileLine* fl, const string& text);
-
     // Verilog::SigParser Callback methods
     virtual void endcellCb(VFileLine* fl, const string& kwd);
     virtual void endinterfaceCb(VFileLine* fl, const string& kwd);
@@ -80,16 +81,15 @@ public:
     virtual void importCb(VFileLine* fl, const string& name);
     virtual void instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range);
     virtual void interfaceCb(VFileLine* fl, const string& kwd, const string& name);
-    virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool celldefine);
+    virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool, bool celldefine);
     virtual void packageCb(VFileLine* fl, const string& kwd, const string& name);
-    virtual void paramPinCb(VFileLine* fl, const string& name, const string& conn, int number);
+    virtual void parampinCb(VFileLine* fl, const string& name, const string& conn, int number);
     virtual void pinCb(VFileLine* fl, const string& name, const string& conn, int number);
     virtual void portCb(VFileLine* fl, const string& name);
-    virtual void signalCb(VFileLine* fl, const string& kwd, const string& name,
-			  const string& vec, const string& mem, const string& signd,
-			  const string& value,
-			  bool inFunc);
+    virtual void signalCb(VFileLine* fl, const string& kwd, const string& name, const string& vec, const string& mem
+	, const string& signd, const string& value, bool inFunc);
     virtual void taskCb(VFileLine* fl, const string& kwd, const string& name);
+    // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen
 
     void call(string* rtnStrp, int params, const char* method, ...);
 };
@@ -123,144 +123,11 @@ void VFileLineParseXs::error(string msg) {
 #//**********************************************************************
 #// Overrides of virtual functions to invoke callbacks
 
-// Verilog::Parser Callback methods
-void VParserXs::attributeCb(VFileLine* fl, const string& text) {
-    cbFileline(fl);
-    static string hold1; hold1 = text;
-    call(NULL, 1,"attribute",hold1.c_str());
-}
-void VParserXs::commentCb(VFileLine* fl, const string& text) {
-    cbFileline(fl);
-    static string hold1; hold1 = text;
-    call(NULL, 1,"comment",hold1.c_str());
-}
-void VParserXs::endparseCb(VFileLine* fl) {
-    cbFileline(fl);
-    call(NULL, 1,"endparse","");
-}
-void VParserXs::keywordCb(VFileLine* fl, const string& text) {
-    cbFileline(fl);
-    static string hold1; hold1 = text;
-    call(NULL, 1,"keyword",hold1.c_str());
-}
-void VParserXs::numberCb(VFileLine* fl, const string& text) {
-    cbFileline(fl);
-    static string hold1; hold1 = text;
-    call(NULL, 1,"number",hold1.c_str());
-}
-void VParserXs::operatorCb(VFileLine* fl, const string& text) {
-    cbFileline(fl);
-    static string hold1; hold1 = text;
-    call(NULL, 1,"operator",hold1.c_str());
-}
-void VParserXs::preprocCb(VFileLine* fl, const string& text) {
-    cbFileline(fl);
-    static string hold1; hold1 = text;
-    call(NULL, 1,"preproc",hold1.c_str());
-}
-void VParserXs::stringCb(VFileLine* fl, const string& text) {
-    cbFileline(fl);
-    static string hold1; hold1 = text;
-    call(NULL, 1,"string",hold1.c_str());
-}
-void VParserXs::symbolCb(VFileLine* fl, const string& text) {
-    cbFileline(fl);
-    static string hold1; hold1 = text;
-    call(NULL, 1,"symbol",hold1.c_str());
-}
-void VParserXs::sysfuncCb(VFileLine* fl, const string& text) {
-    cbFileline(fl);
-    static string hold1; hold1 = text;
-    call(NULL, 1,"sysfunc",hold1.c_str());
-}
+#include "Parser_callbackgen.cpp"
 
-// Verilog::SigParser Callback methods
-void VParserXs::endcellCb(VFileLine* fl, const string& kwd) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    call(NULL, 1,"endcell",hold1.c_str());
-}
-void VParserXs::endinterfaceCb(VFileLine* fl, const string& kwd) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    call(NULL, 1,"endinterface",hold1.c_str());
-}
-void VParserXs::endmoduleCb(VFileLine* fl, const string& kwd) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    call(NULL, 1,"endmodule",hold1.c_str());
-}
-void VParserXs::endpackageCb(VFileLine* fl, const string& kwd) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    call(NULL, 1,"endpackage",hold1.c_str());
-}
-void VParserXs::endtaskfuncCb(VFileLine* fl, const string& kwd) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    call(NULL, 1,"endtaskfunc",hold1.c_str());
-}
-void VParserXs::functionCb(VFileLine* fl, const string& kwd, const string& name, const string& type) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    static string hold2; hold2 = name;
-    static string hold3; hold3 = type;
-    call(NULL, 3,"function",hold1.c_str(), hold2.c_str(), hold3.c_str());
-}
-void VParserXs::importCb(VFileLine* fl, const string& name) {
-    cbFileline(fl);
-    static string hold1; hold1 = name;
-    call(NULL, 1,"import",hold1.c_str());
-}
-void VParserXs::instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range) {
-    cbFileline(fl);
-    static string hold1; hold1 = mod;
-    static string hold2; hold2 = cell;
-    static string hold3; hold3 = range;
-    call(NULL, 3,"instant",hold1.c_str(), hold2.c_str(), hold3.c_str());
-}
-void VParserXs::interfaceCb(VFileLine* fl, const string& kwd, const string& name) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    static string hold2; hold2 = name;
-    call(NULL, 2,"interface",hold1.c_str(), hold2.c_str());
-}
-void VParserXs::moduleCb(VFileLine* fl, const string& kwd, const string& name, bool celldefine) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    static string hold2; hold2 = name;
-    //Unused
-    static string hold4; hold4 = celldefine?"1":"0";
-    call(NULL, 4,"module",hold1.c_str(), hold2.c_str(), NULL, hold4.c_str());
-}
-void VParserXs::packageCb(VFileLine* fl, const string& kwd, const string& name) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    static string hold2; hold2 = name;
-    //Unused
-    call(NULL, 2,"package",hold1.c_str(), hold2.c_str());
-}
-void VParserXs::paramPinCb(VFileLine* fl, const string& name, const string& conn, int number) {
-    cbFileline(fl);
-    static string hold1; hold1 = name;
-    static string hold2; hold2 = conn;
-    static char num3[100]; sprintf(num3,"%d",number);
-    static string hold3; hold3 = num3;
-    call(NULL, 3,"parampin",hold1.c_str(), hold2.c_str(), hold3.c_str());
-}
-void VParserXs::pinCb(VFileLine* fl, const string& name, const string& conn, int number) {
-    cbFileline(fl);
-    static string hold1; hold1 = name;
-    static string hold2; hold2 = conn;
-    static char num3[100]; sprintf(num3,"%d",number);
-    static string hold3; hold3 = num3;
-    call(NULL, 3,"pin",hold1.c_str(), hold2.c_str(), hold3.c_str());
-}
-void VParserXs::portCb(VFileLine* fl, const string& name) {
-    cbFileline(fl);
-    static string hold1; hold1 = name;
-    call(NULL, 1,"port",hold1.c_str());
-}
+#//**********************************************************************
+#// Manually created callbacks
+
 void VParserXs::signalCb(VFileLine* fl, const string& kwd, const string& name,
 			 const string& vec, const string& mem, const string& signd,
 			 const string& value,
@@ -276,13 +143,9 @@ void VParserXs::signalCb(VFileLine* fl, const string& kwd, const string& name,
 	 hold1.c_str(), hold2.c_str(),
 	 hold3.c_str(), hold4.c_str(), hold5.c_str(), hold6.c_str());
 }
-void VParserXs::taskCb(VFileLine* fl, const string& kwd, const string& name) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    static string hold2; hold2 = name;
-    call(NULL, 2,"task",hold1.c_str(), hold2.c_str());
-}
 
+#//**********************************************************************
+#// General callback invoker
 
 void VParserXs::call (
     string* rtnStrp,	/* If non-null, load return value here */

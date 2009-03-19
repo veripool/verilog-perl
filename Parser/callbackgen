@@ -1,0 +1,289 @@
+#!/usr/bin/perl -w
+# See copyright, etc in below POD section.
+######################################################################
+
+require 5.006_001;
+use Getopt::Long;
+use IO::File;
+use Pod::Usage;
+use strict;
+use vars qw ($Debug $VERSION);
+
+$VERSION = '3.120';
+
+my %Cbs =
+    (attribute	=> {which=>'Parser', args => [text=>'string']},
+     comment	=> {which=>'Parser', args => [text=>'string']},
+     endparse	=> {which=>'Parser', args => [text=>'string']},
+     keyword	=> {which=>'Parser', args => [text=>'string']},
+     number	=> {which=>'Parser', args => [text=>'string']},
+     operator	=> {which=>'Parser', args => [text=>'string']},
+     preproc	=> {which=>'Parser', args => [text=>'string']},
+     string	=> {which=>'Parser', args => [text=>'string']},
+     symbol	=> {which=>'Parser', args => [text=>'string']},
+     sysfunc	=> {which=>'Parser', args => [text=>'string']},
+     #
+     endcell	=> {which=>'SigParser', args => [kwd=>'string']},
+     endinterface=>{which=>'SigParser', args => [kwd=>'string']},
+     endmodule	=> {which=>'SigParser', args => [kwd=>'string']},
+     endpackage	=> {which=>'SigParser', args => [kwd=>'string']},
+     endtaskfunc=> {which=>'SigParser', args => [kwd=>'string']},
+     function	=> {which=>'SigParser', args => [kwd=>'string', name=>'string', type=>'string']},
+     import	=> {which=>'SigParser', args => [name=>'string']},
+     instant	=> {which=>'SigParser', args => [mod=>'string', cell=>'string', range=>'string']},
+     interface	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
+     module	=> {which=>'SigParser', args => [kwd=>'string', name=>'string', ignore3=>'undef', celldefine=>'bool'],},
+     package	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
+     parampin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', number=>'int']},
+     pin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', number=>'int']},
+     port	=> {which=>'SigParser', args => [name=>'string']},
+     signal	=> {which=>'SigParser', args => [kwd=>'string', name=>'string', vec=>'string',
+						 mem=>'string', signd=>'string',
+						 value=>'string', inFunc=>'bool'],
+     		    xs_manual=>1,},
+     task	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
+    );
+
+#======================================================================
+# main
+
+our $Opt_Debug;
+
+autoflush STDOUT 1;
+autoflush STDERR 1;
+Getopt::Long::config ("no_auto_abbrev");
+if (! GetOptions (
+	  # Local options
+	  "help"	=> \&usage,
+	  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
+	  "<>"		=> sub { die "%Error: Unknown parameter: $_[0]\n"; },
+    )) {
+    die "%Error: Bad usage, try 'callbackgen --help'\n";
+}
+
+process();
+
+#----------------------------------------------------------------------
+
+sub usage {
+    print "Version $VERSION\n";
+    pod2usage(-verbose=>2, -exitval => 2);
+    exit (1);
+}
+
+#######################################################################
+
+sub process {
+    filter("Parser.xs",0);
+    filter("VParse.h",0);
+    filter("Parser_callbackgen.cpp",1);
+}
+
+sub filter {
+    my $filename = shift;
+    my $make_xs = shift;
+
+    my $fh = IO::File->new("<$filename");
+    my @lines;
+    if (!$fh) {
+	if ($make_xs) {
+	    @lines = ("// CALLBACKGEN_XS\n");
+	} else {
+	    die "%Error: $! $filename\n";
+	}
+    } else {
+	@lines = $fh->getlines;
+	$fh->close;
+    }
+    my @orig = @lines;
+
+    my $strip;
+    my @out;
+    foreach my $line (@lines) {
+	if ($line =~ /CALLBACKGEN_GENERATED_BEGIN/) {
+	    $strip = 1;
+	} else {
+	    if (!$strip) {
+		push @out, $line;
+	    }
+
+	    if ($line =~ /CALLBACKGEN_GENERATED_END/) {
+		$strip = 0;
+	    }
+	    elsif ($line =~ /CALLBACKGEN_H_VIRTUAL(_0)?/) {
+		my $zero = (($1||"") eq "_0") ? " = 0":"";
+		push @out, "    // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen\n";
+		my $last_which = "";
+		foreach my $cb (sort {$Cbs{$a}{which} cmp $Cbs{$b}{which} || $a cmp $b} keys %Cbs) {
+		    my $which = $Cbs{$cb}{which};
+		    if ($last_which ne $which) {
+			push @out, "    // Verilog::$which Callback methods\n";
+			$last_which = $which;
+		    }
+		    push @out, "    virtual void "._func($cb)."("._arglist($cb).")".$zero.";\n";
+		}
+		push @out, "    // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen\n";
+	    }
+	    elsif ($line =~ /CALLBACKGEN_XS/) {
+		push @out, "// CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen\n";
+		foreach my $cb (sort {$Cbs{$a}{which} cmp $Cbs{$b}{which} || $a cmp $b} keys %Cbs) {
+		    next if $Cbs{$cb}{xs_manual};
+		    push @out, _xs($cb);
+		}
+		push @out, "// CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen\n";
+	    }
+	    elsif ($line =~ /CALLBACKGEN/) {
+		die "%Error: callbackgen: Unknown pragma: $line";
+	    }
+	}
+    }
+    @lines = @out;
+
+    if (join('',@lines) ne join('',@orig)) {
+	print "callbackgen edited $filename\n";
+	$fh = IO::File->new(">$filename") or die "%Error: $! writing $filename\n";
+	$fh->write(join('',@lines));
+	$fh->close;
+    }
+}
+
+sub _func {
+    my $cb = shift;
+    return $cb."Cb";
+}
+
+sub _arglist {
+    my $cb = shift;
+    my $args = "VFileLine* fl";
+    my $n=0;
+    for (my $i=0; $i<=$#{$Cbs{$cb}{args}}; $i+=2) {
+	my ($arg,$type) = ($Cbs{$cb}{args}[$i],$Cbs{$cb}{args}[$i+1]);
+	$args .= "\n\t" if (($n++%5)==4);
+	if ($type eq 'string') {
+	    $args .= ", const string\& $arg";
+	} elsif ($type eq 'bool' || $type eq 'int') {
+	    $args .= ", $type $arg";
+	} elsif ($type eq 'undef') {
+	    $args .= ", bool";
+	} else {
+	    die "%Error: callbackgen: Unknown type: $arg=>$type\n";
+	}
+    }
+    return $args;
+}
+
+sub _xs {
+    my $cb = shift;
+    my @out;
+    push @out, "// GENERATED AUTOMATICALLY by callbackgen\n";
+    push @out, "void VParserXs::"._func($cb)."("._arglist($cb).") {\n";
+    push @out, "    cbFileline(fl);\n";
+    my $callargs="";
+    my $n=1;
+    for (my $i=0; $i<=$#{$Cbs{$cb}{args}}; $i+=2) {
+	my ($arg,$type) = ($Cbs{$cb}{args}[$i],$Cbs{$cb}{args}[$i+1]);
+	if ($type eq 'string') {
+	    push @out, "    static string hold${n}; hold${n} = $arg;\n";
+	    $callargs .= ", hold${n}.c_str()";
+	} elsif ($type eq 'bool') {
+	    push @out, "    static string hold${n}; hold${n} = $arg ? \"1\":\"0\";\n";
+	    $callargs .= ", hold${n}.c_str()";
+	} elsif ($type eq 'int') {
+	    push @out, "    static string hold${n}; static char num${n}[30]; sprintf(num${n},\"%d\",$arg); hold${n}=num${n};\n";
+	    $callargs .= ", hold${n}.c_str()";
+	} elsif ($type eq 'undef') {
+	    $callargs .= ", NULL";
+	} else {
+	    die "%Error: callbackgen: Unknown type: $arg=>$type\n";
+	}
+
+	$n++;
+    }
+    my $narg = $n-1;
+    push @out, "    call(NULL, $narg, \"$cb\"$callargs);\n";
+    push @out, "}\n";
+    return @out;
+}
+
+#######################################################################
+__END__
+
+=pod
+
+=head1 NAME
+
+callbackgen - Create callback functions for Verilog-Perl internals
+
+=head1 SYNOPSIS
+
+  make
+
+  This will invoke callbackgen
+
+=head1 DESCRIPTION
+
+Callbackgen is an internal utility used in building Verilog::Parser.
+
+=head1 EXTENSIONS
+
+=over 4
+
+=item //CALLBACKGEN_H_VIRTUAL
+
+Creates "virtual callbackCb(...);"
+
+=item //CALLBACKGEN_H_VIRTUAL_0
+
+Creates "virtual callbackCb(...) = 0;"
+
+=item //CALLBACKGEN_XS
+
+Creates XS code for accepting the callback.
+
+=back
+
+=head1 ARGUMENTS
+
+=over 4
+
+=item --help
+
+Displays this message and program version and exits.
+
+==item --debug
+
+Enable debug.
+
+=item --version
+
+Print the version number and exit.
+
+=back
+
+=head1 DISTRIBUTION
+
+This is part of the L<http://www.veripool.org/> free Verilog EDA software
+tool suite.  The latest version is available from CPAN and from
+L<http://www.veripool.org/>.
+
+Copyright 2008-2009 by Wilson Snyder.  This package is free software; you
+can redistribute it and/or modify it under the terms of either the GNU
+Lesser General Public License or the Perl Artistic License.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+=head1 AUTHORS
+
+Wilson Snyder <wsnyder@wsnyder.org>
+
+=head1 SEE ALSO
+
+=cut
+
+######################################################################
+### Local Variables:
+### compile-command: "./callbackgen "
+### End:

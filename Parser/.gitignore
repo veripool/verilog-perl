@@ -10,6 +10,7 @@
 *.xsc
 *.pre.*
 *_pretmp.*
+*_callbackgen.*
 Makefile
 VParseLex*.cpp
 VParseBison.c

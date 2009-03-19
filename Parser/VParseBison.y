@@ -74,7 +74,7 @@ static void PINPARAMS() {
     // Throw out all the pins we found before we could do instanceCb
     while (!GRAMMARP->m_pinStack.empty()) {
 	VParseGPin& pinr = GRAMMARP->m_pinStack.front();
-	PARSEP->paramPinCb(pinr.m_fl, pinr.m_name, pinr.m_conn, pinr.m_number);
+	PARSEP->parampinCb(pinr.m_fl, pinr.m_name, pinr.m_conn, pinr.m_number);
 	GRAMMARP->m_pinStack.pop_front();
     }
 }
@@ -533,7 +533,7 @@ modHeader:			// IEEE: module_nonansi_header + module_ansi_header
 
 modHdr:
 		yMODULE lifetimeE yaID
-			{ PARSEP->moduleCb($<fl>1,$1,$3,PARSEP->inCellDefine()); }
+			{ PARSEP->moduleCb($<fl>1,$1,$3,false,PARSEP->inCellDefine()); }
 	;
 
 parameter_port_listE:		// IEEE: parameter_port_list + empty == parameter_value_assignment

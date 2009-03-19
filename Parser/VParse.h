@@ -96,9 +96,13 @@ public:
 
     // CALLBACK METHODS
     // This probably will want to be overridden for given child users of this class.
+
+    // CALLBACKGEN_H_VIRTUAL_0
+    // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen
+    // Verilog::Parser Callback methods
     virtual void attributeCb(VFileLine* fl, const string& text) = 0;
     virtual void commentCb(VFileLine* fl, const string& text) = 0;
-    virtual void endparseCb(VFileLine* fl) = 0;
+    virtual void endparseCb(VFileLine* fl, const string& text) = 0;
     virtual void keywordCb(VFileLine* fl, const string& text) = 0;
     virtual void numberCb(VFileLine* fl, const string& text) = 0;
     virtual void operatorCb(VFileLine* fl, const string& text) = 0;
@@ -106,7 +110,7 @@ public:
     virtual void stringCb(VFileLine* fl, const string& text) = 0;
     virtual void symbolCb(VFileLine* fl, const string& text) = 0;
     virtual void sysfuncCb(VFileLine* fl, const string& text) = 0;
-
+    // Verilog::SigParser Callback methods
     virtual void endcellCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endinterfaceCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endmoduleCb(VFileLine* fl, const string& kwd) = 0;
@@ -116,16 +120,15 @@ public:
     virtual void importCb(VFileLine* fl, const string& name) = 0;
     virtual void instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range) = 0;
     virtual void interfaceCb(VFileLine* fl, const string& kwd, const string& name) = 0;
-    virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool celldefine) = 0;
+    virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool, bool celldefine) = 0;
     virtual void packageCb(VFileLine* fl, const string& kwd, const string& name) = 0;
-    virtual void paramPinCb(VFileLine* fl, const string& name, const string& conn, int number) = 0;
+    virtual void parampinCb(VFileLine* fl, const string& name, const string& conn, int number) = 0;
     virtual void pinCb(VFileLine* fl, const string& name, const string& conn, int number) = 0;
     virtual void portCb(VFileLine* fl, const string& name) = 0;
-    virtual void signalCb(VFileLine* fl, const string& kwd, const string& name,
-			  const string& vec, const string& mem, const string& signd,
-			  const string& value,
-			  bool inFunc) = 0;
+    virtual void signalCb(VFileLine* fl, const string& kwd, const string& name, const string& vec, const string& mem
+	, const string& signd, const string& value, bool inFunc) = 0;
     virtual void taskCb(VFileLine* fl, const string& kwd, const string& name) = 0;
+    // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen
 
     // UTILITIES
     void error(string msg) { inFilelinep()->error(msg); }	///< Report a error
