@@ -309,3 +309,9 @@ endmodule
 module bugrt43138;
    assign {{o1,o2},o3,o4,{o5,o6}} = {{i1,i2},i3,i4,{i5,i6}};
 endmodule
+
+module coverage20090318;
+   task atask;
+      begin end
+   endtask
+endmodule

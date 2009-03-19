@@ -17,6 +17,17 @@ $VERSION = '3.120';
 
 #$Debug sets the default value for debug.  You're better off with the object method though.
 
+our @_Callback_Names = qw(
+  attribute
+  endparse
+  keyword
+  number
+  operator
+  preproc
+  string
+  symbol
+  );
+
 ######################################################################
 #### Configuration Section
 
@@ -55,6 +66,10 @@ sub new {
 
 ######################################################################
 ####  Accessors
+
+sub callback_names {
+    return sort @_Callback_Names;
+}
 
 sub debug {
     my $self = shift;
@@ -232,6 +247,12 @@ which parsing package to use for a new application.
 Create a new Parser. Passing the named argument "use_unreadback => 0" will
 disable later use of the unreadback method, which may improve performance.
 
+=item $parser->callback_names ()
+
+Return an array of callback function names.  This may be used to
+automatically create callbacks for all functions, or to test for different
+callback functionality between versions of Verilog-Perl.
+
 =item $parser->eof ()
 
 Indicate the end of the input stream.  All incomplete tokens will be parsed
@@ -286,7 +307,7 @@ than using "$parser->unreadback($parser->unreadback . $text)".
 
 In order to make the parser do anything interesting, you must make a
 subclass where you override one or more of the following callback methods
-as appropriate:
+as appropriate.
 
 =over 4
 

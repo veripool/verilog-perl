@@ -8,8 +8,10 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 3 }
+BEGIN { plan tests => 4 }
 BEGIN { require "t/test_utils.pl"; }
+
+our %_TestCoverage;
 
 ######################################################################
 
@@ -18,12 +20,23 @@ use Verilog::SigParser;
 use strict;
 use base qw(Verilog::SigParser);
 
+BEGIN {
+    # Make functions like this:
+    #  sub attribute {	$_[0]->_common('module', @_); }
+    foreach my $cb (Verilog::SigParser::callback_names()) {
+	my $func = ' sub __CB__ { $_[0]->_common("__CB__", @_); } ';
+	$func =~ s/__CB__/$cb/g;
+	eval($func);
+    }
+}
+
 sub _common {
     my $self = shift;
     my $what = shift;
     my $call_self = shift;
     my @args = @_;
 
+    $_TestCoverage{$what}++;
     my $args="";
     foreach (@args) { $args .= defined $_ ? " '$_'" : " undef"; }
     $self->{dump_fh}->printf("%s:%03d: %s %s\n",
@@ -37,25 +50,6 @@ sub error {
     my $fileline = $self->filename.":".$self->lineno;
     warn ("%Warning: $fileline: $text\n");
 }
-
-sub attribute {	$_[0]->_common('attribute', @_); }
-sub endcell    { $_[0]->_common('endcell', @_); }
-sub endinterface { $_[0]->_common('endinterface', @_); }
-sub endtaskfunc{ $_[0]->_common('endtaskfunc', @_); }
-sub endmodule  { $_[0]->_common('endmodule', @_); }
-sub endpackage { $_[0]->_common('endpackage', @_); }
-sub funcsignal { $_[0]->_common('funcsignal', @_); }
-sub function {	$_[0]->_common('function', @_); }
-sub import {	$_[0]->_common('import', @_); }
-sub instant {	$_[0]->_common('instant', @_); }
-sub interface { $_[0]->_common('interface', @_); }
-sub module {	$_[0]->_common('module', @_); }
-sub package {	$_[0]->_common('package', @_); }
-sub parampin {	$_[0]->_common('parampin', @_); }
-sub pin {	$_[0]->_common('pin', @_); }
-sub port {	$_[0]->_common('port', @_); }
-sub signal_decl { $_[0]->_common('signal_decl', @_); }
-sub task {	$_[0]->_common('task', @_); }
 
 ######################################################################
 
@@ -80,6 +74,16 @@ $dump_fh->close();
 
 # Did we read the right stuff?
 ok(files_identical("test_dir/35.dmp", "t/35_sigparser.out"));
+
+# Did we cover everything?
+my $err;
+foreach my $cb (Verilog::SigParser::callback_names()) {
+    if (!$_TestCoverage{$cb}) {
+	$err=1;
+	warn "%Warning: No test coverage for callback: $cb\n";
+    }
+}
+ok (!$err);
 
 ######################################################################
 

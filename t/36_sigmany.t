@@ -24,9 +24,6 @@ use Verilog::SigParser;
 use strict;
 use base qw(Verilog::SigParser);
 
-sub _common {
-}
-
 sub module {
     my ($self,$kwd,$name)=@_;
     $Got_Eof_Module = 1 if $name eq '_GOT_EOF_MODULE';

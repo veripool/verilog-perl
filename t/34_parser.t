@@ -9,8 +9,10 @@ use strict;
 use Test;
 use Data::Dumper; $Data::Dumper::Indent = 1; #Debug
 
-BEGIN { plan tests => 5 }
+BEGIN { plan tests => 6 }
 BEGIN { require "t/test_utils.pl"; }
+
+our %_TestCoverage;
 
 ######################################################################
 
@@ -19,12 +21,24 @@ use Verilog::Parser;
 use strict;
 use base qw(Verilog::Parser);
 
+BEGIN {
+    # Make functions like this:
+    #  sub attribute {	$_[0]->_common('attribute', @_); }
+    foreach my $cb (Verilog::Parser::callback_names()) {
+	my $func = ' sub __CB__ { $_[0]->_common("__CB__", @_); } ';
+	$func =~ s/__CB__/$cb/g;
+	eval($func);
+    }
+}
+
 sub _common {
     my $self = shift;
     my $what = shift;
     my $call_self = shift;
     my $text = shift;
     my $urb = $self->unreadback;
+
+    $_TestCoverage{$what}++;
     if ($urb &&  $urb ne '') {
 	$self->{dump_fh}->printf("%s:%03d: unreadback '%s'\n",
 				 $self->filename, $self->lineno,
@@ -35,16 +49,6 @@ sub _common {
 			     $self->filename, $self->lineno,
 			     uc $what, $text);
 }
-
-sub attribute {	$_[0]->_common('attribute', @_); }
-sub comment {	$_[0]->_common('comment', @_); }
-sub endparse {	$_[0]->_common('endparse', @_); }
-sub keyword {	$_[0]->_common('keyword', @_); }
-sub number {	$_[0]->_common('number', @_); }
-sub operator {	$_[0]->_common('operator', @_); }
-sub preproc {	$_[0]->_common('preproc', @_); }
-sub string {	$_[0]->_common('string', @_); }
-sub symbol {	$_[0]->_common('symbol', @_); }
 
 ######################################################################
 
@@ -71,6 +75,16 @@ $dump_fh->close();
 
 # Did we read the right stuff?
 ok(files_identical("test_dir/34.dmp", "t/34_parser.out"));
+
+# Did we cover everything?
+my $err;
+foreach my $cb (Verilog::Parser::callback_names()) {
+    if (!$_TestCoverage{$cb}) {
+	$err=1;
+	warn "%Warning: No test coverage for callback: $cb\n";
+    }
+}
+ok (!$err);
 
 ######################################################################
 

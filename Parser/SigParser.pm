@@ -16,6 +16,27 @@ use base qw(Verilog::Parser);
 
 $VERSION = '3.120';
 
+our @_Callback_Names = qw(
+  attribute
+  endcell
+  endinterface
+  endtaskfunc
+  endmodule
+  endpackage
+  funcsignal
+  function
+  import
+  instant
+  interface
+  module
+  package
+  parampin
+  pin
+  port
+  signal_decl
+  task
+  );
+
 #######################################################################
 
 # parse, parse_file, etc are inherited from Verilog::Parser
@@ -34,6 +55,13 @@ sub new {
 sub metacomment {
     my $self = shift;
     return $self->{metacomment};
+}
+
+#######################################################################
+# Accessors
+
+sub callback_names {
+    return sort @_Callback_Names;
 }
 
 #######################################################################
@@ -213,7 +241,9 @@ to use the preprocessing option of Verilog::Parser with this package.
 
 In order to make the parser do anything interesting, you must make a
 subclass where you override one or more of the following methods as
-appropriate:
+appropriate.
+
+Note Verilog::Parser callbacks also are invoked when SigParser is parsing.
 
 =over 4
 
@@ -244,9 +274,9 @@ for writing clean up routines.
 This method is called at a endmodule keyword. It is useful for writing
 clean up routines.
 
-=item $self->endprogram ( $token )
+=item $self->endndpackage ( $token )
 
-This method is called at a endprogram keyword. It is useful for writing
+This method is called at a endpackage keyword. It is useful for writing
 clean up routines.
 
 =item $self->funcsignal ( $keyword, $signame, $vector, $mem, $signed, $value )
@@ -282,6 +312,10 @@ This method is called when an interface is defined.
 
 This method is called when a module is defined.
 
+=item $self->package ( $keyword, $name )
+
+This method is called when a package is defined.
+
 =item $self->parampin ( $name, $connection, $index )
 
 This method is called when a parameter is connected to an instantiation, IE
@@ -303,10 +337,6 @@ This method is called when a module port is defined.
 
 This method is called when a preprocessor definition is encountered.
 
-=item $self->program ( $keyword, $name )
-
-This method is called when a program is defined.
-
 =item $self->signal_decl ( $keyword, $signame, $vector, $mem, $signed, $value )
 
 This method is called when a signal or variable is declared.  The first
@@ -323,7 +353,7 @@ a call with 'reg'.)
 
 =item $self->task ( $keyword, $name )
 
-This method is called when a module is defined.
+This method is called when a task is defined.
 
 =back
 

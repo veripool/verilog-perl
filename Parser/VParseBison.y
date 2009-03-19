@@ -514,8 +514,8 @@ package_import_itemList:
 	;
 
 package_import_item:		// ==IEEE: package_import_item
-		yaID yP_COLONCOLON yaID			{ PARSEP->importCb($<fl>1,$1);}
-	|	yaID yP_COLONCOLON '*'			{ }
+		yaID yP_COLONCOLON yaID			{ PARSEP->importCb($<fl>1,$1); }
+	|	yaID yP_COLONCOLON '*'			{ PARSEP->importCb($<fl>1,$1); }
 	;
 
 //**********************************************************************
