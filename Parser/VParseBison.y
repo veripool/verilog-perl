@@ -617,7 +617,7 @@ portIfList:
 portIf:
 		yaID yaID				{ PARSEP->instantCb($<fl>1, $1, $2, ""); PARSEP->portCb($<fl>1, $2); }
 	|	yINTERFACE yaID				{ PARSEP->portCb($<fl>1, $2); }
-	|	yaID '.' yaID yaID			{ PARSEP->instantCb($<fl>1, $1, "*", ""); PARSEP->portCb($<fl>1, $3); }
+	|	yaID '.' yaID yaID			{ PARSEP->instantCb($<fl>1, $1, $4, ""); PARSEP->portCb($<fl>1, $4); }
 	;
 
 //**********************************************************************

@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Remove unused parameter in exit_if_error.  [Paul Janson]
 
+****	Fix modported instance name passed to SigParser::instant callback.
+
 * Verilog::Language 3.120 2009/2/25
 
 ***	Add vhier --resolve-files option. [by Vasu Arasanipalai]
