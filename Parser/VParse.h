@@ -12,7 +12,7 @@
 //
 //*************************************************************************
 /// \file
-/// \brief Verilog::Parse: Parseess verilog code
+/// \brief Verilog::Parse: Parses verilog code
 ///
 /// Authors: Wilson Snyder
 ///

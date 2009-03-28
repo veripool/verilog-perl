@@ -189,7 +189,8 @@ on how low level and complete the information you need is.
 Verilog::Preproc is useful when you need only text out, or a list of
 defines, etc.  It can preprocess a file, or be used to provide the Verilog
 macro language on top of synthesis scripts.  It understands the full
-SystemVerilog 2005 preprocessor syntax.
+SystemVerilog 2005 preprocessor syntax, and parts of the SystemVerilog 2009
+draft standard (the rest will be supported when the standard is approved.)
 
 =item Verilog::Parser
 
@@ -222,6 +223,13 @@ to call the VPI, and understands as much of the language as the simulator
 supports.  This allows writing lint checks and full knowledge of all parts
 of the code, but generally requires the most work (short of writing a
 parser from scratch.)
+
+=item Verilator
+
+The Verilator program also contains a very similar front end as
+Verilog-Perl.  It also understands how to elaborate and connect complex
+pins and types.  If you're looking to add some lint like checks against
+netlists, this may be a better starting point.
 
 =back
 

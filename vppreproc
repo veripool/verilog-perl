@@ -122,6 +122,10 @@ vppreproc - Preprocess Verilog code using verilog-perl
 Vppreproc reads the Verilog files passed on the command line and outputs
 preprocessed output to standard out or the filename passed with B<-p>.
 
+Note vppreproc was named vppp until release 3.100, so if you're looking for
+vppp, this is the right replacement.  The vppp name conflicted with another
+non-Verilog related tool.
+
 =head1 VERILOG ARGUMENTS
 
 The following arguments are compatible with GCC, VCS and most Verilog
@@ -187,7 +191,7 @@ Remove `line directives.
 
 Rigorously obey the Verilog spec.  This disables the `__FILE__ and
 `__LINE__ features, and may disable other features that are not specified
-in the language reference manual. Defaults false.
+in the approved language reference manual. Defaults false.
 
 =item --simple
 
@@ -202,7 +206,7 @@ Displays program version and exits.
 =head1 LANGUAGE EXTENSIONS
 
 Vppreproc supports the preprocessing constructs defined in the Verilog 2001
-and SystemVerilog 3.1 standards.
+and SystemVerilog 2005 standards.
 
 The following additional constructs may be added to your Verilog code.
 
@@ -211,10 +215,14 @@ The following additional constructs may be added to your Verilog code.
 =item `__FILE__
 
 The __FILE__ define expands to the current filename, like C++'s __FILE__.
+This is in the draft SystemVerilog 2009 standard (but supported by
+Verilog-Perl since 2004!)
 
 =item `__LINE__
 
 The __LINE__ define expands to the current line number, like C++'s __LINE__.
+This is in the draft SystemVerilog 2009 standard (but supported by
+Verilog-Perl since 2004!)
 
 =item `error I<string>
 
