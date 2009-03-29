@@ -138,14 +138,14 @@ sub lint {
 
 sub _decls {
     my $self = shift;
-    my $type = $self->type;
+    my $out = $self->type;
     if ($self->port) {
-	$type = "input" if $self->port->direction eq "in";
-	$type = "output" if $self->port->direction eq "out";
-	$type = "inout" if $self->port->direction eq "inout";
+	$out = "input" if $self->port->direction eq "in";
+	$out = "output" if $self->port->direction eq "out";
+	$out = "inout" if $self->port->direction eq "inout";
     }
-    $type .= " signed" if $self->signed;
-    return $type;
+    $out .= " signed" if $self->signed;
+    return $out;
 }
 
 sub verilog_text {

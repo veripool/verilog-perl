@@ -507,11 +507,11 @@ a module that wasn't found, and thus might be inside the libraries.
 Expand any `defines in the string and return the results.  Undefined
 defines will remain in the returned string.
 
-=item $netlist->resolve_filename (I<string>, [I<lookup-type>])
+=item $netlist->resolve_filename (I<string>, [I<lookup_type>])
 
-Convert a module name to a filename.  Optional lookup-type is
-'module','include', or 'all', to use only module_dirs, incdirs, or both for
-the lookup.  Return undef if not found.
+Convert a module name to a filename.  Optional lookup_type is 'module',
+'include', or 'all', to use only module_dirs, incdirs, or both for the
+lookup.  Return undef if not found.
 
 =item $self->verilog_text
 

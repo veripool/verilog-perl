@@ -158,10 +158,17 @@ escid	\\[^ \t\f\r\n]+
   "task"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTASK; }
   "time"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTIME; }
   "tri"			{ FL; VALTEXT; CALLBACK(keywordCb); return yTRI; }
+  "tri0"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTRI0; }
+  "tri1"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTRI1; }
+  "triand"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTRIAND; }
+  "trior"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTRIOR; }
+  "trireg"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTRIREG; }
   "vectored"		{ FL; VALTEXT; CALLBACK(keywordCb); return yVECTORED; }
   "wait"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWAIT; }
+  "wand"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWAND; }
   "while"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWHILE; }
   "wire"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWIRE; }
+  "wor"			{ FL; VALTEXT; CALLBACK(keywordCb); return yWOR; }
   "xnor"		{ FL; VALTEXT; CALLBACK(keywordCb); return yXNOR; }
   "xor"			{ FL; VALTEXT; CALLBACK(keywordCb); return yXOR; }
   /*     Types Verilator doesn't support but we do generically here */
@@ -192,15 +199,8 @@ escid	\\[^ \t\f\r\n]+
   "tran"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenGATE; }
   "tranif0"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenGATE; }
   "tranif1"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenGATE; }
-  "tri0"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
-  "tri1"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
-  "triand"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
-  "trior"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
-  "trireg"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
-  "wand"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
   "weak0"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenSTRENGTH; }
   "weak1"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenSTRENGTH; }
-  "wor"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenNETTYPE; }
   /*     Generic unsupported warnings */
 }
 

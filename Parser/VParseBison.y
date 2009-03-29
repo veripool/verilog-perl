@@ -112,7 +112,6 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 
 %token<str>		ygenGATE	"GATE keyword"
 %token<str>		ygenKEYWORD	"KEYWORD"
-%token<str>		ygenNETTYPE	"NETTYPE keyword (tri0/wand/etc)"
 %token<str>		ygenOPERATOR	"OPERATOR"
 %token<str>		ygenSTRENGTH	"STRENGTH keyword (strong1/etc)"
 %token<str>		ygenSYSCALL	"SYSCALL"
@@ -294,6 +293,11 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yTIMEPRECISION	"timeprecision"
 %token<str>		yTIMEUNIT	"timeunit"
 %token<str>		yTRI		"tri"
+%token<str>		yTRI0		"tri0"
+%token<str>		yTRI1		"tri1"
+%token<str>		yTRIAND		"triand"
+%token<str>		yTRIOR		"trior"
+%token<str>		yTRIREG		"trireg"
 %token<str>		yTYPE		"type"
 %token<str>		yTYPEDEF	"typedef"
 %token<str>		yUNION		"union"
@@ -306,11 +310,13 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yVOID		"void"
 %token<str>		yWAIT		"wait"
 %token<str>		yWAIT_ORDER	"wait_order"
+%token<str>		yWAND		"wand"
 %token<str>		yWHILE		"while"
 %token<str>		yWILDCARD	"wildcard"
 %token<str>		yWIRE		"wire"
 %token<str>		yWITH		"with"
 %token<str>		yWITHIN		"within"
+%token<str>		yWOR		"wor"
 %token<str>		yXNOR		"xnor"
 %token<str>		yXOR		"xor"
 
@@ -755,9 +761,15 @@ varRESET:
 net_type:			// ==IEEE: net_type
 		ySUPPLY0				{ VARDECL($1); }
 	|	ySUPPLY1				{ VARDECL($1); }
-	|	yWIRE 					{ VARDECL($1); }
 	|	yTRI 					{ VARDECL($1); }
-	|	ygenNETTYPE				{ VARDECL($1); }
+	|	yTRI0 					{ VARDECL($1); }
+	|	yTRI1 					{ VARDECL($1); }
+	|	yTRIAND 				{ VARDECL($1); }
+	|	yTRIOR 					{ VARDECL($1); }
+	|	yTRIREG 				{ VARDECL($1); }
+	|	yWAND 					{ VARDECL($1); }
+	|	yWIRE 					{ VARDECL($1); }
+	|	yWOR 					{ VARDECL($1); }
 	;
 varGParam:	yPARAMETER				{ VARDECL($1); }
 	;
