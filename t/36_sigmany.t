@@ -101,10 +101,20 @@ sub one_parse {
     print "="x70,"\n";
     print "read $filename\n";
     my $opt = new Verilog::Getopt;
-    $opt->define('__message_on',"1'b0");  # So we can read pre-vpassert'ed files
+    # Used to do this so we can read pre-vpassert'ed files,
+    # but now we require a `include std_defines in all sources
+    # even though a lint run may not indicate it's needed
+    # (since lint runs pre-vpassert.)
+    # $opt->define('__message_on',"1'b0");
+    if ($filename =~ m!(.*/)!) {
+	# Allow includes in same dir as the test
+	my $fdir = $1;
+	$opt->incdir($fdir);
+	$opt->module_dir ($fdir);
+    }
 
     my $pp = Verilog::Preproc->new(keep_comments=>0,
-				   include_open_nonfatal=>1,
+				   include_open_nonfatal=>0,
 				   options=>$opt);
 
     my $parser = new MyParser();
