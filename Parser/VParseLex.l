@@ -474,7 +474,14 @@ escid	\\[^ \t\f\r\n]+
   [0-9]*?['']s?[01xXzZ]	{	/* SystemVerilog */
 			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
 			}
-  [0-9][_0-9]*[ \t]*['']s?[bcodhBCODH]?[ \t]*[A-Fa-f0-9xXzZ_?]*	{
+  /* Note below is constructed to not match the ' that begins a '(  or '{ */
+  [0-9][_0-9]*[ \t]*['']s?[bcodhBCODH]?[ \t]*[A-Fa-f0-9xXzZ_?]+	{
+			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
+			}
+  [0-9][_0-9]*[ \t]*['']s?[bcodhBCODH]	{
+			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
+			}
+  [0-9][_0-9]*[ \t]*['']s	{
 			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
 			}
   [0-9][_0-9]*		{ FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
