@@ -111,7 +111,7 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yaTIMINGSPEC	"TIMING SPEC ELEMENT"
 
 %token<str>		ygenGATE	"GATE keyword"
-%token<str>		ygenKEYWORD	"KEYWORD"
+%token<str>		ygenCONFIGKEYWORD "CONFIG keyword (cell/use/design/etc)"
 %token<str>		ygenOPERATOR	"OPERATOR"
 %token<str>		ygenSTRENGTH	"STRENGTH keyword (strong1/etc)"
 %token<str>		ygenSYSCALL	"SYSCALL"

@@ -10,6 +10,7 @@
 
 use strict;
 use Test;
+use Data::Dumper; $Data::Dumper::Indent = 1;
 
 BEGIN { plan tests => 3 }
 BEGIN { require "t/test_utils.pl"; }
@@ -64,12 +65,14 @@ my @files;
 if (!$ENV{VERILOG_TEST_FILES}) {
     skip("VERILOG_TEST_FILES not set (harmless)",1);
     # export VERILOG_TEST_FILES="$V4/test_regress/t/t_case*.v"
-    @files = ("verilog/*.v");
+    @files = glob("verilog/*.v");
+    @files = grep {!m!/inc!} @files;
 } else {
     ok(1);
     @files = split(/:/,$ENV{VERILOG_TEST_FILES});
+    @files = map {glob $_} @files;
 }
-check_series(map {glob $_} @files);
+check_series(@files);
 
 ######################################################################
 
@@ -77,7 +80,6 @@ sub check_series {
     my @files = @_;
     $Any_Error = 0;
     foreach my $file (@files) {
-	next if $file =~ m!/inc!;
 	read_test($file);
     }
     ok(!$Any_Error);
@@ -106,7 +108,7 @@ sub one_parse {
     # even though a lint run may not indicate it's needed
     # (since lint runs pre-vpassert.)
     # $opt->define('__message_on',"1'b0");
-    if ($filename =~ m!(.*/)!) {
+    if ($filename =~ m!(.*)/!) {
 	# Allow includes in same dir as the test
 	my $fdir = $1;
 	$opt->incdir($fdir);

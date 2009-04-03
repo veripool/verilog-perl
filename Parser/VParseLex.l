@@ -220,16 +220,16 @@ escid	\\[^ \t\f\r\n]+
   "signed"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySIGNED; }
   "unsigned"		{ FL; VALTEXT; CALLBACK(keywordCb); return yUNSIGNED; }
   /*     Generic unsupported keywords */
-  "cell"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
-  "config"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
-  "design"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
-  "endconfig"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
-  "incdir"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
-  "include"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
-  "instance"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
-  "liblist"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
-  "library"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
-  "use"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenKEYWORD; } // config
+  "cell"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenCONFIGKEYWORD; }
+  "config"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenCONFIGKEYWORD; }
+  "design"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenCONFIGKEYWORD; }
+  "endconfig"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenCONFIGKEYWORD; }
+  "incdir"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenCONFIGKEYWORD; }
+  "include"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenCONFIGKEYWORD; }
+  "instance"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenCONFIGKEYWORD; }
+  "liblist"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenCONFIGKEYWORD; }
+  "library"		{ FL; VALTEXT; CALLBACK(keywordCb); return ygenCONFIGKEYWORD; }
+  "use"			{ FL; VALTEXT; CALLBACK(keywordCb); return ygenCONFIGKEYWORD; }
 }
 
   /* Verilog 2005 */

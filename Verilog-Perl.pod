@@ -231,6 +231,14 @@ Verilog-Perl.  It also understands how to elaborate and connect complex
 pins and types.  If you're looking to add some lint like checks against
 netlists, this may be a better starting point.
 
+=item Verilog-Mode for Emacs
+
+Although not a parser, a common requested use of Verilog-Perl is to
+automatically make shell modules and interconnect modules.  Verilog-Mode is
+a better solution to this problem, as it results in completely portable
+code; the program (Verilog-Mode) isn't needed for others to update the
+design.  It's also in very common usage, including by many IP providers.
+
 =back
 
 =head1 DISTRIBUTION
