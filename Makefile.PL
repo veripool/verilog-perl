@@ -24,6 +24,8 @@ sub MY::postamble {
     $out .= "OPTIMIZE += -Wno-unused\n" if $ENV{VERILATOR_AUTHOR_SITE};  # Makefile has another -Wall
     $out .= "OPTIMIZE += $ENV{VERILOGPERL_CCFLAGS}\n" if defined $ENV{VERILOGPERL_CCFLAGS};
     $out .= '
+all:: README
+
 README: Verilog-Perl.pod
 	-$(RM_RF) $@
 	pod2text --loose $< > $@
