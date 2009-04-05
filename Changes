@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.1***
+* Verilog::Language 3.121 2009/4/5
 
 ****	Make cell names unique when duplicate cells encountered. [Paul Janson]
 
