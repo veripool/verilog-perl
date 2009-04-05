@@ -676,6 +676,7 @@ modportItemList:
 
 modport_item:			// ==IEEE: modport_item
 		yaID '(' modportPortsDeclList ')'	{ }
+	;
 
 modportPortsDeclList:
 		modportPortsDecl			{ }
@@ -700,6 +701,7 @@ modportSimplePort:
 		yaID					{ }
 	|	'.' yaID '(' ')'			{ }
 	|	'.' yaID '(' expr ')'			{ }
+	;
 
 modport_tf_port:		// ==IEEE: modport_tf_port
 		yaID					{ }
@@ -771,13 +773,17 @@ net_type:			// ==IEEE: net_type
 	|	yWIRE 					{ VARDECL($1); }
 	|	yWOR 					{ VARDECL($1); }
 	;
-varGParam:	yPARAMETER				{ VARDECL($1); }
+varGParam:
+		yPARAMETER				{ VARDECL($1); }
 	;
-varLParam:	yLOCALPARAM				{ VARDECL($1); }
+varLParam:
+		yLOCALPARAM				{ VARDECL($1); }
 	;
-varGenVar:	yGENVAR					{ VARDECL($1); }
+varGenVar:
+		yGENVAR					{ VARDECL($1); }
 	;
-varReg:		varTypeKwds				{ VARDECL($1); }
+varReg:
+		varTypeKwds				{ VARDECL($1); }
 	;
 
 port_direction:			// ==IEEE: port_direction

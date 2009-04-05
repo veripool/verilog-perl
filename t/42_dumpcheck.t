@@ -15,16 +15,19 @@ BEGIN { require "t/test_utils.pl"; }
 use Verilog::Netlist;
 ok(1);
 
-check ('test_dir/42.dmp', 'verilog/v_hier_top.v', 'verilog/v_hier_top2.v', 'verilog/v_comments.v');
+check ('test_dir/42.dmp', ['verilog/v_hier_top.v', 'verilog/v_hier_top2.v', 'verilog/v_comments.v'],
+       [link_read_nonfatal=>1, keep_comments => 1,]);
 ok(1);
 ok(files_identical("test_dir/42.dmp", "t/42_dumpcheck_1.out"));
 
-my $n2 = check ('test_dir/42_n2.dmp', 'verilog/pinorder.v');
+my $n2 = check ('test_dir/42_n2.dmp', ['verilog/pinorder.v'],
+		[link_read_nonfatal=>1, keep_comments => 1,]);
 ok(1);
 ok(files_identical("test_dir/42_n2.dmp", "t/42_dumpcheck_2.out"));
 ok(files_identical("test_dir/42_n2.dmp.v", "t/42_dumpcheck_2v.out"));
 
-check ('test_dir/42_v2k.dmp', 'verilog/v_v2k.v', );
+check ('test_dir/42_v2k.dmp', ['verilog/v_v2k.v'],
+       [link_read_nonfatal=>1, keep_comments => 1,]);
 ok(1);
 ok(files_identical("test_dir/42_v2k.dmp", "t/42_dumpcheck_v2k.out"));
 
@@ -40,7 +43,8 @@ ok(files_identical("test_dir/42.ed.v", "t/42_dumpcheck_2e.out"));
 
 sub check {
     my $outfilename = shift;
-    my @files = @_;
+    my $files = shift;
+    my $nl_opts = shift;
     # Setup options so files can be found
     use Verilog::Getopt;
     my $opt = new Verilog::Getopt;
@@ -50,8 +54,8 @@ sub check {
     my $nl = new Verilog::Netlist (options => $opt,
 				   link_read_nonfatal=>1,
 				   keep_comments => 1,
-				   );
-    foreach my $file (@files) {
+				   @{$nl_opts});
+    foreach my $file (@{$files}) {
 	$nl->read_file (filename=>$file);
     }
     # Read in any sub-modules

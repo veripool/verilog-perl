@@ -232,8 +232,9 @@ CODE:
 {
     delete THIS;
 }
+
 #//**********************************************************************
-#// self->debug()
+#// self->debug(level)
 
 void
 VParserXs::_debug (level)

@@ -6,8 +6,8 @@ package Verilog::Netlist;
 use Carp;
 use IO::File;
 
-use Verilog::Netlist::Module;
 use Verilog::Netlist::File;
+use Verilog::Netlist::Module;
 use Verilog::Netlist::Subclass;
 use base qw(Verilog::Netlist::Subclass);
 use strict;
@@ -51,35 +51,35 @@ sub link {
     $self->{_relink} = 1;
     while ($self->{_relink}) {
 	$self->{_relink} = 0;
-	foreach my $modref ($self->modules) {
-	    $modref->link();
+	foreach my $subref ($self->modules) {
+	    $subref->link();
 	}
-	foreach my $fileref ($self->files) {
-	    $fileref->_link();
+	foreach my $subref ($self->files) {
+	    $subref->_link();
 	}
     }
 }
 sub lint {
     my $self = shift;
-    foreach my $modref ($self->modules_sorted) {
-	next if $modref->is_libcell();
-	$modref->lint();
+    foreach my $subref ($self->modules_sorted) {
+	next if $subref->is_libcell();
+	$subref->lint();
     }
 }
 
 sub verilog_text {
     my $self = shift;
     my @out;
-    foreach my $modref ($self->modules_sorted) {
-	push @out, $modref->verilog_text, "\n";
+    foreach my $subref ($self->modules_sorted) {
+	push @out, $subref->verilog_text, "\n";
     }
     return (wantarray ? @out : join('',@out));
 }
 
 sub dump {
     my $self = shift;
-    foreach my $modref ($self->modules_sorted) {
-	$modref->dump();
+    foreach my $subref ($self->modules_sorted) {
+	$subref->dump();
     }
 }
 

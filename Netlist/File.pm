@@ -79,19 +79,19 @@ sub new {
 sub module {
     my $self = shift;
     my $keyword = shift;
-    my $module = shift;
+    my $name = shift;
     my $orderref = shift;
     my $in_celldefine = shift;
 
     my $fileref = $self->{fileref};
     my $netlist = $self->{netlist};
-    print "Module $module\n" if $Verilog::Netlist::Debug;
+    print "Module $name\n" if $Verilog::Netlist::Debug;
 
     $self->{modref} = $netlist->new_module
-	 (name=>$module,
+	 (name=>$name,
 	  is_libcell=>($fileref->is_libcell() || $in_celldefine),
 	  filename=>$self->filename, lineno=>$self->lineno);
-    $fileref->_modules($module, $self->{modref});
+    $fileref->_modules($name, $self->{modref});
     $self->{_cmtref} = $self->{modref};
 }
 

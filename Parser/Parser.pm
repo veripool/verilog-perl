@@ -51,7 +51,9 @@ sub new {
     my $class = shift;  $class = ref $class if ref $class;
     my $self = {_sigparser=>0,
 		use_unreadback => 1,   # Backward compatibility
+		#_debug		# Don't set, use debug() accessor to change level
 		@_};
+
     bless $self, $class;
     # Sets $self->{_cthis}
     $self->_new($self,
@@ -74,7 +76,11 @@ sub callback_names {
 sub debug {
     my $self = shift;
     my $level = shift;
-    $self->_debug($level) if defined $level;
+    if (defined $level) {
+	$self->{_debug} = $level;
+	$self->_debug($level);
+    }
+    return $self->{_debug};
 }
 
 sub fileline {
@@ -85,7 +91,7 @@ sub fileline {
 sub line { return lineno(@_); }  # Old, now undocumented
 
 #######################################################################
-#### Called by the parser
+#### Methods
 
 sub reset {
     my $self = shift;
@@ -237,6 +243,11 @@ like extractions, see L<Verilog::Netlist>.
 
 See the "Which Package" section of L<Verilog::Language> if you are unsure
 which parsing package to use for a new application.
+
+Note the parser allows some constructs that are syntax errors according to
+the specification (for example "foo.bar(1)++".) This is done when the
+parser can't easily detect these cases.  It's up to the consumer of the
+parser to filter out such errors if it cares.
 
 =head1 METHODS
 

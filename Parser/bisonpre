@@ -26,8 +26,6 @@ our $Opt_Verbose;
 our $Opt_Yacc = "bison";
 our $Opt_Input;
 
-our $Pragma_Edit_Unions;
-
 autoflush STDOUT 1;
 autoflush STDERR 1;
 Getopt::Long::config ("no_auto_abbrev");
@@ -99,9 +97,6 @@ sub process {
 	my $v = bison_version_check();
 	die "bisonpre: %Error: $Opt_Yacc version $v run failed due to errors\n";
     }
-
-    #Works, but generally we'll avoid the clutter
-    #report(output_prefix().".bisonpre.output");
 
     clean_output(tmp_prefix().".output",output_prefix().".output", 1);
     warning_check(output_prefix().".output");
@@ -182,19 +177,6 @@ sub clean_output {
 	@lines = @out; @out = ();
     }
 
-    if ($Pragma_Edit_Unions) {
-	my @out;
-	my $in_struct = "";
-	foreach my $line (@lines) {
-	    $in_struct = $1 if $line =~ /^struct\s+(\S+)/;
-	    # glr-parser in bison 2.3
-	    $line =~ s!union\s+(yyGLRStackItem)!struct $1!g;
-	    $line =~ s!\bunion\b!struct!g if $in_struct eq 'yyGLRState';
-	    push @out, $line;
-	}
-	@lines = @out; @out = ();
-    }
-
     $fh = IO::File->new(">$outname") or die "%Error: $! writing $outname\n";
     foreach my $line (@lines) {
 	# Fix filename refs
@@ -242,26 +224,31 @@ sub clean_input {
 	foreach my $line (@linesin) {
 	    $l++;
 	    #  ^/ to prevent comments from matching
+	    $line =~ m!^[a-zA-Z0-9_<>]+:[^/]*[a-zA-Z]! and die "%Error: $filename:$l: Move text on rule line to next line: $line\n";
 	    if ($line =~ s/^([a-zA-Z0-9_]+)<(\S+)>:/$1:/) {
 		!$rules{$1}{name} or die "%Error: $filename:$l: Redeclaring '$1': $line\n";
 		$types{$2}{$1} = 1;
 		$rules{$1}{name} = $1;
 		$rules{$1}{type} = $2;
+		!$last_rule or die "%Error: $filename:$l: Unterminated previous rule\n";
 		$last_rule = $1;
 	    } elsif ($line =~ /^([a-zA-Z0-9_]+):/) {
 		!$rules{$1}{name} or die "%Error: $filename:$l: Redeclaring '$1': $line\n";
 		$rules{$1}{name} = $1;
 		$rules{$1}{type} = "";
+		!$last_rule or die "%Error: $filename:$l: Unterminated previous rule\n";
 		$last_rule = $1;
-	    }
-	    if ($line =~ /^\s*BISONPRE_EDIT_UNIONS/) {
-		$Pragma_Edit_Unions = 1;
-		$line = "//$line";
 	    }
 	    push @lines, $line;
 	    # Now clean the line and extract some more info
 	    (my $cline = $line) =~ s/\/\/.*$/\n/;
 	    (my $rline = $line) =~ s/\/\/.*$/\n/;
+	    if ($cline =~ /^\s*;/) {
+		$last_rule or die "%Error: $filename:$l: Stray semicolon\n";
+		$last_rule = undef;
+	    } elsif ($last_rule) {
+		$rules{$last_rule}{rules_and_productions} .= $cline;
+	    }
 	    if ($cline =~ /^%token\s*<(\S+)>\s*(\S+)/) {
 		!$tokens{$2} or die "%Error: $filename:$l: Redeclaring '$2': $line\n";
 		$tokens{$2} = $1;
@@ -308,6 +295,40 @@ sub clean_input {
 	}
     }
 
+    # Replace BISONPRE_COPY(type,{code})
+    {
+	my @linesin = @lines;  @lines=();  my $l=0;
+	foreach my $line (@linesin) {
+	    $l++;
+	    if ($line =~ /BISONPRE_COPY/) {
+		($line =~ s/BISONPRE_COPY\((\S+)\s*,\s*{([^}]*)}\s*\)/{HERE}/)
+		    or die "%Error: $filename:$l: Bad form of BISONPRE_NOT: $line\n";
+		my $rule = $1;  my $code = $2;
+		$rules{$rule} or die "%Error: $filename:$l: Can't find definition for rule: $rule\n";
+		# Push it all onto one line to avoid error messages changing
+		my $insert = $rules{$rule}{rules_and_productions};
+		$insert =~ s/^\S+://g;	# Strip rule name
+		#print "COPY code $code\n";
+		#print "COPY in   $insert\n";
+		$_=$insert; eval("$code; \$_;");  $insert = $_;
+		#print "COPY out  $insert\n";
+		while ($insert =~ s/[ \t\n]+\n/\n/go) {}
+		$line =~ s/{HERE}/$insert/;
+	    }
+	    push @lines, $line;
+	}
+    }
+
+    # Replace ~[x]~  - must be after BISONPRE_COPY expansion
+    {
+	my @linesin = @lines;  @lines=();  my $l=0;
+	foreach my $line (@linesin) {
+	    $l++;
+	    $line =~ s/~[a-zA-Z0-9_]+~//g;
+	    push @lines, $line;
+	}
+    }
+
     # Find "BISONPRE_TYPES"
     {
 	my @linesin = @lines;  @lines=();  my $l=0;
@@ -344,43 +365,6 @@ sub clean_input {
 }
 
 #######################################################################
-
-sub report {
-    my $filename = shift;
-    #print "  report $filename\n";
-
-    my $fh = IO::File->new(">$filename") or die "%Error: $! writing $filename\n";
-
-    #use Data::Dumper; print Dumper($Self);
-    $fh->print("All rules and parents that call them, walking upward:\n");
-    foreach my $rulename (sort keys %{$Self->{rules}}) {
-	my $rule = $Self->{rules}{$rulename};
-	next if !defined $rule->{type};
-	$fh->printf("%-20s ",$rule->{name}.":");
-	my @parents = _walk_up_recurse($fh, $rule->{name}, 1, {});
-	$fh->print(join(' ',@parents));
-	$fh->print("\n");
-    }
-    $fh->close;
-}
-
-sub _walk_up_recurse {
-    my $fh = shift;
-    my $rulename = shift;
-    my $first = shift;
-    my $did = shift || {};
-    return if $did->{$rulename};
-    $did->{$rulename} = 1;
-    my $rule = $Self->{rules}{$rulename} or return;
-    my @parents;
-    push @parents, $rule->{name} unless $first;
-    foreach my $par (sort keys %{$rule->{parentrules}||{}}) {
-	push @parents, _walk_up_recurse($fh, $par, 0, $did);
-    }
-    return @parents;
-}
-
-#######################################################################
 __END__
 
 =pod
@@ -409,10 +393,20 @@ various compile warnings.
 
 This is expanded into %type declarations.
 
+=item ~[a-z]+~
+
+Any text matching ~[a-z]+~ is removed.  This allows optional text to be
+used only when the rule containing the ~~ is used in a BISONPRE_COPY.
+
 =item rule_label<type>:
 
 This allows the label declaring a rule to also specify the type of the
 rule.  The type will be inserted where /*BISONPRE_TYPES*/ is encountered.
+
+=item BISONPRE_COPY(rule, {code})
+
+Copy the rules and productions from the specified rule, filter through the
+Perl code provided in the {} and insert here into the output file.
 
 =item BISONPRE_NOT(token[, token...])
 
