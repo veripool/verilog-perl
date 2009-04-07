@@ -25,6 +25,7 @@ structs('new',
 	   comment	=> '$', #'	# Comment provided by user
 	   is_libcell	=> '$',	#'	# True if is a library cell
 	   # For special procedures
+	   _interfaces	=> '%',		# For autosubcell_include
 	   _modules	=> '%',		# For autosubcell_include
 	   ]);
 
@@ -53,6 +54,9 @@ sub new {
 				     modref=>undef,	# Module being parsed now
 				     cellref=>undef,	# Cell being parsed now
 				     _cmtref=>undef,	# Object to attach comments to
+				     # Must parse all files in same compilation unit with
+				     # same symbol_table, or a package won't exist for link()
+				     symbol_table => $params{netlist}->{symbol_table},
 				     );
 
     my @opt;
@@ -76,6 +80,22 @@ sub new {
     return $parser;
 }
 
+sub interface {
+    my $self = shift;
+    my $keyword = shift;
+    my $name = shift;
+
+    my $fileref = $self->{fileref};
+    my $netlist = $self->{netlist};
+    print "Interface $name\n" if $Verilog::Netlist::Debug;
+
+    $self->{modref} = $netlist->new_interface
+	 (name=>$name,
+	  filename=>$self->filename, lineno=>$self->lineno);
+    $fileref->_interfaces($name, $self->{modref});
+    $self->{_cmtref} = $self->{modref};
+}
+
 sub module {
     my $self = shift;
     my $keyword = shift;
@@ -88,22 +108,32 @@ sub module {
     print "Module $name\n" if $Verilog::Netlist::Debug;
 
     $self->{modref} = $netlist->new_module
-	 (name=>$name,
+	 (name=>$name, keyword=>$keyword,
 	  is_libcell=>($fileref->is_libcell() || $in_celldefine),
 	  filename=>$self->filename, lineno=>$self->lineno);
     $fileref->_modules($name, $self->{modref});
     $self->{_cmtref} = $self->{modref};
 }
 
+sub program {
+    my $self = shift;
+    $self->module(@_);
+}
+
+sub endinterface {
+    my $self = shift;
+    $self->endmodule(@_);
+}
+
 sub endmodule {
     my $self = shift;
     $self->{_cmtref} = undef;  # Assume all module comments are inside the module, not after
+    $self->{modref} = undef;
 }
 
-sub port {
+sub endprogram {
     my $self = shift;
-    my $name = shift;
-    push @{$self->{modref}->_portsordered}, $name;
+    $self->endmodule(@_);
 }
 
 sub attribute {
@@ -128,59 +158,70 @@ sub attribute {
     }
 }
 
-sub signal_decl {
+sub port {
     my $self = shift;
-    my $inout = shift;
-    my $netname = shift;
-    my $vector = shift;
+    my $name = shift;
+    my $objof = shift;
+    my $direction = shift;
+    my $type = shift;
     my $array = shift;
-    my $signed = shift;
+    my $pinnum = shift;
+
+    return if $objof ne 'module';
+
+    if ($pinnum) {  # Else a "input" etc outside the "(...)"s
+	$self->{modref}->_portsordered($pinnum-1, $name);  # -1 because [0] has first pin
+    }
+    if ($direction) {  # Else just a pin number without declaration
+	my $port = $self->{modref}->new_port
+	    (name=>$name,
+	     filename=>$self->filename, lineno=>$self->lineno,
+	     direction=>$direction, data_type=>$type,
+	     array=>$array, comment=>undef,);
+    }
+}
+
+sub var {
+    my $self = shift;
+    #use Data::Dumper; print " DEBUG: var callback: ",Dumper(\@_);
+    my $decl_type = shift;
+    my $name = shift;
+    my $objof = shift;
+    my $net_type = shift;
+    my $data_type = shift;
+    my $array = shift;
     my $value = shift;
-    print " Sig $netname $inout\n" if $Verilog::Netlist::Debug;
+    print " Sig $name dt=$decl_type nt=$net_type d=$data_type\n" if $Verilog::Netlist::Debug;
+
+    return if $objof ne 'module';
 
     my $msb;
     my $lsb;
-    if ($vector && $vector =~ /^\[(.*):(.*)\]/) {
-	$msb = $1; $lsb = $2;
-    } elsif ($vector && $vector =~ /^\[(.*)\]/) {
-	$msb = $lsb = $1;
+    if ($data_type && $data_type =~ /^(signed *)?\[(.*):(.*)\]/) {
+	$msb = $2; $lsb = $3;
+    } elsif ($data_type && $data_type =~ /^(signed *)?\[(.*)\]/) {
+	$msb = $lsb = $2;
     }
 
     my $modref = $self->{modref};
     if (!$modref) {
-	return $self->error ("Signal declaration outside of module definition", $netname);
+	return $self->error ("Signal declaration outside of module definition", $name);
     }
 
-    if ($inout =~ /^(inout|in|out)(put|)$/) {
-	my $dir = $1;
-	##
-	my $net = $modref->find_net ($netname);
-	$net or $net = $modref->new_net
-	    (name=>$netname,
-	     filename=>$self->filename, lineno=>$self->lineno,
-	     simple_type=>1, type=>'wire', array=>$array,
-	     comment=>undef, msb=>$msb, lsb=>$lsb,
-	     signed=>$signed,
-	     );
-	$self->{_cmtref} = $net;
-	##
-	my $port = $modref->new_port
-	    (name=>$netname,
-	     filename=>$self->filename, lineno=>$self->lineno,
-	     direction=>$dir, type=>'wire',
-	     array=>$array, comment=>undef,);
-    } else {
-	my $net = $modref->find_net ($netname);
-	$net or $net = $modref->new_net
-	    (name=>$netname,
-	     filename=>$self->filename, lineno=>$self->lineno,
-	     simple_type=>1, type=>$inout, array=>$array,
-	     comment=>undef, msb=>$msb, lsb=>$lsb,
-	     signed=>$signed, value=>$value,
-	     );
-	$net->type($inout);  # If it's already declared as in/out etc, mark the type
-	$self->{_cmtref} = $net;
-    }
+    my $signed = ($data_type =~ /signed/);
+
+    my $net = $modref->find_net ($name);
+    $net or $net = $modref->new_net
+	(name=>$name,
+	 filename=>$self->filename, lineno=>$self->lineno,
+	 simple_type=>1, data_type=>$data_type, array=>$array,
+	 comment=>undef, msb=>$msb, lsb=>$lsb,
+	 net_type=>$net_type, decl_type=>$decl_type,
+	 signed=>$signed, value=>$value,
+	);
+    $net->data_type($data_type);  # If it was declared earlier as in/out etc
+    # (from a single non-typed input/output stmt), remark the type now
+    $self->{_cmtref} = $net;
 }
 
 sub instant {

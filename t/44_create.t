@@ -30,8 +30,8 @@ ok(1);
 
     my $moda = $nl->new_module (name=>'a', @fl);
     {
-	my $x = $moda->new_net (name=>'x', @fl, type=>'input', msb=>2, lsb=>0,);
-	my $y = $moda->new_net (name=>'y', @fl, type=>'output', msb=>2, lsb=>0,);
+	my $x = $moda->new_port (name=>'x', @fl, direction=>'input',  data_type=>'[2:0]',);
+	my $y = $moda->new_port (name=>'y', @fl, direction=>'output', data_type=>'[2:0]',);
 	my $b = $moda->new_cell (name=>'i_b', submodname=>'b', @fl);
 	{
 	    $b->new_pin(name=>'z', portname=>'z', pinnamed=>1, netname=>'x', @fl);

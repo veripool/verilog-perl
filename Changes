@@ -7,6 +7,27 @@ indicates the contributor was also the author of the fix; Thanks!
 
 **	This package is now licensed under LGPL v3 and/or Artistic v2.0.
 
+**	Verilog::Parser, SigParser and Netlist now support SystemVerilog.
+	An attempt was made to support existing user scripts, but some may
+	need modification to work with this version of Verilog-Perl.
+
+***	Verilog::SigParser's signal_decl and funcsignal callbacks no longer
+	work.  They are replaced by the "var" callback.
+
+***	Added Verilog::SigParser program and endprogram callbacks.
+
+***	Calling Verilog::SigParser->new now requires a symbol_table parameter,
+	if multiple modules are to be parsed as part of one compilation unit.
+
+***	Verilog::Netlist::Port->type accessor is renamed data_type.
+
+***	Verilog::Netlist::Net->type accessor is split into data_type,
+	decl_type and net_type accessors.
+
+***	Added Verilog::Netlist::Interface and related accessors.
+
+***	Added Netlist::Module->keyword accessor, and use it for "program"s.
+
 * Verilog::Language 3.121 2009/4/5
 
 ****	Make cell names unique when duplicate cells encountered. [Paul Janson]

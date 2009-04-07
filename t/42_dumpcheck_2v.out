@@ -9,7 +9,7 @@ endmodule
 
 module foo2 (
    x, y, z);
-   output x;
+   output reg x;
    input y;
    input z;
 endmodule

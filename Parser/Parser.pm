@@ -6,6 +6,7 @@ package Verilog::Parser;
 use Carp;
 use Verilog::Getopt;
 use Verilog::Language;
+use Verilog::Std;
 
 require DynaLoader;
 use base qw(DynaLoader);
@@ -37,6 +38,7 @@ bootstrap Verilog::Parser;
 # sub _new (class, sigparser)
 # sub _open (class)
 # sub _debug (class, level)
+# sub _prologe (class, flag)
 # sub parse (class)
 # sub eof (class)
 # sub filename (class, [setit])
@@ -50,7 +52,9 @@ bootstrap Verilog::Parser;
 sub new {
     my $class = shift;  $class = ref $class if ref $class;
     my $self = {_sigparser=>0,
+		symbol_table=>[],	# .xs will init further for us
 		use_unreadback => 1,   # Backward compatibility
+		use_std => undef,	# Undef = silent
 		#_debug		# Don't set, use debug() accessor to change level
 		@_};
 
@@ -58,6 +62,7 @@ sub new {
     # Sets $self->{_cthis}
     $self->_new($self,
 		# Options go here
+		$self->{symbol_table},
 		$self->{_sigparser},
 		$self->{use_unreadback},
 		);
@@ -95,6 +100,30 @@ sub line { return lineno(@_); }  # Old, now undocumented
 
 sub reset {
     my $self = shift;
+    $self->std;
+}
+
+sub std {
+    my $self = shift;
+    my $quiet = !defined $self->{use_std} && $self->{_sigparser};
+    if (!$self->{symbol_table}[1]->{std}  # Not in the symbol table yet
+	&& ($self->{use_std} || $quiet)
+	) {
+	print "Including std::\n" if $self->{_debug};
+	my $olddbg = $self->debug;
+	if ($quiet) {
+	    print "Disabling debug during std:: loading\n" if $self->{_debug};
+	    $self->debug(0);
+	    $self->_callback_enable(0); # //verilog-perl callbacks off
+	}
+	$self->eof;  #Flush user code before callback disable
+	$self->parse(Verilog::Std::std);
+	$self->eof;
+	if ($quiet) {
+	    $self->_callback_enable(1); # //verilog-perl callbacks on
+	    $self->debug($olddbg);
+	}
+    }
 }
 
 sub parse_file {
@@ -257,6 +286,18 @@ parser to filter out such errors if it cares.
 
 Create a new Parser. Passing the named argument "use_unreadback => 0" will
 disable later use of the unreadback method, which may improve performance.
+
+Adding "use_std => 1" will add parsing of the SystemVerilog built-in std::
+package, or "use_std => 0" will disable it.  If unspecified it is silently
+included (no callbacks will be involed) when suspected to be necessary.
+
+Adding "symbol_table => []" will use the specified symbol table for this
+parse, and modify the array reference to include those symbols detected by
+this parse.  As the SystemVerilog language requires packages and typedefs
+to exist before they are referenced, you must pass the same symbol_table to
+subsequent parses that are for the same compilation scope.  The internals
+of this symbol_table should be considered opaque, as it will change between
+package versions, and must not be modified by user code.
 
 =item $parser->callback_names ()
 

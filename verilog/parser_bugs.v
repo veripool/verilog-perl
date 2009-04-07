@@ -315,3 +315,41 @@ module coverage20090318;
       begin end
    endtask
 endmodule
+
+module svsig;
+   function int count (input logic [3:0] d);
+      automatic int count = d[0]+d[1]+d[2]+d[3];
+      for (int i=0; i<4; i++) begin
+	 if (d[i]) count++;
+      end
+      return (count);
+   endfunction
+   task automatic autoconst;
+      const int CONS = 8;
+      $display("CONS=%x\n", CONS);
+      $display("Another stmt\n");
+   endtask
+endmodule
+
+module bug_empty_func_param;
+   //function int intfunc(int a=0, b=1);
+   //   return a+b;
+   //endfunction
+   always_comb begin
+      foo = funccall();
+      foo = intfunc(a, b);
+      foo = intfunc(a, .b(b));
+      foo = intfunc(.b(b), .a(a));
+   end
+endmodule
+
+module dotted_funcs;
+   initial ram.dotTask(addr[31:0],ramdata);  // Call task
+   initial zz = ram.a.dotFunc(foo);  // Call function
+endmodule
+
+module var_only_in_block;
+   initial begin : named
+      integer only_a_var_in_blk;
+   end
+endmodule

@@ -120,6 +120,9 @@ sub one_parse {
 				   options=>$opt);
 
     my $parser = new MyParser();
+    # Suck in std:: before enabling debug dumps
+    $parser->std;
+
     $parser->debug($debug || $ENV{VERILOG_TEST_DEBUG});
     $pp->open($filename);
     if ($ENV{VERILOG_TEST_KEYWORDS}) {
@@ -139,6 +142,8 @@ sub one_parse {
 	$parser->{_errored} = 1;
 	$::Any_Error = 1;
     }
+
+    print Dumper($parser->{symbol_table}) if $parser->debug;
 
     return $parser;
 }

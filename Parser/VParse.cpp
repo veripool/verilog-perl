@@ -32,12 +32,15 @@
 #include "VParse.h"
 #include "VParseLex.h"
 #include "VParseGrammar.h"
+#include "VSymTable.h"
 
 VParseGrammar*	VParseGrammar::s_grammarp = NULL;
 
 //*************************************************************************
 
-VParse::VParse(VFileLine* filelinep, bool sigParser, bool useUnreadbackFlag) {
+VParse::VParse(VFileLine* filelinep, av* symsp, bool sigParser, bool useUnreadbackFlag)
+    : m_syms(filelinep, symsp)
+{
     m_inFilelinep = filelinep;
     m_sigParser = sigParser;
     m_useUnreadback = useUnreadbackFlag;
@@ -45,6 +48,9 @@ VParse::VParse(VFileLine* filelinep, bool sigParser, bool useUnreadbackFlag) {
     m_lexp = new VParseLex(this);
     m_grammarp = new VParseGrammar(this);
     m_eof = false;
+    m_anonNum = 0;
+    m_symTableNextId = NULL;
+    m_callbackEnable = true;
 }
 
 VParse::~VParse() {
@@ -105,7 +111,10 @@ void VParse::fakeBison() {
 
 int VParse::lexToBison(VParseBisonYYSType* yylvalp) {
     int tok = m_lexp->lexToken(yylvalp);
-    if (debug()>=9) { cout<<"   lexToBison  TOKEN="<<tok<<" "<<VParseGrammar::tokenName(tok)<<endl; }
+    if (debug()>=9) {
+	string shortstr = yylvalp->str; if (shortstr.length()>20) shortstr = string(shortstr,20)+"...";
+	cout<<"   lexToBison  TOKEN="<<tok<<" "<<VParseGrammar::tokenName(tok)<<" str=\""<<shortstr<<"\""<<endl;
+    }
     return tok;
 }
 

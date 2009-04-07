@@ -7,6 +7,7 @@ use Carp;
 use IO::File;
 
 use Verilog::Netlist::File;
+use Verilog::Netlist::Interface;
 use Verilog::Netlist::Module;
 use Verilog::Netlist::Subclass;
 use base qw(Verilog::Netlist::Subclass);
@@ -28,13 +29,15 @@ sub lineno { return ''; }
 
 sub new {
     my $class = shift;
-    my $self = {_modules => {},
+    my $self = {_interfaces => {},
+		_modules => {},
 		_files => {},
 		options => undef,	# Usually pointer to Verilog::Getopt
 		implicit_wires_ok => 1,
  		preproc => 'Verilog::Preproc',
 		link_read => 1,
 		logger => Verilog::Netlist::Logger->new,
+		symbol_table => [],	# Symbol table for Verilog::Parser
 		#include_open_nonfatal => 0,
 		#keep_comments => 0,
 		_libraries_done => {},
@@ -54,6 +57,9 @@ sub link {
 	foreach my $subref ($self->modules) {
 	    $subref->link();
 	}
+	foreach my $subref ($self->interfaces) {
+	    $subref->link();
+	}
 	foreach my $subref ($self->files) {
 	    $subref->_link();
 	}
@@ -65,11 +71,17 @@ sub lint {
 	next if $subref->is_libcell();
 	$subref->lint();
     }
+    foreach my $subref ($self->interfaces_sorted) {
+	$subref->link();
+    }
 }
 
 sub verilog_text {
     my $self = shift;
     my @out;
+    foreach my $subref ($self->interfaces_sorted) {
+	push @out, $subref->verilog_text, "\n";
+    }
     foreach my $subref ($self->modules_sorted) {
 	push @out, $subref->verilog_text, "\n";
     }
@@ -78,6 +90,9 @@ sub verilog_text {
 
 sub dump {
     my $self = shift;
+    foreach my $subref ($self->interfaces_sorted) {
+	$subref->dump();
+    }
     foreach my $subref ($self->modules_sorted) {
 	$subref->dump();
     }
@@ -93,6 +108,7 @@ sub new_module {
     # as not allowed to override Class::Struct's new()
     my $modref = new Verilog::Netlist::Module
 	(netlist=>$self,
+	 keyword=>'module',
 	 is_top=>1,
 	 @_);
     $self->{_modules}{$modref->name} = $modref;
@@ -158,6 +174,47 @@ sub modules_sorted_level {
 sub top_modules_sorted {
     my $self = shift;
     return grep ($_->is_top && !$_->is_libcell, $self->modules_sorted);
+}
+
+######################################################################
+#### Interface access
+
+sub new_interface {
+    my $self = shift;
+    # @_ params
+    # Can't have 'new Verilog::Netlist::Interface' do this,
+    # as not allowed to override Class::Struct's new()
+    my $modref = new Verilog::Netlist::Interface
+	(netlist=>$self,
+	 @_);
+    $self->{_interfaces}{$modref->name} = $modref;
+    return $modref;
+}
+
+sub find_interface {
+    my $self = shift;
+    my $search = shift;
+    # Return interface maching name
+    my $mod = $self->{_interfaces}{$search};
+    return $mod if $mod;
+    # Allow FOO_CELL to be a #define to choose what instantiation is really used
+    my $rsearch = $self->remove_defines($search);
+    if ($rsearch ne $search) {
+	return $self->find_interface($rsearch);
+    }
+    return undef;
+}
+
+sub interfaces {
+    my $self = shift;
+    # Return all interfaces
+    return (values %{$self->{_interfaces}});
+}
+
+sub interfaces_sorted {
+    my $self = shift;
+    # Return all interfaces
+    return (sort {$a->name cmp $b->name} (values %{$self->{_interfaces}}));
 }
 
 ######################################################################
@@ -423,6 +480,28 @@ Prints debugging information for the entire netlist structure.
 
 =back
 
+=head1 INTERFACE FUNCTIONS
+
+=over 4
+
+=item $netlist->find_interface($name)
+
+Returns Verilog::Netlist::Interface matching given name.
+
+=item $netlist->interfaces
+
+Returns list of Verilog::Netlist::Interface.
+
+=item $netlist->interfaces_sorted
+
+Returns name sorted list of Verilog::Netlist::Interface.
+
+=item $netlist->new_interface
+
+Creates a new Verilog::Netlist::Interface.
+
+=back
+
 =head1 MODULE FUNCTIONS
 
 =over 4
@@ -545,6 +624,7 @@ Wilson Snyder <wsnyder@wsnyder.org>
 L<Verilog-Perl>,
 L<Verilog::Netlist::Cell>,
 L<Verilog::Netlist::File>,
+L<Verilog::Netlist::Interface>,
 L<Verilog::Netlist::Logger>,
 L<Verilog::Netlist::Module>,
 L<Verilog::Netlist::Net>,

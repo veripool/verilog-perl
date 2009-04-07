@@ -1,10 +1,10 @@
-Module:v_v2k  File:verilog/v_v2k.v
-  Port:clk  Dir:in  Type:wire  Array:
-  Port:rst  Dir:in  Type:wire  Array:
-  Port:sig1  Dir:in  Type:wire  Array:
-  Port:sig2  Dir:out  Type:wire  Array:
-  Net:WIDTH    Type:parameter  Array:  Value:16
-  Net:clk  O  Type:wire  Array:
-  Net:rst  O  Type:wire  Array:
-  Net:sig1  O  Type:wire  Array:  WIDTH:0
-  Net:sig2  I  Type:reg  Array:  WIDTH:0
+Module:v_v2k  Kwd:module  File:verilog/v_v2k.v
+  Port:clk  Dir:in  DataT:  Array:
+  Port:rst  Dir:in  DataT:  Array:
+  Port:sig1  Dir:in  DataT:[WIDTH:0]  Array:
+  Port:sig2  Dir:out  DataT:reg [WIDTH:0]  Array:
+  Net:WIDTH    DeclT:parameter  NetT:  DataT:  Array:  Value:16
+  Net:clk  O  DeclT:port  NetT:  DataT:  Array:
+  Net:rst  O  DeclT:port  NetT:  DataT:  Array:
+  Net:sig1  O  DeclT:port  NetT:  DataT:[WIDTH:0]  Array:  WIDTH:0
+  Net:sig2  I  DeclT:port  NetT:  DataT:reg [WIDTH:0]  Array:

@@ -11,6 +11,7 @@ META.yml
 Netlist.pm
 Netlist/Cell.pm
 Netlist/File.pm
+Netlist/Interface.pm
 Netlist/Logger.pm
 Netlist/Module.pm
 Netlist/Net.pm
@@ -25,12 +26,16 @@ Parser/Parser.pm
 Parser/Parser.xs
 Parser/SigParser.pm
 Parser/typemap
+Parser/VAst.cpp
+Parser/VAst.h
 Parser/VParse.cpp
 Parser/VParse.h
 Parser/VParseBison.y
 Parser/VParseGrammar.h
 Parser/VParseLex.h
 Parser/VParseLex.l
+Parser/VSymTable.cpp
+Parser/VSymTable.h
 Preproc/.gitignore
 Preproc/flexfix
 Preproc/Makefile.PL
@@ -45,6 +50,7 @@ Preproc/VPreprocLex.h
 Preproc/VPreprocLex.l
 Preproc/xsubppfix
 README
+Std.pm
 t/00_pod.t
 t/01_manifest.t
 t/02_help.t
@@ -53,6 +59,7 @@ t/04_critic.t
 t/10_keywords.t
 t/12_splitbus.t
 t/14_numbers.t
+t/16_std.t
 t/20_getopt.opt
 t/20_getopt.t
 t/30_preproc.out
@@ -74,6 +81,7 @@ t/42_dumpcheck_1.out
 t/42_dumpcheck_2.out
 t/42_dumpcheck_2e.out
 t/42_dumpcheck_2v.out
+t/42_dumpcheck_sv.out
 t/42_dumpcheck_v2k.out
 t/44_create.t
 t/46_link.t
@@ -118,6 +126,10 @@ verilog/v_hier_subprim.v
 verilog/v_hier_subsub.v
 verilog/v_hier_top.v
 verilog/v_hier_top2.v
+verilog/v_sv_intf.v
+verilog/v_sv_mod.v
+verilog/v_sv_pgm.v
+verilog/v_sv_pkg.v
 verilog/v_v2k.v
 vhier
 vpassert

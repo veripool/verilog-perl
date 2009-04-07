@@ -38,9 +38,46 @@ my %_Type_Widths = (
     'wor'	=> 1,
     );
 
+my %_Type_Accessors = (
+    'genvar'	=> 'decl_type',
+    'localparam'=> 'decl_type',
+    'parameter'	=> 'decl_type',
+    'var'	=> 'decl_type',		# Not in old version, but for completeness
+    #'port'	=> 'decl_type',		# Internals - Look at Port (input/output/inout/ref)
+    #'net'	=> 'decl_type',		# Internals - Look at net_type (wire/tri/...)
+    #
+    'supply0' 	=> 'net_type',
+    'supply1'	=> 'net_type',
+    'tri'	=> 'net_type',
+    'tri0'	=> 'net_type',
+    'tri1'	=> 'net_type',
+    'triand'	=> 'net_type',
+    'trior'	=> 'net_type',
+    'trireg'	=> 'net_type',
+    'wand'	=> 'net_type',
+    'wire'	=> 'net_type',
+    'wor'	=> 'net_type',
+    #
+    'bit'	=> 'data_type',
+    'byte'	=> 'data_type',
+    'chandle'	=> 'data_type',
+    'event'	=> 'data_type',
+    'int'	=> 'data_type',
+    'integer'	=> 'data_type',
+    'logic'	=> 'data_type',
+    'longint'	=> 'data_type',
+    'real'	=> 'data_type',
+    'realtime'	=> 'data_type',
+    'reg'	=> 'data_type',
+    'shortint'	=> 'data_type',
+    'shortreal'	=> 'data_type',
+    'string'	=> 'data_type',
+    'time'	=> 'data_type',
+    );
+
 ######################################################################
 
-structs('new',
+structs('_new_base',
 	'Verilog::Netlist::Net::Struct'
 	=>[name     	=> '$', #'	# Name of the net
 	   filename 	=> '$', #'	# Filename this came from
@@ -48,7 +85,9 @@ structs('new',
 	   userdata	=> '%',		# User information
 	   attributes	=> '%', #'	# Misc attributes for systemperl or other processors
 	   #
-	   type	 	=> '$', #'	# C++ Type (bool/int)
+	   data_type 	=> '$', #'	# SystemVerilog Type (logic/integer/reg [3:0] etc)
+	   decl_type 	=> '$', #'	# Declaration type (parameter/genvar/port/net etc)
+	   net_type 	=> '$', #'	# Net type (wire/tri/supply0 etc)
 	   comment	=> '$', #'	# Comment provided by user
 	   array	=> '$', #'	# Vector
 	   module	=> '$', #'	# Module entity belongs to
@@ -67,6 +106,14 @@ structs('new',
 	   sp_traced	=> '$', #'	# Created by SP_TRACED
 	   sp_autocreated	=> '$', #'	# Created by /*AUTOSIGNAL*/
 	   ]);
+
+sub new {
+    my $class = shift;
+    my %params = @_;
+    my $self = $class->_new_base (%params);
+    $self->type($params{type}) if $params{type};  # Backward compatibility
+    return $self;
+}
 
 sub delete {
     my $self = shift;
@@ -92,12 +139,29 @@ sub stored_lsb { defined $_[0]->SUPER::stored_lsb ? $_[0]->SUPER::stored_lsb : $
 sub width {
     my $self = shift;
     # Return bit width (if known)
+    my $dt = $self->data_type; $dt="" if $dt eq "signed";
     if (defined $self->msb && defined $self->lsb) {
 	return (abs($self->msb - $self->lsb) + 1);
-    } elsif (my $width = $_Type_Widths{$self->type}) {
+    } elsif (my $width = $_Type_Widths{$dt || $self->net_type || $self->decl_type}) {
 	return $width;
     }
     return undef;
+}
+
+sub type {
+    my $self = shift;
+    my $flag = shift;
+    if (defined $flag) {
+	if (my $acc = $_Type_Accessors{$flag}) {
+	    if ($acc eq 'decl_type') { $self->decl_type($flag); }
+	    elsif ($acc eq 'net_type') { $self->net_type($flag); }
+	    else { $self->data_type($flag); }
+	} else {
+	    $self->data_type($flag);
+	}
+    }
+    my $dt = $self->data_type; $dt="" if $dt && $dt eq "signed";
+    return $dt || $self->net_type || $self->decl_type;
 }
 
 ######################################################################
@@ -138,13 +202,12 @@ sub lint {
 
 sub _decls {
     my $self = shift;
-    my $out = $self->type;
+    my $out = $self->net_type || $self->decl_type;
     if ($self->port) {
 	$out = "input" if $self->port->direction eq "in";
 	$out = "output" if $self->port->direction eq "out";
 	$out = "inout" if $self->port->direction eq "inout";
     }
-    $out .= " signed" if $self->signed;
     return $out;
 }
 
@@ -153,12 +216,12 @@ sub verilog_text {
     my @out;
     foreach my $decl ($self->_decls) {
 	push @out, $decl;
-	push @out, " [".$self->msb.":".$self->lsb."]" if defined $self->msb;
+	push @out, " ".$self->data_type if $self->data_type;
 	push @out, " ".$self->name;
 	push @out, " ".$self->array if $self->array;
         push @out, " = ".$self->value if defined $self->value && $self->value ne '';
 	push @out, ";";
-	push @out, " ".$self->comment if defined $self->comment && $self->comment ne ''
+	push @out, " ".$self->comment if defined $self->comment && $self->comment ne '';
     }
     return (wantarray ? @out : join('',@out));
 }
@@ -168,7 +231,10 @@ sub dump {
     my $indent = shift||0;
     print " "x$indent,"Net:",$self->name()
 	,"  ",($self->_used_in() ? "I":""),($self->_used_out() ? "O":""),
-	,"  Type:",$self->type(),"  Array:",$self->array()||"";
+	,"  DeclT:",$self->decl_type||''
+	,"  NetT:",$self->net_type||''
+	,"  DataT:",$self->data_type||''
+	,"  Array:",$self->array()||'';
     print "  ",($self->msb).":".($self->lsb) if defined $self->msb;
     print "  Value:",$self->value if defined $self->value && $self->value ne '';
     print "\n";
@@ -239,6 +305,18 @@ signals, for the width of a signal, use msb/lsb/width.
 Returns any comments following the definition.  keep_comments=>1 must be
 passed to Verilog::Netlist::new for comments to be retained.
 
+=item $self->data_type
+
+The data type of the net.  This may be a data type keyword ("integer",
+"logic", etc), user defined type from a type def, a range ("[11:0]",
+"signed [1:0]" or "" for an implicit wire.
+
+=item $self->decl_type
+
+How the net was declared.  A declaration keyword ("genvar", "localparam",
+"parameter", "var") or "port" if only as a port - and see the port method,
+or "net" - and see the net_type method.
+
 =item $self->module
 
 Reference to the Verilog::Netlist::Module the net is in.
@@ -255,9 +333,23 @@ The most significant bit number of the net.
 
 The name of the net.
 
+=item $self->net_type
+
+The net type, if one applies.  Always a net type keyword ('supply0',
+'supply1', 'tri', 'tri0', 'tri1', 'triand', 'trior', 'trireg', 'wand',
+'wire', 'wor').
+
 =item $self->type
 
-The C++ or declaration type of the net.  For example "wire" or "parameter".
+The type function is provided for backward compatibility to Verilog-Perl
+versions before 3.200. Applications should change to use data_type() and/or
+decl_type() instead.
+
+The type function returns an agglomeration of data_type, net_type and
+decl_type that worked ok in Verilog, but does not work with SystemVerilog.
+Calls to type() will be converted to calls to data_type, decl_type or
+net_type in a way that attempts to maintain backward compatibility, however
+compatibility is not always possible.
 
 =item $self->value
 

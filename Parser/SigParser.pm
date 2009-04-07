@@ -23,7 +23,7 @@ our @_Callback_Names = qw(
   endtaskfunc
   endmodule
   endpackage
-  funcsignal
+  endprogram
   function
   import
   instant
@@ -33,8 +33,9 @@ our @_Callback_Names = qw(
   parampin
   pin
   port
-  signal_decl
+  program
   task
+  var
   );
 
 #######################################################################
@@ -109,11 +110,15 @@ sub endpackage {
     my $self = shift;
 }
 
+sub endprogram {
+    my $self = shift;
+}
+
 sub function {
     my $self = shift;
     my $keyword = shift;
     my $name = shift;
-    my $type = shift;
+    my $data_type = shift;
 }
 
 sub import {
@@ -166,6 +171,11 @@ sub parampin {
 sub port {
     my $self = shift;
     my $name = shift;
+    my $objof = shift;
+    my $direction = shift;
+    my $data_type = shift;
+    my $array = shift;
+    my $pinnum = shift;
 }
 
 sub ppdefine {
@@ -174,30 +184,27 @@ sub ppdefine {
     my $definition = shift;
 }
 
-sub signal_decl {
+sub program {
     my $self = shift;
-    my $keyword = shift;
+    my $kwd = shift;
     my $name = shift;
-    my $vector = shift;
-    my $mem = shift;
-    my $signed = shift;
-    my $value = shift;
-}
-
-sub funcsignal {
-    my $self = shift;
-    my $keyword = shift;
-    my $name = shift;
-    my $vector = shift;
-    my $mem = shift;
-    my $signed = shift;
-    my $value = shift;
 }
 
 sub task {
     my $self = shift;
     my $keyword = shift;
     my $name = shift;
+}
+
+sub var {
+    my $self = shift;
+    my $keyword = shift;
+    my $name = shift;
+    my $objof = shift;
+    my $net_type = shift;
+    my $data_type = shift;
+    my $array = shift;
+    my $value = shift;
 }
 
 ######################################################################
@@ -274,23 +281,23 @@ for writing clean up routines.
 This method is called at a endmodule keyword. It is useful for writing
 clean up routines.
 
-=item $self->endndpackage ( $token )
+=item $self->endpackage ( $token )
 
 This method is called at a endpackage keyword. It is useful for writing
 clean up routines.
 
-=item $self->funcsignal ( $keyword, $signame, $vector, $mem, $signed, $value )
+=item $self->endprogram ( $token )
 
-This method is called when a signal/variable is declared inside a function.
-See signal_decl for more details.
+This method is called at a endprogram keyword. It is useful for writing
+clean up routines.
 
-=item $self->function ( $keyword, $name, $type )
+=item $self->function ( $keyword, $name, $data-type )
 
 This method is called when a function is defined.  Type is the output size
 or typename, plus "signed", for example "", "[3:0]", "integer", or "signed
 [2:0]".
 
-=item $self->import ( $name )
+=item $self->import ( $package, $id )
 
 This method is called when an import is defined.
 
@@ -329,31 +336,51 @@ This method is called when a pin on a instant is defined.  If a pin name
 was not provided and the connection is by position, name will be '' or
 undef.
 
-=item $self->port ( $name )
+=item $self->port ( $name, $objof, $direction, $data_type, $array, $pinnum )
 
-This method is called when a module port is defined.
+This method is called when a module port is defined.  It may be called
+twice on a port if the 1995 style is used; the first call is made at the
+port header, the second call at the input/output declaration.
+
+The first argument $name, is the name of the port.  $objof is what the port
+is an object of ('module', 'function', etc).  $direction is the port
+direction ('input', 'output', 'inout', 'ref', 'const ref').  $data_type is
+the data type ('reg', 'user_type_t', 'signed [31:0]', etc).  $array is the
+arraying of the port ('[1:0][2:0]', '', etc).  $pinnum is set to the pin
+number for ANSI style declarations, and 0 for Verilog 1995 declarations
+made outside the port list.
 
 =item $self->ppdefine ( $defvar, $definition )
 
 This method is called when a preprocessor definition is encountered.
 
+=item $self->program ( $keyword, $name )
+
+This method is called when a program is defined.
+
 =item $self->signal_decl ( $keyword, $signame, $vector, $mem, $signed, $value )
 
-This method is called when a signal or variable is declared.  The first
-argument, $keyword is a direction ('input', 'output', 'inout'), or a type
-('reg', 'trireg', 'integer', 'parameter'), the second argument is the name
-of the signal.  The third argument is the vector bits or "".  The fourth
-argument is the memory bits or "".  The fifth argument is "signed" if it is
-signed.  The sixth argument is the value it is assigned to for "parameter"
-or "wire".
-
-Note this may be called twice for signals that are declared with both a
-direction and a type.  (IE 'output reg' results in a call with 'output' and
-a call with 'reg'.)
+This method is no longer used, see $self->var.
 
 =item $self->task ( $keyword, $name )
 
 This method is called when a task is defined.
+
+=item $self->var ( $kwd, $name, $objof, $nettype, $data_type, $array, $value )
+
+This method is called when a variable or net is defined.
+
+The first argument $kwd is how it was declared ('port', 'var', 'genvar',
+'parameter', 'localparam', 'typedef') or if applicable a net type
+('supply0', 'wire', etc). $name is the name of the variable.  $objof is
+what the variable is an object of ('module', 'function', etc).  $nettype is
+the net type if any was defined ('', 'supply0', 'wire', 'tri', etc).
+$data_type is the data type ('user_type_t', '[31:0] signed', etc).  $array
+is the arraying of the port ('[1:0][2:0]', '', etc).  $value is what the
+variable was assigned to ('', or expression).
+
+Note typedefs are included here, because "parameter type" is both a
+variable and a type declaration.
 
 =back
 

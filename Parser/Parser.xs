@@ -28,6 +28,8 @@
 
 /* Mine: */
 #include "VParse.h"
+#include "VSymTable.h"
+#include "VAst.h"
 
 /* Perl */
 extern "C" {
@@ -52,8 +54,8 @@ public:
     void cbFileline(const string& filename, int lineno) { m_cbFilelinep = m_cbFilelinep->create(filename, lineno); }
     void cbFileline(VFileLine* filelinep) { m_cbFilelinep = filelinep; }
 
-    VParserXs(VFileLine* filelinep, bool sigparser, bool useUnreadbackFlag)
-	: VParse(filelinep, sigparser, useUnreadbackFlag)
+    VParserXs(VFileLine* filelinep, av* symsp, bool sigparser, bool useUnreadbackFlag)
+	: VParse(filelinep, symsp, sigparser, useUnreadbackFlag)
 	  , m_cbFilelinep(filelinep)
 	{}
     virtual ~VParserXs() {}
@@ -76,19 +78,22 @@ public:
     virtual void endinterfaceCb(VFileLine* fl, const string& kwd);
     virtual void endmoduleCb(VFileLine* fl, const string& kwd);
     virtual void endpackageCb(VFileLine* fl, const string& kwd);
+    virtual void endprogramCb(VFileLine* fl, const string& kwd);
     virtual void endtaskfuncCb(VFileLine* fl, const string& kwd);
-    virtual void functionCb(VFileLine* fl, const string& kwd, const string& name, const string& type);
-    virtual void importCb(VFileLine* fl, const string& name);
+    virtual void functionCb(VFileLine* fl, const string& kwd, const string& name, const string& data_type);
+    virtual void importCb(VFileLine* fl, const string& package, const string& id);
     virtual void instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range);
     virtual void interfaceCb(VFileLine* fl, const string& kwd, const string& name);
     virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool, bool celldefine);
     virtual void packageCb(VFileLine* fl, const string& kwd, const string& name);
-    virtual void parampinCb(VFileLine* fl, const string& name, const string& conn, int number);
-    virtual void pinCb(VFileLine* fl, const string& name, const string& conn, int number);
-    virtual void portCb(VFileLine* fl, const string& name);
-    virtual void signalCb(VFileLine* fl, const string& kwd, const string& name, const string& vec, const string& mem
-	, const string& signd, const string& value, bool inFunc);
+    virtual void parampinCb(VFileLine* fl, const string& name, const string& conn, int index);
+    virtual void pinCb(VFileLine* fl, const string& name, const string& conn, int index);
+    virtual void portCb(VFileLine* fl, const string& name, const string& objof, const string& direction, const string& data_type
+	, const string& array, int index);
+    virtual void programCb(VFileLine* fl, const string& kwd, const string& name);
     virtual void taskCb(VFileLine* fl, const string& kwd, const string& name);
+    virtual void varCb(VFileLine* fl, const string& kwd, const string& name, const string& objof, const string& net
+	, const string& data_type, const string& array, const string& value);
     // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen
 
     void call(string* rtnStrp, int params, const char* method, ...);
@@ -117,6 +122,7 @@ VFileLine* VFileLineParseXs::create(const string filename, int lineno) {
 void VFileLineParseXs::error(string msg) {
     static string holdmsg; holdmsg = msg;
     m_vParserp->cbFileline(this);
+    // Call always, not just if callbacks enabled
     m_vParserp->call(NULL, 1,"error",holdmsg.c_str());
 }
 
@@ -127,22 +133,6 @@ void VFileLineParseXs::error(string msg) {
 
 #//**********************************************************************
 #// Manually created callbacks
-
-void VParserXs::signalCb(VFileLine* fl, const string& kwd, const string& name,
-			 const string& vec, const string& mem, const string& signd,
-			 const string& value,
-			 bool inFunc) {
-    cbFileline(fl);
-    static string hold1; hold1 = kwd;
-    static string hold2; hold2 = name;
-    static string hold3; hold3 = vec;
-    static string hold4; hold4 = mem;
-    static string hold5; hold5 = signd;
-    static string hold6; hold6 = value;
-    call(NULL, 6, (inFunc?"funcsignal":"signal_decl"),
-	 hold1.c_str(), hold2.c_str(),
-	 hold3.c_str(), hold4.c_str(), hold5.c_str(), hold6.c_str());
-}
 
 #//**********************************************************************
 #// General callback invoker
@@ -209,13 +199,13 @@ MODULE = Verilog::Parser  PACKAGE = Verilog::Parser
 #// self->_new (class, sigparser)
 
 static VParserXs *
-VParserXs::_new (SV* SELF, bool sigparser, bool useUnreadback)
-PROTOTYPE: $$
+VParserXs::_new (SV* SELF, AV* symsp, bool sigparser, bool useUnreadback)
+PROTOTYPE: $$$$
 CODE:
 {
     if (CLASS) {}  /* Prevent unused warning */
     VFileLineParseXs* filelinep = new VFileLineParseXs(1/*ok,for initial*/);
-    VParserXs* parserp = new VParserXs(filelinep, sigparser, useUnreadback);
+    VParserXs* parserp = new VParserXs(filelinep, symsp, sigparser, useUnreadback);
     filelinep->setParser(parserp);
     parserp->m_self = newSVsv(SELF);
     RETVAL = parserp;
@@ -243,6 +233,20 @@ PROTOTYPE: $$
 CODE:
 {
     THIS->debug(level);
+    VAstEnt::debug(level);
+}
+
+#//**********************************************************************
+#// self->_callback_enable(flag)
+#// Turn off callbacks during std:: parsing
+
+void
+VParserXs::_callback_enable (flag)
+bool flag
+PROTOTYPE: $$
+CODE:
+{
+    THIS->callbackEnable(flag);
 }
 
 #//**********************************************************************
@@ -312,6 +316,17 @@ PROTOTYPE: $$
 CODE:
 {
     THIS->parse(textp);
+}
+
+#//**********************************************************************
+#// self->selftest()
+
+void
+VParserXs::selftest ()
+PROTOTYPE: $
+CODE:
+{
+    VSymStack::selftest();
 }
 
 #//**********************************************************************

@@ -30,6 +30,7 @@
 using namespace std;
 #include "VFileLine.h"
 #include "VParse.h"
+#include "VAst.h"
 
 //============================================================================
 // Container of things to put out later
@@ -50,6 +51,7 @@ struct VParseGPin {
 struct VParseBisonYYSType {
     string	str;
     VFileLine*	fl;
+    VAstEnt*	entp;
 };
 #define YYSTYPE VParseBisonYYSType
 
@@ -63,15 +65,14 @@ class VParseGrammar {
 public: // Only for VParseBison
     int		m_pinNum;		///< Pin number being parsed
     string	m_varDecl;
+    string	m_varNet;
     string	m_varIO;
-    string	m_varSigned;
+    string	m_varType;
     string	m_varRange;
-    string	m_varArray;
 
     string	m_cellMod;
     bool	m_cellParam;
 
-    bool	m_inFTask;
 
     deque<VParseGPin> m_pinStack;
 
@@ -88,7 +89,7 @@ public:
     // CREATORS
     VParseGrammar(VParse* parsep) : m_parsep(parsep) {
 	s_grammarp = this;
-	m_inFTask = false;
+	m_pinNum = 0;
     }
     ~VParseGrammar() {
 	s_grammarp = NULL;

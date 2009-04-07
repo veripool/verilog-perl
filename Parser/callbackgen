@@ -11,6 +11,8 @@ use vars qw ($Debug $VERSION);
 
 $VERSION = '3.200';
 
+# xs_manual=>1,   -> The .xs file makes the handler itself
+
 my %Cbs =
     (attribute	=> {which=>'Parser', args => [text=>'string']},
      comment	=> {which=>'Parser', args => [text=>'string']},
@@ -27,20 +29,21 @@ my %Cbs =
      endinterface=>{which=>'SigParser', args => [kwd=>'string']},
      endmodule	=> {which=>'SigParser', args => [kwd=>'string']},
      endpackage	=> {which=>'SigParser', args => [kwd=>'string']},
+     endprogram	=> {which=>'SigParser', args => [kwd=>'string']},
      endtaskfunc=> {which=>'SigParser', args => [kwd=>'string']},
-     function	=> {which=>'SigParser', args => [kwd=>'string', name=>'string', type=>'string']},
-     import	=> {which=>'SigParser', args => [name=>'string']},
+     function	=> {which=>'SigParser', args => [kwd=>'string', name=>'string', data_type=>'string']},
+     import	=> {which=>'SigParser', args => [package=>'string', id=>'string']},
      instant	=> {which=>'SigParser', args => [mod=>'string', cell=>'string', range=>'string']},
      interface	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
      module	=> {which=>'SigParser', args => [kwd=>'string', name=>'string', ignore3=>'undef', celldefine=>'bool'],},
      package	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
-     parampin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', number=>'int']},
-     pin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', number=>'int']},
-     port	=> {which=>'SigParser', args => [name=>'string']},
-     signal	=> {which=>'SigParser', args => [kwd=>'string', name=>'string', vec=>'string',
-						 mem=>'string', signd=>'string',
-						 value=>'string', inFunc=>'bool'],
-     		    xs_manual=>1,},
+     parampin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', index=>'int']},
+     pin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', index=>'int']},
+     port	=> {which=>'SigParser', args => [name=>'string', objof=>'string', direction=>'string',
+						 data_type=>'string', array=>'string', index=>'int']},
+     program	=> {which=>'SigParser', args => [kwd=>'string', name=>'string'],},
+     var	=> {which=>'SigParser', args => [kwd=>'string',	 name=>'string', objof=>'string', net=>'string',
+						 data_type=>'string', array=>'string', value=>'string'],},
      task	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
     );
 
@@ -200,7 +203,7 @@ sub _xs {
 	$n++;
     }
     my $narg = $n-1;
-    push @out, "    call(NULL, $narg, \"$cb\"$callargs);\n";
+    push @out, "    if (callbackEnable()) call(NULL, $narg, \"$cb\"$callargs);\n";
     push @out, "}\n";
     return @out;
 }

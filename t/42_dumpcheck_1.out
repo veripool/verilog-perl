@@ -1,73 +1,73 @@
-Module:v_comments  File:verilog/v_comments.v
-  Port:a  Dir:in  Type:wire  Array:
-  Port:b  Dir:inout  Type:wire  Array:
-  Port:c  Dir:out  Type:wire  Array:
-  Port:d  Dir:out  Type:wire  Array:
-  Port:d1  Dir:out  Type:wire  Array:
-  Port:d2  Dir:out  Type:wire  Array:
-  Port:d3  Dir:out  Type:wire  Array:
-  Net:a  O  Type:wire  Array:
-  Net:b    Type:wire  Array:  10:0
-  Net:c  I  Type:wire  Array:  0:10
-  Net:d  I  Type:reg  Array:  ((2*32)-1):0
-  Net:d1  I  Type:wire  Array:  32:0
-  Net:d2  I  Type:wire  Array:  (MATH-1):0
-  Net:d3  I  Type:wire  Array:  32-1:0
-  Net:e    Type:reg  Array:  11:0
-Module:v_hier_noport  File:verilog/v_hier_noport.v
-  Net:internal    Type:reg  Array:
-Module:v_hier_sub  File:verilog/v_hier_sub.v
-  Port:avec  Dir:in  Type:wire  Array:
-  Port:clk  Dir:in  Type:wire  Array:
-  Port:qvec  Dir:out  Type:wire  Array:
-  Net:K    Type:genvar  Array:
-  Net:K_UNUSED    Type:genvar  Array:
-  Net:a1  I  Type:supply1  Array:
-  Net:avec  O  Type:wire  Array:  3:0
-  Net:clk  O  Type:wire  Array:
-  Net:qvec  I  Type:wire  Array:  3:0
+Module:v_comments  Kwd:module  File:verilog/v_comments.v
+  Port:a  Dir:in  DataT:  Array:
+  Port:b  Dir:inout  DataT:[10:0]  Array:
+  Port:c  Dir:out  DataT:[0:10]  Array:
+  Port:d  Dir:out  DataT:[((2*32)-1):0]  Array:
+  Port:d1  Dir:out  DataT:[32:0]  Array:
+  Port:d2  Dir:out  DataT:[(MATH-1):0]  Array:
+  Port:d3  Dir:out  DataT:[32-1:0]  Array:
+  Net:a  O  DeclT:port  NetT:  DataT:  Array:
+  Net:b    DeclT:port  NetT:  DataT:[10:0]  Array:  10:0
+  Net:c  I  DeclT:port  NetT:  DataT:[0:10]  Array:  0:10
+  Net:d  I  DeclT:port  NetT:  DataT:reg  Array:  ((2*32)-1):0
+  Net:d1  I  DeclT:port  NetT:  DataT:[32:0]  Array:  32:0
+  Net:d2  I  DeclT:port  NetT:  DataT:[(MATH-1):0]  Array:  (MATH-1):0
+  Net:d3  I  DeclT:port  NetT:  DataT:[32-1:0]  Array:  32-1:0
+  Net:e    DeclT:var  NetT:  DataT:reg [11:0]  Array:
+Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+  Net:internal    DeclT:var  NetT:  DataT:reg  Array:
+Module:v_hier_sub  Kwd:module  File:verilog/v_hier_sub.v
+  Port:avec  Dir:in  DataT:[3:0]  Array:
+  Port:clk  Dir:in  DataT:  Array:
+  Port:qvec  Dir:out  DataT:[3:0]  Array:
+  Net:K    DeclT:genvar  NetT:  DataT:  Array:
+  Net:K_UNUSED    DeclT:genvar  NetT:  DataT:  Array:
+  Net:a1  I  DeclT:net  NetT:supply1  DataT:  Array:
+  Net:avec  O  DeclT:port  NetT:  DataT:[3:0]  Array:  3:0
+  Net:clk  O  DeclT:port  NetT:  DataT:  Array:
+  Net:qvec  I  DeclT:port  NetT:  DataT:[3:0]  Array:  3:0
   Cell:subsub0  is-a:v_hier_subsub .IGNORED('sh20)
-            Module:v_hier_subsub  File:verilog/v_hier_subsub.v
+            Module:v_hier_subsub  Kwd:module  File:verilog/v_hier_subsub.v
     Pin:a  Net:a1
-              Port:a  Dir:in  Type:wire  Array:
-              Net:a1  I  Type:supply1  Array:
+              Port:a  Dir:in  DataT:signed  Array:
+              Net:a1  I  DeclT:net  NetT:supply1  DataT:  Array:
     Pin:q  Net:qvec[0]
-              Port:q  Dir:out  Type:wire  Array:
+              Port:q  Dir:out  DataT:  Array:
   Cell:subsub2  is-a:v_hier_subsub
-            Module:v_hier_subsub  File:verilog/v_hier_subsub.v
+            Module:v_hier_subsub  Kwd:module  File:verilog/v_hier_subsub.v
     Pin:a  Net:1'b0
-              Port:a  Dir:in  Type:wire  Array:
+              Port:a  Dir:in  DataT:signed  Array:
     Pin:q  Net:qvec[2]
-              Port:q  Dir:out  Type:wire  Array:
-Module:v_hier_subsub  File:verilog/v_hier_subsub.v
-  Port:a  Dir:in  Type:wire  Array:
-  Port:q  Dir:out  Type:wire  Array:
-  Net:IGNORED    Type:parameter  Array:  Value:0
-  Net:a  O  Type:wire  Array:
-  Net:q  I  Type:wire  Array:
-Module:v_hier_top  File:verilog/v_hier_top.v
-  Port:clk  Dir:in  Type:wire  Array:
-  Net:WC_p1    Type:localparam  Array:  0:0  Value:0
-  Net:WC_p3    Type:localparam  Array:  2:0  Value:0
-  Net:WC_p32    Type:localparam  Array:  Value:0
-  Net:WC_p4    Type:localparam  Array:  -1:2  Value:0
-  Net:WC_pint    Type:localparam  Array:  Value:0
-  Net:WC_w1    Type:wire  Array:
-  Net:WC_w1b    Type:wire  Array:  0:0
-  Net:WC_w3    Type:wire  Array:  2:0
-  Net:WC_w4    Type:wire  Array:  -1:2
-  Net:clk  O  Type:wire  Array:
+              Port:q  Dir:out  DataT:  Array:
+Module:v_hier_subsub  Kwd:module  File:verilog/v_hier_subsub.v
+  Port:a  Dir:in  DataT:signed  Array:
+  Port:q  Dir:out  DataT:  Array:
+  Net:IGNORED    DeclT:parameter  NetT:  DataT:  Array:  Value:0
+  Net:a  O  DeclT:port  NetT:  DataT:signed  Array:
+  Net:q  I  DeclT:port  NetT:  DataT:  Array:
+Module:v_hier_top  Kwd:module  File:verilog/v_hier_top.v
+  Port:clk  Dir:in  DataT:  Array:
+  Net:WC_p1    DeclT:localparam  NetT:  DataT:[0:0]  Array:  0:0  Value:0
+  Net:WC_p3    DeclT:localparam  NetT:  DataT:[2:0]  Array:  2:0  Value:0
+  Net:WC_p32    DeclT:localparam  NetT:  DataT:  Array:  Value:0
+  Net:WC_p4    DeclT:localparam  NetT:  DataT:[-1:2]  Array:  -1:2  Value:0
+  Net:WC_pint    DeclT:localparam  NetT:  DataT:integer  Array:  Value:0
+  Net:WC_w1    DeclT:net  NetT:wire  DataT:  Array:
+  Net:WC_w1b    DeclT:net  NetT:wire  DataT:[0:0]  Array:  0:0
+  Net:WC_w3    DeclT:net  NetT:wire  DataT:[2:0]  Array:  2:0
+  Net:WC_w4    DeclT:net  NetT:wire  DataT:[-1:2]  Array:  -1:2
+  Net:clk  O  DeclT:port  NetT:  DataT:  Array:
   Cell:missing  is-a:missing
   Cell:sub  is-a:v_hier_sub
-            Module:v_hier_sub  File:verilog/v_hier_sub.v
+            Module:v_hier_sub  Kwd:module  File:verilog/v_hier_sub.v
     Pin:avec  Net:{avec[3],avec[2:0]}
-              Port:avec  Dir:in  Type:wire  Array:
+              Port:avec  Dir:in  DataT:[3:0]  Array:
     Pin:clk  Net:1'b0
-              Port:clk  Dir:in  Type:wire  Array:
+              Port:clk  Dir:in  DataT:  Array:
     Pin:qvec  Net:qvec[3:0]
-              Port:qvec  Dir:out  Type:wire  Array:
-Module:v_hier_top2  File:verilog/v_hier_top2.v
-  Port:clk  Dir:in  Type:wire  Array:
-  Net:clk  O  Type:wire  Array:
+              Port:qvec  Dir:out  DataT:[3:0]  Array:
+Module:v_hier_top2  Kwd:module  File:verilog/v_hier_top2.v
+  Port:clk  Dir:in  DataT:  Array:
+  Net:clk  O  DeclT:port  NetT:  DataT:  Array:
   Cell:noport  is-a:v_hier_noport
-            Module:v_hier_noport  File:verilog/v_hier_noport.v
+            Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v

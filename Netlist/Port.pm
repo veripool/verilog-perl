@@ -14,7 +14,7 @@ use strict;
 
 $VERSION = '3.200';
 
-structs('new',
+structs('_new_base',
 	'Verilog::Netlist::Port::Struct'
 	=>[name     	=> '$', #'	# Name of the port
 	   filename 	=> '$', #'	# Filename this came from
@@ -23,7 +23,7 @@ structs('new',
 	   attributes	=> '%', #'	# Misc attributes for systemperl or other processors
 	   #
 	   direction	=> '$', #'	# Direction (in/out/inout)
-	   type	 	=> '$', #'	# C++ Type (bool/int)
+	   data_type	=> '$', #'	# SystemVerilog Type (logic/integer etc)
 	   comment	=> '$', #'	# Comment provided by user
 	   array	=> '$', #'	# Vectorization
 	   module	=> '$', #'	# Module entity belongs to
@@ -32,6 +32,17 @@ structs('new',
 	   # below only after autos()
 	   sp_autocreated	=> '$', #'	# Created by /*AUTOINOUT*/
 	   ]);
+
+sub new {
+    my $class = shift;
+    my %params = (@_);
+    $params{data_type} = $params{type} if defined $params{type};  # Backward compatibility
+    if ($params{direction}) {  # Correct common mistakes; plus the parser itself needs this conversion
+	$params{direction} = 'in' if $params{direction} eq 'input';
+	$params{direction} = 'out' if $params{direction} eq 'output';
+    }
+    return $class->_new_base (%params);
+}
 
 sub delete {
     my $self = shift;
@@ -44,6 +55,12 @@ sub delete {
 
 sub netlist { return $_[0]->module->netlist; }
 
+sub type {  # Backward compatibility only
+    my $self=shift;
+    if ($#_ >= 0) { $self->data_type(@_); }
+    return ($self->data_type || ($self->net && $self->net->type))||'';
+}
+
 sub _link {
     my $self = shift;
     if (!$self->net) {
@@ -52,7 +69,8 @@ sub _link {
 	    $net = $self->module->new_net
 		(name=>$self->name,
 		 filename=>$self->filename, lineno=>$self->lineno,
-		 type=>$self->type, array=>$self->array,
+		 decl_type=>"port", net_type=>"wire",
+		 data_type=>$self->data_type, array=>$self->array,
 		 comment=>undef,
 		 );
 	    $net->attributes($self->attributes);  # Copy attributes across
@@ -79,7 +97,7 @@ sub dump {
     my $self = shift;
     my $indent = shift||0;
     print " "x$indent,"Port:",$self->name(),"  Dir:",$self->direction()
-	,"  Type:",$self->type(),"  Array:",$self->array()||"","\n";
+	,"  DataT:",$self->data_type(),"  Array:",$self->array()||"","\n";
 }
 
 ######################################################################
@@ -125,6 +143,10 @@ C<$module->find_net($port->name)->msb>.
 Returns any comments following the definition.  keep_comments=>1 must be
 passed to Verilog::Netlist::new for comments to be retained.
 
+=item $self->data_type
+
+The SystemVerilog data type of the port.
+
 =item $self->direction
 
 The direction of the port: "in", "out", or "inout".
@@ -144,7 +166,8 @@ after the netlist is linked.
 
 =item $self->type
 
-The C++ type of the port.
+Approximately an alias of data_type for backward compatibility.  Do not use
+for new applications.
 
 =back
 

@@ -98,7 +98,7 @@ sub type_match {
     # We could check for specific types being OK, but nearly everything,
     # reg/trireg/wire/wand etc/tri/ supply0|1 etc
     # is allowed to connect with everything else, and we're not a lint tool...
-    # So, not: return $self->net->type eq $self->port->type;
+    # So, not: return $self->net->data_type eq $self->port->data_type;
     return 1;
 }
 
@@ -111,10 +111,10 @@ sub lint {
         $self->error ($self,"Port not found in module ",$self->submod->name,": ",$self->portname,"\n");
     }
     if ($self->port && $self->net) {
-	my $nettype = $self->net->type;
-	my $porttype = $self->port->type;
 	if (!$self->type_match) {
-	    $self->error("Port pin type $porttype != Net type $nettype: "
+	    my $nettype = $self->net->data_type;
+	    my $porttype = $self->port->data_type;
+	    $self->error("Port pin data type '$porttype' != Net data type '$nettype': "
 			 ,$self->name,"\n");
 	}
 	my $netdir = "net";

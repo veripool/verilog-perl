@@ -29,10 +29,13 @@
 #include <iostream>
 using namespace std;
 #include "VFileLine.h"
+#include "VSymTable.h"
 
 class VParseLex;  // Be sure not to include it, or the Bison class will get upset
 class VParseGrammar;  // Be sure not to include it, or the Lex class will get upset
 class VParseBisonYYSType;
+
+struct av;
 
 //**********************************************************************
 // VParse
@@ -49,10 +52,17 @@ private:
     VParseLex*	m_lexp;		///< Current lexer state (NULL = closed)
     VParseGrammar* m_grammarp;	///< Current bison state (NULL = closed)
     bool	m_eof;		///< At end of file
+    bool	m_callbackEnable; ///< Callbacks are enabled
 
     bool	m_useUnreadback;///< Need m_unreadback tracking
     string	m_unreadback;	///< Otherwise unprocessed whitespace before current token
     deque<string> m_buffers;	///< Buffer of characters to process
+
+    int		m_anonNum;	///< Number of next anonymous object
+
+    VSymStack	m_syms;		///< Symbol stack
+
+    VAstEnt*	m_symTableNextId;	///< Symbol table for next lexer lookup
 
 public:  // But for internalish use only
     // METHODS
@@ -61,12 +71,42 @@ public:  // But for internalish use only
     bool inCellDefine() const;
     int inputToLex(char* buf, int max_size);
 
+    // Symbol table
+    VSymStack&	syms() { return m_syms; }
+    VAstEnt* symTableNextId() const { return m_symTableNextId; }
+    void symTableNextId(VAstEnt* entp) {
+	if (debug() && entp) cout <<"symTableNextId under "<<entp<<"-"<<entp->type().ascii()<<endl;
+	m_symTableNextId = entp;
+    }
+    void symReinsert(VAstType type, const string& name) {
+	return m_syms.reinsert(type,name);
+    }
+    string symObjofUpward() {
+	return m_syms.objofUpward();
+    }
+    void symPushNew(VAstType type, const string& name) {
+	m_syms.pushScope(m_syms.findNewTable(type,name));
+    }
+    void symPushNewAnon(VAstType type) {
+	string name = "__anon";
+	name += type.ascii() + cvtToStr(++m_anonNum);
+	symPushNew(type,name);
+    }
+    void symPopScope(VAstType type) {
+	if (m_syms.curType() != type) {
+	    string msg = (string)("Symbols suggest ending a '")+m_syms.curType().ascii()+"' but parser thinks ending a '"+type.ascii()+"'";
+	    this->error(msg);
+	    return;
+	}
+	m_syms.popScope(inFilelinep());
+    }
+
 private:
     void fakeBison();
 
 public:
     // CONSTRUCTORS
-    VParse(VFileLine* filelinep, bool sigParser, bool useUnreadbackFlag);
+    VParse(VFileLine* filelinep, av* symsp, bool sigParser, bool useUnreadbackFlag);
     virtual ~VParse();
 
     // ACCESSORS
@@ -77,6 +117,8 @@ public:
     void setEof();				///< Got a end of file
     bool sigParser() const { return m_sigParser; }
     void language(const char* valuep);
+    void callbackEnable(bool flag) { m_callbackEnable=flag; }
+    bool callbackEnable() const { return m_callbackEnable; }
 
     VFileLine* inFilelinep() const;		///< File/Line number for last callback
     void inFileline(const string& filename, int lineno) { m_inFilelinep = m_inFilelinep->create(filename, lineno); }
@@ -115,19 +157,22 @@ public:
     virtual void endinterfaceCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endmoduleCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endpackageCb(VFileLine* fl, const string& kwd) = 0;
+    virtual void endprogramCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endtaskfuncCb(VFileLine* fl, const string& kwd) = 0;
-    virtual void functionCb(VFileLine* fl, const string& kwd, const string& name, const string& type) = 0;
-    virtual void importCb(VFileLine* fl, const string& name) = 0;
+    virtual void functionCb(VFileLine* fl, const string& kwd, const string& name, const string& data_type) = 0;
+    virtual void importCb(VFileLine* fl, const string& package, const string& id) = 0;
     virtual void instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range) = 0;
     virtual void interfaceCb(VFileLine* fl, const string& kwd, const string& name) = 0;
     virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool, bool celldefine) = 0;
     virtual void packageCb(VFileLine* fl, const string& kwd, const string& name) = 0;
-    virtual void parampinCb(VFileLine* fl, const string& name, const string& conn, int number) = 0;
-    virtual void pinCb(VFileLine* fl, const string& name, const string& conn, int number) = 0;
-    virtual void portCb(VFileLine* fl, const string& name) = 0;
-    virtual void signalCb(VFileLine* fl, const string& kwd, const string& name, const string& vec, const string& mem
-	, const string& signd, const string& value, bool inFunc) = 0;
+    virtual void parampinCb(VFileLine* fl, const string& name, const string& conn, int index) = 0;
+    virtual void pinCb(VFileLine* fl, const string& name, const string& conn, int index) = 0;
+    virtual void portCb(VFileLine* fl, const string& name, const string& objof, const string& direction, const string& data_type
+	, const string& array, int index) = 0;
+    virtual void programCb(VFileLine* fl, const string& kwd, const string& name) = 0;
     virtual void taskCb(VFileLine* fl, const string& kwd, const string& name) = 0;
+    virtual void varCb(VFileLine* fl, const string& kwd, const string& name, const string& objof, const string& net
+	, const string& data_type, const string& array, const string& value) = 0;
     // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen
 
     // UTILITIES

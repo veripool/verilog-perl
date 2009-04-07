@@ -61,9 +61,12 @@ sub _link_guts {
     my $self = shift;
     if ($self->submodname()) {
 	my $name = $self->submodname();
-	my $sm = $self->netlist->find_module ($self->submodname());
+	my $sm = ($self->netlist->find_module ($self->submodname())
+		  || $self->netlist->find_interface ($self->submodname()));
 	if (!$sm) {
-	    $sm = $self->netlist->find_module ($self->netlist->remove_defines($self->submodname()));
+	    my $name2 = $self->netlist->remove_defines($self->submodname());
+	    $sm = ($self->netlist->find_module ($name2)
+		   || $self->netlist->find_module ($name2));
 	}
 	$self->submod($sm);
 	$sm->is_top(0) if $sm;
@@ -112,7 +115,7 @@ sub _link {
 sub lint {
     my $self = shift;
     if (!$self->submod() && !$self->gateprim && !$self->netlist->{link_read_nonfatal}) {
-        $self->error ($self,"Module reference not found: ",$self->submodname(),,"\n");
+        $self->error ($self,"Module/Program/Interface reference not found: ",$self->submodname(),,"\n");
     }
     if (!$self->netlist->{skip_pin_interconnect}) {
 	foreach my $pinref ($self->pins) {

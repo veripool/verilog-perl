@@ -260,7 +260,7 @@ escid	\\[^ \t\f\r\n]+
   "chandle"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCHANDLE; }
   "class"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCLASS; }
   "clocking"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCLOCKING; }
-  "const"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCONST; }
+  "const"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCONST__LEX; }
   "constraint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCONSTRAINT; }
   "context"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCONTEXT; }
   "continue"		{ FL; VALTEXT; CALLBACK(keywordCb); return yCONTINUE; }
@@ -302,7 +302,7 @@ escid	\\[^ \t\f\r\n]+
   "longint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yLONGINT; }
   "matches"		{ FL; VALTEXT; CALLBACK(keywordCb); return yMATCHES; }
   "modport"		{ FL; VALTEXT; CALLBACK(keywordCb); return yMODPORT; }
-  "new"			{ FL; VALTEXT; CALLBACK(keywordCb); return yNEW; }
+  "new"			{ FL; VALTEXT; CALLBACK(keywordCb); return yNEW__LEX; }
   "null"		{ FL; VALTEXT; CALLBACK(keywordCb); return yNULL; }
   "package"		{ FL; VALTEXT; CALLBACK(keywordCb); return yPACKAGE; }
   "packed"		{ FL; VALTEXT; CALLBACK(keywordCb); return yPACKED; }
@@ -322,7 +322,7 @@ escid	\\[^ \t\f\r\n]+
   "shortint"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySHORTINT; }
   "shortreal"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySHORTREAL; }
   "solve"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySOLVE; }
-  "static"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTATIC; }
+  "static"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTATIC__LEX; }
   "string"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTRING; }
   "struct"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySTRUCT; }
   "super"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySUPER; }
@@ -336,11 +336,11 @@ escid	\\[^ \t\f\r\n]+
   "union"		{ FL; VALTEXT; CALLBACK(keywordCb); return yUNION; }
   "unique"		{ FL; VALTEXT; CALLBACK(keywordCb); return yUNIQUE; }
   "var"			{ FL; VALTEXT; CALLBACK(keywordCb); return yVAR; }
-  "virtual"		{ FL; VALTEXT; CALLBACK(keywordCb); return yVIRTUAL; }
+  "virtual"		{ FL; VALTEXT; CALLBACK(keywordCb); return yVIRTUAL__LEX; }
   "void"		{ FL; VALTEXT; CALLBACK(keywordCb); return yVOID; }
   "wait_order"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWAIT_ORDER; }
   "wildcard"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWILDCARD; }
-  "with"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWITH; }
+  "with"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWITH__LEX; }
   "within"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWITHIN; }
 }
 
@@ -442,6 +442,10 @@ escid	\\[^ \t\f\r\n]+
   ":/"[^\/\*]		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_COLONDIV; }  /* : then comment is not ":/" */
   "|->"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ORMINUSGT; }
   "|=>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_OREQGT; }
+  /* Some simulators allow whitespace here. Grr */
+  "["{ws}*"*"		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_BRASTAR; }
+  "["{ws}*"="		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_BRAEQ; }
+  "["{ws}*"->"		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_BRAMINUSGT; }
 }
 
   /* Identifiers and numbers */
@@ -454,7 +458,7 @@ escid	\\[^ \t\f\r\n]+
 			      string sym = string(yytext,yyleng-1) + ' ';
 			      FL; CALLBACKS(symbolCb, sym); VALTEXTS(sym);
 			  }
-			  return yaID; }
+			  return yaID__LEX; }
   {escid}		{ if (VParseLex::symEscapeless(yytext+1,yyleng-1)) {
 			      string sym = string(yytext+1,yyleng-1);
 			      FL; CALLBACKS(symbolCb, sym); VALTEXTS(sym);
@@ -462,8 +466,8 @@ escid	\\[^ \t\f\r\n]+
 			      string sym = string(yytext,yyleng) + ' ';
 			      FL; CALLBACKS(symbolCb, sym); VALTEXTS(sym);
 			  }
-			  return yaID; }
-  {id}			{ FL; VALTEXT; CALLBACK(symbolCb); return yaID; }
+			  return yaID__LEX; }
+  {id}			{ FL; VALTEXT; CALLBACK(symbolCb); return yaID__LEX; }
   \"[^\"\\]*\"		{ FL; VALTEXT; CALLBACK(stringCb); return yaSTRING;
 			}
   \" 			{ yy_push_state(STRING); yymore(); }
@@ -617,22 +621,57 @@ void VParseLex::unused() {
 int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
     // Fetch next token from prefetch or real lexer
     s_currentLexp = this;
+    int token;
     if (m_ahead) {
-	// We prefetched a extra token, give it back
+	// We prefetched an extra token, give it back
 	m_ahead = false;
+	token = m_aheadToken;
 	*yylvalp = m_aheadVal;
-	return m_aheadToken;
+    } else {
+	// Parse new token
+	s_yylvalp = yylvalp;  // Read by yylex()
+	token = yylex();
     }
-    // Parse new token
-    s_yylvalp = yylvalp;
-    int token = yylex();
+    // If an id, change the type based on symbol table
+    s_yylvalp->entp = NULL;
+    if (token == yaID__LEX) {
+	VAstEnt* entp;
+	if (VAstEnt* look_underp = LPARSEP->symTableNextId()) {
+	    if (yy_flex_debug) { cout<<"   lexToken: next id lookup forced under "<<look_underp
+				     <<" for \""<<s_yylvalp->str<<"\""<<endl; }
+	    entp = look_underp->findSym(s_yylvalp->str.c_str());
+	    // "consume" it.  Must set again if want another token under temp scope
+	    LPARSEP->symTableNextId(NULL);
+	} else {
+	    entp = LPARSEP->syms().findEntUpward(s_yylvalp->str);
+	}
+	if (entp) {
+	    s_yylvalp->entp = entp;
+	    switch (entp->type()) {
+	    case VAstType::CLASS:	token = yaID__aCLASS;	    break;
+	    case VAstType::PACKAGE:	token = yaID__aPACKAGE;	    break;
+	    case VAstType::COVERGROUP:	token = yaID__aCOVERGROUP;  break;
+	    case VAstType::TYPE:	token = yaID__aTYPE;	    break;
+	    default:			token = yaID__ETC;	    break;
+	    }
+	} else {  // Not found
+	    token = yaID__ETC;
+	}
+    }
     // If a paren, read another
-    if (token == '('
-	|| token == yVIRTUAL) {
+    else if (token == '('
+	|| token == yCONST__LEX
+	|| token == yNEW__LEX
+	|| token == ySTATIC__LEX
+	|| token == yVIRTUAL__LEX
+	|| token == yWITH__LEX
+	// Never put yID_* here; above symbol table resolution would break
+	) {
 #ifdef FLEX_DEBUG
 	if (yy_flex_debug) { cout<<"   lexToken: reading ahead to find possible strength"<<endl; }
 #endif
-	s_yylvalp = &m_aheadVal;
+	s_yylvalp = &m_aheadVal;  // Read by yylex
+	s_yylvalp->entp = NULL;
 	int nexttok = yylex();
 	m_ahead = true;
 	m_aheadToken = nexttok;
@@ -642,8 +681,29 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 			     || nexttok == ySUPPLY1)) {
 	    token = yP_PAR__STRENGTH;
 	}
-	else if (token == yVIRTUAL && (nexttok == yCLASS)) {
-	    token = yVIRTUAL__CLASS;
+	else if (token == yCONST__LEX) {
+	    if (nexttok == yREF) token = yCONST__REF;
+	    else if (nexttok == yLOCAL || nexttok == yPROTECTED) token = yCONST__LOCAL;
+	    else token = yCONST__ETC;
+	}
+	else if (token == yNEW__LEX) {
+	    if (nexttok == '(') token = yNEW__PAREN;
+	    else token = yNEW__ETC;
+	}
+	else if (token == ySTATIC__LEX) {
+	    if (nexttok == yCONSTRAINT) token = ySTATIC__CONSTRAINT;
+	    else if (nexttok == yFUNCTION || nexttok == yTASK) token = ySTATIC__TF;
+	    else token = ySTATIC__ETC;
+	}
+	else if (token == yVIRTUAL__LEX) {
+	    if (nexttok == yCLASS) token = yVIRTUAL__CLASS;
+	    else if (nexttok == yFUNCTION || nexttok == yTASK) token = yVIRTUAL__TF;
+	    else token = yVIRTUAL__ETC;
+	}
+	else if (token == yWITH__LEX) {
+	    if (nexttok == '(') token = yWITH__PAREN;
+	    else if (nexttok == '[') token = yWITH__BRA;
+	    else token = yWITH__ETC;
 	}
 	// If add to above "else if", also add to "if (token" further above
     }

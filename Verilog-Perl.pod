@@ -198,20 +198,28 @@ Verilog::Parser is useful when you need to tokenize or write source filters
 (where you need everything including whitespace).  It can take raw files,
 or preprocessed input.  It understands all SystemVerilog 2005 keywords.
 
+=item Abstract Syntax Tree
+
+Verilog::Parser knows enough to make a complete Abstract Syntax Tree (AST)
+of Verilog syntax, however this hasn't been implemented yet.  This would
+allow any arbitrary transformation of Verilog syntax (everthing is known
+excluding whitespace).  If you'd find this useful please contact the
+author.
+
 =item Verilog::SigParser
 
 Verilog::SigParser is useful when you need a list of modules, signals,
-ports, functions, etc.  It requires a preprocessed file, and can parse most
-Verilog 2005 files, but only provides callbacks on certain interesting
-things.  It does not have SystemVerilog support yet; try contacting the
-author with your requirements.
+ports, functions, etc.  It requires a preprocessed file, and can parse all
+SystemVerilog 2005 files, but only provides callbacks on certain
+interesting things.
 
 =item Verilog::Netlist
 
 Verilog::Netlist is useful for when you need the hierarchy, and a list of
 signals per module, pins per cell, etc.  It builds upon the output of
-Verilog::SigParser, so requires preprocessed files.  It does not have
-SystemVerilog support yet.
+Verilog::SigParser, so requires preprocessed files.  It parses all
+SystemVerilog 2005 files, but not all SystemVerilog constructs are loaded
+into objects.
 
 This is probably the most popular choice.
 
@@ -275,6 +283,7 @@ L<Verilog::SigParser>
 
 L<Verilog::Netlist::Cell>,
 L<Verilog::Netlist::File>,
+L<Verilog::Netlist::Interface>,
 L<Verilog::Netlist::Module>,
 L<Verilog::Netlist::Net>,
 L<Verilog::Netlist::Pin>,

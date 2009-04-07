@@ -7,6 +7,7 @@
 
 use strict;
 use Test;
+use Data::Dumper; $Data::Dumper::Indent = 1;
 
 BEGIN { plan tests => 4 }
 BEGIN { require "t/test_utils.pl"; }
@@ -100,4 +101,6 @@ sub read_test {
     # Preprocess
     $pp->open($filename);
     $parser->parse_preproc_file($pp);
+
+    print Dumper($parser->{symbol_table}) if ($parser->debug());
 }

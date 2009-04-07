@@ -54,10 +54,15 @@ VPATH += . $(PPSRC)
 config ::
 	$(PERL) callbackgen
 
-VParseLex.o:		VParseLex.cpp     VParseLex.h VParseGrammar.h VParse.h VFileLine.h VParseBison.h
-VParseGrammar.o:	VParseGrammar.cpp VParseLex.h VParseGrammar.h VParse.h VFileLine.h VParseBison.h
-VParse.o:		VParse.cpp        VParseLex.h VParseGrammar.h VParse.h VFileLine.h VParseBison.h
-VFileLine.o:	        VFileLine.cpp     VFileLine.h
+VHEADERS = VParseLex.h VParseGrammar.h VParse.h VFileLine.h VParseBison.h VSymTable.h VAst.h
+
+VParseLex.o:		VParseLex.cpp     $(VHEADERS)
+VParseGrammar.o:	VParseGrammar.cpp $(VHEADERS)
+VParseBison.o:		VParseBison.cpp   $(VHEADERS)
+VParse.o:		VParse.cpp        $(VHEADERS)
+VFileLine.o:	        VFileLine.cpp     $(VHEADERS)
+VAst.o:		        VAst.cpp	  $(VHEADERS)
+VSymTable.o:	        VSymTable.cpp     $(VHEADERS)
 
 VFileLine.o: $(PPSRC)/VFileLine.cpp
 	$(CCCMD) $(CCCDLFLAGS) "-I$(PERL_INC)" $(PASTHRU_DEFINE) $(DEFINE) $<
@@ -95,6 +100,6 @@ WriteMakefile(
 	      VERSION_FROM  => 'Parser.pm',
 	      XSOPT => '-C++',
 	      CCFLAGS	=> $ccflags,
-	      OBJECT   => 'VFileLine.o VParseLex.o VParse.o VParseBison.o',
+	      OBJECT   => 'VFileLine.o VParseLex.o VParse.o VParseBison.o VSymTable.o VAst.o ',
 	      MYEXTLIB => 'Parser_cleaned.o',
 	      );

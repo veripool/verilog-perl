@@ -24,6 +24,7 @@
 #define _VFILELINE_H_ 1
 #include <string>
 #include <iostream>
+#include <sstream>
 using namespace std;
 
 //============================================================================
@@ -71,5 +72,9 @@ ostream& operator<<(ostream& os, VFileLine* fileline);
 
 /// Use this instead of fatal() to mention the source code line.
 #define fatalSrc(msg) fatal((string)"Internal Error: "+__FILE__+":"+VFileLine::itoa(__LINE__)+": "+(msg))
+
+template< class T> std::string cvtToStr (const T& t) {
+    ostringstream os; os<<t; return os.str();
+}
 
 #endif // Guard
