@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.200
+* Verilog::Language 3.200 [Beta, not released]
 
 **	This package is now licensed under LGPL v3 and/or Artistic v2.0.
 
@@ -27,6 +27,8 @@ indicates the contributor was also the author of the fix; Thanks!
 ***	Added Verilog::Netlist::Interface and related accessors.
 
 ***	Added Netlist::Module->keyword accessor, and use it for "program"s.
+
+****	Fix const compile warning in VPreproc.cpp. [Chitlesh Goorah]
 
 * Verilog::Language 3.121 2009/4/5
 

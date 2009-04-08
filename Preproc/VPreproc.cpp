@@ -813,7 +813,7 @@ string VPreprocImp::getline() {
     // Get a single line from the parse stream.  Buffer unreturned text until the newline.
     if (isEof()) return "";
     while (1) {
-	char* rtnp;
+	const char* rtnp;
 	bool gotEof = false;
 	while (NULL==(rtnp=strchr(m_lineChars.c_str(),'\n')) && !gotEof) {
 	    int tok = getToken();
