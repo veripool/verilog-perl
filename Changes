@@ -28,6 +28,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Added Netlist::Module->keyword accessor, and use it for "program"s.
 
+****	Fix parallel make rule build error.  [Chitlesh Goorah]
+
 ****	Fix const compile warning in VPreproc.cpp. [Chitlesh Goorah]
 
 * Verilog::Language 3.121 2009/4/5

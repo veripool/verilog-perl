@@ -50,11 +50,8 @@ LEXFLAGS += -d
 
 VPATH += . $(PPSRC)
 
-# Prep work
-config ::
-	$(PERL) callbackgen
-
-VHEADERS = VParseLex.h VParseGrammar.h VParse.h VFileLine.h VParseBison.h VSymTable.h VAst.h
+VHEADERS = VParseLex.h VParseGrammar.h VParse.h VFileLine.h VParseBison.h \
+	VSymTable.h VAst.h Parser_callbackgen.cpp
 
 VParseLex.o:		VParseLex.cpp     $(VHEADERS)
 VParseGrammar.o:	VParseGrammar.cpp $(VHEADERS)
@@ -82,12 +79,16 @@ VParseBison.cpp:	VParseBison.y bisonpre
 	$(PERL) bisonpre --yacc ${YACC} --debug --verbose --d -k VParseBison.y -o VParseBison.c
 	mv VParseBison.c VParseBison.cpp
 
-Parser_cleaned.c: Parser.c
+Parser_callbackgen.cpp: callbackgen
+	$(PERL) callbackgen
+
+Parser_cleaned.c: Parser.c $(VHEADERS)
 	$(PERL) $(XSUBPPFIX) < Parser.c > Parser_cleaned.c
 
 clean::
 	-$(RM_RF) test *.d *.o *.output *.pre.* *_pretmp.*
 	-$(RM_RF) VParseLex*.cpp VParseBison.h VParseBison.cpp Parser_cleaned.c
+	-$(RM_RF) Parser_callbackgen.cpp
 ';
     return $out;
 }

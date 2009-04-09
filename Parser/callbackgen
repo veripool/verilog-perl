@@ -142,7 +142,8 @@ sub filter {
     }
     @lines = @out;
 
-    if (join('',@lines) ne join('',@orig)) {
+    if (join('',@lines) ne join('',@orig)
+	|| $make_xs) {  # Generated file, so touch to apppease make
 	print "callbackgen edited $filename\n";
 	$fh = IO::File->new(">$filename") or die "%Error: $! writing $filename\n";
 	$fh->write(join('',@lines));
