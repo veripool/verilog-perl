@@ -55,6 +55,7 @@ VPreproc.o:	VPreprocLex.h VPreproc.h VFileLine.h
 VFileLine.o:	                         VFileLine.h
 
 VPreprocLex_pretmp.cpp: VPreprocLex.l
+	$(LEX) --version
 	$(LEX) $(LEXFLAGS) -o$@ $<
 
 VPreprocLex.cpp: $(FLEXFIX) VPreprocLex_pretmp.cpp

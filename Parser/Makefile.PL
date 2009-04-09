@@ -68,6 +68,7 @@ VFileLine.o: $(PPSRC)/VFileLine.cpp
 	$(CCCMD) $(CCCDLFLAGS) "-I$(PERL_INC)" $(PASTHRU_DEFINE) $(DEFINE) $<
 
 VParseLex_pretmp.cpp: VParseLex.l
+	$(LEX) --version
 	$(LEX) $(LEXFLAGS) -o$@ $<
 
 VParseLex.cpp: $(FLEXFIX) VParseLex_pretmp.cpp
