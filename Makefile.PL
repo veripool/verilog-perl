@@ -97,6 +97,6 @@ WriteMakefile(
 
 my $mkv = `make --version`;
 if ($? || $mkv !~ /GNU Make/i) {
-    warn "-Important: Now type 'gmake' as this package requires GNU Make\n";
+    warn "-Important: Now type 'gmake MAKE=gmake' as this package requires GNU Make\n";
 }
 1;
