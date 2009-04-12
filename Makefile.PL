@@ -86,7 +86,7 @@ WriteMakefile(
 			    #'Test::Pod' => 1,  # Required only for author tests
 			    #'Test::Perl::Critic' => 1,  # Required only for author tests
 			},
-	      PMLIBDIRS => ['lib', 'Verilog', 'Netlist',],
+	      PMLIBDIRS => ['lib', 'Parser', 'Preproc', 'Netlist',],
 	      EXE_FILES => [qw( vrename vpassert vppreproc vhier vsplitmodule )],
 	      'clean'	=> {FILES => qw (test_dir signals.vrename .vpassert simv ),},
 	      'dist'    => {COMPRESS => 'gzip -9f',
