@@ -198,3 +198,8 @@ class this_dot_tests;
       this.super.foo = this.bar;
    endtask
 endclass
+
+module sized_out
+  #( parameter SZ = 4 )
+   ( output logic [SZ-1:0] o_sized );
+endmodule

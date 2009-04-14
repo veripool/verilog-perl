@@ -197,10 +197,10 @@ sub var {
 
     my $msb;
     my $lsb;
-    if ($data_type && $data_type =~ /^(signed *)?\[(.*):(.*)\]/) {
-	$msb = $2; $lsb = $3;
-    } elsif ($data_type && $data_type =~ /^(signed *)?\[(.*)\]/) {
-	$msb = $lsb = $2;
+    if ($data_type && $data_type =~ /\[(.*):(.*)\]/) {
+	$msb = $1; $lsb = $2;
+    } elsif ($data_type && $data_type =~ /\[(.*)\]/) {
+	$msb = $lsb = $1;
     }
 
     my $modref = $self->{modref};

@@ -34,6 +34,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix const compile warning in VPreproc.cpp. [Chitlesh Goorah]
 
+****	Fix logic MSBs not being reported in 3.200 beta.  [Tom Horia]
+
 * Verilog::Language 3.121 2009/4/5
 
 ****	Make cell names unique when duplicate cells encountered. [Paul Janson]

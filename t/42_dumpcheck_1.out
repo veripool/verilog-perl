@@ -13,7 +13,7 @@ Module:v_comments  Kwd:module  File:verilog/v_comments.v
   Net:d1  I  DeclT:port  NetT:  DataT:[32:0]  Array:  32:0
   Net:d2  I  DeclT:port  NetT:  DataT:[(MATH-1):0]  Array:  (MATH-1):0
   Net:d3  I  DeclT:port  NetT:  DataT:[32-1:0]  Array:  32-1:0
-  Net:e    DeclT:var  NetT:  DataT:reg [11:0]  Array:
+  Net:e    DeclT:var  NetT:  DataT:reg [11:0]  Array:  11:0
 Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
   Net:internal    DeclT:var  NetT:  DataT:reg  Array:
 Module:v_hier_sub  Kwd:module  File:verilog/v_hier_sub.v
