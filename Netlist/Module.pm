@@ -123,7 +123,8 @@ sub ports_sorted {
     return (sort {$a->name() cmp $b->name()} (values %{$_[0]->_ports}));
 }
 sub ports_ordered {
-    return ( @{$_[0]->_portsordered});
+    my $self = shift;
+    return map {$self->_ports->{$_}} @{$self->_portsordered};
 }
 sub cells {
     return (values %{$_[0]->_cells});
@@ -322,7 +323,9 @@ passed to Verilog::Netlist::new for comments to be retained.
 
 =item $self->find_port_by_index
 
-Returns the port name associated with the given index.
+Returns the port name associated with the given index.  Indexes start at 1
+(pin numbers are traditionally counted from pin 1..pin N, not starting at
+zero.  This was probably an unfortunate choice, sorry.)
 
 =item $self->is_top
 
@@ -362,13 +365,13 @@ Returns list of references to Verilog::Netlist::Port in the module.
 
 =item $self->ports_ordered
 
-Returns list of textual port names in the order the ports were declared in
-the module's port list.  For references to the ports in the same order, use
-find_port_by_index.
+Returns list of references to Verilog::Netlist::Port in the module sorted
+by pin number.
 
 =item $self->ports_sorted
 
-Returns list of name sorted references to Verilog::Netlist::Port in the module.
+Returns list of references to Verilog::Netlist::Port in the module sorted
+by name.
 
 =back
 

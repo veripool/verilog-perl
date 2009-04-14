@@ -8,7 +8,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 19 }
+BEGIN { plan tests => 21 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::Netlist::Debug = 1;
@@ -62,7 +62,19 @@ ok ($mods[4], 'v_hier_top');
     ok (_width_of($mod,"WC_pint"), 32);
 }
 
+# Port accessors
+{
+    my $mod = $nl->find_module("v_hier_sub");
+
+    my @o = $mod->ports_sorted;
+    ok ($#o == 2 && $o[0]->name eq 'avec');
+
+    @o = $mod->ports_ordered;
+    ok ($#o == 2 && $o[0]->name eq 'clk');
+}
+
 ok(1);
+
 
 sub _width_of {
     my $mod = shift;

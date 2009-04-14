@@ -19,12 +19,14 @@ indicates the contributor was also the author of the fix; Thanks!
 ***	Calling Verilog::SigParser->new now requires a symbol_table parameter,
 	if multiple modules are to be parsed as part of one compilation unit.
 
-***	Verilog::Netlist::Port->type accessor is renamed data_type.
+***	Netlist::Port->type accessor is renamed data_type. [Toma Horia]
 
-***	Verilog::Netlist::Net->type accessor is split into data_type,
+***	Netlist::Net->type accessor is split into data_type,
 	decl_type and net_type accessors.
 
-***	Added Verilog::Netlist::Interface and related accessors.
+***	Netlist::Module->ports_ordered now returns objects. []
+
+***	Added Netlist::Interface and related accessors.
 
 ***	Added Netlist::Module->keyword accessor, and use it for "program"s.
 
@@ -34,7 +36,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix const compile warning in VPreproc.cpp. [Chitlesh Goorah]
 
-****	Fix logic MSBs not being reported in 3.200 beta.  [Tom Horia]
+****	Fix logic MSBs not being reported in 3.200 beta.  [Horia Toma]
 
 * Verilog::Language 3.121 2009/4/5
 
