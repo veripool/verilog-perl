@@ -5,6 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.200 [Beta, not released]
 
+**	This is a major release that may break scripts that worked with
+	earlier versions.
+
 **	This package is now licensed under LGPL v3 and/or Artistic v2.0.
 
 **	Verilog::Parser, SigParser and Netlist now support SystemVerilog.
