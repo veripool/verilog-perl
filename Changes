@@ -3,16 +3,15 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.200 [Beta, not released]
+* Verilog::Language 3.200 2009/4/15
 
-**	This is a major release that may break scripts that worked with
-	earlier versions.
+**	This is a major release that may break some scripts that worked with
+	earlier versions.  Some scripts may need modification to work with
+ 	this version of Verilog-Perl.
 
 **	This package is now licensed under LGPL v3 and/or Artistic v2.0.
 
 **	Verilog::Parser, SigParser and Netlist now support SystemVerilog.
-	An attempt was made to support existing user scripts, but some may
-	need modification to work with this version of Verilog-Perl.
 
 ***	Verilog::SigParser's signal_decl and funcsignal callbacks no longer
 	work.  They are replaced by the "var" callback.
@@ -22,12 +21,12 @@ indicates the contributor was also the author of the fix; Thanks!
 ***	Calling Verilog::SigParser->new now requires a symbol_table parameter,
 	if multiple modules are to be parsed as part of one compilation unit.
 
-***	Netlist::Port->type accessor is renamed data_type. [Toma Horia]
+***	Netlist::Port->type accessor is renamed data_type. [Horia Toma]
 
 ***	Netlist::Net->type accessor is split into data_type,
 	decl_type and net_type accessors.
 
-***	Netlist::Module->ports_ordered now returns objects. []
+***	Netlist::Module->ports_ordered now returns objects. [Horia Toma]
 
 ***	Added Netlist::Interface and related accessors.
 
