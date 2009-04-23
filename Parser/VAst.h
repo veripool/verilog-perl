@@ -25,6 +25,8 @@
 #define _VAST_H_ 1
 
 #include <string>
+#include <cstdlib>
+#include <cassert>
 using namespace std;
 
 // We don't include perl.h as it gets upset when merged with bison
@@ -100,8 +102,8 @@ public:
 private:
 
     // CREATORS
-    VAstEnt() { abort(); }	// Not made by users, it's an AV*
-    ~VAstEnt() { abort(); }	// Not made by users, it's an AV*
+    VAstEnt() { assert(0); }	// Not made by users, it's an AV*
+    ~VAstEnt() { assert(0); }	// Not made by users, it's an AV*
 
     static av* newAVEnt (VAstType type);
     static void initAVEnt (struct av* avp, VAstType type);

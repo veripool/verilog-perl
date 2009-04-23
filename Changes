@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.2**
+
+****	Fix "abort" compile error.  [Jayanand AK]
+
 * Verilog::Language 3.200 2009/4/15
 
 **	This is a major release that may break some scripts that worked with
