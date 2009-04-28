@@ -16,7 +16,7 @@ use Verilog::Getopt;
 use strict;
 use vars qw ($Debug $VERSION);
 
-$VERSION = '3.200';
+$VERSION = '3.201';
 
 ######################################################################
 # main
