@@ -353,3 +353,18 @@ module var_only_in_block;
       integer only_a_var_in_blk;
    end
 endmodule
+
+module v2k_vec_no_vec
+  ( input [2:0] VEC,
+    VEC2,  		// No direction, no port, no data type; inherits
+    input NOVEC,	// No direction, no data type; use `default_nettype
+    input ARY [1:0],
+    NOARY2,		// Array doesn't inherit
+    logic STILL_IN,	// No direction, data type; inherits direction
+    input logic TYPED	// Logic type
+    );
+   task t (input [2:0] FVEC, FVEC2,
+	   input NOVEC);
+      begin end
+   endtask
+endmodule

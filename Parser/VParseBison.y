@@ -723,8 +723,10 @@ port:				// ==IEEE: port
 
 portDirNetE:			// IEEE: part of port, optional net type and/or direction
 		/* empty */				{ }
-	|	port_direction				{ }
-	|	port_direction net_type			{ } // net_type calls VARNET
+	//			// Per spec, if direction given default the nettype.
+	//			// The higher level rule may override this VARTYPE with one later in the parse.
+	|	port_direction				{ VARTYPE(""/*default_nettype*/); }
+	|	port_direction net_type			{ VARTYPE(""/*default_nettype*/); } // net_type calls VARNET
 	|	net_type				{ } // net_type calls VARNET
 	;
 
@@ -1027,7 +1029,7 @@ port_declaration:		// ==IEEE: port_declaration
 	|	port_directionDecl port_declNetE yVAR implicit_type { VARTYPE($4); } list_of_variable_decl_assignments	{ }
 	|	port_directionDecl port_declNetE signingE rangeList { VARTYPE(SPACED($3,$4)); } list_of_variable_decl_assignments	{ }
 	|	port_directionDecl port_declNetE signing	    { VARTYPE($3); } list_of_variable_decl_assignments	{ }
-	|	port_directionDecl port_declNetE /*implicit*/       {/*VARTYPE-same*/} list_of_variable_decl_assignments	{ }
+	|	port_directionDecl port_declNetE /*implicit*/       { VARTYPE("");/*default_nettype*/} list_of_variable_decl_assignments	{ }
 	;
 
 tf_port_declaration:		// ==IEEE: tf_port_declaration
@@ -2318,7 +2320,7 @@ tf_port_itemFront:		// IEEE: part of tf_port_item, which has the data type
 	|	yVAR data_type				{ VARTYPE($2); }
 	|	yVAR implicit_type			{ VARTYPE($2); }
 	//
-	|	tf_port_itemDir /*implicit*/		{ /*same type as last-see spec*/ }
+	|	tf_port_itemDir /*implicit*/		{ VARTYPE(""); /*default_nettype-see spec*/ }
 	|	tf_port_itemDir data_type		{ VARTYPE($2); }
 	|	tf_port_itemDir signingE rangeList	{ VARTYPE(SPACED($2,$3)); }
 	|	tf_port_itemDir signing			{ VARTYPE($2); }
