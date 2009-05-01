@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.2***
+* Verilog::Language 3.202 2009/5/1
 
 ****	Fix 3.200 mis-inheriting V2K port types.  [Derek Johnstone]
 
