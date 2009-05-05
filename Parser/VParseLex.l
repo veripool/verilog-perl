@@ -3,7 +3,7 @@
 %option noc++
 %option prefix="VParseLex"
 %{
-/******************************************************************************
+/**************************************************************************
  * DESCRIPTION: Verilog Parser Lexer
  *
  * This file is part of Verilog-Perl.
@@ -12,21 +12,22 @@
  *
  * Code available from: http://www.veripool.org/systemperl
  *
- ******************************************************************************
+ **************************************************************************
  *
  * Copyright 2000-2009 by Wilson Snyder.  This program is free software;
- * you can redistribute it and/or modify it under the terms of either the GNU
- * Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
+ * you can redistribute it and/or modify it under the terms of either the
+ * GNU Lesser General Public License Version 3 or the Perl Artistic License
+ * Version 2.0.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- *****************************************************************************
+ **************************************************************************
  * Do not use Flex in C++ mode.  It has bugs with yyunput() which result in
  * lost characters.
- *****************************************************************************/
+ *************************************************************************/
 
 #include "VParseLex.h"
 #include <cstdio>
@@ -81,7 +82,8 @@ void yyerrorf(const char* format, ...) {
 %}
 
 %s V95 V01 V05 S05
-%s STRING CMTMODE PROTMODE ATTRMODE
+%s STRING ATTRMODE
+%s CMTMODE PROTMODE
 
 space	[ ]
 ws	[ \t\f\r]+
@@ -97,7 +99,7 @@ escid	\\[^ \t\f\r\n]+
   /* Verilog 1995 */
 <V95,V01,V05,S05>{
   {ws}			{ StashPrefix; }	/* otherwise ignore white-space */
-  \n			{ StashPrefix; NEXTLINE();}		/* Count line numbers */
+  \n			{ StashPrefix; NEXTLINE(); }		/* Count line numbers */
   /*     Keywords */
   "always"		{ FL; VALTEXT; CALLBACK(keywordCb); return yALWAYS; }
   "and"			{ FL; VALTEXT; CALLBACK(keywordCb); return yAND; }
@@ -350,7 +352,12 @@ escid	\\[^ \t\f\r\n]+
 }
 
   /************************************************************************/
+
   /* Single character operator thingies */
+<V95,V01,V05,S05>{
+  "{"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
+  "}"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
+}
 <V95,V01,V05,S05>{
   "!"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
   "#"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
@@ -375,14 +382,14 @@ escid	\\[^ \t\f\r\n]+
   "["			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
   "]"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
   "^"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
-  "{"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
   "|"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
-  "}"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
   "~"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
 }
 
   /************************************************************************/
   /* Operators and multi-character symbols */
+
+  /* Verilog 1995 Operators */
 <V95,V01,V05,S05>{
   "&&"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ANDAND; }
   "||"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_OROR; }
@@ -488,7 +495,8 @@ escid	\\[^ \t\f\r\n]+
   [0-9][_0-9]*[ \t]*['']s	{
 			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
 			}
-  [0-9][_0-9]*		{ FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
+  [0-9][_0-9]*		{
+			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
 			}
   [0-9][_0-9]*(\.[_0-9]+)([eE][-+]?[_0-9]+)? {
                           FL; VALTEXT; CALLBACK(numberCb); return yaFLOATNUM;
@@ -592,7 +600,7 @@ escid	\\[^ \t\f\r\n]+
   "`"[a-zA-Z_0-9]+	{ FL; VALTEXT;
 			  if (LPARSEP->sigParser()) { yyerrorf("Define or directive not defined: %s",yytext); }
 			  else { CALLBACK(preprocCb); } }
-  "//"[^\n]*		{ FL; VALTEXT; CALLBACK(commentCb); }
+  "//"[^\n]*		{ FL; VALTEXT; CALLBACK(commentCb); }  /* throw away single line comments */
   "/*"		       	{ yy_push_state(CMTMODE); yymore(); }
   .			{ FL; VALTEXT; CALLBACK(operatorCb); return ygenOPERATOR; } /* return single char ops. */
 }

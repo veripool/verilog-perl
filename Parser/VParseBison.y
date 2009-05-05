@@ -1,5 +1,5 @@
 // -*- C++ -*-
-//*****************************************************************************
+//*************************************************************************
 // DESCRIPTION: SystemC bison parser
 //
 // This file is part of SystemC-Perl.
@@ -8,7 +8,7 @@
 //
 // Code available from: http://www.veripool.org/systemperl
 //
-//*****************************************************************************
+//*************************************************************************
 //
 // Copyright 2001-2009 by Wilson Snyder.  This program is free software;
 // you can redistribute it and/or modify it under the terms of either the GNU
@@ -19,7 +19,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-//****************************************************************************/
+//*************************************************************************
 
 %{
 
@@ -1076,7 +1076,7 @@ signing<str>:			// ==IEEE: signing
 	;
 
 //************************************************
-// Enums
+// Data Types
 
 casting_type<str>:		// IEEE: casting_type
 	//			// IEEE: signing
@@ -1561,9 +1561,13 @@ delay_value:			// ==IEEE:delay_value
 	|	yaTIMENUM 				{ }
 	;
 
+delayExpr:
+		expr					{ }
+	;
+
 minTypMax:			// IEEE: mintypmax_expression and constant_mintypmax_expression
-		expr 					{ }
-	|	expr ':' expr ':' expr			{ }
+		delayExpr				{ }
+	|	delayExpr ':' delayExpr ':' delayExpr	{ }
 	;
 
 netSigList:			// IEEE: list_of_port_identifiers
@@ -1919,7 +1923,7 @@ statement_item:			// IEEE: statement_item
 	//			// IEEE: randcase_statement
 	|	yRANDCASE case_itemList yENDCASE	{ }
 	//
-	|	expect_property_statement
+	|	expect_property_statement		{ }
 	//
 	|	error ';'				{ }
 	;
@@ -2123,7 +2127,8 @@ for_initializationItem:		// IEEE: variable_assignment + for_variable_declaration
 	;
 
 for_stepE:			// IEEE: for_step + empty
-		for_step				{ }
+		/* empty */				{ }
+	|	for_step				{ }
 	;
 
 for_step:			// IEEE: for_step + empty
