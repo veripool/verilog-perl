@@ -40,6 +40,7 @@ if (! GetOptions (
 	  "d"			=> \$Opt_Definitions,
 	  "k|token-table"	=> \$Opt_Token_Table,
 	  "o=s"			=> \$Opt_Output,
+	  "p|name-prefix=s"	=> \$Opt_Name_Prefix,
 	  "v|verbose"		=> \$Opt_Verbose,
 	  "<>"			=> \&parameter,
     )) {
@@ -84,7 +85,8 @@ sub process {
 		   .($Opt_Token_Table?" -k":"")
 		   .($Opt_Verbose?" -v":"")
 		   .(($Opt_Verbose && $supports_report)?" --report=itemset --report=lookahead":"")
-		   ." -p ".tmp_prefix()		# Unfortunately newer bisons/GLR write to -p basename, not -o
+		   # -p required for GLR parsers; they write to -p basename, not -o
+		   .($Opt_Name_Prefix?" -p $Opt_Name_Prefix":"")
 		   ." -b ".tmp_prefix()
 		   ." -o ".tmp_prefix().".c"
 		   ." ".tmp_prefix().".y" );
@@ -219,13 +221,18 @@ sub clean_input {
     my %rules;  $Self->{rules} = \%rules;
     my %tokens;
     my $last_rule;
+    my $section = 1;
     {
 	my @linesin = @lines;  @lines=();  my $l=0;
 	foreach my $line (@linesin) {
 	    $l++;
 	    #  ^/ to prevent comments from matching
 	    $line =~ m!^[a-zA-Z0-9_<>]+:[^/]*[a-zA-Z]! and die "%Error: $filename:$l: Move text on rule line to next line: $line\n";
-	    if ($line =~ s/^([a-zA-Z0-9_]+)<(\S+)>:/$1:/) {
+	    if ($line =~ /^%%/) {
+		$section++;
+		if ($section==2) { $last_rule = undef; }
+	    }
+	    elsif ($line =~ s/^([a-zA-Z0-9_]+)<(\S+)>:/$1:/) {
 		!$rules{$1}{name} or die "%Error: $filename:$l: Redeclaring '$1': $line\n";
 		$types{$2}{$1} = 1;
 		$rules{$1}{name} = $1;
