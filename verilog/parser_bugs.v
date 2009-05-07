@@ -368,3 +368,7 @@ module v2k_vec_no_vec
       begin end
    endtask
 endmodule
+
+module bugfor;
+   initial for (a=0;a;) begin end
+endmodule
