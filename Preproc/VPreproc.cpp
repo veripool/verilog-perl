@@ -82,12 +82,14 @@ struct VPreprocImp : public VPreprocOpaque {
     VPreprocLex* m_lexp;	///< Current lexer state (NULL = closed)
     stack<VPreprocLex*> m_includeStack;	///< Stack of includers above current m_lexp
 
-    enum ProcState { ps_TOP, ps_DEFNAME, ps_DEFVALUE, ps_DEFPAREN, ps_DEFARG,
+    enum ProcState { ps_TOP,
+		     ps_DEFNAME, ps_DEFFORM, ps_DEFVALUE, ps_DEFPAREN, ps_DEFARG,
 		     ps_INCNAME, ps_ERRORNAME };
     ProcState	m_state;	///< Current state of parser
     int		m_stateFor;	///< Token state is parsing for
     int		m_off;		///< If non-zero, ifdef level is turned off, don't dump text
     string	m_lastSym;	///< Last symbol name found.
+    string	m_formals;	///< Last formals found
 
     // For getRawToken/ `line insertion
     string	m_lineCmt;	///< Line comment(s) to be returned
@@ -163,6 +165,7 @@ string VPreproc::getline() {
 void VPreproc::debug(int level) {
     VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
     idatap->m_debug = level;
+    // To see "accepting rule" debug, Makefile.PL must be changed to enable flex debug
 }
 bool VPreproc::isEof() {
     VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
@@ -219,6 +222,7 @@ const char* VPreprocImp::tokenName(int tok) {
     case VP_LINE	: return("LINE");
     case VP_SYMBOL	: return("SYMBOL");
     case VP_STRING	: return("STRING");
+    case VP_DEFFORM	: return("DEFFORM");
     case VP_DEFVALUE	: return("DEFVALUE");
     case VP_COMMENT	: return("COMMENT");
     case VP_TEXT	: return("TEXT");
@@ -429,7 +433,7 @@ int VPreprocImp::getRawToken() {
 	    return (VP_TEXT);
 	}
 	if (m_lineCmt!="") {
-	    // We have some `line directive to return to the user.  Do it.
+	    // We have some `line directive or other processed data to return to the user.
 	    static string rtncmt;  // Keep the c string till next call
 	    rtncmt = m_lineCmt;
 	    if (m_lineCmtNl) {
@@ -439,10 +443,11 @@ int VPreprocImp::getRawToken() {
 	    yytext=(char*)rtncmt.c_str(); yyleng=rtncmt.length();
 	    m_lineCmt = "";
 	    if (yyleng) m_rawAtBol = (yytext[yyleng-1]=='\n');
-	    if (m_state!=ps_DEFVALUE) return (VP_TEXT);
-	    else {
+	    if (m_state==ps_DEFVALUE) {
 		VPreprocLex::s_currentLexp->appendDefValue(yytext,yyleng);
 		goto next_tok;
+	    } else {
+		return (VP_TEXT);
 	    }
 	}
 	if (isEof()) return (VP_EOF);
@@ -457,9 +462,9 @@ int VPreprocImp::getRawToken() {
 	    string::size_type pos;
 	    while ((pos=buf.find("\n")) != string::npos) { buf.replace(pos, 1, "\\n"); }
 	    while ((pos=buf.find("\r")) != string::npos) { buf.replace(pos, 1, "\\r"); }
-	    fprintf (stderr, "%d: RAW %s s%d dr%d:  %-10s: %s\n",
+	    fprintf (stderr, "%d: RAW %s s%d dr%d:  <%d>%-10s: %s\n",
 		     m_filelinep->lineno(), m_off?"of":"on", m_state, (int)m_defRefs.size(),
-		     tokenName(tok), buf.c_str());
+		     m_lexp->currentStartState(), tokenName(tok), buf.c_str());
 	}
 
 	// On EOF, try to pop to upper level includes, as needed.
@@ -544,8 +549,8 @@ int VPreprocImp::getToken() {
 		}
 		else if (m_stateFor==VP_DEFINE) {
 		    // m_lastSym already set.
-		    m_state = ps_DEFVALUE;
-		    m_lexp->pushStateDefValue();
+		    m_state = ps_DEFFORM;
+		    m_lexp->pushStateDefForm();
 		}
 		else fatalSrc("Bad case\n");
 		goto next_tok;
@@ -555,45 +560,64 @@ int VPreprocImp::getToken() {
 		goto next_tok;
 	    }
 	}
+	case ps_DEFFORM: {
+	    if (tok==VP_DEFFORM) {
+		m_formals = m_lexp->m_defValue;
+		m_state = ps_DEFVALUE;
+		if (debug()) cout<<"DefFormals='"<<m_formals<<"'\n";
+		m_lexp->pushStateDefValue();
+		goto next_tok;
+	    } else if (tok==VP_TEXT) {
+		// IE, something like comment in formals
+		if (!m_off) return tok;
+		else goto next_tok;
+	    } else {
+		error((string)"Expecting define formal arguments. Found: "+tokenName(tok)+"\n");
+		goto next_tok;
+	    }
+	}
 	case ps_DEFVALUE: {
 	    static string newlines;
 	    newlines = "\n";  // Always start with trailing return
 	    if (tok == VP_DEFVALUE) {
+		if (debug()) cout<<"DefValue='"<<m_lexp->m_defValue<<"'  formals='"<<m_formals<<"'\n";
+		// Add any formals
+		string formAndValue = m_formals + m_lexp->m_defValue;
 		// Remove returns
-		for (unsigned i=0; i<m_lexp->m_defValue.length(); i++) {
-		    if (m_lexp->m_defValue[i] == '\n') {
-			m_lexp->m_defValue[i] = ' ';
+		for (unsigned i=0; i<formAndValue.length(); i++) {
+		    if (formAndValue[i] == '\n') {
+			formAndValue[i] = ' ';
 			newlines += "\n";
 		    }
 		}
 		if (!m_off) {
 		    string params;
-		    if (m_lexp->m_defValue=="" || isspace(m_lexp->m_defValue[0])) {
+		    if (formAndValue=="" || isspace(formAndValue[0])) {
 			// Define without parameters
-		    } else if (m_lexp->m_defValue[0] == '(') {
-			string::size_type paren = m_lexp->m_defValue.find(")");
+		    } else if (formAndValue[0] == '(') {
+			string::size_type paren = formAndValue.find(")");
 			if (paren == string::npos) {
 			    error((string)"Missing ) to end define arguments.\n");
 			} else {
-			    params = m_lexp->m_defValue.substr(0, paren+1);
-			    m_lexp->m_defValue.replace(0, paren+1, "");
+			    params = formAndValue.substr(0, paren+1);
+			    formAndValue.replace(0, paren+1, "");
 			}
 		    } else {
 			error((string)"Missing space or paren to start define value.\n");
 		    }
 		    // Remove leading whitespace
 		    unsigned leadspace = 0;
-		    while (m_lexp->m_defValue.length() > leadspace
-			   && isspace(m_lexp->m_defValue[leadspace])) leadspace++;
-		    if (leadspace) m_lexp->m_defValue.erase(0,leadspace);
+		    while (formAndValue.length() > leadspace
+			   && isspace(formAndValue[leadspace])) leadspace++;
+		    if (leadspace) formAndValue.erase(0,leadspace);
 		    // Remove trailing whitespace
 		    unsigned trailspace = 0;
-		    while (m_lexp->m_defValue.length() > trailspace
-			   && isspace(m_lexp->m_defValue[m_lexp->m_defValue.length()-1-trailspace])) trailspace++;
-		    if (trailspace) m_lexp->m_defValue.erase(m_lexp->m_defValue.length()-trailspace,trailspace);
+		    while (formAndValue.length() > trailspace
+			   && isspace(formAndValue[formAndValue.length()-1-trailspace])) trailspace++;
+		    if (trailspace) formAndValue.erase(formAndValue.length()-trailspace,trailspace);
 		    // Define it
-		    if (debug()) cout<<"Define "<<m_lastSym<<" = '"<<m_lexp->m_defValue<<"'"<<endl;
-		    m_preprocp->define(m_lastSym, m_lexp->m_defValue, params);
+		    if (debug()) cout<<"Define "<<m_lastSym<<" = '"<<formAndValue<<"'"<<endl;
+		    m_preprocp->define(m_lastSym, formAndValue, params);
 		}
 	    } else {
 		fatalSrc("Bad define text\n");
@@ -800,6 +824,7 @@ int VPreprocImp::getToken() {
 	}
 	case VP_WHITE:		// Handled at top of loop
 	case VP_COMMENT:	// Handled at top of loop
+	case VP_DEFFORM:	// Handled by m_state=ps_DEFFORM;
 	case VP_DEFVALUE:	// Handled by m_state=ps_DEFVALUE;
 	default:
 	    fatalSrc("Internal error: Unexpected token.\n");

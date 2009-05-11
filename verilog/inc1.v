@@ -144,11 +144,11 @@ endmodule
 //======================================================================
 // macro call with , in {}
 
-`define xxerror(log, msg) $blah(log,msg)
+`define xxerror(logfile, msg) $blah(logfile,msg)
 `xxerror("ab,cd","e,f");
-`xxerror(this.log, vec);
-`xxerror(this.log, vec[1,2,3]);
-`xxerror(this.log, {blah.name(), " is not foo"});
+`xxerror(this.logfile, vec);
+`xxerror(this.logfile, vec[1,2,3]);
+`xxerror(this.logfile, {blah.name(), " is not foo"});
 
 //======================================================================
 // pragma/default net type
@@ -156,3 +156,16 @@ endmodule
 `pragma foo = 1
 `default_nettype none
 `default_nettype uwire
+
+//======================================================================
+// bug84
+
+`define ARGPAR(a,  // Hello, comments MIGHT not be legal
+  /*more,,)cmts*/ b  // But newlines ARE legal... who speced THAT?
+  ) (a,b)
+`ARGPAR(p,q)
+`ARGPAR( //Here
+	      x,
+  y   //Too
+  )
+Line: `__LINE__

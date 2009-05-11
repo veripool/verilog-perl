@@ -40,7 +40,7 @@ VPreprocLex* VPreprocLex::s_currentLexp = NULL;	// Current lexing point
 bool pedantic() { return VPreprocLex::s_currentLexp->m_pedantic; }
 bool keepWhitespace() { return VPreprocLex::s_currentLexp->m_keepWhitespace; }
 void yyerror(char* msg) { VPreprocLex::s_currentLexp->m_curFilelinep->error(msg); }
-void appendDefValue(char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(t,l); }
+void appendDefValue(const char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(t,l); }
 
 void yyerrorf(const char* format, ...) {
     char msg[1024];
@@ -58,7 +58,9 @@ void yyerrorf(const char* format, ...) {
 
 %x CMTMODE
 %x STRMODE
-%x DEFMODE
+%x DEFFPAR
+%x DEFFORM
+%x DEFVAL
 %x ARGMODE
 %x INCMODE
 %x PRTMODE
@@ -125,16 +127,35 @@ drop		[\032]
 <INCMODE>{backslash}.	{ yymore(); }
 <INCMODE>[\>]	 	{ yy_pop_state(); return (VP_STRING); }
 
-	/* Reading definition */
-<DEFMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
-<DEFMODE>"//"[^\n\r]*	{ return (VP_COMMENT);}
-<DEFMODE>{drop}		{ }
-<DEFMODE><<EOF>>	{ linenoInc(); yy_pop_state(); yytext=(char*)"\n"; yyleng=1; return (VP_DEFVALUE); } /* Technically illegal, but people complained */
-<DEFMODE>{crnl}		{ linenoInc(); yy_pop_state(); yytext=(char*)"\n"; yyleng=1; return (VP_DEFVALUE); }
-<DEFMODE>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\n",1); } /* Include return so can maintain output line count */
-<DEFMODE>[^\/\*\n\r\\]+	|
-<DEFMODE>[\\][^\n\r]	|
-<DEFMODE>.		{ appendDefValue(yytext,yyleng); }
+	/* Reading definition formal parenthesis (or not) to begin formal arguments */
+	/* Note '(' must IMMEDIATELY follow definition name */
+<DEFFPAR>[(]		{ appendDefValue("(",1); BEGIN(DEFFORM); }
+<DEFFPAR>{crnl}		{ yy_pop_state(); unput('\n'); yyleng=0; return VP_DEFFORM; } /* DEFVAL will later grab the return */
+<DEFFPAR>.		{ yy_pop_state(); unput(yytext[yyleng-1]); yyleng=0; return VP_DEFFORM; }  /* empty formals */
+
+	/* Reading definition formals */
+<DEFFORM>[(]		{ yy_pop_state(); yyerrorf("Extra ( in define formal arguments.\n"); yyleng=0; return VP_DEFFORM; }
+<DEFFORM>[)]		{ yy_pop_state(); appendDefValue(yytext,yyleng); yyleng=0; return VP_DEFFORM; }
+<DEFFORM>"/*"		{ yy_push_state(CMTMODE); yymore(); }
+<DEFFORM>"//"[^\n\r]*	{ return (VP_COMMENT);}
+<DEFFORM>{drop}	{ }
+<DEFFORM><<EOF>>	{ linenoInc(); yy_pop_state(); yyerrorf("Unterminated ( in define formal arguments."); yyleng=0; return VP_DEFFORM; }
+<DEFFORM>{crnl}		{ linenoInc(); appendDefValue((char*)"\n",1); } /* Include return so can maintain output line count */
+<DEFFORM>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\n",1); } /* Include return so can maintain output line count */
+<DEFFORM>[^\/\*\n\r\\()]+	|
+<DEFFORM>[\\][^\n\r]	|
+<DEFFORM>.		{ appendDefValue(yytext,yyleng); }
+
+	/* Reading definition value */
+<DEFVAL>"/*"		{ yy_push_state(CMTMODE); yymore(); }
+<DEFVAL>"//"[^\n\r]*	{ return (VP_COMMENT);}
+<DEFVAL>{drop}		{ }
+<DEFVAL><<EOF>>		{ linenoInc(); yy_pop_state(); yytext=(char*)"\n"; yyleng=1; return (VP_DEFVALUE); } /* Technically illegal, but people complained */
+<DEFVAL>{crnl}		{ linenoInc(); yy_pop_state(); yytext=(char*)"\n"; yyleng=1; return (VP_DEFVALUE); }
+<DEFVAL>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\n",1); } /* Include return so can maintain output line count */
+<DEFVAL>[^\/\*\n\r\\]+	|
+<DEFVAL>[\\][^\n\r]	|
+<DEFVAL>.		{ appendDefValue(yytext,yyleng); }
 
 	/* Define arguments */
 <ARGMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
@@ -202,9 +223,16 @@ void VPreprocLex::pushStateDefArg(int level) {
     m_defValue = "";
 }
 
+void VPreprocLex::pushStateDefForm() {
+    // Enter define formal arguments state
+    yy_push_state(DEFFPAR);  // First is an optional ( to begin args
+    m_parenLevel = 0;
+    m_defValue = "";
+}
+
 void VPreprocLex::pushStateDefValue() {
     // Enter define value state
-    yy_push_state(DEFMODE);
+    yy_push_state(DEFVAL);
     m_parenLevel = 0;
     m_defValue = "";
 }
@@ -227,6 +255,10 @@ void VPreprocLex::unputString(const char* textp) {
 void VPreprocLex::appendDefValue(const char* textp, int len) {
     // Append given text to current definition value being formed
     m_defValue.append(textp,len);
+}
+
+int VPreprocLex::currentStartState() {
+    return YY_START;
 }
 
 void VPreprocLex::unused() {

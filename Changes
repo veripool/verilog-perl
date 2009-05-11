@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.2****
 
+****	Fix define formal arguments that contain newlines, bug84. [David A]
+
 ****	Fix parsing arrayed instances with just "[#]" (no colon).
 
 ****	Fix parsing "for (a=0;a;)".

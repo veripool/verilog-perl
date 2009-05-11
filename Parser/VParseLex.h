@@ -94,7 +94,6 @@ class VParseLex {
 	m_inCellDefine = false;
 	m_ahead = false;
 
-	static char buf[YY_BUF_SIZE+2]="\0";
 	m_yyState = yy_create_buffer(NULL, YY_BUF_SIZE);
 	s_currentLexp = this;
 	yyrestart(NULL);

@@ -52,6 +52,7 @@
 #define VP_DEFREF	306
 #define VP_DEFARG	307
 #define VP_ERROR	308
+#define VP_DEFFORM	309
 
 
 //======================================================================
@@ -133,9 +134,12 @@ class VPreprocLex {
     void linenoInc() { m_curFilelinep = m_curFilelinep->create(m_curFilelinep->lineno()+1); }
     /// Called by VPreproc.cpp to inform lexer
     void pushStateDefArg(int level);
+    void pushStateDefForm();
     void pushStateDefValue();
     void pushStateIncFilename();
     void unputString(const char* textp);
+    /// Called by VPreproc.cpp to get data from lexer
+    int	 currentStartState();
     void unused();
 };
 
