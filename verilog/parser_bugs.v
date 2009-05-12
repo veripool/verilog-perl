@@ -372,3 +372,10 @@ endmodule
 module bugfor;
    initial for (a=0;a;) begin end
 endmodule
+
+module bug85 #(parameter type T_DATA = byte)
+   (data);
+   input T_DATA data;
+   sub #(.T_DATA( T_DATA ))
+   sub (.data(data));
+endmodule

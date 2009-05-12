@@ -1734,11 +1734,11 @@ cellpinItList:			// IEEE: list_of_port_connections + list_of_parameter_assignmen
 cellpinItemE:			// IEEE: named_port_connection + named_parameter_assignment + empty
 		/* empty: ',,' is legal */		{ PINNUMINC(); }  /*PINDONE(yylval.fl,"",""); <- No, as then () implies a pin*/
 	|	yP_DOTSTAR				{ PINDONE($<fl>1,"*","*");PINNUMINC(); }
-	|	'.' id					{ PINDONE($<fl>1,$2,$2);  PINNUMINC(); }
-	|	'.' id '(' ')'				{ PINDONE($<fl>1,$2,"");  PINNUMINC(); }
-	|	'.' id '(' expr ')'			{ PINDONE($<fl>1,$2,$4);  PINNUMINC(); }
+	|	'.' idAny				{ PINDONE($<fl>1,$2,$2);  PINNUMINC(); }
+	|	'.' idAny '(' ')'			{ PINDONE($<fl>1,$2,"");  PINNUMINC(); }
+	|	'.' idAny '(' expr ')'			{ PINDONE($<fl>1,$2,$4);  PINNUMINC(); }
 	//			// For parameters
-	|	'.' id '(' data_type ')'		{ PINDONE($<fl>1,$2,$4);  PINNUMINC(); }
+	|	'.' idAny '(' data_type ')'		{ PINDONE($<fl>1,$2,$4);  PINNUMINC(); }
 	//			// For parameters
 	|	data_type				{ PINDONE($<fl>1,"",$1);  PINNUMINC(); }
 	//

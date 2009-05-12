@@ -1,5 +1,15 @@
+Interface:sv_if_ported  File:verilog/v_sv_mod.v
+  Port:clk  Dir:in  DataT:  Array:
+  Net:clk  O  DeclT:port  NetT:wire  DataT:  Array:
 Interface:v_sv_intf  File:verilog/v_sv_intf.v
 Module:v_sv_mod  Kwd:module  File:verilog/v_sv_mod.v
+  Port:clk  Dir:in  DataT:  Array:
+  Net:clk  IO  DeclT:port  NetT:  DataT:  Array:
+  Cell:if_ported  is-a:sv_if_ported
+            Interface:sv_if_ported  File:verilog/v_sv_mod.v
+    Pin:clk  Net:clk
+              Port:clk  Dir:in  DataT:  Array:
+              Net:clk  IO  DeclT:port  NetT:  DataT:  Array:
   Cell:intf  is-a:v_sv_intf
             Interface:v_sv_intf  File:verilog/v_sv_intf.v
   Cell:pgm  is-a:v_sv_pgm

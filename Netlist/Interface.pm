@@ -7,6 +7,7 @@ use Class::Struct;
 
 use Verilog::Netlist;
 use Verilog::Netlist::Net;
+use Verilog::Netlist::Pin;
 use Verilog::Netlist::Subclass;
 use vars qw($VERSION @ISA);
 use strict;
@@ -25,12 +26,18 @@ structs('new',
 	   attributes	=> '%', #'	# Misc attributes for systemperl or other processors
 	   #
 	   comment	=> '$', #'	# Comment provided by user
+	   _ports	=> '%',		# hash of Verilog::Netlist::Ports
+	   _portsordered=> '@',		# list of Verilog::Netlist::Ports as ordered in list of ports
 	   _nets	=> '%',		# hash of Verilog::Netlist::Nets
+	   _level	=> '$',		# Depth in hierarchy (if calculated)
 	   ]);
 
 sub delete {
     my $self = shift;
     foreach my $oref ($self->nets) {
+	$oref->delete;
+    }
+    foreach my $oref ($self->ports) {
 	$oref->delete;
     }
     my $h = $self->netlist->{_interfaces};
@@ -42,10 +49,28 @@ sub delete {
 
 sub is_top {}  # Ignored, for module compatibility
 
+sub keyword { return 'interface'; }
+
 sub logger {
     return $_[0]->netlist->logger;
 }
 
+sub find_port {
+    my $self = shift;
+    my $search = shift;
+    return $self->_ports->{$search} || $self->_ports->{"\\".$search." "};
+}
+sub find_port_by_index {
+    my $self = shift;
+    my $myindex = shift;
+    # @{$self->_portsordered}[$myindex-1] returns the name of
+    # the port in the module at this index.  Then, this is
+    # used to find the port reference via the port hash
+    return $self->_ports->{@{$self->_portsordered}[$myindex-1]};
+}
+sub find_cell {
+    return undef;  # Module compatibility
+}
 sub find_net {
     my $self = shift;
     my $search = shift;
@@ -63,9 +88,24 @@ sub nets {
 sub nets_sorted {
     return (sort {$a->name() cmp $b->name()} (values %{$_[0]->_nets}));
 }
-sub nets_and_ports_sorted {
+sub ports {
+    return (values %{$_[0]->_ports});
+}
+sub ports_sorted {
+    return (sort {$a->name() cmp $b->name()} (values %{$_[0]->_ports}));
+}
+sub ports_ordered {
     my $self = shift;
-    return $self->nets_sorted(@_);
+    return map {$self->_ports->{$_}} @{$self->_portsordered};
+}
+sub cells {
+    return ();  # Module compatibility
+}
+sub cells_sorted {
+    return ();  # Module compatibility
+}
+sub nets_and_ports_sorted {
+    return Verilog::Netlist::Module::nets_and_ports_sorted(@_);
 }
 
 sub new_net {
@@ -85,9 +125,30 @@ sub new_attr {
     push @{$self->attrs}, $clean_text;
 }
 
+sub new_port {
+    my $self = shift;
+    # @_ params
+    # Create a new port under this module
+    my $portref = new Verilog::Netlist::Port (@_, module=>$self,);
+    $self->_ports ($portref->name(), $portref);
+    return $portref;
+}
+
+sub level {
+    my $self = shift;
+    my $level = $self->_level;
+    return $level if defined $level;
+    $self->_level(2);  # Interfaces are never up "top"
+    # Interfaces don't have cells
+    return $self->_level;
+}
+
 sub link {
     my $self = shift;
     # Ports create nets, so link ports before nets
+    foreach my $portref ($self->ports) {
+	$portref->_link();
+    }
     foreach my $netref ($self->nets) {
 	$netref->_link();
     }
@@ -96,6 +157,9 @@ sub link {
 sub lint {
     my $self = shift;
     if (!$self->netlist->{skip_pin_interconnect}) {
+	foreach my $portref ($self->ports) {
+	    $portref->lint();
+	}
 	foreach my $netref ($self->nets) {
 	    $netref->lint();
 	}
@@ -106,6 +170,15 @@ sub verilog_text {
     my $self = shift;
     my @out = "interface ".$self->name." (\n";
     my $indent = "   ";
+    # Port list
+    my $comma="";
+    push @out, $indent;
+    foreach my $portref ($self->ports_sorted) {
+	push @out, $comma, $portref->verilog_text;
+	$comma = ", ";
+    }
+    push @out, ");\n";
+
     # Signal list
     foreach my $netref ($self->nets_sorted) {
 	push @out, $indent, $netref->verilog_text, "\n";
@@ -121,6 +194,9 @@ sub dump {
     my $norecurse = shift;
     print " "x$indent,"Interface:",$self->name(),"  File:",$self->filename(),"\n";
     if (!$norecurse) {
+	foreach my $portref ($self->ports_sorted) {
+	    $portref->dump($indent+2);
+	}
 	foreach my $netref ($self->nets_sorted) {
 	    $netref->dump($indent+2);
 	}
@@ -189,6 +265,20 @@ Returns list of name sorted references to Verilog::Netlist::Net in the interface
 Returns list of name sorted references to Verilog::Netlist::Net and
 Verilog::Netlist::Port in the interface.
 
+=item $self->ports
+
+Returns list of references to Verilog::Netlist::Port in the module.
+
+=item $self->ports_ordered
+
+Returns list of references to Verilog::Netlist::Port in the module sorted
+by pin number.
+
+=item $self->ports_sorted
+
+Returns list of references to Verilog::Netlist::Port in the module sorted
+by name.
+
 =back
 
 =head1 MEMBER FUNCTIONS
@@ -204,6 +294,11 @@ Updates the AUTOs for the interface.
 =item $self->find_net(I<name>)
 
 Returns Verilog::Netlist::Net matching given name.
+
+=item $self->level
+
+Returns the reverse depth of this interface with respect to other modules
+and interfaces.  See also Netlist's modules_sorted_level.
 
 =item $self->lint
 

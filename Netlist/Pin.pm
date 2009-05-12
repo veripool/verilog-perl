@@ -108,7 +108,7 @@ sub lint {
         $self->error ("Pin's net declaration not found: ",$self->netname,"\n");
     }
     if (!$self->port && $self->submod) {
-        $self->error ($self,"Port not found in module ",$self->submod->name,": ",$self->portname,"\n");
+        $self->error ($self,"Port not found in ",$self->submod->keyword," ",$self->submod->name,": ",$self->portname,"\n");
     }
     if ($self->port && $self->net) {
 	if (!$self->type_match) {

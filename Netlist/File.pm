@@ -167,7 +167,7 @@ sub port {
     my $array = shift;
     my $pinnum = shift;
 
-    return if $objof ne 'module';
+    return if !($objof eq 'module' || $objof eq 'interface');
 
     if ($pinnum) {  # Else a "input" etc outside the "(...)"s
 	$self->{modref}->_portsordered($pinnum-1, $name);  # -1 because [0] has first pin

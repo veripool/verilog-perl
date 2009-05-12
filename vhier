@@ -199,18 +199,18 @@ sub show_mod_files {
     my $nl = shift;
     my $fh = shift;
     # We'll attach a level attribute to each module indicating its maximum depth
-    foreach my $mod ($nl->modules) {
+    foreach my $mod ($nl->modules, $nl->interfaces) {
 	$mod->attributes("_vhier_level", 0);
     }
     # Recurse the tree and determine level
-    foreach my $mod ($nl->modules) {
+    foreach my $mod ($nl->modules, $nl->interfaces) {
 	if ($mod->is_top) {
 	    _mod_files_recurse($mod, 1);
 	}
     }
     # Make sort key based on numeric level
     my %keys;
-    foreach my $mod ($nl->modules) {
+    foreach my $mod ($nl->modules) { # No interfaces, it's --module-files implying modules only
 	my $key = sprintf("%03d_%s", $mod->attributes("_vhier_level"), $mod->name);
 	$keys{$key} = $mod;
     }

@@ -8,7 +8,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 21 }
+BEGIN { plan tests => 23 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::Netlist::Debug = 1;
@@ -28,7 +28,8 @@ $opt->parameter( "+incdir+verilog",
 my $nl = new Verilog::Netlist (options => $opt,
 			       link_read_nonfatal=>1,
     );
-foreach my $file ('verilog/v_hier_top.v', 'verilog/v_hier_top2.v') {
+foreach my $file ('verilog/v_hier_top.v', 'verilog/v_hier_top2.v',
+		  'verilog/v_sv_mod.v') {
     $nl->read_file (filename=>$file);
 }
 # Read in any sub-modules
@@ -44,9 +45,11 @@ ok($nl->find_module("v_hier_subsub")->level, 1);
 my @mods = map {$_->name} $nl->modules_sorted_level;
 ok ($mods[0], 'v_hier_noport');
 ok ($mods[1], 'v_hier_subsub');
-ok ($mods[2], 'v_hier_sub');
-ok ($mods[3], 'v_hier_top2');
-ok ($mods[4], 'v_hier_top');
+ok ($mods[2], 'v_sv_pgm');
+ok ($mods[3], 'v_hier_sub');
+ok ($mods[4], 'v_hier_top2');
+ok ($mods[5], 'v_hier_top');
+ok ($mods[6], 'v_sv_mod');
 
 # Width checks
 {
