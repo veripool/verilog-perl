@@ -5,7 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.2****
 
-****	Fix vhier errors with ported interfaces, bug86. [David A]
+****	Fix Netlist errors with ported interfaces, bug86. [David A]
+
+****	Fix Netlist errors with interfaces-under-interfaces, bug87. [David A]
 
 ****	Fix define formal arguments that contain newlines, bug84. [David A]
 

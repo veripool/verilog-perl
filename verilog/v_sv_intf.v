@@ -6,4 +6,9 @@
 
 interface v_sv_intf;
    v_sv_pkg::byte_t byte_port;
+   v_sv_intf2 subintf(.*);
+endinterface
+
+interface v_sv_intf2;
+   v_sv_pkg::byte_t byte_port;
 endinterface

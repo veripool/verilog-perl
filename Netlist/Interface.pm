@@ -29,6 +29,7 @@ structs('new',
 	   _ports	=> '%',		# hash of Verilog::Netlist::Ports
 	   _portsordered=> '@',		# list of Verilog::Netlist::Ports as ordered in list of ports
 	   _nets	=> '%',		# hash of Verilog::Netlist::Nets
+	   _cells	=> '%',		# hash of Verilog::Netlist::Cells
 	   _level	=> '$',		# Depth in hierarchy (if calculated)
 	   ]);
 
@@ -38,6 +39,9 @@ sub delete {
 	$oref->delete;
     }
     foreach my $oref ($self->ports) {
+	$oref->delete;
+    }
+    foreach my $oref ($self->cells) {
 	$oref->delete;
     }
     my $h = $self->netlist->{_interfaces};
@@ -69,7 +73,9 @@ sub find_port_by_index {
     return $self->_ports->{@{$self->_portsordered}[$myindex-1]};
 }
 sub find_cell {
-    return undef;  # Module compatibility
+    my $self = shift;
+    my $search = shift;
+    return $self->_cells->{$search} || $self->_cells->{"\\".$search." "};
 }
 sub find_net {
     my $self = shift;
@@ -99,10 +105,10 @@ sub ports_ordered {
     return map {$self->_ports->{$_}} @{$self->_portsordered};
 }
 sub cells {
-    return ();  # Module compatibility
+    return (values %{$_[0]->_cells});
 }
 sub cells_sorted {
-    return ();  # Module compatibility
+    return (sort {$a->name() cmp $b->name()} (values %{$_[0]->_cells}));
 }
 sub nets_and_ports_sorted {
     return Verilog::Netlist::Module::nets_and_ports_sorted(@_);
@@ -111,10 +117,10 @@ sub nets_and_ports_sorted {
 sub new_net {
     my $self = shift;
     # @_ params
-    # Create a new net under this interface
+    # Create a new net under this
     my $netref = new Verilog::Netlist::Net (direction=>'net', data_type=>'wire',
 					    @_,
-					    interface=>$self, );
+					    module=>$self, );
     $self->_nets ($netref->name(), $netref);
     return $netref;
 }
@@ -134,12 +140,21 @@ sub new_port {
     return $portref;
 }
 
+sub new_cell {
+    return Verilog::Netlist::Module::new_cell(@_);
+}
+
 sub level {
     my $self = shift;
     my $level = $self->_level;
     return $level if defined $level;
     $self->_level(2);  # Interfaces are never up "top"
-    # Interfaces don't have cells
+    foreach my $cell ($self->cells) {
+	if ($cell->submod) {
+	    my $celllevel = $cell->submod->level;
+	    $self->_level($celllevel+1) if $celllevel >= $self->_level;
+	}
+    }
     return $self->_level;
 }
 
@@ -152,6 +167,9 @@ sub link {
     foreach my $netref ($self->nets) {
 	$netref->_link();
     }
+    foreach my $cellref ($self->cells) {
+	$cellref->_link();
+    }
 }
 
 sub lint {
@@ -163,6 +181,9 @@ sub lint {
 	foreach my $netref ($self->nets) {
 	    $netref->lint();
 	}
+    }
+    foreach my $cellref ($self->cells) {
+	$cellref->lint();
     }
 }
 
@@ -183,6 +204,10 @@ sub verilog_text {
     foreach my $netref ($self->nets_sorted) {
 	push @out, $indent, $netref->verilog_text, "\n";
     }
+    # Cell list
+    foreach my $cellref ($self->cells_sorted) {
+	push @out, $indent, $cellref->verilog_text, "\n";
+    }
 
     push @out, "endinterface\n";
     return (wantarray ? @out : join('',@out));
@@ -199,6 +224,9 @@ sub dump {
 	}
 	foreach my $netref ($self->nets_sorted) {
 	    $netref->dump($indent+2);
+	}
+	foreach my $cellref ($self->cells_sorted) {
+	    $cellref->dump($indent+2);
 	}
     }
 }

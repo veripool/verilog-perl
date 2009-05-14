@@ -148,7 +148,7 @@ sub nets_and_ports_sorted {
 sub new_net {
     my $self = shift;
     # @_ params
-    # Create a new net under this module
+    # Create a new net under this
     my $netref = new Verilog::Netlist::Net (direction=>'net', data_type=>'wire',
 					    @_,
 					    module=>$self, );
@@ -249,11 +249,11 @@ sub verilog_text {
     foreach my $netref ($self->nets_sorted) {
 	push @out, $indent, $netref->verilog_text, "\n";
     }
-
     # Cell list
     foreach my $cellref ($self->cells_sorted) {
 	push @out, $indent, $cellref->verilog_text, "\n";
     }
+
     push @out, "end".($self->keyword||'module')."\n";
     return (wantarray ? @out : join('',@out));
 }

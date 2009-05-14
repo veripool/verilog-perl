@@ -90,7 +90,7 @@ structs('_new_base',
 	   net_type 	=> '$', #'	# Net type (wire/tri/supply0 etc)
 	   comment	=> '$', #'	# Comment provided by user
 	   array	=> '$', #'	# Vector
-	   module	=> '$', #'	# Module entity belongs to
+	   module	=> '$', #'	# Module, Program or Interface entity belongs to
 	   signed	=> '$', #'	# True if signed
 	   value	=> '$', #'	# For parameters, the value of the parameter
 	   # below only after links()
@@ -319,7 +319,8 @@ or "net" - and see the net_type method.
 
 =item $self->module
 
-Reference to the Verilog::Netlist::Module the net is in.
+Reference to the Verilog::Netlist::Module or Verilog::Netlist::Interface
+the net is under.
 
 =item $self->lsb
 
