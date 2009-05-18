@@ -224,3 +224,9 @@ class vmm_stuff;
    extern function bit foo4();
    static local bit foo5[string];
 endclass
+
+class vmm_cl_func_colon;
+   typedef enum int unsigned {FIRM} restart_e;
+   function void do_all(vmm_cl_func_colon::restart_e kind = vmm_cl_func_colon::FIRM);
+   endfunction
+endclass

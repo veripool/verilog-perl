@@ -96,7 +96,10 @@ sub read_test {
 
     my $parser = new MyParser (dump_fh => $dump_fh,
 			       metacomment=>{synopsys=>1},);
-    #$parser->debug(9);
+
+    if ($ENV{VERILOG_TEST_DEBUG}) {  # For example, VERILOG_TEST_DEBUG=9
+	$parser->debug($ENV{VERILOG_TEST_DEBUG});
+    }
 
     # Preprocess
     $pp->open($filename);

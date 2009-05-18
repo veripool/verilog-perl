@@ -2707,6 +2707,7 @@ exprScope<str>:			// scope and variable for use to inside an expression
 		yTHIS					{ $<fl>$=$<fl>1; $$ = $1; }
 	|	idArrayed				{ $<fl>$=$<fl>1; $$ = $1; }
 	|	package_scopeIdFollows idArrayed	{ $<fl>$=$<fl>1; $$ = $1+$2; }
+	|	class_scopeIdFollows idArrayed		{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	~l~expr '.' idArrayed			{ $<fl>$=$<fl>1; $$ = $1+"."+$2; }
 	//			// expr below must be a "yTHIS"
 	|	~l~expr '.' ySUPER			{ $<fl>$=$<fl>1; $$ = $1+"."+$2; }
@@ -3694,8 +3695,10 @@ package_scopeIdFollowsE<str>:	// IEEE: [package_scope]
 package_scopeIdFollows<str>:	// IEEE: package_scope
 	//			// IMPORTANT: The lexer will parse the following ID to be in the found package
 	//			//vv mid rule action needed otherwise we might not have NextId in time to parse the id token
-		yD_UNIT        { PARSEP->symTableNextId(PARSEP->syms().netlistSymp()); } yP_COLONCOLON	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>3; }
-	|	yaID__aPACKAGE { PARSEP->symTableNextId($<entp>1); }			 yP_COLONCOLON	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>3; }
+		yD_UNIT        { PARSEP->symTableNextId(PARSEP->syms().netlistSymp()); }
+	/*cont*/	yP_COLONCOLON	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>3; }
+	|	yaID__aPACKAGE { PARSEP->symTableNextId($<entp>1); }
+	/*cont*/	yP_COLONCOLON	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>3; }
 	;
 
 //^^^=========
