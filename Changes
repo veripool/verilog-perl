@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.2****
 
+***	Fix parsing class member variables with multiple qualifiers.
+
 ****	Fix Netlist errors with ported interfaces, bug86. [David A]
 
 ****	Fix Netlist errors with interfaces-under-interfaces, bug87. [David A]

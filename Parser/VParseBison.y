@@ -321,7 +321,6 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		ySTATIC__CONSTRAINT "static-then-constraint"
 %token<str>		ySTATIC__ETC	"static"
 %token<str>		ySTATIC__LEX	"static-in-lex"
-%token<str>		ySTATIC__TF	"static-then-taskf"
 %token<str>		ySTRING		"string"
 %token<str>		ySTRUCT		"struct"
 %token<str>		ySUPER		"super"
@@ -351,7 +350,8 @@ static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 %token<str>		yVIRTUAL__CLASS	"virtual-then-class"
 %token<str>		yVIRTUAL__ETC	"virtual"
 %token<str>		yVIRTUAL__LEX	"virtual-in-lex"
-%token<str>		yVIRTUAL__TF	"virtual-then-taskf"
+%token<str>		yVIRTUAL__INTERFACE	"virtual-then-interface"
+%token<str>		yVIRTUAL__anyID	"virtual-then-identifier"
 %token<str>		yVOID		"void"
 %token<str>		yWAIT		"wait"
 %token<str>		yWAIT_ORDER	"wait_order"
@@ -1121,8 +1121,8 @@ data_typeNoRef<str>:		// ==IEEE: data_type, excluding class_type etc references
 	|	ySTRING					{ $<fl>$=$<fl>1; $$=$1; }
 	|	yCHANDLE				{ $<fl>$=$<fl>1; $$=$1; }
 	|	yEVENT					{ $<fl>$=$<fl>1; $$=$1; }
-	|	yVIRTUAL__ETC yINTERFACE id/*interface*/	{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
-	|	yVIRTUAL__ETC            id/*interface*/	{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
+	|	yVIRTUAL__INTERFACE yINTERFACE id/*interface*/	{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
+	|	yVIRTUAL__anyID                id/*interface*/	{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	|	type_reference				{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: class_scope: see data_type above
 	//			// IEEE: class_type: see data_type above
@@ -1222,8 +1222,12 @@ variable_dimension<str>:	// ==IEEE: variable_dimension
 
 random_qualifierE:		// IEEE: random_qualifier + empty
 		/*empty*/				{ }
-	|	yRAND					{ }
-	|	yRANDC					{ }
+	|	random_qualifier			{ }
+	;
+
+random_qualifier<str>:		// ==IEEE: random_qualifier
+		yRAND					{ $<fl>$=$<fl>1; $$=$1; }
+	|	yRANDC					{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 taggedE:
@@ -1273,6 +1277,7 @@ enumNameStartE:			// IEEE: third part of enum_name_declaration
 // Typedef
 
 data_declaration:		// ==IEEE: data_declaration
+	//			// VARRESET can't be called here - conflicts
 		data_declarationVar			{ }
 	|	type_declaration			{ }
 	|	package_import_declaration		{ }
@@ -1281,9 +1286,24 @@ data_declaration:		// ==IEEE: data_declaration
 	//			// Therefore the virtual_interface_declaration term isn't used
 	;
 
-data_declarationVar:		// IEEE: part of data_declaration (called elsewhere)
+class_property:			// ==IEEE: class_property, which is {property_qualifier} data_declaration
+		memberQualResetListE data_declarationVarClass		{ }
+	|	yCONST__ETC memberQualResetListE data_declarationVarClass	{ }
+	|	memberQualResetListE type_declaration			{ }
+	|	memberQualResetListE package_import_declaration	{ }
+	//			// IEEE: virtual_interface_declaration
+	//			// "yVIRTUAL yID yID" looks just like a data_declaration
+	//			// Therefore the virtual_interface_declaration term isn't used
+	;
+
+data_declarationVar:		// IEEE: part of data_declaration
 	//			// The first declaration has complications between assuming what's the type vs ID declaring
 		data_declarationVarFront list_of_variable_decl_assignments ';'	{ }
+	;
+
+data_declarationVarClass:	// IEEE: part of data_declaration (for class_property)
+	//			// The first declaration has complications between assuming what's the type vs ID declaring
+		data_declarationVarFrontClass list_of_variable_decl_assignments ';'	{ }
 	;
 
 data_declarationVarFront:	// IEEE: part of data_declaration
@@ -1296,6 +1316,21 @@ data_declarationVarFront:	// IEEE: part of data_declaration
 	|	/**/		      data_type	{ VARRESET(); VARDECL("var"); VARTYPE($1); }
 	|	/**/	    lifetime  data_type	{ VARRESET(); VARDECL("var"); VARTYPE($2); }
 	|	yCONST__ETC lifetimeE data_type	{ VARRESET(); VARDECL("var"); VARTYPE(SPACED($1,$3)); }
+	//			// = class_new is in variable_decl_assignment
+	;
+
+data_declarationVarFrontClass:	// IEEE: part of data_declaration (for class_property)
+	//			// VARRESET called before this rule
+	//			// yCONST is removed, added to memberQual rules
+	//			// implicit_type expanded into /*empty*/ or "signingE rangeList"
+		yVAR lifetimeE data_type	 { VARDECL("var"); VARTYPE(SPACED(GRAMMARP->m_varType,$3)); }
+	|	yVAR lifetimeE			 { VARDECL("var"); VARTYPE(GRAMMARP->m_varType); }
+	|	yVAR lifetimeE signingE rangeList { VARDECL("var"); VARTYPE(SPACED(GRAMMARP->m_varType,SPACED($3,$4))); }
+	//
+	//			// Expanded: "constE lifetimeE data_type"
+	|	/**/		      data_type	{ VARDECL("var"); VARTYPE(SPACED(GRAMMARP->m_varType,$1)); }
+	//			// lifetime is removed, added to memberQual rules to avoid conflict
+	//			// yCONST is removed, added to memberQual rules to avoid conflict
 	//			// = class_new is in variable_decl_assignment
 	;
 
@@ -2257,6 +2292,7 @@ lifetimeE:			// IEEE: [lifetime]
 	;
 
 lifetime:			// ==IEEE: lifetime
+	//			// Note lifetime used by members is instead under memberQual
 		ySTATIC__ETC		 		{ }
 	|	yAUTOMATIC		 		{ }
 	;
@@ -3685,50 +3721,46 @@ class_item:			// ==IEEE: class_item
 	|	';'					{ }
 	;
 
-class_property:			// ==IEEE: class_property
-	//			// property_qualifier == random_qualifier
-	//			// data_declaration includes [yCONST] [ySTATIC|yAUTOMATIC] var
-		random_qualifierE data_declaration	{ }
-	//			// yCONST {no-qualifier} data_type id" is part of data_declaration
-	//			// yCONST ySTATIC        data_type id" is part of data_declaration
-	|	yCONST__LOCAL class_item_qualifierNoStatic data_type id ';'		{ }
-	|	yCONST__LOCAL class_item_qualifierNoStatic data_type id '=' constExpr ';'	{ }
-	;
-
 class_method:			// ==IEEE: class_method
-		method_qualifierListE task_declaration			{ }
-	|	method_qualifierListE function_declaration		{ }
-	|	yEXTERN method_qualifierListE method_prototype ';'	{ }
-	//			// IEEE: "method_qualifierE class_constructor_declaration"		{ }
+		memberQualResetListE task_declaration			{ }
+	|	memberQualResetListE function_declaration		{ }
+	|	yEXTERN memberQualResetListE method_prototype ';'	{ }
+	//			// IEEE: "method_qualifierE class_constructor_declaration"
 	//			// part of function_declaration
-	|	yEXTERN method_qualifierListE class_constructor_prototype	{ }
+	|	yEXTERN memberQualResetListE class_constructor_prototype	{ }
 	;
 
 // IEEE: class_constructor_prototype
 // See function_declaration
 
-class_item_qualifierNoStatic:	// IEEE: class_item_qualifier minus ySTATIC
+class_item_qualifier<str>:	// IEEE: class_item_qualifier minus ySTATIC
 	//			// IMPORTANT: yPROTECTED | yLOCAL is in a lex rule
-		yPROTECTED				{ }
-	|	yLOCAL					{ }
+		yPROTECTED				{ $<fl>$=$<fl>1; $$=$1; }
+	|	yLOCAL					{ $<fl>$=$<fl>1; $$=$1; }
+	|	ySTATIC__ETC				{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
-method_qualifierListE:
-		/* empty */				{ }
-	|	method_qualifierList			{ }
+memberQualResetListE:		// Called from class_property for all qualifiers before yVAR
+	//			// Also before method declarations, to prevent grammar conflict
+	//			// Thus both types of qualifiers (method/property) are here
+		/*empty*/				{ VARRESET(); VARTYPE(""); }
+	|	memberQualList				{ VARRESET(); VARTYPE($1); }
 	;
 
-method_qualifierList:
-		method_qualifier			{ }
-	|	method_qualifierList method_qualifier	{ }
+memberQualList<str>:
+		memberQualOne				{ $<fl>$=$<fl>1; $$=$1; }
+	|	memberQualList memberQualOne		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	;
 
-method_qualifier:
-		yVIRTUAL__TF				{ }
-	//			// IEEE: class_item_qualifier
-	|	ySTATIC__TF				{ }
-	|	yPROTECTED				{ }
-	|	yLOCAL					{ }
+memberQualOne<str>:			// IEEE: property_qualifier + method_qualifier
+	//			// Part of method_qualifier and property_qualifier
+		class_item_qualifier			{ $<fl>$=$<fl>1; $$=$1; }
+	//			// Part of method_qualifier only
+	|	yVIRTUAL__ETC				{ $<fl>$=$<fl>1; $$=$1; }
+	//			// Part of property_qualifier only
+	|	random_qualifier			{ $<fl>$=$<fl>1; $$=$1; }
+	//			// Part of lifetime, but here as ySTATIC can be in different positions
+	|	yAUTOMATIC		 		{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 //**********************************************************************

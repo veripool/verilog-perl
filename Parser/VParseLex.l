@@ -691,7 +691,6 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	}
 	else if (token == yCONST__LEX) {
 	    if (nexttok == yREF) token = yCONST__REF;
-	    else if (nexttok == yLOCAL || nexttok == yPROTECTED) token = yCONST__LOCAL;
 	    else token = yCONST__ETC;
 	}
 	else if (token == yNEW__LEX) {
@@ -700,12 +699,14 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	}
 	else if (token == ySTATIC__LEX) {
 	    if (nexttok == yCONSTRAINT) token = ySTATIC__CONSTRAINT;
-	    else if (nexttok == yFUNCTION || nexttok == yTASK) token = ySTATIC__TF;
 	    else token = ySTATIC__ETC;
 	}
 	else if (token == yVIRTUAL__LEX) {
 	    if (nexttok == yCLASS) token = yVIRTUAL__CLASS;
-	    else if (nexttok == yFUNCTION || nexttok == yTASK) token = yVIRTUAL__TF;
+	    else if (nexttok == yINTERFACE) token = yVIRTUAL__INTERFACE;
+	    else if (nexttok == yaID__ETC || nexttok == yaID__LEX)
+		     // || nexttok == yaID__aINTERFACE	// but we may not know interfaces yet.
+		token = yVIRTUAL__anyID;
 	    else token = yVIRTUAL__ETC;
 	}
 	else if (token == yWITH__LEX) {

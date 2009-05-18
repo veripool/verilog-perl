@@ -218,4 +218,9 @@ class vmm_stuff;
       this.a.taskcall();
       super.new(name2);
    endtask
+   extern static local function bit foo1();
+   extern virtual protected function void foo2();
+   protected static string foo3;
+   extern function bit foo4();
+   static local bit foo5[string];
 endclass
