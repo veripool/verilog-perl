@@ -138,6 +138,9 @@ public:
     /// Insert into current table from another imported package's table
     void import(VAstEnt* fromEntp, const string& id_or_star);
 
+    /// Info on current node, for debug
+    string ascii(const string& name="");
+
 protected:
     friend class VSymStack;
     void initNetlist(VFileLine* fl);

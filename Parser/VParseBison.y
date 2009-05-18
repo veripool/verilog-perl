@@ -3713,20 +3713,20 @@ class_scopeIdFollows<str>:	// IEEE: class_scope
 	;
 
 class_typeOneListColonIdFollows<str_entp>: // IEEE: class_type ::
-		class_typeOneList yP_COLONCOLON 	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>2; $<entp>$=$<entp>1; PARSEP->symTableNextId($<entp>1); }
+		class_typeOneList yP_COLONCOLON 	{ $<fl>$=$<fl>1; $<entp>$=$<entp>1; $<str>$=$<str>1+$<str>2; PARSEP->symTableNextId($<entp>1); }
 	;
 
 class_typeOneList<str_entp>: // IEEE: class_type: "id [ parameter_value_assignment ]"
 	//			// If you follow the rules down, class_type is really a list via ps_class_identifier
 	//			// Must propagate entp up for next id
-		class_typeOne				{ $<fl>$=$<fl>1; $<str>$=$<str>1; $<entp>$=$<entp>1; }
-	|	class_typeOneListColonIdFollows class_typeOne	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>2; $<entp>$=$<entp>2; }
+		class_typeOne					{ $<fl>$=$<fl>1; $<entp>$=$<entp>1; $<str>$=$<str>1; }
+	|	class_typeOneListColonIdFollows class_typeOne	{ $<fl>$=$<fl>1; $<entp>$=$<entp>2; $<str>$=$<str>1+$<str>2; }
 	;
 
 class_typeOne<str_entp>:	// IEEE: class_type: "id [ parameter_value_assignment ]"
 	//			// If you follow the rules down, class_type is really a list via ps_class_identifier
 		yaID__aCLASS parameter_value_assignmentE
-			{ $<fl>$=$<fl>1; $<str>$=$<str>1; $<entp>$=$<entp>1; }
+			{ $<fl>$=$<fl>1; $<entp>$=$<entp>1; $<str>$=$<str>1; }
 	;
 
 package_scopeIdFollowsE<str>:	// IEEE: [package_scope]

@@ -101,7 +101,7 @@ void VAstEnt::initAVEnt(AV* avp, VAstType type) {
 }
 
 void VAstEnt::insert(VAstEnt* newentp, const string& name) {
-    if (debug()) cout<<"VAstEnt::insert under="<<this<<" "<<newentp<<"-"<<newentp->type().ascii()<<"-\""<<name<<"\"\n";
+    if (debug()) cout<<"VAstEnt::insert under="<<this<<" "<<newentp->ascii(name)<<"\"\n";
 
     HV* hvp = subhash(); assert(hvp);
 
@@ -137,7 +137,7 @@ VAstEnt* VAstEnt::findSym (const string& name) {
     // $sub_avp = @{$table{$name}}
     AV* sub_avp = (AV*)(SvRV(svp));
     VAstEnt* entp = avToSymEnt(sub_avp);
-    if (debug()) cout<<"VAstEnt::find found under="<<this<<" "<<entp<<"-"<<entp->type().ascii()<<"-\""<<name<<"\"\n";
+    if (debug()) cout<<"VAstEnt::find found under="<<this<<" "<<entp->ascii(name)<<"\n";
     return entp;
 }
 
@@ -168,6 +168,12 @@ void VAstEnt::import(VAstEnt* pkgEntp, const string& id_or_star) {
 	    insert(avToSymEnt((AV*)(SvRV(svp))), name);
 	}
     }
+}
+
+string VAstEnt::ascii(const string& name) {
+    string out = cvtToStr((void*)this)+"-"+type().ascii();
+    if (name!="") out += "-\""+name+"\"";
+    return out;
 }
 
 #undef DBG_SV_DUMP

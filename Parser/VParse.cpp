@@ -114,7 +114,7 @@ int VParse::lexToBison(VParseBisonYYSType* yylvalp) {
     if (debug()>=9) {
 	string shortstr = yylvalp->str; if (shortstr.length()>20) shortstr = string(shortstr,20)+"...";
 	cout<<"   lexToBison  TOKEN="<<tok<<" "<<VParseGrammar::tokenName(tok)<<" str=\""<<shortstr<<"\"";
-	if (yylvalp->entp) cout<<"  entp="<<(void*)(yylvalp->entp);
+	if (yylvalp->entp) cout<<"  entp="<<yylvalp->entp->ascii();
 	cout<<endl;
     }
     return tok;
