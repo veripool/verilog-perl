@@ -1938,7 +1938,8 @@ statement_item:			// IEEE: statement_item
 	|	yFOR '(' for_initialization expr ';' for_stepE ')' stmtBlock
 				{ }
 	|	yDO stmtBlock yWHILE '(' expr ')'	{ }
-	|	yFOREACH '(' id/*array_identifier*/ '[' loop_variables ']' ')' stmt	{ }
+	//			// IEEE says array_identifier here, but dotted accepted in VMM
+	|	yFOREACH '(' idClassForeach/*array_id[loop_variables]*/ ')' stmt	{ }
 	//
 	//			// IEEE: jump_statement
 	|	yRETURN ';'				{ }
@@ -2199,9 +2200,9 @@ for_step_assignment:		// ==IEEE: for_step_assignment
 	|	exprScope				{ }
 	;
 
-loop_variables:			// ==IEEE: loop_variables
-		id					{ }
-	|	loop_variables ',' id			{ }
+loop_variables<str>:			// ==IEEE: loop_variables
+		id					{ $<fl>$=$<fl>1; $$=$1; }
+	|	loop_variables ',' id			{ $<fl>$=$<fl>1; $$=$1+","+$3; }
 	;
 
 //************************************************
@@ -2937,8 +2938,18 @@ idClassSel<str>:		// Misc Ref to dotted, and/or arrayed, and/or bit-ranged varia
 	|	package_scopeIdFollows idDotted		{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	;
 
+idClassForeach<str>:		// Misc Ref to dotted, and/or arrayed, no bit range for foreach statement
+		idDottedForeach				{ $<fl>$=$<fl>1; $$ = $1; }
+	//			// IEEE: [ implicit_class_handle . | package_scope ] hierarchical_variable_identifier select
+	|	yTHIS '.' idDottedForeach		{ $<fl>$=$<fl>1; $$ = "this."+$3; }
+	|	ySUPER '.' idDottedForeach		{ $<fl>$=$<fl>1; $$ = "super."+$3; }
+	|	yTHIS '.' ySUPER '.' idDottedForeach	{ $<fl>$=$<fl>1; $$ = "this.super."+$3; }
+	//			// Expanded: package_scope idDotted
+	|	package_scopeIdFollows idDottedForeach	{ $<fl>$=$<fl>1; $$ = $1+$2; }
+	;
+
 hierarchical_identifierList:	// IEEE: part of wait_statement
-		hierarchical_identifier				{ }
+		hierarchical_identifier			{ }
 	|	hierarchical_identifierList ',' hierarchical_identifier		{ }
 	;
 
@@ -2956,9 +2967,19 @@ idDotted<str>:
 	|	idDottedMore		 		{ $<fl>$=$<fl>1; $$ = $1; }
 	;
 
+idDottedForeach<str>:
+		yD_ROOT '.' idDottedForeachMore		{ $<fl>$=$<fl>1; $$ = $1+"."+$3; }
+	|	idDottedForeachMore	 		{ $<fl>$=$<fl>1; $$ = $1; }
+	;
+
 idDottedMore<str>:
 		idArrayed 				{ $<fl>$=$<fl>1; $$ = $1; }
 	|	idDottedMore '.' idArrayed		{ $<fl>$=$<fl>1; $$ = $1+"."+$3; }
+	;
+
+idDottedForeachMore<str>:
+		idForeach 				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	idDottedForeachMore '.' idForeach	{ $<fl>$=$<fl>1; $$ = $1+"."+$3; }
 	;
 
 // Single component of dotted path, maybe [#].
@@ -2974,6 +2995,19 @@ idArrayed<str>:			// IEEE: id + select
 	//	 		// IEEE: indexed_range/constant_indexed_range
 	|	idArrayed '[' expr yP_PLUSCOLON  constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"+:"+$5+"]"; }
 	|	idArrayed '[' expr yP_MINUSCOLON constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"-:"+$5+"]"; }
+	;
+
+idForeach<str>:			// IEEE: id + select + [loop_variables]
+	//			// Merge of foreach and idArrayed to prevent conflict
+		id					{ $<fl>$=$<fl>1; $$ = $1; }
+	//			// IEEE: part_select_range/constant_part_select_range
+	|	idForeach '[' expr ']'				{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"]"; }
+	|	idForeach '[' constExpr ':' constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+":"+$5+"]"; }
+	//	 		// IEEE: indexed_range/constant_indexed_range
+	|	idForeach '[' expr yP_PLUSCOLON  constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"+:"+$5+"]"; }
+	|	idForeach '[' expr yP_MINUSCOLON constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"-:"+$5+"]"; }
+	//			// IEEE: part of foreach: [ loop_variables ]
+	|	idForeach '[' expr ',' loop_variables ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+","+$5+"]"; }
 	;
 
 strAsInt<str>:
@@ -3805,7 +3839,8 @@ constraint_expression:		// ==IEEE: constraint_expression
 	|	expr yP_MINUSGT constraint_set		{ }
 	|	yIF '(' expr ')' constraint_set	%prec prLOWER_THAN_ELSE	{ }
 	|	yIF '(' expr ')' constraint_set	yELSE constraint_set	{ }
-	|	yFOREACH '(' id/*array_identifier*/ '[' loop_variables ']' ')' constraint_set	{ }
+	//			// IEEE says array_identifier here, but dotted accepted in VMM
+	|	yFOREACH '(' idClassForeach/*array_id[loop_variables]*/ ')' constraint_set	{ }
 	;
 
 constraint_set:			// ==IEEE: constraint_set
