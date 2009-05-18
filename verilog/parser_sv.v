@@ -245,4 +245,6 @@ endtask
 task vmm_more;
    file_is_a_string(`__FILE__,`__LINE__);
    foreach(this.text[i]) begin $display("%s\n", this.text[i]); end
+   // Not part of 1800-2005 grammar, but likely in 1800-2009
+   queue = '{};
 endtask

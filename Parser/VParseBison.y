@@ -2159,6 +2159,8 @@ assignment_pattern<str>:		// ==IEEE: assignment_pattern
 	//			// also IEEE "''{' structure_pattern_key ':' ...
 	//			// also IEEE "''{' array_pattern_key ':' ...
 	|	yP_TICKBRA patternMemberList '}'	{ $<fl>$=$<fl>1; $$="'{"+$2+"}"; }
+	//			// IEEE: Not in grammar, but in VMM
+	|	yP_TICKBRA '}'				{ $<fl>$=$<fl>1; $$="'{}"; }
 	;
 
 // "datatype id = x {, id = x }"  |  "yaId = x {, id=x}" is legal
