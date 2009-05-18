@@ -2244,14 +2244,9 @@ system_f_call<str>:		// IEEE: system_tf_call (as func)
 	;
 
 list_of_argumentsE<str>:	// IEEE: [list_of_arguments]
-		/* empty */				{ $$=""; }
-	|	list_of_arguments			{ $<fl>$=$<fl>1; $$=$1; }
-	;
-
-list_of_arguments<str>:		// ==IEEE: list_of_arguments - empty (handled above)
 		argsDottedList				{ $<fl>$=$<fl>1; $$=$1; }
-	|	argsExprList				{ $<fl>$=$<fl>1; $$=$1; }
-	|	argsExprList ',' argsDottedList		{ $<fl>$=$<fl>1; $$=$1+","+$3; }
+	|	argsExprListE				{ $<fl>$=$<fl>1; $$=$1; }
+	|	argsExprListE ',' argsDottedList	{ $<fl>$=$<fl>1; $$=$1+","+$3; }
 	;
 
 task_declaration:		// ==IEEE: task_declaration
@@ -2746,9 +2741,19 @@ exprOrDataTypeList<str>:
 	|	exprOrDataTypeList ','			{ $<fl>$=$<fl>1; $$ = $1+","; }   // Verilog::Parser only: ,, is ok
 	;
 
-argsExprList<str>:		// IEEE: part of list_of_arguments
+argsExprList<str>:		// IEEE: part of list_of_arguments (used where ,, isn't legal)
 		expr					{ $<fl>$=$<fl>1; $$ = $1; }
 	|	argsExprList ',' expr			{ $<fl>$=$<fl>1; $$ = $1+","+$3; }
+	;
+
+argsExprListE<str>:		// IEEE: part of list_of_arguments
+		argsExprOneE				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	argsExprListE ',' argsExprOneE		{ $<fl>$=$<fl>1; $$ = $1+","+$3; }
+	;
+
+argsExprOneE<str>:		// IEEE: part of list_of_arguments
+		/*empty*/				{ $$ = ""; }	// ,, is legal in list_of_arguments
+	|	expr					{ $<fl>$=$<fl>1; $$ = $1; }
 	;
 
 argsDottedList<str>:		// IEEE: part of list_of_arguments

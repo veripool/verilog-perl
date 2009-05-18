@@ -234,3 +234,10 @@ endclass
 class vmm_cl_subenv;
    extern protected virtual task do_reset(vmm_cl_func_colon::restart_e kind = vmm_cl_func_colon::FIRM);
 endclass
+
+task empty_comma;
+   extracomma1(,);
+   extracomma2("a",);
+   extracomma3("a",,"c");
+   extracomma4(,"b");
+endtask
