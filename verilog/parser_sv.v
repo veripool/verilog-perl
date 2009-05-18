@@ -208,5 +208,6 @@ class vmm_stuff;
    task examples;
       void'(this.a.funccall(x));
       this.a.taskcall();
+      super.new(name2);
    endtask
 endclass

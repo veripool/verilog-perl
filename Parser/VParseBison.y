@@ -1883,6 +1883,11 @@ statement_item:			// IEEE: statement_item
 	|	fexpr '.' array_methodNoRoot ';'	{ }
 	|	fexpr '.' task_subroutine_callNoMethod ';'	{ }
 	|	fexprScope ';'				{ }
+	//			// Not here in IEEE; from class_constructor_declaration
+	//			// Because we've joined class_constructor_declaration into generic functions
+	//			// Way over-permissive;
+	//			// IEEE: [ ySUPER '.' yNEW [ '(' list_of_arguments ')' ] ';' ]
+	|	fexpr '.' class_new ';'		{ }
 	//
 	//			// IEEE: disable_statement
 	|	yDISABLE hierarchical_identifier/*task_or_block*/ ';'	{ }
@@ -2228,10 +2233,17 @@ function_declaration:		// IEEE: function_declaration + function_body_declaration
 	 	yFUNCTION lifetimeE funcId tfGuts yENDFUNCTION endLabelE
 			{ PARSEP->endtaskfuncCb($<fl>5,$5);
 			  PARSEP->symPopScope(VAstType::FUNCTION); }
+	| 	yFUNCTION lifetimeE funcIdNew tfGuts yENDFUNCTION endLabelE
+			{ PARSEP->endtaskfuncCb($<fl>5,$5);
+			  PARSEP->symPopScope(VAstType::FUNCTION); }
 	;
 
 function_prototype:		// IEEE: function_prototype
 		yFUNCTION funcId '(' tf_port_listE ')'	{ PARSEP->symPopScope(VAstType::FUNCTION); }
+	;
+
+class_constructor_prototype:	// ==IEEE: class_constructor_prototype
+		yFUNCTION funcIdNew '(' tf_port_listE ')' ';'	{ PARSEP->symPopScope(VAstType::FUNCTION); }
 	;
 
 method_prototype:
@@ -2273,9 +2285,10 @@ funcId:				// IEEE: function_data_type_or_implicit + part of function_body_decla
 	|	data_type		tfIdScoped
 			{ PARSEP->symPushNew(VAstType::FUNCTION, $2);
 			  PARSEP->functionCb($<fl>2,"function",$2,$1); }
-	//
-	//			// IEEE: from class_constructor_declaration
-	| 	yNEW__ETC
+	;
+
+funcIdNew:			// IEEE: from class_constructor_declaration
+	 	yNEW__ETC
 			{ PARSEP->symPushNew(VAstType::FUNCTION, "new");
 			  PARSEP->functionCb($<fl>1,"function","new",""); }
 	| 	yNEW__PAREN
@@ -3684,8 +3697,8 @@ class_method:			// ==IEEE: class_method
 	|	method_qualifierListE function_declaration		{ }
 	|	yEXTERN method_qualifierListE method_prototype ';'	{ }
 	//			// IEEE: "method_qualifierE class_constructor_declaration"		{ }
-	//			// IEEE: "yEXTERN method_qualifierE class_constructor_prototype"
-	//			// Both part of function_declaration
+	//			// part of function_declaration
+	|	yEXTERN method_qualifierListE class_constructor_prototype	{ }
 	;
 
 // IEEE: class_constructor_prototype
