@@ -678,11 +678,12 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 #ifdef FLEX_DEBUG
 	if (yy_flex_debug) { cout<<"   lexToken: reading ahead to find possible strength"<<endl; }
 #endif
-	s_yylvalp = &m_aheadVal;  // Read by yylex
-	s_yylvalp->entp = NULL;
+	VParseBisonYYSType curValue = *s_yylvalp;  // Remember value, as about to read ahead
 	int nexttok = yylex();
 	m_ahead = true;
 	m_aheadToken = nexttok;
+	m_aheadVal = *s_yylvalp;
+	*s_yylvalp = curValue;
 	// Now potentially munge the current token
 	if (token == '(' && (nexttok == ygenSTRENGTH
 			     || nexttok == ySUPPLY0

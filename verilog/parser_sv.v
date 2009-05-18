@@ -230,3 +230,7 @@ class vmm_cl_func_colon;
    function void do_all(vmm_cl_func_colon::restart_e kind = vmm_cl_func_colon::FIRM);
    endfunction
 endclass
+
+class vmm_cl_subenv;
+   extern protected virtual task do_reset(vmm_cl_func_colon::restart_e kind = vmm_cl_func_colon::FIRM);
+endclass

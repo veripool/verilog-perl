@@ -75,7 +75,10 @@ public:  // But for internalish use only
     VSymStack&	syms() { return m_syms; }
     VAstEnt* symTableNextId() const { return m_symTableNextId; }
     void symTableNextId(VAstEnt* entp) {
-	if (debug() && entp) cout <<"symTableNextId under "<<entp<<"-"<<entp->type().ascii()<<endl;
+	if (debug()) {
+	    if (entp) cout <<"symTableNextId under "<<entp<<"-"<<entp->type().ascii()<<endl;
+	    else cout <<"symTableNextId under NULL"<<endl;
+	}
 	m_symTableNextId = entp;
     }
     void symReinsert(VAstType type, const string& name) {
