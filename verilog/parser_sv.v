@@ -203,3 +203,10 @@ module sized_out
   #( parameter SZ = 4 )
    ( output logic [SZ-1:0] o_sized );
 endmodule
+
+class vmm_stuff;
+   task examples;
+      void'(this.a.funccall(x));
+      this.a.taskcall();
+   endtask
+endclass

@@ -62,15 +62,16 @@ use Verilog::Getopt;
 ok(1);
 
 my @files;
-if (!$ENV{VERILOG_TEST_FILES}) {
+if ($ENV{VERILOG_TEST_FILES}) {
+    ok(1);
+    @files = split(/:/,$ENV{VERILOG_TEST_FILES});
+    @files = map {glob $_} @files;
+}
+else {
     skip("VERILOG_TEST_FILES not set (harmless)",1);
     # export VERILOG_TEST_FILES="$V4/test_regress/t/t_case*.v"
     @files = glob("verilog/*.v");
     @files = grep {!m!/inc!} @files;
-} else {
-    ok(1);
-    @files = split(/:/,$ENV{VERILOG_TEST_FILES});
-    @files = map {glob $_} @files;
 }
 check_series(@files);
 

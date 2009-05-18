@@ -1876,6 +1876,7 @@ statement_item:			// IEEE: statement_item
 	//
 	//			// IEEE: subroutine_call_statement
 	|	yVOID yP_TICK '(' function_subroutine_callNoMethod ')' ';' { }
+	|	yVOID yP_TICK '(' expr '.' function_subroutine_callNoMethod ')' ';' { }
 	//			// Expr included here to resolve our not knowing what is a method call
 	//			// Expr here must result in a subroutine_call
 	|	task_subroutine_callNoMethod ';'	{ }
@@ -3679,9 +3680,9 @@ class_property:			// ==IEEE: class_property
 	;
 
 class_method:			// ==IEEE: class_method
-		method_qualifierE task_declaration			{ }
-	|	method_qualifierE function_declaration			{ }
-	|	yEXTERN method_qualifierE method_prototype ';'		{ }
+		method_qualifierListE task_declaration			{ }
+	|	method_qualifierListE function_declaration		{ }
+	|	yEXTERN method_qualifierListE method_prototype ';'	{ }
 	//			// IEEE: "method_qualifierE class_constructor_declaration"		{ }
 	//			// IEEE: "yEXTERN method_qualifierE class_constructor_prototype"
 	//			// Both part of function_declaration
@@ -3696,9 +3697,18 @@ class_item_qualifierNoStatic:	// IEEE: class_item_qualifier minus ySTATIC
 	|	yLOCAL					{ }
 	;
 
-method_qualifierE:
+method_qualifierListE:
 		/* empty */				{ }
-	|	yVIRTUAL__TF				{ }
+	|	method_qualifierList			{ }
+	;
+
+method_qualifierList:
+		method_qualifier			{ }
+	|	method_qualifierList method_qualifier	{ }
+	;
+
+method_qualifier:
+		yVIRTUAL__TF				{ }
 	//			// IEEE: class_item_qualifier
 	|	ySTATIC__TF				{ }
 	|	yPROTECTED				{ }
