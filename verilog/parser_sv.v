@@ -240,4 +240,5 @@ task empty_comma;
    extracomma2("a",);
    extracomma3("a",,"c");
    extracomma4(,"b");
+   file_is_a_string(`__FILE__,`__LINE__);
 endtask

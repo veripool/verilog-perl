@@ -2,7 +2,7 @@
 // DESCRIPTION: Verilog::Preproc: Example source code
 // This file ONLY is placed into the Public Domain, for any use,
 // without warranty, 2000-2009 by Wilson Snyder.
-At file verilog/inc2.v  line 4
+At file "verilog/inc2.v"  line 4
  
 `line 5 "verilog/inc2.v" 0
 `line 1 "verilog/inc3.v" 1
@@ -15,7 +15,7 @@ At file verilog/inc2.v  line 4
   
   
   // FOO
-  At file inc3_a_filename_from_line_directive  line 10
+  At file "inc3_a_filename_from_line_directive"  line 10
 
    
 

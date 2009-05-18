@@ -4,7 +4,7 @@ verilog/inc2.v:1: `line 1 "verilog/inc2.v" 1
 verilog/inc2.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc2.v:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/inc2.v:3: // without warranty, 2000-2009 by Wilson Snyder.
-verilog/inc2.v:4: At file verilog/inc2.v  line 4
+verilog/inc2.v:4: At file "verilog/inc2.v"  line 4
 verilog/inc3.v:1:  
 verilog/inc3.v:1: `line 5 "verilog/inc2.v" 0
 verilog/inc3.v:1: `line 1 "verilog/inc3.v" 1
@@ -17,7 +17,7 @@ inc3_a_filename_from_line_directive:6:
 inc3_a_filename_from_line_directive:7:   
 inc3_a_filename_from_line_directive:8:   
 inc3_a_filename_from_line_directive:9:   // FOO
-inc3_a_filename_from_line_directive:10:   At file inc3_a_filename_from_line_directive  line 10
+inc3_a_filename_from_line_directive:10:   At file "inc3_a_filename_from_line_directive"  line 10
 inc3_a_filename_from_line_directive:11: 
 inc3_a_filename_from_line_directive:12:    
 inc3_a_filename_from_line_directive:13: 

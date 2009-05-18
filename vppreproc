@@ -214,9 +214,9 @@ The following additional constructs may be added to your Verilog code.
 
 =item `__FILE__
 
-The __FILE__ define expands to the current filename, like C++'s __FILE__.
-This is in the draft SystemVerilog 2009 standard (but supported by
-Verilog-Perl since 2004!)
+The __FILE__ define expands to the current filename as a string, like C++'s
+__FILE__.  This is in the draft SystemVerilog 2009 standard (but supported
+by Verilog-Perl since 2004!)
 
 =item `__LINE__
 

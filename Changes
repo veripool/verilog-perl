@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.2****
 
+***	`__FILE__ now expands to a string, per draft SystemVerilog 2010(ish).
+
 ***	Fix parsing class member variables with multiple qualifiers.
 
 ****	Fix Netlist errors with ported interfaces, bug86. [David A]
