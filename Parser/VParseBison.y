@@ -2956,12 +2956,14 @@ hierarchical_identifierList:	// IEEE: part of wait_statement
 	;
 
 hierarchical_identifierBit:	// IEEE: "hierarchical_identifier bit_select"
-		idDotted				{ }
+	//			// Not in grammar but "this." believed legal here
+		idClassSel				{ }
 	;
 
 hierarchical_identifier:	// IEEE: hierarchical_identifier, including extra bit_select
 	//			//	  +hierarchical_parameter_identifier
-		idDotted				{ }
+	//			// Not in grammar but "this." believed legal here
+		idClassSel				{ }
 	;
 
 idDotted<str>:

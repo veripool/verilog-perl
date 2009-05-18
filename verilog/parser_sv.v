@@ -247,4 +247,5 @@ task vmm_more;
    foreach(this.text[i]) begin $display("%s\n", this.text[i]); end
    // Not part of 1800-2005 grammar, but likely in 1800-2009
    queue = '{};
+   -> this.item_taken;
 endtask
