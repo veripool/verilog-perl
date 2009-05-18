@@ -2939,8 +2939,11 @@ strAsInt<str>:
 	;
 
 identifier_list<str>:		// ==IEEE: identifier_list
-		id					{ $<fl>$=$<fl>1; $$ = $1; }
-	|	identifier_list ',' id			{ $<fl>$=$<fl>1; $$ = $1+","+$3; }
+	//			// Used by ySOLVE and yRANDOMIZE;
+	//			// IEEE: uses id below, but,
+	//			// VMM suggests idDotted is legal in many cases
+		idDotted				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	identifier_list ',' idDotted		{ $<fl>$=$<fl>1; $$ = $1+","+$3; }
 	;
 
 endLabelE:

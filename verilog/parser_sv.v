@@ -204,6 +204,14 @@ module sized_out
    ( output logic [SZ-1:0] o_sized );
 endmodule
 
+class solve_size;
+   rand byte arrayed[];
+   rand bit b;
+   // The dot below doesn't seem legal according to grammar, but
+   // the intent makes sense, and it appears in the VMM
+   constraint solve_a_b { solve arrayed.size before b; }
+endclass
+
 class vmm_stuff;
    task examples;
       void'(this.a.funccall(x));
