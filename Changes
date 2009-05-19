@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.211****
+
+****	Fix compile error under GCC 3.3.5.
+
 * Verilog::Language 3.210 2009/05/19
 
 ***	`__FILE__ now expands to a string, per draft SystemVerilog 2010(ish).

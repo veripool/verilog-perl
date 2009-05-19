@@ -109,9 +109,12 @@ public:
 };
 
 void VSymStack::selftest() {
-    assert(string(VAstType(VAstType::_MAX).ascii()) == "_MAX");  // Else probably missing word in ascii()
+    // GCC 3.3.5 requires this temporary string, so can't be a one liner
+    { string max = VAstType(VAstType::_MAX).ascii(); assert(max == "_MAX"); } // Else probably missing word in ascii()
     //
-    VFileLine* fl = VFileLineTest(1).create(__FILE__,__LINE__);
+    VFileLineTest flt(1);  // GCC 3.3.5 requires temporary
+    VFileLine* fl = flt.create(__FILE__,__LINE__);
+
     AV* topavp = newAV();
     VSymStack stack (fl, topavp);
     //
