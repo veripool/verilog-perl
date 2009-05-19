@@ -35,14 +35,14 @@ module test (
       else     d_out <= d_int;
    end
 
-//   property p1;
-//      @(posedge clk)
-//	disable iff(!rst)
-//	  $rose(d_int) |-> ##1 d_int;
-//   endproperty
-//
-//   a1:     assert property(p1) else $warning("\nProperty violated\n");
-//   c1:     cover  property(p1)  $display("\np1_cover\n");
+   property p1;
+      @(posedge clk)
+	disable iff(!rst)
+	  $rose(d_int) |-> ##1 d_int;
+   endproperty
+
+   //a1:   assert property(p1) else $warning("\nProperty violated\n");
+   c1:     cover  property(p1)  $display("\np1_cover\n");
 endmodule : test
 
 // Different ways of declaring pins/vars
@@ -229,6 +229,7 @@ class vmm_cl_func_colon;
    typedef enum int unsigned {FIRM} restart_e;
    function void do_all(vmm_cl_func_colon::restart_e kind = vmm_cl_func_colon::FIRM);
    endfunction
+   extern function int uses_class_type();
 endclass
 
 class vmm_cl_subenv;
@@ -249,3 +250,16 @@ task vmm_more;
    queue = '{};
    -> this.item_taken;
 endtask
+
+// Extern Functions/tasks when defined must scope to the class they're in to get appropriate types
+function int vmm_cl_func_colon::uses_class_type(restart_e note_uses_class_type);
+   var restart_e also_uses_class_type;
+endfunction
+
+module hidden_checks;
+   typedef int T;
+   sub (.T(123));  // Different T
+   task hidden;
+      typedef bit T;  // Different T
+   endtask
+endmodule

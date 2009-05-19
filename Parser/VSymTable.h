@@ -61,11 +61,22 @@ public:
     /// Return type of current lookup
     VAstType curType() { return m_currentSymp->type(); }
 
+    void showUpward () {
+	cout<<"SymTable Stack:\n";
+	for (SymStack::reverse_iterator it=m_sympStack.rbegin(); it!=m_sympStack.rend(); ++it) {
+	    VAstEnt* symp = *it;
+	    cout<<"\t"<<symp->ascii()<<endl;
+	}
+	cout<<"SymTable Parents of current:\n";
+	for (VAstEnt* symp=currentSymp(); symp; symp=symp->parentp()) {
+	    cout<<"\t"<<symp->ascii()<<endl;
+	}
+    }
+
     /// Lookup the given string as an identifier, return type of the id
     // This recurses upwards if not found; for flat lookup use symp->findSym
     VAstEnt* findEntUpward (const string& name) {
-	for (SymStack::reverse_iterator it=m_sympStack.rbegin(); it!=m_sympStack.rend(); ++it) {
-	    VAstEnt* symp = *it;
+	for (VAstEnt* symp=currentSymp(); symp; symp=symp->parentp()) {
 	    if (VAstEnt* subp = symp->findSym(name)) {
 		return subp;
 	    }
@@ -87,8 +98,7 @@ public:
 
     /// Return what this object is a member of, ignoring blocks
     string objofUpward() {
-	for (SymStack::reverse_iterator it=m_sympStack.rbegin(); it!=m_sympStack.rend(); ++it) {
-	    VAstEnt* symp = *it;
+	for (VAstEnt* symp=currentSymp(); symp; symp=symp->parentp()) {
 	    if (!symp->typeIgnoreObjof()) {
 		return symp->type().ascii();
 	    }

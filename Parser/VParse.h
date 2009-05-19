@@ -88,7 +88,11 @@ public:  // But for internalish use only
 	return m_syms.objofUpward();
     }
     void symPushNew(VAstType type, const string& name) {
-	m_syms.pushScope(m_syms.findNewTable(type,name));
+	symPushNewUnder(NULL, type, name);
+    }
+    void symPushNewUnder(VAstEnt* parentp, VAstType type, const string& name) {
+	if (!parentp) parentp = m_syms.currentSymp();
+	m_syms.pushScope(parentp->findNewTable(type,name));
     }
     void symPushNewAnon(VAstType type) {
 	string name = "__anon";

@@ -106,7 +106,7 @@ sub reset {
 sub std {
     my $self = shift;
     my $quiet = !defined $self->{use_std} && $self->{_sigparser};
-    if (!$self->{symbol_table}[1]->{std}  # Not in the symbol table yet
+    if (!$self->{symbol_table}[2]->{std}  # Not in the symbol table yet
 	&& ($self->{use_std} || $quiet)
 	) {
 	print "Including std::\n" if $self->{_debug};

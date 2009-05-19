@@ -2203,6 +2203,7 @@ for_step_assignment:		// ==IEEE: for_step_assignment
 	;
 
 loop_variables<str>:			// ==IEEE: loop_variables
+//FIXMEid
 		id					{ $<fl>$=$<fl>1; $$=$1; }
 	|	loop_variables ',' id			{ $<fl>$=$<fl>1; $$=$1+","+$3; }
 	;
@@ -2297,47 +2298,47 @@ lifetime:			// ==IEEE: lifetime
 
 taskId:
 		tfIdScoped
-			{ PARSEP->symPushNew(VAstType::TASK, $1);
-			  PARSEP->taskCb($<fl>1,"task",$1); }
+			{ PARSEP->symPushNewUnder($<entp>1, VAstType::TASK, $<str>1);
+			  PARSEP->taskCb($<fl>1,"task",$<str>1); }
 	;
 
 funcId:				// IEEE: function_data_type_or_implicit + part of function_body_declaration
 	//			// IEEE: function_data_type_or_implicit must be expanded here to prevent conflict
 	//			// function_data_type expanded here to prevent conflicts with implicit_type:empty vs data_type:ID
 		/**/			tfIdScoped
-			{ PARSEP->symPushNew(VAstType::FUNCTION, $1);
-			  PARSEP->functionCb($<fl>1,"function",$1,""); }
+			{ PARSEP->symPushNewUnder($<entp>1, VAstType::FUNCTION, $<str>1);
+			  PARSEP->functionCb($<fl>1,"function",$<str>1,""); }
 	|	signingE rangeList	tfIdScoped
-			{ PARSEP->symPushNew(VAstType::FUNCTION, $3);
-			  PARSEP->functionCb($<fl>3,"function",$3,SPACED($1,$2)); }
+			{ PARSEP->symPushNewUnder($<entp>3, VAstType::FUNCTION, $<str>3);
+			  PARSEP->functionCb($<fl>3,"function",$<str>3,SPACED($1,$2)); }
 	|	signing			tfIdScoped
-			{ PARSEP->symPushNew(VAstType::FUNCTION, $2);
-			  PARSEP->functionCb($<fl>2,"function",$2,$1); }
+			{ PARSEP->symPushNewUnder($<entp>2, VAstType::FUNCTION, $<str>2);
+			  PARSEP->functionCb($<fl>2,"function",$<str>2,$1); }
 	|	yVOID			tfIdScoped
-			{ PARSEP->symPushNew(VAstType::FUNCTION, $2);
-			  PARSEP->functionCb($<fl>2,"function",$2,$1); }
+			{ PARSEP->symPushNewUnder($<entp>2, VAstType::FUNCTION, $<str>2);
+			  PARSEP->functionCb($<fl>2,"function",$<str>2,$1); }
 	|	data_type		tfIdScoped
-			{ PARSEP->symPushNew(VAstType::FUNCTION, $2);
-			  PARSEP->functionCb($<fl>2,"function",$2,$1); }
+			{ PARSEP->symPushNewUnder($<entp>2, VAstType::FUNCTION, $<str>2);
+			  PARSEP->functionCb($<fl>2,"function",$<str>2,$1); }
 	;
 
 funcIdNew:			// IEEE: from class_constructor_declaration
 	 	yNEW__ETC
-			{ PARSEP->symPushNew(VAstType::FUNCTION, "new");
+			{ PARSEP->symPushNewUnder(NULL, VAstType::FUNCTION, "new");
 			  PARSEP->functionCb($<fl>1,"function","new",""); }
 	| 	yNEW__PAREN
-			{ PARSEP->symPushNew(VAstType::FUNCTION, "new");
+			{ PARSEP->symPushNewUnder(NULL, VAstType::FUNCTION, "new");
 			  PARSEP->functionCb($<fl>1,"function","new",""); }
 	|	class_scopeWithoutId yNEW__PAREN
-			{ PARSEP->symPushNew(VAstType::FUNCTION, "new");
+			{ PARSEP->symPushNewUnder($<entp>1, VAstType::FUNCTION, "new");
 			  PARSEP->functionCb($<fl>2,"function","new",""); }
 	;
 
-tfIdScoped<str>:		// IEEE: part of function_body_declaration/task_body_declaration
-	//			// IEEE: [ interface_identifier '.' | class_scope ] function_identifier
-		id					{ $<fl>$=$<fl>1; $$ = $1; }
-	|	id/*interface_identifier*/ '.' idAny	{ $<fl>$=$<fl>1; $$ = $1+"."+$2; }
-	|	class_scope_id				{ $<fl>$=$<fl>1; $$ = $1; }
+tfIdScoped<str_entp>:		// IEEE: part of function_body_declaration/task_body_declaration
+ 	//			// IEEE: [ interface_identifier '.' | class_scope ] function_identifier
+		id					{ $<fl>$=$<fl>1; $<entp>$=NULL;     $<str>$ = $1; }
+	|	id/*interface_identifier*/ '.' id	{ $<fl>$=$<fl>1; $<entp>$=NULL;     $<str>$ = $1+"."+$2; }
+	|	class_scope_id				{ $<fl>$=$<fl>1; $<entp>$=$<entp>1; $<str>$ = $<str>1; }
 	;
 
 tfGuts:
@@ -2705,7 +2706,7 @@ exprScope<str>:			// scope and variable for use to inside an expression
 		yTHIS					{ $<fl>$=$<fl>1; $$ = $1; }
 	|	idArrayed				{ $<fl>$=$<fl>1; $$ = $1; }
 	|	package_scopeIdFollows idArrayed	{ $<fl>$=$<fl>1; $$ = $1+$2; }
-	|	class_scopeIdFollows idArrayed		{ $<fl>$=$<fl>1; $$ = $1+$2; }
+	|	class_scopeIdFollows idArrayed		{ $<fl>$=$<fl>1; $$ = $<str>1+$2; }
 	|	~l~expr '.' idArrayed			{ $<fl>$=$<fl>1; $$ = $1+"."+$2; }
 	//			// expr below must be a "yTHIS"
 	|	~l~expr '.' ySUPER			{ $<fl>$=$<fl>1; $$ = $1+"."+$2; }
@@ -3686,11 +3687,11 @@ ps_covergroup_identifier<str>:	// ==IEEE: ps_covergroup_identifier
 	;
 
 class_scope_type<str>:		// class_scope + type
-		class_scopeIdFollows yaID__aTYPE	{ $<fl>$=$<fl>1; $$=$1+$2; }
+		class_scopeIdFollows yaID__aTYPE	{ $<fl>$=$<fl>1; $$=$<str>1+$2; }
 	;
 
-class_scope_id<str>:		// class_scope + id etc
-		class_scopeIdFollows id			{ $<fl>$=$<fl>1; $$=$1+$2; }
+class_scope_id<str_entp>:	// class_scope + id etc
+		class_scopeIdFollows id			{ $<fl>$=$<fl>1; $<entp>$=$<entp>1; $<str>$=$<str>1+$<str>2; }
 	;
 
 //=== Below rules assume special scoping per above
@@ -3702,14 +3703,14 @@ class_typeWithoutId<str>:	// class_type standalone without following id
 
 class_scopeWithoutId<str>:	// class_type standalone without following id
 	//			// and we thus don't need to resolve it in specified package
-		class_scopeIdFollows			{ $<fl>$=$<fl>1; $$=$1; PARSEP->symTableNextId(NULL); }
+		class_scopeIdFollows			{ $<fl>$=$<fl>1; $$=$<str>1; PARSEP->symTableNextId(NULL); }
 	;
 
-class_scopeIdFollows<str>:	// IEEE: class_scope
+class_scopeIdFollows<str_entp>:	// IEEE: class_scope
 	//			// IEEE: "class_type yP_COLONCOLON"
 	//			// IMPORTANT: The lexer will parse the following ID to be in the found package
 	//			// But class_type:'::' conflicts with class_scope:'::' so expand here
-		package_scopeIdFollowsE class_typeOneListColonIdFollows	{ $<fl>$=$<fl>2; $$=$1+$<str>2; }
+		package_scopeIdFollowsE class_typeOneListColonIdFollows	{ $<fl>$=$<fl>2; $<entp>$=$<entp>2; $<str>$=$1+$<str>2; }
 	;
 
 class_typeOneListColonIdFollows<str_entp>: // IEEE: class_type ::

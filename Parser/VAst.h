@@ -105,25 +105,33 @@ private:
     VAstEnt() { assert(0); }	// Not made by users, it's an AV*
     ~VAstEnt() { assert(0); }	// Not made by users, it's an AV*
 
-    static av* newAVEnt (VAstType type);
-    static void initAVEnt (struct av* avp, VAstType type);
+    av* newAVEnt (VAstType type);
+    static void initAVEnt (struct av* avp, VAstType type, struct av* parentp);
 
     // ACCESSORS
     inline struct av* castAVp() { return (struct av*)(this); }
     inline VAstEnt* avToSymEnt(struct av* avp) { return (VAstEnt*)(avp); }
 
-    /// $self->[1]: For current entry, the hash of symbols under it
+    /// $self->[2]: For current entry, the hash of symbols under it
     struct hv* subhash();
 
     /// Insert into current table
     void insert(VAstEnt* newentp, const string& name);
 
 public:
+    // ACCESSORS
+
     /// $self->[0]: For current entry, the node type
     VAstType type();
 
+    /// $self->[1]: For current entry, what node it is under or NULL if netlist
+    VAstEnt* parentp();
+
     /// type() indicates we shouldn't report this as a containing object
     bool typeIgnoreObjof() { VAstType t=type(); return t==VAstType::BLOCK || t==VAstType::FORK; }
+
+    /// Info on current node, for debug
+    string ascii(const string& name="");
 
     // METHODS
     /// Return internal pointer for given name or null
@@ -137,9 +145,6 @@ public:
 
     /// Insert into current table from another imported package's table
     void import(VAstEnt* fromEntp, const string& id_or_star);
-
-    /// Info on current node, for debug
-    string ascii(const string& name="");
 
 protected:
     friend class VSymStack;
