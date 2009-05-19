@@ -675,10 +675,10 @@ port:				// ==IEEE: port
 	//			// IEEE: interface_port_header port_identifier { unpacked_dimension }
 	//			// Expanded interface_port_header
 	//			// We use instantCb here because the non-port form looks just like a module instantiation
-		portDirNetE id/*interface*/                   id/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $3, $4, ""); PARSEP->instantCb($<fl>2, $2, $3, $4); PINNUMINC(); }
-	|	portDirNetE yINTERFACE                        id/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $3, $4, ""); PINNUMINC(); }
-	|	portDirNetE id/*interface*/ '.' id/*modport*/ id/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $5, $6, ""); PARSEP->instantCb($<fl>2, $2, $5, $6); PINNUMINC(); }
-	|	portDirNetE yINTERFACE      '.' id/*modport*/ id/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }
+		portDirNetE id/*interface*/                   idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $3, $4, ""); PARSEP->instantCb($<fl>2, $2, $3, $4); PINNUMINC(); }
+	|	portDirNetE yINTERFACE                        idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $3, $4, ""); PINNUMINC(); }
+	|	portDirNetE id/*interface*/ '.' idAny/*modport*/ idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $5, $6, ""); PARSEP->instantCb($<fl>2, $2, $5, $6); PINNUMINC(); }
+	|	portDirNetE yINTERFACE      '.' idAny/*modport*/ idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }
 	//
 	//			// IEEE: ansi_port_declaration, with [port_direction] removed
 	//			//   IEEE: [ net_port_header | interface_port_header ] port_identifier { unpacked_dimension }
@@ -910,8 +910,8 @@ modportPortsDecl:
 
 modportSimplePort:		// IEEE: modport_simple_port or modport_tf_port, depending what keyword was earlier
 		id					{ }
-	|	'.' id '(' ')'				{ }
-	|	'.' id '(' expr ')'			{ }
+	|	'.' idAny '(' ')'			{ }
+	|	'.' idAny '(' expr ')'			{ }
 	;
 
 modport_tf_port:		// ==IEEE: modport_tf_port
@@ -2336,7 +2336,7 @@ funcIdNew:			// IEEE: from class_constructor_declaration
 tfIdScoped<str>:		// IEEE: part of function_body_declaration/task_body_declaration
 	//			// IEEE: [ interface_identifier '.' | class_scope ] function_identifier
 		id					{ $<fl>$=$<fl>1; $$ = $1; }
-	|	id/*interface_identifier*/ '.' id	{ $<fl>$=$<fl>1; $$ = $1+"."+$2; }
+	|	id/*interface_identifier*/ '.' idAny	{ $<fl>$=$<fl>1; $$ = $1+"."+$2; }
 	|	class_scope_id				{ $<fl>$=$<fl>1; $$ = $1; }
 	;
 
@@ -2765,7 +2765,7 @@ argsDottedList<str>:		// IEEE: part of list_of_arguments
 	;
 
 argsDotted<str>:		// IEEE: part of list_of_arguments
-		'.' id '(' expr ')'			{ $<fl>$=$<fl>1; $$=$1+$2+$3+$4+$5; }
+		'.' idAny '(' expr ')'			{ $<fl>$=$<fl>1; $$=$1+$2+$3+$4+$5; }
 	;
 
 streaming_concatenation<str>:	// ==IEEE: streaming_concatenation
@@ -3376,7 +3376,7 @@ coverage_spec_or_option:	// ==IEEE: coverage_spec_or_option
 
 coverage_option:		// ==IEEE: coverage_option
 	//			// option/type_option aren't really keywords
-		id/*yOPTION | yTYPE_OPTION*/ '.' id/*member_identifier*/ '=' expr	{ }
+		id/*yOPTION | yTYPE_OPTION*/ '.' idAny/*member_identifier*/ '=' expr	{ }
 	;
 
 cover_point:			// ==IEEE: cover_point
@@ -3516,7 +3516,7 @@ select_condition:		// ==IEEE: select_condition
 bins_expression:		// ==IEEE: bins_expression
 	//			// "cover_point_identifier" and "variable_identifier" look identical
 		id/*variable_identifier or cover_point_identifier*/	{ }
-	|	id/*cover_point_identifier*/ '.' id/*bins_identifier*/	{ }
+	|	id/*cover_point_identifier*/ '.' idAny/*bins_identifier*/	{ }
 	;
 
 coverage_eventE:		// IEEE: [ coverage_event ]
