@@ -13,7 +13,7 @@ use strict;
 @ISA = qw(Verilog::Netlist::File::Struct
 	Verilog::Netlist::Subclass);
 
-$VERSION = '3.202';
+$VERSION = '3.210';
 
 structs('new',
 	'Verilog::Netlist::File::Struct'

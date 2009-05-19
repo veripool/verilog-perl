@@ -3,9 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.2****
+* Verilog::Language 3.210 2009/05/19
 
 ***	`__FILE__ now expands to a string, per draft SystemVerilog 2010(ish).
+
+***	Fix parsing external declarations using appropriate class scope.
 
 ***	Fix parsing class member variables with multiple qualifiers.
 
@@ -21,15 +23,15 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix parsing "super.new(...)"
 
-* Verilog::Language 3.202 2009/5/1
+* Verilog::Language 3.202 2009/05/01
 
 ****	Fix 3.200 mis-inheriting V2K port types.  [Derek Johnstone]
 
-* Verilog::Language 3.201 2009/4/28
+* Verilog::Language 3.201 2009/04/28
 
 ****	Fix "abort" compile error.  [Jayanand AK]
 
-* Verilog::Language 3.200 2009/4/15
+* Verilog::Language 3.200 2009/04/15
 
 **	This is a major release that may break some scripts that worked with
 	earlier versions.  Some scripts may need modification to work with
@@ -66,7 +68,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix logic MSBs not being reported in 3.200 beta.  [Horia Toma]
 
-* Verilog::Language 3.121 2009/4/5
+* Verilog::Language 3.121 2009/04/05
 
 ****	Make cell names unique when duplicate cells encountered. [Paul Janson]
 
@@ -74,7 +76,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix modported instance name passed to SigParser::instant callback.
 
-* Verilog::Language 3.120 2009/2/25
+* Verilog::Language 3.120 2009/02/25
 
 ***	Add vhier --resolve-files option. [by Vasu Arasanipalai]
 
@@ -94,7 +96,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix Bison 2.4 compile issues.
 
-* Verilog::Language 3.110 2009/1/28
+* Verilog::Language 3.110 2009/01/28
 
 **	Support interface and import. [by Sandeep Gor]
 	Add new SigParser::interface, endinterface and import callbacks.
@@ -107,7 +109,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Support `pragma and `default_nettype.
 
-* Verilog::Language 3.100 2009/1/2
+* Verilog::Language 3.100 2009/01/02
 
 **	Vppp is now renamed vppreproc; vpm is renamed vpassert.
 	This fixes naming conflicts with other packages.  [Chitlesh Goorah]

@@ -2203,7 +2203,6 @@ for_step_assignment:		// ==IEEE: for_step_assignment
 	;
 
 loop_variables<str>:			// ==IEEE: loop_variables
-//FIXMEid
 		id					{ $<fl>$=$<fl>1; $$=$1; }
 	|	loop_variables ',' id			{ $<fl>$=$<fl>1; $$=$1+","+$3; }
 	;
