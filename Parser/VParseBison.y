@@ -884,7 +884,7 @@ modport_itemList:		// IEEE: part of modport_declaration
 	;
 
 modport_item:			// ==IEEE: modport_item
-		id/*new modport*/ '(' modportPortsDeclList ')'		{ }
+		id/*new-modport*/ '(' modportPortsDeclList ')'		{ }
 	;
 
 modportPortsDeclList:
@@ -932,7 +932,7 @@ list_of_genvar_identifiers:	// IEEE: list_of_genvar_identifiers (for declaration
 	;
 
 genvar_identifierDecl:		// IEEE: genvar_identifier (for declaration)
-		id/*genvar_identifier*/ sigAttrListE	{ VARRESET_NONLIST("genvar"); VARDONE($<fl>1, $1, "", ""); }
+		id/*new-genvar_identifier*/ sigAttrListE	{ VARRESET_NONLIST("genvar"); VARDONE($<fl>1, $1, "", ""); }
 	;
 
 local_parameter_declaration:	// IEEE: local_parameter_declaration
@@ -1183,9 +1183,9 @@ list_of_tf_variable_identifiers: // ==IEEE: list_of_tf_variable_identifiers
 	;
 
 tf_variable_identifier:		// IEEE: part of list_of_tf_variable_identifiers
-		yaID__ETC variable_dimensionListE sigAttrListE
+		id variable_dimensionListE sigAttrListE
 			{ VARDONE($<fl>1, $1, $2, ""); }
-	|	yaID__ETC variable_dimensionListE sigAttrListE '=' expr
+	|	id variable_dimensionListE sigAttrListE '=' expr
 			{ VARDONE($<fl>1, $1, $2, $5); }
 	;
 
@@ -1448,7 +1448,7 @@ module_or_generate_item_declaration:	// ==IEEE: module_or_generate_item_declarat
 		package_or_generate_item_declaration	{ }
 	| 	genvar_declaration			{ }
 	|	clocking_declaration			{ }
-	|	yDEFAULT yCLOCKING id/*clocking_identifier*/ ';'	{ }
+	|	yDEFAULT yCLOCKING idAny/*new-clocking_identifier*/ ';'	{ }
 	;
 
 aliasEqList:			// IEEE: part of net_alias
@@ -1499,8 +1499,8 @@ genItemBegin:			// IEEE: part of generate_block
 	|	yBEGIN yEND				{ }
 	|	id ':' yBEGIN genItemList yEND endLabelE	{ }
 	|	id ':' yBEGIN             yEND endLabelE	{ }
-	|	yBEGIN ':' id genItemList yEND endLabelE	{ }
-	|	yBEGIN ':' id             yEND endLabelE	{ }
+	|	yBEGIN ':' idAny genItemList yEND endLabelE	{ }
+	|	yBEGIN ':' idAny             yEND endLabelE	{ }
 	;
 
 genItemList:
@@ -1626,7 +1626,7 @@ netSig:				// IEEE: net_decl_assignment -  one element from list_of_port_identif
 	;
 
 netId<str>:
-		id/*net*/				{ $<fl>$=$<fl>1; $$=$1; }
+		id/*new-net*/				{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 sigAttrListE:
@@ -1693,7 +1693,7 @@ delayrange<str>:
 param_assignment:		// ==IEEE: param_assignment
 	//			// IEEE: constant_param_expression
 	//			// constant_param_expression: '$' is in expr
-		id/*parameter*/ sigAttrListE '=' exprOrDataType
+		id/*new-parameter*/ sigAttrListE '=' exprOrDataType
 			{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, "", $4); }
 	;
 
@@ -1827,25 +1827,25 @@ stmtBlock:			// IEEE: statement + seq_block + par_block
 
 seq_block:			// ==IEEE: seq_block
 	//			// IEEE doesn't allow declarations in unnamed blocks, but several simulators do.
-		yBEGIN blockDeclStmtList yEND			{ }
+		yBEGIN blockDeclStmtList yEND		{ }
 	|	yBEGIN /**/	yEND			{ }
 	|	yBEGIN ':' seq_blockId blockDeclStmtList yEND endLabelE	{ PARSEP->symPopScope(VAstType::BLOCK); }
 	|	yBEGIN ':' seq_blockId /**/		 yEND endLabelE	{ PARSEP->symPopScope(VAstType::BLOCK); }
 	;
 
 seq_blockId:			// IEEE: part of seq_block
-		id/*block_identifier*/			{ PARSEP->symPushNew(VAstType::BLOCK,$1); }
+		idAny/*new-block_identifier*/		{ PARSEP->symPushNew(VAstType::BLOCK,$1); }
 	;
 
 par_block:			// ==IEEE: par_block
-		yFORK blockDeclStmtList	yJOIN			{ }
+		yFORK blockDeclStmtList	yJOIN		{ }
 	|	yFORK /**/	yJOIN			{ }
 	|	yFORK ':' par_blockId blockDeclStmtList	yJOIN endLabelE	{ PARSEP->symPopScope(VAstType::FORK); }
 	|	yFORK ':' par_blockId /**/		yJOIN endLabelE	{ PARSEP->symPopScope(VAstType::FORK); }
 	;
 
 par_blockId:			// IEEE: part of par_block
-		id/*block_identifier*/			{ PARSEP->symPushNew(VAstType::FORK,$1); }
+		idAny/*new-block_identifier*/		{ PARSEP->symPushNew(VAstType::FORK,$1); }
 	;
 
 blockDeclStmtList:		// IEEE: { block_item_declaration } { statement or null }
@@ -2176,7 +2176,7 @@ for_initializationItemList:	// IEEE: [for_variable_declaration...]
 
 for_initializationItem:		// IEEE: variable_assignment + for_variable_declaration
 	//			// IEEE: for_variable_declaration
-		data_type id '=' expr			{ VARTYPE($1); }
+		data_type idAny/*new*/ '=' expr		{ VARTYPE($1); }
 	//			// IEEE: variable_assignment
 	|	variable_lvalue '=' expr		{ }
 	;
@@ -2404,9 +2404,9 @@ tf_port_itemDir:		// IEEE: part of tf_port_item, direction
 	;
 
 tf_port_itemAssignment:		// IEEE: part of tf_port_item, which has assignment
-		yaID__ETC variable_dimensionListE sigAttrListE
+		id variable_dimensionListE sigAttrListE
 			{ VARDONE($<fl>1, $1, $2, ""); }
-	|	yaID__ETC variable_dimensionListE sigAttrListE '=' expr
+	|	id variable_dimensionListE sigAttrListE '=' expr
 			{ VARDONE($<fl>1, $1, $2, $5); }
 	;
 
@@ -2468,7 +2468,7 @@ dpi_tf_import_propertyE:	// IEEE: [ dpi_function_import_property + dpi_task_impo
 	;
 
 overload_declaration:		// ==IEEE: overload_declaration
-		yBIND overload_operator yFUNCTION data_type id/*function_identifier*/
+		yBIND overload_operator yFUNCTION data_type idAny/*new-function_identifier*/
 			'(' overload_proto_formals ')' ';'	{ }
 	;
 
@@ -3087,8 +3087,8 @@ list_of_clocking_decl_assign:	// ==IEEE: list_of_clocking_decl_assign
 	;
 
 clocking_decl_assign:		// ==IEEE: clocking_decl_assign
-		id/*signal_identifier*/			{ }
-	|	id/*signal_identifier*/ '=' expr	{ }
+		idAny/*new-signal_identifier*/		{ }
+	|	idAny/*new-signal_identifier*/ '=' expr	{ }
 	;
 
 clocking_skewE:			// IEEE: [clocking_skew]
@@ -3497,7 +3497,7 @@ bins_selection_or_option:	// ==IEEE: bins_selection_or_option
 	;
 
 bins_selection:			// ==IEEE: bins_selection
-		bins_keyword id/*bin_identifier*/ '=' select_expression iffE	{ }
+		bins_keyword idAny/*new-bin_identifier*/ '=' select_expression iffE	{ }
 	;
 
 select_expression:		// ==IEEE: select_expression
