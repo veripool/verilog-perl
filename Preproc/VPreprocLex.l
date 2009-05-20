@@ -34,6 +34,9 @@
 #include <cstring>
 #include <iostream>
 
+// Flex 2.5.35 has compile warning in ECHO, so we'll default our own rule
+#define ECHO yyerrorf("Missing VPreprocLex.l rule: ECHO rule invoked in state %d: %s", YY_START, yytext);
+
 VPreprocLex* VPreprocLex::s_currentLexp = NULL;	// Current lexing point
 
 #define linenoInc()  { VPreprocLex::s_currentLexp->linenoInc(); }

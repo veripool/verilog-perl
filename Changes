@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix compile error under GCC 3.3.5.
 
+****	Work around compiler warning when using flex 2.5.35. [Jonathan Kimmitt]
+
 * Verilog::Language 3.210 2009/05/19
 
 ***	`__FILE__ now expands to a string, per draft SystemVerilog 2010(ish).

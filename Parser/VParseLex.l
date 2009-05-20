@@ -40,6 +40,9 @@
 
 #define YY_SKIP_YYWRAP
 
+// Flex 2.5.35 has compile warning in ECHO, so we'll default our own rule
+#define ECHO yyerrorf("Missing VParseLex.l rule: ECHO rule invoked in state %d: %s", YY_START, yytext);
+
 VParseLex* VParseLex::s_currentLexp = NULL;	// Current lexing point
 VParseBisonYYSType* VParseLex::s_yylvalp = NULL;		// LValue for current bison object
 
