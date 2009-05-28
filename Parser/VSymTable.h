@@ -104,6 +104,7 @@ public:
 	    }
 	}
 	assert(0);  // Should have been a NETLIST if nothing else
+	return "";  // Asserts maybe NOPed
     }
 
     /// Push current scope down to a new scope
