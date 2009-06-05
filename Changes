@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.211****
 
+***	Add SigParser->var callbacks on struct members, bug91. [Saul Cuellar]
+
 ****	Fix compile error under GCC 3.3.5.
 
 ****	Work around compiler warning when using flex 2.5.35. [Jonathan Kimmitt]

@@ -263,3 +263,9 @@ module hidden_checks;
       typedef bit T;  // Different T
    endtask
 endmodule
+
+typedef struct packed signed {
+      rand int m_a;
+      bit [7:0] m_b;
+   } t_bug91;
+t_bug91 v_bug91;

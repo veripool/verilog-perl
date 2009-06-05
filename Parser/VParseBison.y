@@ -1115,8 +1115,10 @@ data_typeNoRef<str>:		// ==IEEE: data_type, excluding class_type etc references
 		integer_vector_type signingE regArRangeE	{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
 	|	integer_atom_type signingE			{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	|	non_integer_type			{ $<fl>$=$<fl>1; $$=$1; }
-	|	ySTRUCT        packedSigningE '{' struct_union_memberList '}' packed_dimensionE	{ $<fl>$=$<fl>1; $$=$1; }
-	|	yUNION taggedE packedSigningE '{' struct_union_memberList '}' packed_dimensionE	{ $<fl>$=$<fl>1; $$=$1; }
+	|	ySTRUCT        packedSigningE '{' { PARSEP->symPushNew(VAstType::STRUCT, " unknown"); }
+	/*cont*/	struct_union_memberList '}' packed_dimensionE	{ $<fl>$=$<fl>1; $$=$1; PARSEP->symPopScope(VAstType::STRUCT); }
+	|	yUNION taggedE packedSigningE '{' { PARSEP->symPushNew(VAstType::UNION, " unknown"); }
+	/*cont*/	struct_union_memberList '}' packed_dimensionE	{ $<fl>$=$<fl>1; $$=$1; PARSEP->symPopScope(VAstType::UNION); }
 	|	enumDecl				{ $<fl>$=$<fl>1; $$=$1; }
 	|	ySTRING					{ $<fl>$=$<fl>1; $$=$1; }
 	|	yCHANDLE				{ $<fl>$=$<fl>1; $$=$1; }
@@ -1152,7 +1154,8 @@ struct_union_memberList:	// IEEE: { struct_union_member }
 	;
 
 struct_union_member:		// ==IEEE: struct_union_member
-		random_qualifierE data_type_or_void list_of_variable_decl_assignments ';'
+		random_qualifierE data_type_or_void { VARRESET_NONLIST("member"); VARTYPE(SPACED($1,$2)); }
+	/*cont*/	list_of_variable_decl_assignments ';'	{ }
 	;
 
 list_of_variable_decl_assignments:	// ==IEEE: list_of_variable_decl_assignments
@@ -1220,9 +1223,9 @@ variable_dimension<str>:	// ==IEEE: variable_dimension
 	//			// '[' '$' ':' expr ']' -- anyrange:expr:$
 	;
 
-random_qualifierE:		// IEEE: random_qualifier + empty
-		/*empty*/				{ }
-	|	random_qualifier			{ }
+random_qualifierE<str>:		// IEEE: random_qualifier + empty
+		/*empty*/				{ $$=""; }
+	|	random_qualifier			{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 random_qualifier<str>:		// ==IEEE: random_qualifier
