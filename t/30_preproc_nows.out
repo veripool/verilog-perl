@@ -89,4 +89,7 @@ verilog/inc1.v:158: `default_nettype uwire
 verilog/inc1.v:166: (p,q)
 verilog/inc1.v:170: (x,y )
 verilog/inc1.v:171: Line: 171
-verilog/inc1.v:172: `line 172 "verilog/inc1.v" 2
+verilog/inc1.v:180: beginend 
+verilog/inc1.v:181: beginend 
+verilog/inc1.v:182: "beginend" 
+verilog/inc1.v:183: `line 183 "verilog/inc1.v" 2

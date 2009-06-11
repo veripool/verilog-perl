@@ -332,4 +332,20 @@ COMMENT: /*CMT*/
 COMMENT: /*CMT*/
 verilog/inc1.v:170: ( /*CMT*/  	      x,y     /*CMT*/    )
 verilog/inc1.v:171: Line: 171
-verilog/inc1.v:172: `line 172 "verilog/inc1.v" 2
+verilog/inc1.v:172: 
+COMMENT: //======================================================================
+verilog/inc1.v:173:  /*CMT*/ 
+COMMENT: // defines split arguments
+verilog/inc1.v:174:  /*CMT*/ 
+verilog/inc1.v:175: 
+verilog/inc1.v:176:  
+verilog/inc1.v:177:  
+verilog/inc1.v:178:  
+verilog/inc1.v:179:  
+COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
+verilog/inc1.v:180: beginend    /*CMT*/ 
+COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
+verilog/inc1.v:181: beginend     /*CMT*/ 
+COMMENT: // No space "beginend"
+verilog/inc1.v:182: "beginend"   /*CMT*/ 
+verilog/inc1.v:183: `line 183 "verilog/inc1.v" 2

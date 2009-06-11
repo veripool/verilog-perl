@@ -169,3 +169,14 @@ endmodule
   y   //Too
   )
 Line: `__LINE__
+
+//======================================================================
+// defines split arguments
+
+`define BEGIN begin
+`define END end
+`define BEGINEND `BEGIN`END
+`define quoteit(x) `"x`"
+`BEGIN`END   // 2001 spec doesn't require two tokens, so "beginend" ok
+`BEGINEND    // 2001 spec doesn't require two tokens, so "beginend" ok
+`quoteit(`BEGIN`END)  // No space "beginend"
