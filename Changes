@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add SigParser->var callbacks on struct members, bug91. [Saul Cuellar]
 
+****	Fix parsing empty commas in port lists, bug97.  [Noam Meir]
+
 ****	Fix compile error under GCC 3.3.5.
 
 ****	Work around compiler warning when using flex 2.5.35. [Jonathan Kimmitt]

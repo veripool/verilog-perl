@@ -657,25 +657,26 @@ paramPortDeclOrArg:		// IEEE: param_assignment + parameter_port_declaration
 
 portsStarE:			// IEEE: .* + list_of_ports + list_of_port_declarations + empty
 		/* empty */					{ }
-	|	'(' ')'						{ }
 	//			// .* expanded from module_declaration
+	//			// '(' ')' handled by list_of_ports:portE
 	|	'(' yP_DOTSTAR ')'				{ }
-	|	'(' {VARRESET_LIST("");} list_of_ports ')'	{ VARRESET_NONLIST(""); }
+	|	'(' {VARRESET_LIST("");} list_of_portsE ')'	{ VARRESET_NONLIST(""); }
 	;
 
-list_of_ports:			// IEEE: list_of_ports + list_of_port_declarations
-		port					{ }
-	|	list_of_ports ',' port	 		{ }
+list_of_portsE:			// IEEE: list_of_ports + list_of_port_declarations
+		portE					{ }
+	|	list_of_portsE ',' portE 		{ }
 	;
 
-port:				// ==IEEE: port
+portE:				// ==IEEE: [ port ]
 	//			// Though not type for interfaces, we factor out the port direction and type
 	//			// so we can simply handle it in one place
 	//
 	//			// IEEE: interface_port_header port_identifier { unpacked_dimension }
 	//			// Expanded interface_port_header
 	//			// We use instantCb here because the non-port form looks just like a module instantiation
-		portDirNetE id/*interface*/                   idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $3, $4, ""); PARSEP->instantCb($<fl>2, $2, $3, $4); PINNUMINC(); }
+		/* empty */				{ }
+	|	portDirNetE id/*interface*/                   idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $3, $4, ""); PARSEP->instantCb($<fl>2, $2, $3, $4); PINNUMINC(); }
 	|	portDirNetE yINTERFACE                        idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $3, $4, ""); PINNUMINC(); }
 	|	portDirNetE id/*interface*/ '.' idAny/*modport*/ idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $5, $6, ""); PARSEP->instantCb($<fl>2, $2, $5, $6); PINNUMINC(); }
 	|	portDirNetE yINTERFACE      '.' idAny/*modport*/ idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }

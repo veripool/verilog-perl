@@ -379,3 +379,7 @@ module bug85 #(parameter type T_DATA = byte)
    sub #(.T_DATA( T_DATA ))
    sub (.data(data));
 endmodule
+
+module bugmodportcomma (,a,);
+   input a;
+endmodule
