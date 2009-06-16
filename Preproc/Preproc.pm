@@ -121,6 +121,10 @@ sub error {
 
 sub comment {}
 
+sub def_substitute {
+    my ($self, $out) = @_;
+    return $out;
+}
 sub include {
     my ($self,$filename)=@_;
     print "INCLUDE $filename\n" if $self->{debug};
@@ -318,6 +322,14 @@ Called with each `define.  Defaults to use options object.
 Called to determine if the define exists.  Return true if the define
 exists, or argument list with leading parenthesis if the define has
 arguments.  Defaults to use options object.
+
+=item $self->def_substitute(I<string>)
+
+Called to determine what string to insert for a define substitution.
+Called with the value of the define after parameters have been expanded
+computed per the SystemVerilog spec.  Generally this function would just
+return the same string as it is passed, but this can be overridden to allow
+customized preprocessing.
 
 =item $self->def_value(I<defname>)
 

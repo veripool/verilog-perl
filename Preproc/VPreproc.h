@@ -83,6 +83,7 @@ public:
     virtual bool defExists(string name);	///< Return true if define exists
     virtual string defParams(string name);	///< Return parameter list if define exists
     virtual string defValue(string name);	///< Return value of given define (should exist)
+    virtual string defSubstitute(string substitute);	///< Return value to substitute for given post-parameter value
 
     // UTILITIES
     void error(string msg) { filelinep()->error(msg); }	///< Report a error

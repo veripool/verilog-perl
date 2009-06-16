@@ -20,6 +20,17 @@ use base qw(Verilog::Preproc);
 sub comment { print $::OUTTO "COMMENT: $_[1]\n";
 	      $_[0]->unreadback(' /*CMT*/ '); }
 
+sub def_substitute {
+    my ($self,$out) = @_;
+    # Only do this for some tests, as it makes the output look strange
+    if ($self->{_test_def_substitute}
+	&& $out !~ /^".*"$/) {  # And don't corrupt `include test
+	return "DS<".$out.">";
+    } else {
+	return $out;
+    }
+}
+
 package main;
 #######################################################################
 
@@ -61,7 +72,7 @@ ok(1);
     ok(files_identical("test_dir/inc.out", "t/30_preproc.out"));
 }
 
-test ('_sub', keep_comments=>'sub',);
+test ('_sub', keep_comments=>'sub', _test_def_substitute=>1);
 test ('_on',  keep_comments=>1,);
 test ('_nows', keep_comments=>0, keep_whitespace=>0,);
 

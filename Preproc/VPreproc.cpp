@@ -204,6 +204,10 @@ string VPreproc::defValue(string define) {
     error("Define not defined: "+define+"\n");
     return define;
 }
+string VPreproc::defSubstitute(string substitute) {
+    error("Defines not implemented: "+substitute+"\n");
+    return substitute;
+}
 
 //**********************************************************************
 // Parser Utilities
@@ -656,6 +660,7 @@ int VPreprocImp::getToken() {
 		// Substitute in and prepare for next action
 		// Similar code in non-parenthesized define (Search for END_OF_DEFARG)
 		m_defRefs.pop();
+		out = m_preprocp->defSubstitute(out);
 		m_lexp->unputString(out.c_str());
 		if (m_defRefs.empty()) {
 		    m_state = ps_TOP;
@@ -785,6 +790,7 @@ int VPreprocImp::getToken() {
 		    // Similar code in parenthesized define (Search for END_OF_DEFARG)
 		    if (m_defRefs.empty()) {
 			// Just output the substitution
+			out = m_preprocp->defSubstitute(out);
 			m_lexp->unputString(out.c_str());
 		    } else {
 			// Inside another define.  Can't subst now, or

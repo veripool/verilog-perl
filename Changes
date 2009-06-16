@@ -5,7 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.211****
 
-***	Add SigParser->var callbacks on struct members, bug91. [Saul Cuellar]
+***	Add SigParser::var callbacks on struct members, bug91. [Saul Cuellar]
+
+***	Add Preproc::defSubstitute define callbacks, bug94. [by Saul Cuellar]
 
 ****	Fix parsing empty commas in port lists, bug97.  [Noam Meir]
 

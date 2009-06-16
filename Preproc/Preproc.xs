@@ -67,6 +67,7 @@ public:
     virtual void undef(string name);		// Remove a definition
     virtual string defParams(string name);	// Return parameter list if define exists
     virtual string defValue(string name);	// Return value of given define (should exist)
+    virtual string defSubstitute(string substitute);	///< Return value to substitute for given post-parameter value
 
     void call(string* rtnStrp, int params, const char* method, ...);
     void unreadback(char* text);
@@ -130,6 +131,12 @@ string VPreprocXs::defValue(string define) {
     call(&valueStr, 1,"def_value", holddefine.c_str());
     return valueStr;
 }
+string VPreprocXs::defSubstitute(string subs) {
+    static string holdsubs; holdsubs = subs;
+    string outStr;
+    call(&outStr, 1, "def_substitute", holdsubs.c_str());
+    return outStr;
+}    
 
 void VPreprocXs::call (
     string* rtnStrp,	/* If non-null, load return value here */

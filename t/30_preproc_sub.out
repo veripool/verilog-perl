@@ -115,16 +115,16 @@ COMMENT: // but not
 verilog/inc1.v:7:  
 COMMENT: /*CMT*/
 COMMENT: /*CMT*/
-verilog/inc1.v:8: foo   /*CMT*/   bar     /*CMT*/ 
+verilog/inc1.v:8: DS<foo   /*CMT*/   bar     /*CMT*/ >
 COMMENT: /*CMT*/
-verilog/inc1.v:9: foobar2   /*CMT*/ 
+verilog/inc1.v:9: DS<foobar2   /*CMT*/ >
 verilog/inc1.v:10: 
 verilog/inc1.v:11:  
 verilog/inc1.v:11: 
 verilog/inc1.v:13: 
 COMMENT: /*******COMMENT*****/
 verilog/inc1.v:14:  /*CMT*/ 
-verilog/inc1.v:15: first part  		second part
+verilog/inc1.v:15: DS<first part  		second part>
 verilog/inc1.v:16: 
 COMMENT: //===========================================================================
 verilog/inc1.v:17:  /*CMT*/ 
@@ -132,7 +132,7 @@ verilog/inc1.v:18:
 verilog/inc1.v:19: 
 verilog/inc1.v:20:  
 verilog/inc1.v:21:  
-verilog/inc1.v:22: deep deep
+verilog/inc1.v:22: DS<DS<deep> DS<deep>>
 verilog/inc1.v:23: 
 verilog/inc1.v:24:  
 verilog/inc1.v:25:  
@@ -140,29 +140,29 @@ verilog/inc1.v:26: "Inside: `nosubst"
 verilog/inc1.v:27: "`nosubst"
 verilog/inc1.v:28: 
 verilog/inc1.v:29:  
-verilog/inc1.v:30: x y LLZZ x y
-verilog/inc1.v:31: p q LLZZ p q r  s  LLZZ r  s  LLZZ p q LLZZ p q r  s  LLZZ r  s 
+verilog/inc1.v:30: DS<x y LLZZ x y>
+verilog/inc1.v:31: DS<DS<p q LLZZ p q> DS<r  s  LLZZ r  s > LLZZ DS<p q LLZZ p q> DS<r  s  LLZZ r  s >>
 verilog/inc1.v:32: 
 verilog/inc1.v:33: 
 verilog/inc1.v:34: 
-verilog/inc1.v:35: firstline	 comma","line LLZZ firstline	 comma","line
+verilog/inc1.v:35: DS<firstline	 comma","line LLZZ firstline	 comma","line>
 verilog/inc1.v:36: 
 verilog/inc1.v:37:  
-verilog/inc1.v:38: x  y LLZZ "a" y
+verilog/inc1.v:38: DS<x  y LLZZ "a" y>
 verilog/inc1.v:39: 
 verilog/inc1.v:40:  
-verilog/inc1.v:41: (a,b)(a,b)
+verilog/inc1.v:41: DS<(a,b)>(a,b)
 verilog/inc1.v:42: 
 verilog/inc1.v:43:  
 verilog/inc1.v:44: $display("left side: \"right side\"")
 verilog/inc1.v:45: 
 verilog/inc1.v:46:  
-verilog/inc1.v:47: bar_suffix  more
+verilog/inc1.v:47: DS<bar_suffix>  more
 verilog/inc1.v:48: 
 verilog/inc1.v:49:  
 verilog/inc1.v:49: 
-verilog/inc1.v:51: $c("Zap(\"",bug1,"\");");;
-verilog/inc1.v:52: $c("Zap(\"","bug2","\");");;
+verilog/inc1.v:51: DS<$c("Zap(\"",bug1,"\");");>;
+verilog/inc1.v:52: DS<$c("Zap(\"","bug2","\");");>;
 verilog/inc1.v:53: 
 COMMENT: /* Define inside comment: `DEEPER and `WITHTICK */
 verilog/inc1.v:54:  /*CMT*/ 
@@ -191,7 +191,7 @@ verilog/inc1.v:70:
 verilog/inc1.v:71:    initial begin
 COMMENT: //$display(`msg( \`, \`));  // Illegal
 verilog/inc1.v:72:        /*CMT*/ 
-verilog/inc1.v:73:       $display("pre thrupre thrumid thrupost post: \"right side\"");
+verilog/inc1.v:73:       $display("pre DS<thrupre DS<thrumid> thrupost> post: \"right side\"");
 verilog/inc1.v:74:       $display("left side: \"right side\"");
 verilog/inc1.v:75:       $display("left side : \"right side \"");
 verilog/inc1.v:76:       $display("left_side : \"right_side \"");
@@ -201,9 +201,9 @@ verilog/inc1.v:79:       $display("na: \"nana\"");
 COMMENT: // Results vary between simulators
 verilog/inc1.v:80:       $display("`ls `rs	 /*CMT*/ : \"`ls `rs	 /*CMT*/ \"");    /*CMT*/ 
 COMMENT: // Empty
-verilog/inc1.v:81:       $display(": \"\"");   /*CMT*/ 
-verilog/inc1.v:82:       $display("left side: \"right side\"");
-verilog/inc1.v:83:       $display("left side  : \"right side  \"");
+verilog/inc1.v:81:       $display("DS<>: \"\"");   /*CMT*/ 
+verilog/inc1.v:82:       $display("DS<left side>: \"DS<right side>\"");
+verilog/inc1.v:83:       $display("DS<left side > : \"DS<right side > \"");
 verilog/inc1.v:84: 
 verilog/inc1.v:85:  
 verilog/inc1.v:85: 
@@ -223,11 +223,11 @@ verilog/inc1.v:95:
 verilog/inc1.v:99: 
 verilog/inc1.v:100: module add1 ( input wire d1, output wire o1);
 COMMENT: // expansion is OK
-verilog/inc1.v:101:  wire  tmp_d1 = d1;  wire  tmp_o1 = tmp_d1 + 1;  assign o1 = tmp_o1 ;    /*CMT*/ 
+verilog/inc1.v:101:  DS<wire  tmp_d1 = d1;  wire  tmp_o1 = tmp_d1 + 1;  assign o1 = tmp_o1 ;>    /*CMT*/ 
 verilog/inc1.v:102: endmodule
 verilog/inc1.v:103: module add2 ( input wire d2, output wire o2);
 COMMENT: // expansion is bad
-verilog/inc1.v:104:  wire  tmp_d2  = d2 ;  wire  tmp_o2  = tmp_d2  + 1;  assign o2  = tmp_o2  ;   /*CMT*/ 
+verilog/inc1.v:104:  DS<wire  tmp_d2  = d2 ;  wire  tmp_o2  = tmp_d2  + 1;  assign o2  = tmp_o2  ;>   /*CMT*/ 
 verilog/inc1.v:105: endmodule
 verilog/inc1.v:106: 
 COMMENT: //======================================================================
@@ -255,9 +255,9 @@ verilog/inc1.v:123:
 verilog/inc1.v:124:  
 verilog/inc1.v:125:  
 verilog/inc1.v:126: 
-verilog/inc1.v:127: begin addr <= (({regs[6], regs[7]} + 1)); rd <= 1; end and begin addr <= (({regs[6], regs[7]})); wdata <= (rdata); wr <= 1; end
-verilog/inc1.v:128: begin addr <= ({regs[6], regs[7]} + 1); rd <= 1; end
-verilog/inc1.v:129: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end  more
+verilog/inc1.v:127: DS<begin addr <= (({DS<regs[DS<6>]>, DS<regs[DS<7>]>} + 1)); rd <= 1; end> and DS<begin addr <= (({DS<regs[DS<6>]>, DS<regs[DS<7>]>})); wdata <= (rdata); wr <= 1; end>
+verilog/inc1.v:128: DS<begin addr <= ({DS<regs[DS<6>]>, DS<regs[DS<7>]>} + 1); rd <= 1; end>
+verilog/inc1.v:129: DS<begin addr <= ({DS<regs[DS<6>]>, DS<regs[DS<7>]>}); wdata <= (rdata); wr <= 1; end>  more
 verilog/inc1.v:130: 
 COMMENT: //======================================================================
 verilog/inc1.v:131:  /*CMT*/ 
@@ -297,10 +297,10 @@ COMMENT: // macro call with , in {}
 verilog/inc1.v:145:  /*CMT*/ 
 verilog/inc1.v:146: 
 verilog/inc1.v:147:  
-verilog/inc1.v:148: $blah("ab,cd","e,f");
-verilog/inc1.v:149: $blah(this.logfile,vec);
-verilog/inc1.v:150: $blah(this.logfile,vec[1,2,3]);
-verilog/inc1.v:151: $blah(this.logfile,{blah.name(), " is not foo"});
+verilog/inc1.v:148: DS<$blah("ab,cd","e,f")>;
+verilog/inc1.v:149: DS<$blah(this.logfile,vec)>;
+verilog/inc1.v:150: DS<$blah(this.logfile,vec[1,2,3])>;
+verilog/inc1.v:151: DS<$blah(this.logfile,{blah.name(), " is not foo"})>;
 verilog/inc1.v:152: 
 COMMENT: //======================================================================
 verilog/inc1.v:153:  /*CMT*/ 
@@ -322,7 +322,7 @@ COMMENT: // But newlines ARE legal... who speced THAT?
 verilog/inc1.v:165:   /*CMT*/  /*CMT*/  /*CMT*/ 
 verilog/inc1.v:165: 
 verilog/inc1.v:165: 
-verilog/inc1.v:166: (p,q)
+verilog/inc1.v:166: DS<(p,q)>
 COMMENT: //Here
 verilog/inc1.v:167: 
 verilog/inc1.v:168: 
@@ -330,7 +330,7 @@ COMMENT: //Too
 verilog/inc1.v:169: 
 COMMENT: /*CMT*/
 COMMENT: /*CMT*/
-verilog/inc1.v:170: ( /*CMT*/  	      x,y     /*CMT*/    )
+verilog/inc1.v:170: DS<( /*CMT*/  	      x,y     /*CMT*/    )>
 verilog/inc1.v:171: Line: 171
 verilog/inc1.v:172: 
 COMMENT: //======================================================================
@@ -343,9 +343,9 @@ verilog/inc1.v:177:
 verilog/inc1.v:178:  
 verilog/inc1.v:179:  
 COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
-verilog/inc1.v:180: beginend    /*CMT*/ 
+verilog/inc1.v:180: DS<begin>DS<end>    /*CMT*/ 
 COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
-verilog/inc1.v:181: beginend     /*CMT*/ 
+verilog/inc1.v:181: DS<DS<begin>DS<end>>     /*CMT*/ 
 COMMENT: // No space "beginend"
 verilog/inc1.v:182: "beginend"   /*CMT*/ 
 verilog/inc1.v:183: `line 183 "verilog/inc1.v" 2
