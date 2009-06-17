@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix parsing empty commas in port lists, bug97.  [Noam Meir]
 
+****	Fix compatibility with Getopt-Long-2.38, rt47030.  [by Marek Rouchal]
+
 ****	Fix compile error under GCC 3.3.5.
 
 ****	Work around compiler warning when using flex 2.5.35. [Jonathan Kimmitt]
