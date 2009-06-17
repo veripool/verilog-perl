@@ -136,7 +136,7 @@ string VPreprocXs::defSubstitute(string subs) {
     string outStr;
     call(&outStr, 1, "def_substitute", holdsubs.c_str());
     return outStr;
-}    
+}
 
 void VPreprocXs::call (
     string* rtnStrp,	/* If non-null, load return value here */
