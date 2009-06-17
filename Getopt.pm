@@ -169,7 +169,7 @@ sub incdir {
     if (@_) {
 	my $token = shift;
 	print "incdir $token\n" if $Debug;
-	if (ref $token) {
+	if (ref($_[0]) && ref($_[0]) eq 'ARRAY') {
 	    @{$self->{incdir}} = @{$token};
 	} else {
 	    push @{$self->{incdir}}, $self->file_abs($token);
@@ -183,7 +183,7 @@ sub libext {
     if (@_) {
 	my $token = shift;
 	print "libext $token\n" if $Debug;
-	if (ref $token) {
+	if (ref($_[0]) && ref($_[0]) eq 'ARRAY') {
 	    @{$self->{libext}} = @{$token};
 	} else {
 	    push @{$self->{libext}}, $token;
@@ -197,7 +197,7 @@ sub library {
     if (@_) {
 	my $token = shift;
 	print "library $token\n" if $Debug;
-	if (ref $token) {
+	if (ref($_[0]) && ref($_[0]) eq 'ARRAY') {
 	    @{$self->{library}} = @{$token};
 	} else {
 	    push @{$self->{library}}, $self->file_abs($token);
@@ -210,7 +210,7 @@ sub module_dir {
     if (@_) {
 	my $token = shift;
 	print "module_dir $token\n" if $Debug;
-	if (ref $token) {
+	if (ref($_[0]) && ref($_[0]) eq 'ARRAY') {
 	    @{$self->{module_dir}} = @{$token};
 	} else {
 	    push @{$self->{module_dir}}, $self->file_abs($token);
@@ -222,7 +222,8 @@ sub module_dir {
 sub depend_files {
     my $self = shift;
     if (@_) {
-	if (ref $_[0]) {
+	#@_ may be Getopt::Long::Parameters which aren't arrays, will stringify
+	if (ref($_[0]) && ref($_[0]) eq 'ARRAY') {
 	    $self->{depend_files} = {};
 	    foreach my $fn (@{$_[0]}) {
 		$self->{depend_files}{$fn} = 1;
