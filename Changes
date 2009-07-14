@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.21****
 
+***	Fix syntax errors when using vhier/Netlist with --language 1364-2001.
+
 ****	Fix dotted expressions returning "..", bug98. [Saul Cuellar]
 
 ****	Fix Getopt::file_path to expand environment variables in filenames.

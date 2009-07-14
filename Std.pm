@@ -5,6 +5,7 @@ package Verilog::Std;
 use Config;
 use IO::File;
 use File::Path;
+use Verilog::Language;
 use Carp;
 use strict;
 
@@ -18,18 +19,20 @@ $VERSION = '3.211';
 #######################################################################
 # ACCESSORS
 
-our $_Std_Data;
+our %_Std_Data;
 
 sub std {
-    if (!$_Std_Data) {
+    my $std = shift || Verilog::Language::language_standard();
+    if (!$_Std_Data{$std}) {
 	my @out;
 	foreach (<DATA>) {
 	    last if $_ =~ /^__END__/;
+	    last if $std !~ /^1800/;  # Non system verilog, ie 1364 has no std package
 	    push @out, $_;
 	}
-	$_Std_Data = join('',@out);
+	$_Std_Data{$std} = join('',@out);
     }
-    return $_Std_Data;
+    return $_Std_Data{$std};
 }
 
 #######################################################################
@@ -103,9 +106,11 @@ SystemVerilog standard.
 
 =over 4
 
-=item std
+=item std ({I<standard>})
 
-Return the definition of the std package.
+Return the definition of the std package.  Optionally pass the language
+standard, defaulting to what Verilog::Language::language_standard returns if
+unspecified.
 
 =back
 

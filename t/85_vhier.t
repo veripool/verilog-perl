@@ -17,7 +17,7 @@ print "Checking vhier...\n";
 vhier ("t/85_vhier_cells.out",	    "--cells");
 vhier ("t/85_vhier_inpfiles.out",   "--input-files");
 vhier ("t/85_vhier_resolvefiles.out","--resolve-files");
-vhier ("t/85_vhier_modfiles.out",   "--module-files");
+vhier ("t/85_vhier_modfiles.out",   "--module-files --language 2001");
 vhier ("t/85_vhier_topmodule.out",  "--module-files --top-module v_hier_sub");
 
 sub vhier {
