@@ -269,3 +269,7 @@ typedef struct packed signed {
       bit [7:0] m_b;
    } t_bug91;
 t_bug91 v_bug91;
+
+module bug98(interfacex x_if);
+   h inst_h(.push(x_if.pop));
+endmodule

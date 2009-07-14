@@ -2710,9 +2710,9 @@ exprScope<str>:			// scope and variable for use to inside an expression
 	|	idArrayed				{ $<fl>$=$<fl>1; $$ = $1; }
 	|	package_scopeIdFollows idArrayed	{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	class_scopeIdFollows idArrayed		{ $<fl>$=$<fl>1; $$ = $<str>1+$2; }
-	|	~l~expr '.' idArrayed			{ $<fl>$=$<fl>1; $$ = $1+"."+$2; }
+	|	~l~expr '.' idArrayed			{ $<fl>$=$<fl>1; $$ = $1+"."+$3; }
 	//			// expr below must be a "yTHIS"
-	|	~l~expr '.' ySUPER			{ $<fl>$=$<fl>1; $$ = $1+"."+$2; }
+	|	~l~expr '.' ySUPER			{ $<fl>$=$<fl>1; $$ = $1+"."+$3; }
 	//			// Part of implicit_class_handle
 	|	ySUPER					{ $<fl>$=$<fl>1; $$ = $1; }
 	;

@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.21****
+
+****	Fix dotted expressions returning "..", bug98. [Saul Cuellar]
+
 * Verilog::Language 3.211 2009/06/17
 
 ***	Add SigParser::var callbacks on struct members, bug91. [Saul Cuellar]
