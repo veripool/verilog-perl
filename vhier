@@ -112,7 +112,9 @@ sub vhier {
     if ($Opt_ResolveFiles) {
 	$nl->read_libraries();
 	foreach my $file (@files) {
-	    print $fh $nl->resolve_filename ($file, "all"), "\n";
+	    if (my $resolved = $nl->resolve_filename ($file, "all")) {
+		print $fh $resolved, "\n";
+	    }
 	}
 	return;
     }

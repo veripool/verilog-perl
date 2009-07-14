@@ -6,6 +6,7 @@
 
 use IO::File;
 use File::Copy;
+use strict;
 use vars qw($PERL);
 
 $PERL = "$^X -Iblib/arch -Iblib/lib -IPreproc/blib/arch -IPreproc/blib/lib";

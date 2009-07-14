@@ -333,6 +333,7 @@ sub file_substitute {
 	    $out =~ s/\$$var\b/$ENV{$var}/g;
 	}
     }
+    $filename =~ s!^~!$ENV{HOME}/!;
     return $out;
 }
 
@@ -356,6 +357,14 @@ sub file_path {
 	$self->depend_files($filename);
 	return $filename;
     }
+    # Try expanding environment
+    $filename = $self->file_substitute($filename);
+    if (-r $filename && !-d $filename) {
+	$self->{_file_path_cache}{$filename} = $filename;
+	$self->depend_files($filename);
+	return $filename;
+    }
+
     # What paths to use?
     my @dirlist;
     if ($lookup_type eq 'module') {
