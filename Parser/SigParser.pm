@@ -376,11 +376,27 @@ The first argument $kwd is how it was declared ('port', 'var', 'genvar',
 what the variable is an object of ('module', 'function', etc).  $nettype is
 the net type if any was defined ('', 'supply0', 'wire', 'tri', etc).
 $data_type is the data type ('user_type_t', '[31:0] signed', etc).  $array
-is the arraying of the port ('[1:0][2:0]', '', etc).  $value is what the
-variable was assigned to ('', or expression).
+is the arraying of the variable which is the text AFTER the variable name
+('[1:0][2:0]', '', etc).  $value is what the variable was assigned to ('',
+or expression).
 
 Note typedefs are included here, because "parameter type" is both a
 variable and a type declaration.
+
+Below are some example declarations and the callbacks:
+
+   reg [4:0]  vect = 5'b10100;
+   # VAR  'var' 'vect' 'module' '' 'reg [4:0]' '' '5'b10100'
+   wire (weak0, weak1) value = pullval;
+   # VAR  'net' 'value' 'module' 'wire' '' '' 'pullval'
+   reg [1:0] mem [12:2];
+   # VAR  'var' 'mem' 'module' '' 'reg [1:0]' '[12:2]' ''
+   int n[1:2][1:3] = '{'{0,1,2}, '{3{4}}};
+   # verilog/parser_sv.v:121: VAR  'var' 'n' 'module' '' 'int' '[1:2][1:3]' ''{'{0,1,2},'{3}}'
+   module ( output logic [SZ-1:0] o_sized );
+   # VAR  'port' 'o_sized' 'module' '' 'logic [SZ-1:0]' '' ''
+   struct packed signed { bit [7:0] m_b; };
+   # VAR  'member' 'm_b' 'struct' '' 'bit [7:0]' '' ''
 
 =back
 
