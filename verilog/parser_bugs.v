@@ -32,14 +32,11 @@ module bug26969 (input [31:0] ad, output [15:0] regff, input [31:0] read);
 endmodule
 
 module bug26970;
-   // Copyright (c) 2002 Stephen Williams (steve@icarus.com)
-   // GNU Licensed
-   parameter   SET  = 1'b1,
-		 CLR  = 1'b0,
-		 S1   = 2'd1,
-		 HINC = 3'd4;
-   parameter
-     x = {S1,CLR,CLR,CLR,CLR,SET,SET,CLR,CLR,HINC };
+   parameter A = 1'b1,
+     B = 1'b0,
+     C  = 2'd1,
+     D = 3'd4;
+   parameter x = {C,B,B,B,B,A,A,B,B,D };
 endmodule
 
 module bug26997;
@@ -57,20 +54,14 @@ module bug26997;
 endmodule
 
 module bug27009();
-   // Copyright (c) 2002 Stephen Williams (steve@icarus.com)
-   // GNU Licensed
-   reg pullval;
-   wire (weak0, weak1) value = pullval;
-   //Legal?: buf (highz0, strong1) drive0(value, en0);
-   //Legal?: not (strong0, highz1) drive1(value, en1);
+   reg topull;
+   wire (weak0, weak1) pulled_wire = topull;
 endmodule // main
 
 
 module bug27010;
-   // Copyright (c) 2000 Yasuhisa Kato <ykato@mac.com>
-   // GNU Licensed
-   initial begin clk = 0 ; forever #5 clk = ~clk ; end
-   drvz N ( clk, b, ~c, s ) ; // line(A)
+   initial begin clk = 0; forever #5 clk = ~clk; end
+   drivez N (clk, din, ~clr, set);
 endmodule
 
 module bug27013;
