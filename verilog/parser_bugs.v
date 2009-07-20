@@ -32,11 +32,8 @@ module bug26969 (input [31:0] ad, output [15:0] regff, input [31:0] read);
 endmodule
 
 module bug26970;
-   parameter A = 1'b1,
-     B = 1'b0,
-     C  = 2'd1,
-     D = 3'd4;
-   parameter x = {C,B,B,B,B,A,A,B,B,D };
+   parameter A = 2'b1, B = 3'b0;
+   parameter x = {B,B,B,A,A,B};
 endmodule
 
 module bug26997;
@@ -51,17 +48,6 @@ module bug26997;
 			    .TC	(),
 			    .TD	(),
 			    .TQ	());
-endmodule
-
-module bug27009();
-   reg topull;
-   wire (weak0, weak1) pulled_wire = topull;
-endmodule // main
-
-
-module bug27010;
-   initial begin clk = 0; forever #5 clk = ~clk; end
-   drivez N (clk, din, ~clr, set);
 endmodule
 
 module bug27013;
