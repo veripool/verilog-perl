@@ -12,7 +12,9 @@ foreach my $line (<STDIN>) {
     # Fix xsubpp 1.9508 and GCC 4.2.1 warning
     # "warning: deprecated conversion from string constant to ‘char*’"
     $line =~ s/^ *char\* file = __FILE__;/char* file = (char*)__FILE__;/;
-    $line =~ s/newXSproto\(\"/newXSproto((char*)\"/;
+    if($line =~ /newXSproto/) {
+	$line =~ s/([(,]\s*)"/$1(char*)"/g;
+    }
     #
     print "$line";
 }
