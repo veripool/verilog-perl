@@ -233,4 +233,12 @@ verilog/inc1.v:179:
 verilog/inc1.v:180: beginend   // 2001 spec doesn't require two tokens, so "beginend" ok
 verilog/inc1.v:181: beginend    // 2001 spec doesn't require two tokens, so "beginend" ok
 verilog/inc1.v:182: "beginend"  // No space "beginend"
-verilog/inc1.v:183: `line 183 "verilog/inc1.v" 2
+verilog/inc1.v:183: 
+verilog/inc1.v:184: //======================================================================
+verilog/inc1.v:185: // bug106
+verilog/inc1.v:186:  
+verilog/inc1.v:187:  
+verilog/inc1.v:188:   got_escaped
+verilog/inc1.v:189: 
+verilog/inc1.v:190: Not a \`define
+verilog/inc1.v:191: `line 191 "verilog/inc1.v" 2

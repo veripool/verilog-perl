@@ -180,3 +180,11 @@ Line: `__LINE__
 `BEGIN`END   // 2001 spec doesn't require two tokens, so "beginend" ok
 `BEGINEND    // 2001 spec doesn't require two tokens, so "beginend" ok
 `quoteit(`BEGIN`END)  // No space "beginend"
+
+//======================================================================
+// bug106
+`define \esc`def got_escaped
+`ifdef \esc`def
+  `\esc`def
+`endif
+Not a \`define

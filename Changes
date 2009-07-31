@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.21***
 
+****	Fix escaped preprocessor identifiers, bug106. [Nimrod Gileadi]
+
 ****	Fix Perl 5.8.8 compile error, rt48226. [Marek Rouchal]
 
 * Verilog::Language 3.212 2009/07/20

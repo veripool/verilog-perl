@@ -348,4 +348,14 @@ COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
 verilog/inc1.v:181: DS<DS<begin>DS<end>>     /*CMT*/ 
 COMMENT: // No space "beginend"
 verilog/inc1.v:182: "beginend"   /*CMT*/ 
-verilog/inc1.v:183: `line 183 "verilog/inc1.v" 2
+verilog/inc1.v:183: 
+COMMENT: //======================================================================
+verilog/inc1.v:184:  /*CMT*/ 
+COMMENT: // bug106
+verilog/inc1.v:185:  /*CMT*/ 
+verilog/inc1.v:186:  
+verilog/inc1.v:187:  
+verilog/inc1.v:188:   DS<got_escaped>
+verilog/inc1.v:189: 
+verilog/inc1.v:190: Not a \`define
+verilog/inc1.v:191: `line 191 "verilog/inc1.v" 2
