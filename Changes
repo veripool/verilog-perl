@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.21***
 
+***	Improved warning when "do" used as identifier.
+
 ****	Fix escaped preprocessor identifiers, bug106. [Nimrod Gileadi]
 
 ****	Fix Perl 5.8.8 compile error, rt48226. [Marek Rouchal]

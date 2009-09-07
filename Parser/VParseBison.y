@@ -109,6 +109,12 @@ static int  VParseBisonlex(VParseBisonYYSType* yylvalp) { return PARSEP->lexToBi
 
 static void VParseBisonerror(const char *s) { VParseGrammar::bisonError(s); }
 
+static void ERRSVKWD(VFileLine* fileline, const string& tokname) {
+    static int toldonce = 0;
+    fileline->error((string)"Unexpected \""+tokname+"\": \""+tokname+"\" is a SystemVerilog keyword misused as an identifier.");
+    if (!toldonce++) fileline->error("Modify the Verilog-2001 code to avoid SV keywords, or use `begin_keywords or --language.");
+}
+
 %}
 
 %pure_parser
@@ -745,6 +751,7 @@ portAssignExprE:		// IEEE: part of port, optional expression
 
 portSig<str>:
 		id/*port*/				{ $<fl>$=$<fl>1; $$=$1; }
+	|	idSVKwd					{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 //**********************************************************************
@@ -1169,6 +1176,7 @@ variable_decl_assignment:	// ==IEEE: variable_decl_assignment
 			{ VARDONE($<fl>1, $1, $2, ""); }
 	|	id variable_dimensionListE sigAttrListE '=' variable_declExpr
 			{ VARDONE($<fl>1, $1, $2, $5); }
+	|	idSVKwd					{ }
 	//
 	//			// IEEE: "dynamic_array_variable_identifier '[' ']' [ '=' dynamic_array_new ]"
 	//			// Matches above with variable_dimensionE = "[]"
@@ -1631,6 +1639,7 @@ netSig:				// IEEE: net_decl_assignment -  one element from list_of_port_identif
 
 netId<str>:
 		id/*new-net*/				{ $<fl>$=$<fl>1; $$=$1; }
+	|	idSVKwd					{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 sigAttrListE:
@@ -1773,6 +1782,7 @@ cellpinItList:			// IEEE: list_of_port_connections + list_of_parameter_assignmen
 cellpinItemE:			// IEEE: named_port_connection + named_parameter_assignment + empty
 		/* empty: ',,' is legal */		{ PINNUMINC(); }  /*PINDONE(yylval.fl,"",""); <- No, as then () implies a pin*/
 	|	yP_DOTSTAR				{ PINDONE($<fl>1,"*","*");PINNUMINC(); }
+	|	'.' idSVKwd				{ PINDONE($<fl>1,$2,$2);  PINNUMINC(); }
 	|	'.' idAny				{ PINDONE($<fl>1,$2,$2);  PINNUMINC(); }
 	|	'.' idAny '(' ')'			{ PINDONE($<fl>1,$2,"");  PINNUMINC(); }
 	|	'.' idAny '(' expr ')'			{ PINDONE($<fl>1,$2,$4);  PINNUMINC(); }
@@ -2910,6 +2920,12 @@ idAny<str>:			// Any kind of identifier
 	|	yaID__aPACKAGE				{ $<fl>$=$<fl>1; $$=$1; }
 	|	yaID__aTYPE				{ $<fl>$=$<fl>1; $$=$1; }
 	|	yaID__ETC				{ $<fl>$=$<fl>1; $$=$1; }
+	;
+
+idSVKwd<str>:			// Warn about non-forward compatible Verilog 2001 code
+	//			// yBIT, yBYTE won't work here as causes conflicts
+		yDO					{ $<fl>$=$<fl>1; $$=$1; ERRSVKWD($<fl>1,$$); }
+	|	yFINAL					{ $<fl>$=$<fl>1; $$=$1; ERRSVKWD($<fl>1,$$); }
 	;
 
 variable_lvalue<str>:		// IEEE: variable_lvalue or net_lvalue
