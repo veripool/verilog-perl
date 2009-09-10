@@ -13,6 +13,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix Perl 5.8.8 compile error, rt48226. [Marek Rouchal]
 
+****	Fix Perl 5.8.0 compile error with callbackgen. [Kjeld Svendsen]
+
 * Verilog::Language 3.212 2009/07/20
 
 ***	Fix syntax errors when using vhier/Netlist with --language 1364-2001.

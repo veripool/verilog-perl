@@ -193,7 +193,7 @@ sub _xs {
 	    push @out, "    static string hold${n}; hold${n} = $arg ? \"1\":\"0\";\n";
 	    $callargs .= ", hold${n}.c_str()";
 	} elsif ($type eq 'int') {
-	    push @out, "    static string hold${n}; static char num${n}[30]; sprintf(num${n},\"%d\",$arg); hold${n}=num${n};\n";
+	    push @out, "    static string hold${n}; static char num".$n."[30]; sprintf(num${n},\"%d\",$arg); hold${n}=num${n};\n";
 	    $callargs .= ", hold${n}.c_str()";
 	} elsif ($type eq 'undef') {
 	    $callargs .= ", NULL";
