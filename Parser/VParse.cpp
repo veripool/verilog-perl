@@ -104,8 +104,8 @@ void VParse::fakeBison() {
     // Verilog::Parser and we don't care about the syntax, so just Lex.
     static const size_t chunk = 8192;
     VParseBisonYYSType yylval;
-    char buffer[chunk+10];
     while (int tok = lexToBison(&yylval)) {
+	if (tok) {} // Prevent unused on some GCCs
     }
 }
 
