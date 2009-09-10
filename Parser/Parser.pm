@@ -14,7 +14,7 @@ use base qw(DynaLoader);
 use strict;
 use vars qw($VERSION $Debug);
 
-$VERSION = '3.212';
+$VERSION = '3.213';
 
 #$Debug sets the default value for debug.  You're better off with the object method though.
 
