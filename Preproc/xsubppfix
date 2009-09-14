@@ -11,8 +11,8 @@
 foreach my $line (<STDIN>) {
     # Fix xsubpp 1.9508 and GCC 4.2.1 warning
     # "warning: deprecated conversion from string constant to ‘char*’"
-    $line =~ s/^ *char\* file = __FILE__;/char* file = (char*)__FILE__;/;
-    if($line =~ /newXSproto/) {
+    $line =~ s/^(\s*)(?:const\s*|)char\*\s*file\s*=\s*__FILE__;/${1}char* file = (char*)__FILE__;/;
+    if ($line =~ /newXSproto/) {
 	$line =~ s/([(,]\s*)"/$1(char*)"/g;
     }
     #
