@@ -194,12 +194,12 @@ verilog/inc1.v:72:        /*CMT*/
 verilog/inc1.v:73:       $display("pre DS<thrupre DS<thrumid> thrupost> post: \"right side\"");
 verilog/inc1.v:74:       $display("left side: \"right side\"");
 verilog/inc1.v:75:       $display("left side : \"right side \"");
-verilog/inc1.v:76:       $display("left_side : \"right_side \"");
-verilog/inc1.v:77:       $display("na : \"right_side \"");
-verilog/inc1.v:78:       $display("prep ( midp1 left_side midp2 ( outp ) ) : \"right_side \"");
-verilog/inc1.v:79:       $display("na: \"nana\"");
+verilog/inc1.v:76:       $display("DS<left_side> : \"DS<right_side> \"");
+verilog/inc1.v:77:       $display("DS<na> : \"DS<right_side> \"");
+verilog/inc1.v:78:       $display("prep ( midp1 DS<left_side> midp2 ( outp ) ) : \"DS<right_side> \"");
+verilog/inc1.v:79:       $display("DS<na>: \"DS<na>DS<na>\"");
 COMMENT: // Results vary between simulators
-verilog/inc1.v:80:       $display("`ls `rs	 /*CMT*/ : \"`ls `rs	 /*CMT*/ \"");    /*CMT*/ 
+verilog/inc1.v:80:       $display("DS<`ls `rs	 /*CMT*/> : \"DS<`ls `rs	 /*CMT*/> \"");    /*CMT*/ 
 COMMENT: // Empty
 verilog/inc1.v:81:       $display("DS<>: \"\"");   /*CMT*/ 
 verilog/inc1.v:82:       $display("DS<left side>: \"DS<right side>\"");
@@ -207,7 +207,7 @@ verilog/inc1.v:83:       $display("DS<left side > : \"DS<right side > \"");
 verilog/inc1.v:84: 
 verilog/inc1.v:85:  
 verilog/inc1.v:85: 
-verilog/inc1.v:87:       $display("twoline: \"first   second\"");
+verilog/inc1.v:87:       $display("twoline: \"DS<first   second>\"");
 verilog/inc1.v:88: 
 COMMENT: //$display(`msg(left side, \ right side \ ));  // Not sure \{space} is legal.
 verilog/inc1.v:89:        /*CMT*/ 
@@ -255,9 +255,9 @@ verilog/inc1.v:123:
 verilog/inc1.v:124:  
 verilog/inc1.v:125:  
 verilog/inc1.v:126: 
-verilog/inc1.v:127: DS<begin addr <= (({DS<regs[DS<6>]>, DS<regs[DS<7>]>} + 1)); rd <= 1; end> and DS<begin addr <= (({DS<regs[DS<6>]>, DS<regs[DS<7>]>})); wdata <= (rdata); wr <= 1; end>
-verilog/inc1.v:128: DS<begin addr <= ({DS<regs[DS<6>]>, DS<regs[DS<7>]>} + 1); rd <= 1; end>
-verilog/inc1.v:129: DS<begin addr <= ({DS<regs[DS<6>]>, DS<regs[DS<7>]>}); wdata <= (rdata); wr <= 1; end>  more
+verilog/inc1.v:127: DS<begin addr <= ((DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}> + 1)); rd <= 1; end> and DS<begin addr <= ((DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}>)); wdata <= (rdata); wr <= 1; end>
+verilog/inc1.v:128: DS<begin addr <= (DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}> + 1); rd <= 1; end>
+verilog/inc1.v:129: DS<begin addr <= (DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}>); wdata <= (rdata); wr <= 1; end>  more
 verilog/inc1.v:130: 
 COMMENT: //======================================================================
 verilog/inc1.v:131:  /*CMT*/ 
@@ -347,7 +347,7 @@ verilog/inc1.v:180: DS<begin>DS<end>    /*CMT*/
 COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
 verilog/inc1.v:181: DS<DS<begin>DS<end>>     /*CMT*/ 
 COMMENT: // No space "beginend"
-verilog/inc1.v:182: "beginend"   /*CMT*/ 
+verilog/inc1.v:182: "DS<begin>DS<end>"   /*CMT*/ 
 verilog/inc1.v:183: 
 COMMENT: //======================================================================
 verilog/inc1.v:184:  /*CMT*/ 
@@ -358,4 +358,13 @@ verilog/inc1.v:187:
 verilog/inc1.v:188:   DS<got_escaped>
 verilog/inc1.v:189: 
 verilog/inc1.v:190: Not a \`define
-verilog/inc1.v:191: `line 191 "verilog/inc1.v" 2
+verilog/inc1.v:191: 
+COMMENT: //======================================================================
+verilog/inc1.v:192:  /*CMT*/ 
+COMMENT: // misparsed comma in submacro
+verilog/inc1.v:193:  /*CMT*/ 
+verilog/inc1.v:194:  
+verilog/inc1.v:195:  
+verilog/inc1.v:196:  
+verilog/inc1.v:197: DS<DS<x,y)>--DS<bee>>  submacro has comma paren
+verilog/inc1.v:198: `line 198 "verilog/inc1.v" 2

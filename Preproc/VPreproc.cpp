@@ -648,6 +648,7 @@ int VPreprocImp::getToken() {
 	    if (m_defRefs.empty()) error("InternalError: Shouldn't be in DEFARG w/o active defref");
 	    VPreDefRef* refp = &(m_defRefs.top());
 	    refp->nextarg(refp->nextarg()+m_lexp->m_defValue); m_lexp->m_defValue="";
+	    if (debug()) cout<<"defarg++ "<<refp->nextarg()<<endl;
 	    if (tok==VP_DEFARG && yyleng==1 && yytext[0]==',') {
 		refp->args().push_back(refp->nextarg());
 		m_state = ps_DEFARG;
@@ -661,13 +662,17 @@ int VPreprocImp::getToken() {
 		// Similar code in non-parenthesized define (Search for END_OF_DEFARG)
 		m_defRefs.pop();
 		out = m_preprocp->defSubstitute(out);
-		m_lexp->unputString(out.c_str());
 		if (m_defRefs.empty()) {
+		    m_lexp->unputString(out.c_str());
 		    m_state = ps_TOP;
 		    m_lexp->m_parenLevel = 0;
 		}
 		else {  // Finished a defref inside a upper defref
+		    // Can't subst now, or
+		    // `define a(ign) x,y
+		    // foo(`a(ign),`b)  would break because a contains comma
 		    refp = &(m_defRefs.top());  // We popped, so new top
+		    refp->nextarg(refp->nextarg()+m_lexp->m_defValue+out); m_lexp->m_defValue="";
 		    m_lexp->m_parenLevel = refp->parenLevel();
 		    m_state = ps_DEFARG;
 		}
@@ -787,13 +792,13 @@ int VPreprocImp::getToken() {
 		else if (params=="0") {  // Found, as simple substitution
 		    string out = m_preprocp->defValue(name);
 		    if (debug()) cout<<"Defref `"<<name<<" => '"<<out<<"'"<<endl;
+		    out = m_preprocp->defSubstitute(out);
 		    // Similar code in parenthesized define (Search for END_OF_DEFARG)
 		    if (m_defRefs.empty()) {
 			// Just output the substitution
-			out = m_preprocp->defSubstitute(out);
 			m_lexp->unputString(out.c_str());
-		    } else {
-			// Inside another define.  Can't subst now, or
+		    } else {  // Inside another define.
+			// Can't subst now, or
 			// `define a x,y
 			// foo(`a,`b)  would break because a contains comma
 			VPreDefRef* refp = &(m_defRefs.top());

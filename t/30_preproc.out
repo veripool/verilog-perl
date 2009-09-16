@@ -241,4 +241,11 @@ verilog/inc1.v:187:
 verilog/inc1.v:188:   got_escaped
 verilog/inc1.v:189: 
 verilog/inc1.v:190: Not a \`define
-verilog/inc1.v:191: `line 191 "verilog/inc1.v" 2
+verilog/inc1.v:191: 
+verilog/inc1.v:192: //======================================================================
+verilog/inc1.v:193: // misparsed comma in submacro
+verilog/inc1.v:194:  
+verilog/inc1.v:195:  
+verilog/inc1.v:196:  
+verilog/inc1.v:197: x,y)--bee  submacro has comma paren
+verilog/inc1.v:198: `line 198 "verilog/inc1.v" 2

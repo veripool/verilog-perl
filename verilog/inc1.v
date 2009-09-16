@@ -188,3 +188,10 @@ Line: `__LINE__
   `\esc`def
 `endif
 Not a \`define
+
+//======================================================================
+// misparsed comma in submacro
+`define sb bee
+`define sa(l) x,y)
+`define sfoo(q,r) q--r
+`sfoo(`sa(el),`sb)  submacro has comma paren
