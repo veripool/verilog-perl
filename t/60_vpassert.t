@@ -28,9 +28,14 @@ ok(compare('diff',  [glob("test_dir/.vpassert/*.v")]));
 # Build the model
 unlink "simv";
 chdir 'test_dir';
-if ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
+if (!$ENV{VERILATOR_AUTHOR_SITE}) {
+    skip("author only test (harmless)",1);
+}
+elsif ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
     run_system (# We use VCS, insert your simulator here
 		"$ENV{VCS_HOME}/bin/vcs"
+		# vpassert optionally uses SystemVerilog coverage for $ucover_clk
+		." -sverilog"
 		# vpassert uses `pli to point to the hierarchy of the pli module
 		." +define+pli=pli"
 		# vpassert uses `__message_on to point to the message on variable
