@@ -7,7 +7,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix deep defines causing flex scanner overflows. [Brad Dobbie]
 
-****	Fix commas in two level deep parameterized macros. [Brad Dobbie]
+****	Fix preprocessing commas in deep parameterized macros. [Brad Dobbie]
 
 ****	Fix Preproc::defSubstitute not being called on parameterized macros.
 
