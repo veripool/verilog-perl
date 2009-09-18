@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix Preproc::defSubstitute not being called on parameterized macros.
 
+****	Fix Perl 5.8.8 compile error, rt48226. [Marek Rouchal]
+
 * Verilog::Language 3.213 2009/09/10
 
 ***	Improved warning when "do" used as identifier.
