@@ -5,7 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.21***
 
-****	Fix commas in two level deep parameterized macros.  [Brad Dobbie]
+****	Fix deep defines causing flex scanner overflows. [Brad Dobbie]
+
+****	Fix commas in two level deep parameterized macros. [Brad Dobbie]
 
 ****	Fix Preproc::defSubstitute not being called on parameterized macros.
 

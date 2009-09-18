@@ -136,6 +136,7 @@ drop		[\032]
 	/* Note '(' must IMMEDIATELY follow definition name */
 <DEFFPAR>[(]		{ appendDefValue("(",1); BEGIN(DEFFORM); }
 <DEFFPAR>{crnl}		{ yy_pop_state(); unput('\n'); yyleng=0; return VP_DEFFORM; } /* DEFVAL will later grab the return */
+<DEFFPAR><<EOF>>	{ yy_pop_state(); return VP_DEFFORM; }  /* empty formals */
 <DEFFPAR>.		{ yy_pop_state(); unput(yytext[yyleng-1]); yyleng=0; return VP_DEFFORM; }  /* empty formals */
 
 	/* Reading definition formals */
@@ -211,6 +212,7 @@ drop		[\032]
 <INITIAL>"`"{symb}	{ return (VP_DEFREF); }
 
 	/* Generics */
+<INITIAL><<EOF>> 	{ yyterminate(); }  /* A "normal" EOF */
 <INITIAL>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
 <INITIAL>{symb}		{ return (VP_SYMBOL); }
 <INITIAL>[\r]		{ }
@@ -248,13 +250,9 @@ void VPreprocLex::pushStateIncFilename() {
     yymore();
 }
 
-void VPreprocLex::unputString(const char* textp) {
-    // Add characters to input stream in back-to-front order
-    const char* cp;
-    for (cp = textp; *cp; cp++);
-    for (cp--; cp >= textp; cp--) {
-	unput(*cp);
-    }
+void VPreprocLex::scanBytes(const string& strg) {
+    yy_scan_bytes(strg.c_str(), strg.length());
+    m_bufferStack.push(currentBuffer());  // yy_scan_bytes makes new buffer
 }
 
 void VPreprocLex::appendDefValue(const char* textp, int len) {
@@ -262,10 +260,25 @@ void VPreprocLex::appendDefValue(const char* textp, int len) {
     m_defValue.append(textp,len);
 }
 
+YY_BUFFER_STATE VPreprocLex::currentBuffer() {
+    return YY_CURRENT_BUFFER;
+}
+
 int VPreprocLex::currentStartState() {
     return YY_START;
 }
 
+void VPreprocLex::dumpStack() {
+    // For debug use
+    stack<YY_BUFFER_STATE> tmpstack = m_bufferStack;
+    printf("  bufferStack[%p]:",this);
+    while (!tmpstack.empty()) {
+	printf(" %p",tmpstack.top());
+	tmpstack.pop();
+    }
+    printf("\n");
+}
+	
 void VPreprocLex::unused() {
     if (0) {
 	// Prevent unused warnings
@@ -275,6 +288,6 @@ void VPreprocLex::unused() {
 
 /*###################################################################
  * Local Variables:
- * mode: C
+ * mode: C++
  * End:
  */
