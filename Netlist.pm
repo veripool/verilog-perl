@@ -36,11 +36,11 @@ sub new {
 		link_read => 1,
 		logger => Verilog::Netlist::Logger->new,
 		options => undef,	# Usually pointer to Verilog::Getopt
-		skip_pin_interconnect => 0,
 		symbol_table => [],	# Symbol table for Verilog::Parser
  		preproc => 'Verilog::Preproc',
 		#include_open_nonfatal => 0,
 		#keep_comments => 0,
+		use_vars => 1,
 		_libraries_done => {},
 		@_};
     bless $self, $class;
@@ -120,8 +120,8 @@ sub defvalue_nowarn {
     my $self = shift;
     my $sym = shift;
     # Look up the value of a define, letting the user pick the accessor class
-    if ($self->{options}) {
-	return $self->{options}->defvalue_nowarn($sym);
+    if (my $opt=$self->{options}) {
+	return $opt->defvalue_nowarn($sym);
     }
     return undef;
 }
@@ -129,6 +129,7 @@ sub defvalue_nowarn {
 sub remove_defines {
     my $self = shift;
     my $sym = shift;
+    # This function is HOT
     my $val = "x";
     while (defined $val) {
 	last if $sym eq $val;
@@ -420,7 +421,7 @@ there is no elaboration you may get false errors about multiple drivers
 from generate statements that are mutually exclusive.  For this reason and
 the few lint checks you may not want to use this method.  Alternatively to
 avoid pin interconnect checks, set the $netlist->new
-(...skip_pin_interconnect=>1...) option.
+(...use_vars=>0...) option.
 
 =item $netlist->link()
 
@@ -483,10 +484,11 @@ files.
 
 The name of the preprocessor class. Defaults to "Verilog::Preproc".
 
-=item skip_pin_interconnect => $true_or_false
+=item use_vars => $true_or_false
 
-Interconnect information is not needed, do not read it, nor report lint
-related pin warnings.  Can greatly improve performance.
+Indicates that signals, variables, and pin interconnect information is
+needed; set by default.  If clear do not read it, nor report lint related
+pin warnings, which can greatly improve performance.
 
 =back
 

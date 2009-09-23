@@ -53,6 +53,7 @@ sub new {
     my $class = shift;  $class = ref $class if ref $class;
     my $self = {_sigparser=>0,
 		symbol_table=>[],	# .xs will init further for us
+		use_vars => 1,
 		use_unreadback => 1,   # Backward compatibility
 		use_std => undef,	# Undef = silent
 		#_debug		# Don't set, use debug() accessor to change level
@@ -65,6 +66,7 @@ sub new {
 		$self->{symbol_table},
 		$self->{_sigparser},
 		$self->{use_unreadback},
+		$self->{use_vars},
 		);
     $self->language(Verilog::Language::language_standard());
     $self->debug($Debug) if $Debug;
@@ -284,12 +286,7 @@ parser to filter out such errors if it cares.
 
 =item $parser = Verilog::Parser->new (args...)
 
-Create a new Parser. Passing the named argument "use_unreadback => 0" will
-disable later use of the unreadback method, which may improve performance.
-
-Adding "use_std => 1" will add parsing of the SystemVerilog built-in std::
-package, or "use_std => 0" will disable it.  If unspecified it is silently
-included (no callbacks will be involed) when suspected to be necessary.
+Create a new Parser.
 
 Adding "symbol_table => []" will use the specified symbol table for this
 parse, and modify the array reference to include those symbols detected by
@@ -298,6 +295,17 @@ to exist before they are referenced, you must pass the same symbol_table to
 subsequent parses that are for the same compilation scope.  The internals
 of this symbol_table should be considered opaque, as it will change between
 package versions, and must not be modified by user code.
+
+Adding "use_vars => 0" will disable pin, var and port callbacks to
+Verilog::SigParser.  This can greatly speed parsing when variable and
+interconnect information is not required.
+
+Adding "use_std => 1" will add parsing of the SystemVerilog built-in std::
+package, or "use_std => 0" will disable it.  If unspecified it is silently
+included (no callbacks will be involed) when suspected to be necessary.
+
+Adding "use_unreadback => 0" will disable later use of the unreadback
+method, which may improve performance.
 
 =item $parser->callback_names ()
 

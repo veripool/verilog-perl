@@ -38,11 +38,11 @@ my %Cbs =
      module	=> {which=>'SigParser', args => [kwd=>'string', name=>'string', ignore3=>'undef', celldefine=>'bool'],},
      package	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
      parampin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', index=>'int']},
-     pin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', index=>'int']},
-     port	=> {which=>'SigParser', args => [name=>'string', objof=>'string', direction=>'string',
+     pin	=> {which=>'SigParser', enable=>'m_useVars', args => [name=>'string', conn=>'string', index=>'int']},
+     port	=> {which=>'SigParser', enable=>'m_useVars', args => [name=>'string', objof=>'string', direction=>'string',
 						 data_type=>'string', array=>'string', index=>'int']},
      program	=> {which=>'SigParser', args => [kwd=>'string', name=>'string'],},
-     var	=> {which=>'SigParser', args => [kwd=>'string',	 name=>'string', objof=>'string', net=>'string',
+     var	=> {which=>'SigParser', enable=>'m_useVars', args => [kwd=>'string',	 name=>'string', objof=>'string', net=>'string',
 						 data_type=>'string', array=>'string', value=>'string'],},
      task	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
     );
@@ -181,19 +181,22 @@ sub _xs {
     my @out;
     push @out, "// GENERATED AUTOMATICALLY by callbackgen\n";
     push @out, "void VParserXs::"._func($cb)."("._arglist($cb).") {\n";
-    push @out, "    cbFileline(fl);\n";
+    my $enable = "callbackEnable()";
+    $enable .= " && $Cbs{$cb}{enable}" if $Cbs{$cb}{enable};
+    push @out, "    if ($enable) {\n";
+    push @out, "        cbFileline(fl);\n";
     my $callargs="";
     my $n=1;
     for (my $i=0; $i<=$#{$Cbs{$cb}{args}}; $i+=2) {
 	my ($arg,$type) = ($Cbs{$cb}{args}[$i],$Cbs{$cb}{args}[$i+1]);
 	if ($type eq 'string') {
-	    push @out, "    static string hold${n}; hold${n} = $arg;\n";
+	    push @out, "        static string hold${n}; hold${n} = $arg;\n";
 	    $callargs .= ", hold${n}.c_str()";
 	} elsif ($type eq 'bool') {
-	    push @out, "    static string hold${n}; hold${n} = $arg ? \"1\":\"0\";\n";
+	    push @out, "        static string hold${n}; hold${n} = $arg ? \"1\":\"0\";\n";
 	    $callargs .= ", hold${n}.c_str()";
 	} elsif ($type eq 'int') {
-	    push @out, "    static string hold${n}; static char num".$n."[30]; sprintf(num${n},\"%d\",$arg); hold${n}=num${n};\n";
+	    push @out, "        static string hold${n}; static char num".$n."[30]; sprintf(num${n},\"%d\",$arg); hold${n}=num${n};\n";
 	    $callargs .= ", hold${n}.c_str()";
 	} elsif ($type eq 'undef') {
 	    $callargs .= ", NULL";
@@ -204,7 +207,8 @@ sub _xs {
 	$n++;
     }
     my $narg = $n-1;
-    push @out, "    if (callbackEnable()) call(NULL, $narg, \"$cb\"$callargs);\n";
+    push @out, "        call(NULL, $narg, \"$cb\"$callargs);\n";
+    push @out, "    }\n";
     push @out, "}\n";
     return @out;
 }

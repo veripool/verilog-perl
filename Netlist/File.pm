@@ -371,6 +371,7 @@ sub read {
 	  filename=>$filepath,	# for ->read
 	  metacomment=>($params{metacomment} || $netlist->{metacomment}),
 	  keep_comments=>($params{keep_comments} || $netlist->{keep_comments}),
+	  use_vars=>($params{use_vars} || $netlist->{use_vars}),
 	  preproc=>($params{preproc} || $netlist->{preproc}),
 	  );
     return $fileref;

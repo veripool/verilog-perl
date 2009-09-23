@@ -219,7 +219,7 @@ sub link {
 
 sub lint {
     my $self = shift;
-    if (!$self->netlist->{skip_pin_interconnect}) {
+    if ($self->netlist->{use_vars}) {
 	foreach my $portref ($self->ports) {
 	    $portref->lint();
 	}

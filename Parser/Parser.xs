@@ -50,13 +50,18 @@ public:
     SV*		m_self;	// Class called from
     VFileLine*	m_cbFilelinep;	///< Last callback's starting point
 
+    // Callback enables
+    bool	m_useVars;	///< Need pin callbacks
+
     VFileLine* cbFilelinep() const { return m_cbFilelinep; }
     void cbFileline(const string& filename, int lineno) { m_cbFilelinep = m_cbFilelinep->create(filename, lineno); }
     void cbFileline(VFileLine* filelinep) { m_cbFilelinep = filelinep; }
 
-    VParserXs(VFileLine* filelinep, av* symsp, bool sigparser, bool useUnreadbackFlag)
-	: VParse(filelinep, symsp, sigparser, useUnreadbackFlag)
-	  , m_cbFilelinep(filelinep)
+    VParserXs(VFileLine* filelinep, av* symsp, bool sigparser, bool useUnreadback
+	      , bool useVars)
+	: VParse(filelinep, symsp, sigparser, useUnreadback)
+	, m_cbFilelinep(filelinep)
+	, m_useVars(useVars)
 	{}
     virtual ~VParserXs() {}
 
@@ -199,13 +204,13 @@ MODULE = Verilog::Parser  PACKAGE = Verilog::Parser
 #// self->_new (class, sigparser)
 
 static VParserXs *
-VParserXs::_new (SV* SELF, AV* symsp, bool sigparser, bool useUnreadback)
-PROTOTYPE: $$$$
+VParserXs::_new (SV* SELF, AV* symsp, bool sigparser, bool useUnreadback, bool useVars)
+PROTOTYPE: $$$$$
 CODE:
 {
     if (CLASS) {}  /* Prevent unused warning */
     VFileLineParseXs* filelinep = new VFileLineParseXs(1/*ok,for initial*/);
-    VParserXs* parserp = new VParserXs(filelinep, symsp, sigparser, useUnreadback);
+    VParserXs* parserp = new VParserXs(filelinep, symsp, sigparser, useUnreadback, useVars);
     filelinep->setParser(parserp);
     parserp->m_self = newSVsv(SELF);
     RETVAL = parserp;

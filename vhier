@@ -105,7 +105,8 @@ sub vhier {
     my @files = @_;
 
     my $nl = new Verilog::Netlist (options => $Opt,
-				   skip_pin_interconnect => 1,
+				   keep_comments => 0,
+				   use_vars => 0,
 				   link_read_nonfatal => !$Opt_Missing,
 				   );
 
@@ -124,7 +125,7 @@ sub vhier {
     }
     # Read in any sub-modules
     $nl->link();
-    $nl->lint();  # Simplified as skip_pin_interconnect => 1
+    $nl->lint();  # Simplified as use_vars => 0
     $nl->exit_if_error();
 
     if ($Opt_TopModule) {

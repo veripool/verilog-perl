@@ -123,7 +123,7 @@ sub lint {
     if (!$self->submod() && !$self->gateprim && !$self->netlist->{link_read_nonfatal}) {
         $self->error ($self,"Module/Program/Interface reference not found: ",$self->submodname(),,"\n");
     }
-    if (!$self->netlist->{skip_pin_interconnect}) {
+    if ($self->netlist->{use_vars}) {
 	foreach my $pinref ($self->pins) {
 	    $pinref->lint();
 	}
