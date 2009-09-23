@@ -352,7 +352,7 @@ Verilog::Netlist - Verilog Netlist
     }
     # Read in any sub-modules
     $nl->link();
-    $nl->lint();
+    #$nl->lint();  # Optional, see docs; probably not wanted
     $nl->exit_if_error();
 
     foreach my $mod ($nl->top_modules_sorted) {
@@ -413,7 +413,14 @@ See also Verilog::Netlist::Subclass for additional accessors and methods.
 
 =item $netlist->lint
 
-Error checks the entire netlist structure.
+Error checks the entire netlist structure.  Currently there are only two
+checks, that modules are bound to instantiations (which is also checked by
+$netlist->link), and that signals aren't multiply driven.  Note that as
+there is no elaboration you may get false errors about multiple drivers
+from generate statements that are mutually exclusive.  For this reason and
+the few lint checks you may not want to use this method.  Alternatively to
+avoid pin interconnect checks, set the $netlist->new
+(...skip_pin_interconnect=>1...) option.
 
 =item $netlist->link()
 
@@ -423,10 +430,6 @@ If link_read=>1 is passed when netlist->new is called (it is by default),
 undefined modules will be searched for using the Verilog::Getopt package,
 passed by a reference in the creation of the netlist.  To suppress errors
 in any missing references, set link_read_nonfatal=>1 also.
-
-If keep_comments=>1 is passed, comment fields will be entered on net
-declarations into the Vtest::Netlist::Net structures.  Otherwise all
-comments are stripped for speed.
 
 =item $netlist->new
 
@@ -445,7 +448,9 @@ Indicates that include files that do not exist should be ignored.
 
 =item keep_comments => $true_or_false
 
-Indicates that comments should be preserved in the structure (slower).
+Indicates that comment fields should be preserved and on net declarations
+into the Vtest::Netlist::Net structures.  Otherwise all comments are
+stripped for speed.
 
 =item link_read => $true_or_false
 
@@ -456,6 +461,11 @@ undefined modules through the "options" object.
 
 Indicates that modules that referenced but not found should be ignored,
 rather than causing an error message.
+
+=item lint_pin_interconnect => $true_or_false
+
+Indicates that lint should Interconnect information is not needed, do not read it, nor report lint
+related pin warnings.  Greatly improves performance.
 
 =item logger => object
 
@@ -476,7 +486,7 @@ The name of the preprocessor class. Defaults to "Verilog::Preproc".
 =item skip_pin_interconnect => $true_or_false
 
 Interconnect information is not needed, do not read it, nor report lint
-related pin warnings.  Greatly improves performance.
+related pin warnings.  Can greatly improve performance.
 
 =back
 

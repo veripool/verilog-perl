@@ -35,7 +35,7 @@ ok(1);
     }
     # Read in any sub-modules
     $nl->link();
-    $nl->lint();
+    #$nl->lint();  # Optional, see docs; probably not wanted
     $nl->exit_if_error();
 
     foreach my $mod ($nl->top_modules_sorted) {

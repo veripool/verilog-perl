@@ -34,7 +34,7 @@ foreach my $file ('verilog/v_hier_top.v', 'verilog/v_hier_top2.v',
 }
 # Read in any sub-modules
 $nl->link();
-$nl->lint();
+$nl->lint();  # Optional, see docs; probably not wanted
 $nl->exit_if_error();
 
 print "Level tests\n";
