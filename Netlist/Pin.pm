@@ -68,28 +68,34 @@ sub netlist {
 
 sub _link {
     my $self = shift;
+    # Note this routine is HOT
     my $change;
-    if (!$self->net
-	&& $self->netname) {
-	$self->net($self->module->find_net($self->netname));
-	$change = 1;
+    if (!$self->net) {
+	if (my $netname = $self->netname) {
+	    $self->net($self->module->find_net($netname));
+	    $change = 1;
+	}
     }
-    if (!$self->port
-	&& $self->portname && $self->submod && !$self->cell->byorder ) {
-	$self->port($self->submod->find_port($self->portname));
-	$change = 1;
-    }
-    elsif (!$self->port
-	&& $self->submod) {
-	$self->port($self->submod->find_port_by_index($self->portnumber));
-	# changing name from pin# to actual port name
-	$self->name($self->port->name()) if $self->port;
-	$change = 1;
+    if (!$self->port) {
+	if (my $submod = $self->submod) {
+	    my $portname = $self->portname;
+	    if ($portname && !$self->cell->byorder ) {
+		$self->port($submod->find_port($portname));
+		$change = 1;
+	    }
+	    else {
+		$self->port($submod->find_port_by_index($self->portnumber));
+		# changing name from pin# to actual port name
+		$self->name($self->port->name) if $self->port;
+		$change = 1;
+	    }
+	}
     }
     if ($change && $self->net && $self->port) {
-	$self->net->_used_in_inc()    if ($self->port->direction() eq 'in');
-	$self->net->_used_out_inc()   if ($self->port->direction() eq 'out');
-	$self->net->_used_inout_inc() if ($self->port->direction() eq 'inout');
+	my $dir = $self->port->direction;
+	if    ($dir eq 'in')    { $self->net->_used_in_inc(); }
+	elsif ($dir eq 'out')   { $self->net->_used_out_inc(); }
+	elsif ($dir eq 'inout') { $self->net->_used_inout_inc(); }
     }
 }
 
@@ -145,7 +151,7 @@ sub verilog_text {
 sub dump {
     my $self = shift;
     my $indent = shift||0;
-    print " "x$indent,"Pin:",$self->name(),"  Net:",$self->netname(),"\n";
+    print " "x$indent,"Pin:",$self->name,"  Net:",$self->netname,"\n";
     if ($self->port) {
 	$self->port->dump($indent+10, 'norecurse');
     }

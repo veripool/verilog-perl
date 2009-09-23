@@ -59,17 +59,22 @@ sub netlist {
 
 sub _link_guts {
     my $self = shift;
-    if ($self->submodname()) {
-	my $name = $self->submodname();
-	my $sm = ($self->netlist->find_module ($self->submodname())
-		  || $self->netlist->find_interface ($self->submodname()));
-	if (!$sm) {
-	    my $name2 = $self->netlist->remove_defines($self->submodname());
-	    $sm = ($self->netlist->find_module ($name2)
-		   || $self->netlist->find_module ($name2));
+    # This function is HOT, keep simple
+    if (!$self->submod) {
+	if (my $name = $self->submodname) {
+	    my $netlist = $self->netlist;
+	    my $sm = ($netlist->find_module ($name)
+		      || $netlist->find_interface ($name));
+	    if (!$sm) {
+		my $name2 = $netlist->remove_defines($name);
+		$sm = ($netlist->find_module ($name2)
+		       || $netlist->find_interface ($name2));
+	    }
+	    if ($sm) {
+		$self->submod($sm);
+		$sm->is_top(0);
+	    }
 	}
-	$self->submod($sm);
-	$sm->is_top(0) if $sm;
     }
     foreach my $pinref ($self->pins) {
 	$pinref->_link();
@@ -77,6 +82,7 @@ sub _link_guts {
 }
 sub _link {
     my $self = shift;
+    # This function is HOT, keep simple
     $self->_link_guts();
     if (!$self->submod && Verilog::Language::is_gateprim($self->submodname)) {
 	$self->gateprim(1);
