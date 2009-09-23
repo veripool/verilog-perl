@@ -124,7 +124,7 @@ sub vhier {
     }
     # Read in any sub-modules
     $nl->link();
-    $nl->lint();
+    $nl->lint();  # Simplified as skip_pin_interconnect => 1
     $nl->exit_if_error();
 
     if ($Opt_TopModule) {

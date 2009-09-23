@@ -32,12 +32,13 @@ sub new {
     my $self = {_interfaces => {},
 		_modules => {},
 		_files => {},
-		options => undef,	# Usually pointer to Verilog::Getopt
 		implicit_wires_ok => 1,
- 		preproc => 'Verilog::Preproc',
 		link_read => 1,
 		logger => Verilog::Netlist::Logger->new,
+		options => undef,	# Usually pointer to Verilog::Getopt
+		skip_pin_interconnect => 0,
 		symbol_table => [],	# Symbol table for Verilog::Parser
+ 		preproc => 'Verilog::Preproc',
 		#include_open_nonfatal => 0,
 		#keep_comments => 0,
 		_libraries_done => {},
@@ -434,30 +435,9 @@ with the following parameters:
 
 =over 8
 
-=item options => $opt_object
-
-An optional pointer to a Verilog::Getopt object, to be used for locating
-files.
-
 =item implicit_wires_ok => $true_or_false
 
 Indicates whether to allow undeclared wires to be used.
-
-=item logger => object
-
-Specify a message handler object to be used for error handling, this class
-should be a Verilog::Netlist::Logger object, or derived from one.  If
-unspecified, a Verilog::Netlist::Logger local to this netlist will be
-used.
-
-=item preproc => $package_name
-
-The name of the preprocessor class. Defaults to "Verilog::Preproc".
-
-=item link_read => $true_or_false
-
-Indicates whether or not the parser should automatically search for
-undefined modules through the "options" object.
 
 =item include_open_nonfatal => $true_or_false
 
@@ -467,10 +447,36 @@ Indicates that include files that do not exist should be ignored.
 
 Indicates that comments should be preserved in the structure (slower).
 
+=item link_read => $true_or_false
+
+Indicates whether or not the parser should automatically search for
+undefined modules through the "options" object.
+
 =item link_read_nonfatal => $true_or_false
 
 Indicates that modules that referenced but not found should be ignored,
 rather than causing an error message.
+
+=item logger => object
+
+Specify a message handler object to be used for error handling, this class
+should be a Verilog::Netlist::Logger object, or derived from one.  If
+unspecified, a Verilog::Netlist::Logger local to this netlist will be
+used.
+
+=item options => $opt_object
+
+An optional pointer to a Verilog::Getopt object, to be used for locating
+files.
+
+=item preproc => $package_name
+
+The name of the preprocessor class. Defaults to "Verilog::Preproc".
+
+=item skip_pin_interconnect => $true_or_false
+
+Interconnect information is not needed, do not read it, nor report lint
+related pin warnings.  Greatly improves performance.
 
 =back
 

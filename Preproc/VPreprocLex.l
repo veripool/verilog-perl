@@ -278,7 +278,7 @@ void VPreprocLex::dumpStack() {
     }
     printf("\n");
 }
-	
+
 void VPreprocLex::unused() {
     if (0) {
 	// Prevent unused warnings
