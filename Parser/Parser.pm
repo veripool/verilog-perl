@@ -155,8 +155,8 @@ sub parse_preproc_file {
 
     ref($pp) or croak "%Error: not passed a Verilog::Preproc object";
     $self->reset();
-    while (defined(my $line = $pp->getline())) {
-	$self->parse ($line);
+    while (defined(my $text = $pp->getall)) {
+	$self->parse ($text);
     }
     $self->eof;
     return $self;

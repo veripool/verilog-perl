@@ -21,6 +21,7 @@ bootstrap Verilog::Preproc;
 #In Preproc.xs:
 # sub _new (class, keepcmt, linedir, pedantic)
 # sub _open (class)
+# sub getall (class)
 # sub getline (class)
 # sub eof (class)
 # sub filename (class)
@@ -218,6 +219,11 @@ Returns true at the end of the file.
 
 Returns the filename of the most recently returned getline().  May not match
 the filename passed on the command line, as `line directives are honored.
+
+=item $self->getall()
+
+Return the entire translated text up to the final EOF, similar to calling
+join('',$self->getline) but significantly faster.  Returns undef at EOF.
 
 =item $self->getline()
 

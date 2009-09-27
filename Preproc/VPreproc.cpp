@@ -123,7 +123,7 @@ struct VPreprocImp : public VPreprocOpaque {
     int getToken();
     void parseTop();
     void parseUndef();
-    string getline();
+    string gettext(bool stop_at_eol);
     bool isEof() const { return (m_lexp==NULL); }
     void open(string filename, VFileLine* filelinep);
     void insertUnreadback(const string& text) { m_lineCmt += text; }
@@ -161,7 +161,11 @@ void VPreproc::open(string filename, VFileLine* filelinep) {
 }
 string VPreproc::getline() {
     VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
-    return idatap->getline();
+    return idatap->gettext(true);
+}
+string VPreproc::getall() {
+    VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
+    return idatap->gettext(false);
 }
 void VPreproc::debug(int level) {
     VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
@@ -867,13 +871,14 @@ int VPreprocImp::getToken() {
     }
 }
 
-string VPreprocImp::getline() {
+string VPreprocImp::gettext(bool stop_at_eol) {
     // Get a single line from the parse stream.  Buffer unreturned text until the newline.
     if (isEof()) return "";
     while (1) {
-	const char* rtnp;
+	const char* rtnp = NULL;
 	bool gotEof = false;
-	while (NULL==(rtnp=strchr(m_lineChars.c_str(),'\n')) && !gotEof) {
+	while ((!stop_at_eol || NULL==(rtnp=strchr(m_lineChars.c_str(),'\n')))
+	       && !gotEof) {
 	    int tok = getToken();
 	    if (debug()) {
 		string buf = string (yytext, yyleng);
@@ -897,7 +902,7 @@ string VPreprocImp::getline() {
 	}
 
 	// Make new string with data up to the newline.
-	int len = rtnp-m_lineChars.c_str()+1;
+	int len = stop_at_eol ? (rtnp-m_lineChars.c_str()+1) : m_lineChars.length();
 	string theLine(m_lineChars, 0, len);
 	m_lineChars = m_lineChars.erase(0,len);	// Remove returned characters
 

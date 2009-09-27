@@ -279,6 +279,22 @@ CODE:
 }
 
 #//**********************************************************************
+#// self->getall()
+
+const char *
+VPreprocXs::getall ()
+PROTOTYPE: $
+CODE:
+{
+    static string holdline;
+    if (!THIS || THIS->isEof()) XSRETURN_UNDEF;
+    string lastline = THIS->getall();
+    holdline = lastline;	/* Stash it so c_str() doesn't disappear immediately */
+    RETVAL = lastline.c_str();
+}
+OUTPUT: RETVAL
+
+#//**********************************************************************
 #// self->getline()
 
 const char *

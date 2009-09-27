@@ -9,7 +9,7 @@ use IO::File;
 use strict;
 use Test;
 
-BEGIN { plan tests => 12 }
+BEGIN { plan tests => 14 }
 BEGIN { require "t/test_utils.pl"; }
 
 #######################################################################
@@ -75,6 +75,7 @@ ok(1);
 test ('_sub', keep_comments=>'sub', _test_def_substitute=>1);
 test ('_on',  keep_comments=>1,);
 test ('_nows', keep_comments=>0, keep_whitespace=>0,);
+test_getall ();
 
 sub test {
     my $id = shift;
@@ -95,5 +96,34 @@ sub test {
     ok(1);
 
     ok(files_identical("test_dir/inc${id}.out", "t/30_preproc${id}.out"));
+}
+
+sub test_getall {
+    my $id = shift;
+    my @args = @_;
+
+    my $a;
+    my $acalls = 0;
+    {
+	my $pp = new MyPreproc (options=>prep(), @args);
+	$pp->open("inc1.v");
+	while (defined(my $line = $pp->getline)) {
+	    $a .= $line;
+	    $acalls++;
+	}
+    }
+    my $b;
+    my $bcalls = 0;
+    {
+	my $pp = new MyPreproc (options=>prep(), @args);
+	$pp->open("inc1.v");
+	while (defined(my $all = $pp->getall)) {
+	    $b .= $all;
+	    $bcalls++;
+	}
+    }
+
+    ok($a eq $b);
+    ok($acalls > $bcalls);
 }
 

@@ -71,6 +71,7 @@ my $vp = Verilog::Preproc->new(@opt_pp_flags,
 $vp->debug($Debug) if $Debug;
 foreach my $file (@opt_files) {
     $vp->open($file);
+    # Alternatively, use $vp->getall for better performance
     while (defined (my $line = $vp->getline())) {
 	next if !$opt_blank && $line =~ /^\s*[\n]?$/;
 	print $fh $line;
