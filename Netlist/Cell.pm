@@ -63,21 +63,17 @@ sub _link_guts {
     if (!$self->submod) {
 	if (my $name = $self->submodname) {
 	    my $netlist = $self->netlist;
-	    my $sm = ($netlist->find_module ($name)
-		      || $netlist->find_interface ($name));
+	    my $sm = $netlist->find_module_or_interface_for_cell ($name);
 	    if (!$sm) {
 		my $name2 = $netlist->remove_defines($name);
-		$sm = ($netlist->find_module ($name2)
-		       || $netlist->find_interface ($name2));
+		$sm = $netlist->find_module_or_inteface_for_cell ($name2)
+		    if $name ne $name2;
 	    }
 	    if ($sm) {
 		$self->submod($sm);
 		$sm->is_top(0);
 	    }
 	}
-    }
-    foreach my $pinref ($self->pins) {
-	$pinref->_link();
     }
 }
 sub _link {
@@ -98,6 +94,7 @@ sub _link {
 	# Try 1: Direct filename
 	$self->netlist->read_file(filename=>$self->submodname, error_self=>0);
 	$self->_link_guts();
+	#
 	# Try 2: Libraries
 	if (!$self->submod()) {
 	    $self->netlist->read_libraries();
@@ -115,6 +112,10 @@ sub _link {
 	    # Don't link this file again - speeds up if many common gate-ish missing primitives
 	    $self->netlist->{_missing_submod}{$self->submodname} = 1;
 	}
+    }
+    # Link pins after module resolved, so don't do it multiple times if not found
+    foreach my $pinref ($self->pins) {
+	$pinref->_link();
     }
 }
 

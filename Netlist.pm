@@ -130,14 +130,19 @@ sub remove_defines {
     my $self = shift;
     my $sym = shift;
     # This function is HOT
-    my $val = "x";
-    while (defined $val) {
-	last if $sym eq $val;
-	(my $xsym = $sym) =~ s/^\`//;
-	$val = $self->defvalue_nowarn($xsym);  #Undef if not found
-	$sym = $val if defined $val;
-    }
+    # We only remove defines one level deep, for historical reasons.
+    # We don't require a ` as SystemC also uses this function and doesn't use `.
+    (my $xsym = $sym) =~ s/^\`//;
+    my $val = $self->defvalue_nowarn($xsym);  #Undef if not found
+    $sym = $val if defined $val;
     return $sym;
+}
+
+sub find_module_or_interface_for_cell {
+    # ($self,$name)   Are arguments, hardcoded below
+    # Hot function, used only by Verilog::Netlist::Cell linking
+    # Doesn't need to remove defines, as that's already done by caller
+    return $_[0]->{_modules}{$_[1]} || $_[0]->{_interfaces}{$_[1]};
 }
 
 sub find_module {
