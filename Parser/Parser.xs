@@ -242,16 +242,16 @@ CODE:
 }
 
 #//**********************************************************************
-#// self->_callback_enable(flag)
+#// self->_callback_master_enable(flag)
 #// Turn off callbacks during std:: parsing
 
 void
-VParserXs::_callback_enable (flag)
+VParserXs::_callback_master_enable (flag)
 bool flag
 PROTOTYPE: $$
 CODE:
 {
-    THIS->callbackEnable(flag);
+    THIS->callbackMasterEna(flag);
 }
 
 #//**********************************************************************

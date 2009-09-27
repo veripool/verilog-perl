@@ -52,7 +52,7 @@ private:
     VParseLex*	m_lexp;		///< Current lexer state (NULL = closed)
     VParseGrammar* m_grammarp;	///< Current bison state (NULL = closed)
     bool	m_eof;		///< At end of file
-    bool	m_callbackEnable; ///< Callbacks are enabled
+    bool	m_callbackMasterEna; ///< Callbacks are enabled
 
     bool	m_useUnreadback;///< Need m_unreadback tracking
     string	m_unreadback;	///< Otherwise unprocessed whitespace before current token
@@ -124,8 +124,8 @@ public:
     void setEof();				///< Got a end of file
     bool sigParser() const { return m_sigParser; }
     void language(const char* valuep);
-    void callbackEnable(bool flag) { m_callbackEnable=flag; }
-    bool callbackEnable() const { return m_callbackEnable; }
+    void callbackMasterEna(bool flag) { m_callbackMasterEna=flag; }
+    bool callbackMasterEna() const { return m_callbackMasterEna; }
 
     VFileLine* inFilelinep() const;		///< File/Line number for last callback
     void inFileline(const string& filename, int lineno) { m_inFilelinep = m_inFilelinep->create(filename, lineno); }

@@ -181,7 +181,7 @@ sub _xs {
     my @out;
     push @out, "// GENERATED AUTOMATICALLY by callbackgen\n";
     push @out, "void VParserXs::"._func($cb)."("._arglist($cb).") {\n";
-    my $enable = "callbackEnable()";
+    my $enable = "callbackMasterEna()";
     $enable .= " && $Cbs{$cb}{enable}" if $Cbs{$cb}{enable};
     push @out, "    if ($enable) {\n";
     push @out, "        cbFileline(fl);\n";

@@ -50,7 +50,7 @@ VParse::VParse(VFileLine* filelinep, av* symsp, bool sigParser, bool useUnreadba
     m_eof = false;
     m_anonNum = 0;
     m_symTableNextId = NULL;
-    m_callbackEnable = true;
+    m_callbackMasterEna = true;
 }
 
 VParse::~VParse() {

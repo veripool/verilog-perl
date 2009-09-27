@@ -39,6 +39,7 @@ bootstrap Verilog::Parser;
 # sub _open (class)
 # sub _debug (class, level)
 # sub _prologe (class, flag)
+# sub _callback_master_enable
 # sub parse (class)
 # sub eof (class)
 # sub filename (class, [setit])
@@ -116,13 +117,13 @@ sub std {
 	if ($quiet) {
 	    print "Disabling debug during std:: loading\n" if $self->{_debug};
 	    $self->debug(0);
-	    $self->_callback_enable(0); # //verilog-perl callbacks off
+	    $self->_callback_master_enable(0); # //verilog-perl callbacks off
 	}
 	$self->eof;  #Flush user code before callback disable
 	$self->parse(Verilog::Std::std);
 	$self->eof;
 	if ($quiet) {
-	    $self->_callback_enable(1); # //verilog-perl callbacks on
+	    $self->_callback_master_enable(1); # //verilog-perl callbacks on
 	    $self->debug($olddbg);
 	}
     }
