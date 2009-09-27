@@ -113,6 +113,16 @@ sub filter {
 	    if ($line =~ /CALLBACKGEN_GENERATED_END/) {
 		$strip = 0;
 	    }
+	    elsif ($line =~ /CALLBACKGEN_H_MEMBERS/) {
+		push @out, "    // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen\n";
+		push @out, _h_use_cb();
+		push @out, "    // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen\n";
+	    }
+	    elsif ($line =~ /CALLBACKGEN_CB_USE/) {
+		push @out, "    // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen\n";
+		push @out, _c_use_cb();
+		push @out, "    // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen\n";
+	    }
 	    elsif ($line =~ /CALLBACKGEN_H_VIRTUAL(_0)?/) {
 		my $zero = (($1||"") eq "_0") ? " = 0":"";
 		push @out, "    // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen\n";
@@ -133,6 +143,7 @@ sub filter {
 		    next if $Cbs{$cb}{xs_manual};
 		    push @out, _xs($cb);
 		}
+		push @out, _xs_use_cb();
 		push @out, "// CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen\n";
 	    }
 	    elsif ($line =~ /CALLBACKGEN/) {
@@ -182,6 +193,7 @@ sub _xs {
     push @out, "// GENERATED AUTOMATICALLY by callbackgen\n";
     push @out, "void VParserXs::"._func($cb)."("._arglist($cb).") {\n";
     my $enable = "callbackMasterEna()";
+    $enable .= " && m_useCb_${cb}";
     $enable .= " && $Cbs{$cb}{enable}" if $Cbs{$cb}{enable};
     push @out, "    if ($enable) {\n";
     push @out, "        cbFileline(fl);\n";
@@ -209,6 +221,41 @@ sub _xs {
     my $narg = $n-1;
     push @out, "        call(NULL, $narg, \"$cb\"$callargs);\n";
     push @out, "    }\n";
+    push @out, "}\n";
+    return @out;
+}
+
+#######################################################################
+
+sub _h_use_cb {
+    my @out;
+    push @out, "    struct {  // Bit packed to help the cache\n";
+    foreach my $cb (sort {$a cmp $b} keys %Cbs) {
+	push @out, "    bool m_useCb_${cb}:1;\n";
+    }
+    push @out, "    };\n";
+    return @out;
+}
+
+sub _c_use_cb {
+    my @out;
+    push @out, "    void set_cb_use() {\n";
+    foreach my $cb (sort {$a cmp $b} keys %Cbs) {
+	push @out, "       m_useCb_${cb} = true;\n";
+    }
+    push @out, "   }\n";
+    return @out;
+}
+
+sub _xs_use_cb {
+    my @out;
+    push @out, "// GENERATED AUTOMATICALLY by callbackgen\n";
+    # Trailing Ena so it doesn't look like it is a callback itself
+    push @out, "void VParserXs::useCbEna(const char* name, bool flag) {\n";
+    push @out, "    if (0) ;\n";
+    foreach my $cb (sort {$a cmp $b} keys %Cbs) {
+	push @out, "    else if (0==strcmp(name,\"${cb}\")) m_useCb_${cb} = flag;\n";
+    }
     push @out, "}\n";
     return @out;
 }

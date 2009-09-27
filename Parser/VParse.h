@@ -134,7 +134,8 @@ public:
 
     string unreadback() const { return (m_useUnreadback ? m_unreadback : "new(...,use_unreadback=>0) was used"); }
     void unreadback(const string& text) { if (m_useUnreadback) m_unreadback = text; }
-    void unreadbackCat(const char* textp, int len) { if (m_useUnreadback) m_unreadback += string(textp,len); }
+    void unreadbackCat(const string& text) { if (m_useUnreadback) m_unreadback += text; }
+    void unreadbackCat(const char* textp, int len) { unreadbackCat(string(textp,len)); }
 
     // The default behavior is to pass all unknown `defines right through.
     // This lets the user determine how to report the errors.  It also nicely

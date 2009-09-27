@@ -301,6 +301,7 @@ sub ppinclude {
 
 sub keyword {
     # OVERRIDE Verilog::Parse calls when keyword occurs
+    # Note we use_cb_keyword only if comments are parsed!
     my $self = shift;	# Parser invoked
     $self->SUPER::keyword(@_);
     $self->{_cmtref} = undef;
@@ -318,6 +319,11 @@ sub comment {
 	$self->{_cmtref}->comment($old);
     }
 }
+
+# sub operator {   ... Disabled by new(use_cmt_operator => 0)
+# sub number {   ... Disabled by new(use_cmt_number => 0)
+# sub string {   ... Disabled by new(use_cmt_string => 0)
+# sub symbol {   ... Disabled by new(use_cmt_symbol => 0)
 
 sub error {
     my $self = shift;
@@ -366,13 +372,22 @@ sub read {
 				      is_libcell=>$params{is_libcell}||0,
 				      );
 
+    my $keep_cmt = ($params{keep_comments} || $netlist->{keep_comments});
     my $parser = Verilog::Netlist::File::Parser->new
 	( fileref=>$fileref,
 	  filename=>$filepath,	# for ->read
 	  metacomment=>($params{metacomment} || $netlist->{metacomment}),
-	  keep_comments=>($params{keep_comments} || $netlist->{keep_comments}),
+	  keep_comments => $keep_cmt,
 	  use_vars=>($params{use_vars} || $netlist->{use_vars}),
 	  preproc=>($params{preproc} || $netlist->{preproc}),
+	  # Callbacks we need; disable unused for speed
+	  use_cb_attribute => 1,
+	  use_cb_comment => $keep_cmt,
+	  use_cb_keyword => $keep_cmt,
+	  use_cb_number  => 0,
+	  use_cb_operator => 0,
+	  use_cb_string => 0,
+	  use_cb_symbol => 0,
 	  );
     return $fileref;
 }

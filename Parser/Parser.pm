@@ -40,6 +40,7 @@ bootstrap Verilog::Parser;
 # sub _debug (class, level)
 # sub _prologe (class, flag)
 # sub _callback_master_enable
+# sub _use_cb (class, name, flag)
 # sub parse (class)
 # sub eof (class)
 # sub filename (class, [setit])
@@ -57,6 +58,8 @@ sub new {
 		use_vars => 1,
 		use_unreadback => 1,   # Backward compatibility
 		use_std => undef,	# Undef = silent
+		#use_cb_{callback-name} => 0/1
+		#
 		#_debug		# Don't set, use debug() accessor to change level
 		@_};
 
@@ -69,6 +72,12 @@ sub new {
 		$self->{use_unreadback},
 		$self->{use_vars},
 		);
+    foreach my $key (keys %{$self}) {
+	if ($key =~ /^use_cb_(.*)/) {
+	    $self->_use_cb($1, $self->{$key});
+	}
+    }
+
     $self->language(Verilog::Language::language_standard());
     $self->debug($Debug) if $Debug;
     return $self;
@@ -297,9 +306,12 @@ subsequent parses that are for the same compilation scope.  The internals
 of this symbol_table should be considered opaque, as it will change between
 package versions, and must not be modified by user code.
 
-Adding "use_vars => 0" will disable pin, var and port callbacks to
-Verilog::SigParser.  This can greatly speed parsing when variable and
-interconnect information is not required.
+Adding "use_cb_{callback-name} => 0" will disable the specified callback.
+By default, all callbacks will be called; disabling callbacks can greatly
+speed up the parser as a large percentage of time is spent calling between
+C and Perl to invoke the callbacks.  When using this feature,
+use_unreadback=>0 should be used too, as since whole tokens are skipped,
+skipping whitespace shouldn't matter either.
 
 Adding "use_std => 1" will add parsing of the SystemVerilog built-in std::
 package, or "use_std => 0" will disable it.  If unspecified it is silently
@@ -307,6 +319,10 @@ included (no callbacks will be involed) when suspected to be necessary.
 
 Adding "use_unreadback => 0" will disable later use of the unreadback
 method, which may improve performance.
+
+Adding "use_vars => 0" will disable pin, var and port callbacks to
+Verilog::SigParser.  This can greatly speed parsing when variable and
+interconnect information is not required.
 
 =item $parser->callback_names ()
 
