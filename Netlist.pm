@@ -42,6 +42,7 @@ sub new {
 		#keep_comments => 0,
 		use_vars => 1,
 		_libraries_done => {},
+		_need_link => [],	# Objects we need to ->link
 		@_};
     bless $self, $class;
     return $self;
@@ -52,6 +53,12 @@ sub new {
 
 sub link {
     my $self = shift;
+    while (defined(my $subref = pop @{$self->{_need_link}})) {
+	$subref->link();
+    }
+    # The above should have gotten everything, but a child class
+    # may rely on old behavior or have added classes outside our
+    # universe, so be nice and do it the old way too.
     $self->{_relink} = 1;
     while ($self->{_relink}) {
 	$self->{_relink} = 0;
@@ -66,6 +73,7 @@ sub link {
 	}
     }
 }
+
 sub lint {
     my $self = shift;
     foreach my $subref ($self->modules_sorted) {
@@ -113,6 +121,7 @@ sub new_module {
 	 is_top=>1,
 	 @_);
     $self->{_modules}{$modref->name} = $modref;
+    push @{$self->{_need_link}}, $modref;
     return $modref;
 }
 
@@ -195,6 +204,7 @@ sub new_interface {
 	(netlist=>$self,
 	 @_);
     $self->{_interfaces}{$modref->name} = $modref;
+    push @{$self->{_need_link}}, $modref;
     return $modref;
 }
 
@@ -253,6 +263,7 @@ sub new_file {
     defined $fileref->name or carp "%Error: No name=> specified, stopped";
     $self->{_files}{$fileref->name} = $fileref;
     $fileref->basename (Verilog::Netlist::Module::modulename_from_filename($fileref->name));
+    push @{$self->{_need_link}}, $fileref;
     return $fileref;
 }
 

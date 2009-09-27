@@ -377,6 +377,10 @@ sub read {
     return $fileref;
 }
 
+sub link {
+    # For backward compatibility for SystemC child class, call _link
+    $_[0]->_link(@_);
+}
 sub _link {
 }
 

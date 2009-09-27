@@ -85,7 +85,6 @@ sub _link {
     }
     if (!$self->submod()
 	&& !$self->gateprim
-	&& !$self->netlist->{_relink}
 	&& !$self->module->is_libcell()
 	&& $self->netlist->{link_read}
 	&& !$self->netlist->{_missing_submod}{$self->submodname}
@@ -105,13 +104,12 @@ sub _link {
 	    $self->netlist->read_file(filename=>$self->submodname,
 				      error_self=>($self->netlist->{link_read_nonfatal} ? 0:$self));
 	}
-	# Got it; ask for another link
-	if ($self->submod()) {
-	    $self->netlist->{_relink} = 1;
-	} else {
+	# Still missing
+	if (!$self->submod()) {
 	    # Don't link this file again - speeds up if many common gate-ish missing primitives
 	    $self->netlist->{_missing_submod}{$self->submodname} = 1;
 	}
+	# Note if got it the new_module will add it to the _need_link list
     }
     # Link pins after module resolved, so don't do it multiple times if not found
     foreach my $pinref ($self->pins) {
