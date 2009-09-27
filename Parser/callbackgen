@@ -38,11 +38,11 @@ my %Cbs =
      module	=> {which=>'SigParser', args => [kwd=>'string', name=>'string', ignore3=>'undef', celldefine=>'bool'],},
      package	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
      parampin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', index=>'int']},
-     pin	=> {which=>'SigParser', enable=>'m_useVars', args => [name=>'string', conn=>'string', index=>'int']},
-     port	=> {which=>'SigParser', enable=>'m_useVars', args => [name=>'string', objof=>'string', direction=>'string',
+     pin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', index=>'int']},
+     port	=> {which=>'SigParser', args => [name=>'string', objof=>'string', direction=>'string',
 						 data_type=>'string', array=>'string', index=>'int']},
      program	=> {which=>'SigParser', args => [kwd=>'string', name=>'string'],},
-     var	=> {which=>'SigParser', enable=>'m_useVars', args => [kwd=>'string',	 name=>'string', objof=>'string', net=>'string',
+     var	=> {which=>'SigParser', args => [kwd=>'string',	 name=>'string', objof=>'string', net=>'string',
 						 data_type=>'string', array=>'string', value=>'string'],},
      task	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
     );
@@ -231,7 +231,7 @@ sub _h_use_cb {
     my @out;
     push @out, "    struct {  // Bit packed to help the cache\n";
     foreach my $cb (sort {$a cmp $b} keys %Cbs) {
-	push @out, "    bool m_useCb_${cb}:1;\n";
+	push @out, "        bool m_useCb_${cb}:1;\n";
     }
     push @out, "    };\n";
     return @out;

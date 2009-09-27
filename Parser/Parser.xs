@@ -51,40 +51,37 @@ public:
     SV*		m_self;	// Class called from
     VFileLine*	m_cbFilelinep;	///< Last callback's starting point
 
-    // Callback enables
-    bool	m_useVars;	///< Need pin callbacks
-
     // CALLBACKGEN_H_MEMBERS
     // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen
     struct {  // Bit packed to help the cache
-    bool m_useCb_attribute:1;
-    bool m_useCb_comment:1;
-    bool m_useCb_endcell:1;
-    bool m_useCb_endinterface:1;
-    bool m_useCb_endmodule:1;
-    bool m_useCb_endpackage:1;
-    bool m_useCb_endparse:1;
-    bool m_useCb_endprogram:1;
-    bool m_useCb_endtaskfunc:1;
-    bool m_useCb_function:1;
-    bool m_useCb_import:1;
-    bool m_useCb_instant:1;
-    bool m_useCb_interface:1;
-    bool m_useCb_keyword:1;
-    bool m_useCb_module:1;
-    bool m_useCb_number:1;
-    bool m_useCb_operator:1;
-    bool m_useCb_package:1;
-    bool m_useCb_parampin:1;
-    bool m_useCb_pin:1;
-    bool m_useCb_port:1;
-    bool m_useCb_preproc:1;
-    bool m_useCb_program:1;
-    bool m_useCb_string:1;
-    bool m_useCb_symbol:1;
-    bool m_useCb_sysfunc:1;
-    bool m_useCb_task:1;
-    bool m_useCb_var:1;
+        bool m_useCb_attribute:1;
+        bool m_useCb_comment:1;
+        bool m_useCb_endcell:1;
+        bool m_useCb_endinterface:1;
+        bool m_useCb_endmodule:1;
+        bool m_useCb_endpackage:1;
+        bool m_useCb_endparse:1;
+        bool m_useCb_endprogram:1;
+        bool m_useCb_endtaskfunc:1;
+        bool m_useCb_function:1;
+        bool m_useCb_import:1;
+        bool m_useCb_instant:1;
+        bool m_useCb_interface:1;
+        bool m_useCb_keyword:1;
+        bool m_useCb_module:1;
+        bool m_useCb_number:1;
+        bool m_useCb_operator:1;
+        bool m_useCb_package:1;
+        bool m_useCb_parampin:1;
+        bool m_useCb_pin:1;
+        bool m_useCb_port:1;
+        bool m_useCb_preproc:1;
+        bool m_useCb_program:1;
+        bool m_useCb_string:1;
+        bool m_useCb_symbol:1;
+        bool m_useCb_sysfunc:1;
+        bool m_useCb_task:1;
+        bool m_useCb_var:1;
     };
     // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen
 
@@ -92,11 +89,9 @@ public:
     void cbFileline(const string& filename, int lineno) { m_cbFilelinep = m_cbFilelinep->create(filename, lineno); }
     void cbFileline(VFileLine* filelinep) { m_cbFilelinep = filelinep; }
 
-    VParserXs(VFileLine* filelinep, av* symsp, bool sigparser, bool useUnreadback
-	      , bool useVars)
+    VParserXs(VFileLine* filelinep, av* symsp, bool sigparser, bool useUnreadback)
 	: VParse(filelinep, symsp, sigparser, useUnreadback)
 	, m_cbFilelinep(filelinep)
-	, m_useVars(useVars)
 	{ set_cb_use(); }
     virtual ~VParserXs() {}
 
@@ -273,13 +268,13 @@ MODULE = Verilog::Parser  PACKAGE = Verilog::Parser
 #// self->_new (class, sigparser)
 
 static VParserXs *
-VParserXs::_new (SV* SELF, AV* symsp, bool sigparser, bool useUnreadback, bool useVars)
-PROTOTYPE: $$$$$
+VParserXs::_new (SV* SELF, AV* symsp, bool sigparser, bool useUnreadback)
+PROTOTYPE: $$$$
 CODE:
 {
     if (CLASS) {}  /* Prevent unused warning */
     VFileLineParseXs* filelinep = new VFileLineParseXs(1/*ok,for initial*/);
-    VParserXs* parserp = new VParserXs(filelinep, symsp, sigparser, useUnreadback, useVars);
+    VParserXs* parserp = new VParserXs(filelinep, symsp, sigparser, useUnreadback);
     filelinep->setParser(parserp);
     parserp->m_self = newSVsv(SELF);
     RETVAL = parserp;

@@ -70,8 +70,12 @@ sub new {
 		$self->{symbol_table},
 		$self->{_sigparser},
 		$self->{use_unreadback},
-		$self->{use_vars},
 		);
+
+    $self->{use_cb_pin}  = $self->{use_vars} if !exists $self->{use_cb_pin};
+    $self->{use_cb_port} = $self->{use_vars} if !exists $self->{use_cb_port};
+    $self->{use_cb_var}  = $self->{use_vars} if !exists $self->{use_cb_var};
+
     foreach my $key (keys %{$self}) {
 	if ($key =~ /^use_cb_(.*)/) {
 	    $self->_use_cb($1, $self->{$key});
