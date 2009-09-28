@@ -207,7 +207,7 @@ sub new_contassign {
     # Create a new statement under this module
     if (!defined $params{name} || $params{name} eq '') {
 	# Blank instance name; invent a new one; use the next instance number in this module t$
-	$params{name} = '__unnamed_statement_' . (scalar $self->_statements + 1);
+	$params{name} = '__unnamed_statement_' . ((scalar keys %{$self->_statements}) + 1);
     }
     # Create a new object; pass the potentially modified options
     my $newref = new Verilog::Netlist::ContAssign(%params, module=>$self,);

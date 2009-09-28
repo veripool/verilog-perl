@@ -55,6 +55,8 @@ sub delete {
 
 sub netlist { return $_[0]->module->netlist; }
 
+sub logger { return $_[0]->netlist->logger; }
+
 sub type {  # Backward compatibility only
     my $self=shift;
     if ($#_ >= 0) { $self->data_type(@_); }

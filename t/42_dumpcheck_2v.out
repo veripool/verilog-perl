@@ -23,6 +23,7 @@ module pinorder4 (
    foo foo1 (.abcconst(3'h0), .def(IPCD_const), .noconnect(), .x(a_i), .y(b_i));
    foo2 foo2 (.x(b_i), .y(d_o), .z(a_i[0]));
    foo foo3 (.abcconst(3'h0), .def(IPCD_const), .x(a_i), .y(b_i));
+   assign a_i = 0
    assign b_i = 0
 endmodule
 
