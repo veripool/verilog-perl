@@ -80,6 +80,22 @@ sub new {
     return $parser;
 }
 
+sub contassign {
+    my $self = shift;
+    my $keyword = shift;
+    my $lhs = shift;
+    my $rhs = shift;
+
+    print " ContAssign $keyword $lhs\n" if $Verilog::Netlist::Debug;
+    my $modref = $self->{modref};
+    if (!$modref) {
+	 return $self->error ("CONTASSIGN outside of module definition", $lhs);
+    }
+    $modref->new_contassign
+	 (filename=>$self->filename, lineno=>$self->lineno,
+	  keyword=>$keyword, lhs=>$lhs, rhs=>$rhs);
+}
+
 sub interface {
     my $self = shift;
     my $keyword = shift;

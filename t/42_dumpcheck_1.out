@@ -56,6 +56,7 @@ Module:v_hier_top  Kwd:module  File:verilog/v_hier_top.v
   Net:WC_w1b    DeclT:net  NetT:wire  DataT:[0:0]  Array:  0:0
   Net:WC_w3    DeclT:net  NetT:wire  DataT:[2:0]  Array:  2:0
   Net:WC_w4    DeclT:net  NetT:wire  DataT:[-1:2]  Array:  -1:2
+  Net:asn_clk    DeclT:net  NetT:wire  DataT:  Array:
   Net:clk  O  DeclT:port  NetT:  DataT:  Array:
   Cell:missing  is-a:missing
   Cell:sub  is-a:v_hier_sub
@@ -66,6 +67,7 @@ Module:v_hier_top  Kwd:module  File:verilog/v_hier_top.v
               Port:clk  Dir:in  DataT:  Array:
     Pin:qvec  Net:qvec[3:0]
               Port:qvec  Dir:out  DataT:[3:0]  Array:
+  ContAssign:assign  lhs:asn_clk  rhsclk
 Module:v_hier_top2  Kwd:module  File:verilog/v_hier_top2.v
   Port:clk  Dir:in  DataT:  Array:
   Net:clk  O  DeclT:port  NetT:  DataT:  Array:

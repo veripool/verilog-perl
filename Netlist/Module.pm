@@ -6,6 +6,7 @@ package Verilog::Netlist::Module;
 use Class::Struct;
 
 use Verilog::Netlist;
+use Verilog::Netlist::ContAssign;
 use Verilog::Netlist::Port;
 use Verilog::Netlist::Net;
 use Verilog::Netlist::Cell;
@@ -37,6 +38,7 @@ structs('new',
 	   _celldecls	=> '%',		# hash of declared cells (for autocell only)
 	   _cellarray	=> '%',		# hash of declared cell widths (for autocell only)
 	   _level	=> '$',		# Depth in hierarchy (if calculated)
+	   _statements	=> '%',		# hash of Verilog::Netlist::ContAssigns
 	   is_top	=> '$', #'	# Module is at top of hier (not a child)
 	   is_libcell	=> '$', #'	# Module is a library cell
 	   # SystemPerl:
@@ -61,6 +63,9 @@ sub delete {
 	$oref->delete;
     }
     foreach my $oref ($self->cells) {
+	$oref->delete;
+    }
+    foreach my $oref ($self->statements) {
 	$oref->delete;
     }
     my $h = $self->netlist->{_modules};
@@ -132,6 +137,13 @@ sub cells {
 sub cells_sorted {
     return (sort {$a->name() cmp $b->name()} (values %{$_[0]->_cells}));
 }
+sub statements {
+    return (values %{$_[0]->_statements});
+}
+sub statements_sorted {
+    return (sort {$a->name() cmp $b->name()} (values %{$_[0]->_statements}));
+}
+
 sub nets_and_ports_sorted {
     my $self = shift;
     my @list = ($self->nets, $self->ports,);
@@ -189,6 +201,21 @@ sub new_cell {
     return $cellref;
 }
 
+sub new_contassign {
+    my $self = shift;
+    my %params = @_; # name=>, filename=>, lineno=>, keyword=> etc
+    # Create a new statement under this module
+    if (!defined $params{name} || $params{name} eq '') {
+	# Blank instance name; invent a new one; use the next instance number in this module t$
+	$params{name} = '__unnamed_statement_' . (scalar $self->_statements + 1);
+    }
+    # Create a new object; pass the potentially modified options
+    my $newref = new Verilog::Netlist::ContAssign(%params, module=>$self,);
+    # Add the new object to the hash of statements in this module
+    $self->_statements($params{name}, $newref);
+    return $newref;
+}
+
 sub level {
     my $self = shift;
     my $level = $self->_level;
@@ -230,6 +257,9 @@ sub lint {
     foreach my $cellref ($self->cells) {
 	$cellref->lint();
     }
+    foreach my $oref ($self->statements) {
+	$oref->lint();
+    }
 }
 
 sub verilog_text {
@@ -253,6 +283,9 @@ sub verilog_text {
     foreach my $cellref ($self->cells_sorted) {
 	push @out, $indent, $cellref->verilog_text, "\n";
     }
+    foreach my $oref ($self->statements_sorted) {
+	push @out, $indent, $oref->verilog_text, "\n";
+    }
 
     push @out, "end".($self->keyword||'module')."\n";
     return (wantarray ? @out : join('',@out));
@@ -271,6 +304,9 @@ sub dump {
 	    $netref->dump($indent+2);
 	}
 	foreach my $cellref ($self->cells_sorted) {
+	    $cellref->dump($indent+2);
+	}
+	foreach my $cellref ($self->statements_sorted) {
 	    $cellref->dump($indent+2);
 	}
     }
@@ -372,6 +408,18 @@ by pin number.
 
 Returns list of references to Verilog::Netlist::Port in the module sorted
 by name.
+
+=item $self->statements
+
+Returns list of references to Verilog::Netlist::ContAssign in the module.
+Other statement types (Always, etc) may also be added to this list in the
+future.
+
+=item $self->statements_sorted
+
+Returns list of name sorted references to Verilog::Netlist::ContAssign in
+the module.  Other statement types (Always, etc) may also be added to this
+list in the future.
 
 =back
 

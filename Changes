@@ -5,7 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.21***
 
-***	Add SigParser::contassign callback.
+**	Add parsing of "assign", including SigParser::contassign callback,
+	Netlist::ContAssign object, and related accessors.
 
 ***	Several code speedups to vhier, Verilog::Netlist, and the parsers.
 

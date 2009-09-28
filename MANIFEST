@@ -10,6 +10,7 @@ MANIFEST.SKIP
 META.yml
 Netlist.pm
 Netlist/Cell.pm
+Netlist/ContAssign.pm
 Netlist/File.pm
 Netlist/Interface.pm
 Netlist/Logger.pm

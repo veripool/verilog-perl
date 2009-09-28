@@ -29,6 +29,10 @@ module v_hier_top (/*AUTOARG*/
    localparam [-1:2]  WC_p4=0;
    localparam integer WC_pint=0;
 
+   // Assignments
+   wire  asn_clk;
+   assign asn_clk = clk;
+
 endmodule
 
 // Local Variables:

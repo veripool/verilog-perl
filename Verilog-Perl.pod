@@ -127,6 +127,11 @@ design database.
 A Verilog::Netlist::Cell object is created by Verilog::Netlist for every
 instantiation in the current module.
 
+=item L<Verilog::Netlist::ContAssign|Verilog::Netlist::ContAssign>
+
+A Verilog::Netlist::ContAssign object is created by Verilog::Netlist for
+every continuous assignment in the current module.
+
 =item L<Verilog::Netlist::File|Verilog::Netlist::File>
 
 Verilog::Netlist::File allows Verilog::Netlist objects to be read and
@@ -282,6 +287,7 @@ L<Verilog::Preproc>,
 L<Verilog::SigParser>
 
 L<Verilog::Netlist::Cell>,
+L<Verilog::Netlist::ContAssign>,
 L<Verilog::Netlist::File>,
 L<Verilog::Netlist::Interface>,
 L<Verilog::Netlist::Module>,
