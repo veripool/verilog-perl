@@ -1587,7 +1587,7 @@ assignList:
 	;
 
 assignOne:
-		variable_lvalue '=' expr		{ }
+		variable_lvalue '=' expr		{ PARSEP->contassignCb($<fl>2,"assign",$1,$3); }
 	;
 
 delay_or_event_controlE:			// IEEE: delay_or_event_control plus empty

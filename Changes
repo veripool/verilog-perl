@@ -5,13 +5,15 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.21***
 
+***	Add SigParser::contassign callback.
+
 ***	Several code speedups to vhier, Verilog::Netlist, and the parsers.
 
-***	Add Verilog::Preproc::getall to fetch all text instead of line-by-line.
+***	Add Preproc::getall to fetch all text instead of line-by-line.
 
-***	Add Parser->new(use_cb_{name}=>0) option to speed parsing.
+***	Add Parser::new(use_cb_{name}=>0) option to speed parsing.
 
-***	Add SigParser/Netlist->new(use_vars=>0) option to speed parsing.
+***	Add SigParser/Netlist::new(use_vars=>0) option to speed parsing.
 
 ****	Fix deep defines causing flex scanner overflows. [Brad Dobbie]
 

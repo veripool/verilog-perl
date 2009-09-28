@@ -25,6 +25,7 @@ my %Cbs =
      symbol	=> {which=>'Parser', args => [text=>'string']},
      sysfunc	=> {which=>'Parser', args => [text=>'string']},
      #
+     contassign => {which=>'SigParser', args => [kwd=>'string', lhs=>'string', rhs=>'string']},
      endcell	=> {which=>'SigParser', args => [kwd=>'string']},
      endinterface=>{which=>'SigParser', args => [kwd=>'string']},
      endmodule	=> {which=>'SigParser', args => [kwd=>'string']},

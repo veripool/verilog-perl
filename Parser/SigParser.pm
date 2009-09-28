@@ -18,6 +18,7 @@ $VERSION = '3.213';
 
 our @_Callback_Names = qw(
   attribute
+  contassign
   endcell
   endinterface
   endtaskfunc
@@ -89,6 +90,12 @@ sub comment {
 
 # The my's aren't needed since we do nothing, but are useful if the
 # user copies them from here to their program.
+
+sub contassign {
+    my $self = shift;
+    my $lhs = shift;
+    my $rhs = shift;
+}
 
 sub endcell {
     my $self = shift;
@@ -260,6 +267,13 @@ Scanned an attribute or meta-comment.  The parser inspects the first word
 of each comment line (C<//key rest> to end of line) or comment block
 (C</*key rest */).  It calls C<$self->attribute( meta_text )>
 if the first word has a true value in hash C<$self->metacomment>.
+
+=item $self->contassign ( $token, $lhs, $rhs )
+
+This method is called at a continuous "assign" keyword, with the left and
+right hand part of the assignment.  Note that "wire" initializations are
+not considered assignments; those are received via the var callback's value
+parameter.
 
 =item $self->endcell ( $token )
 
