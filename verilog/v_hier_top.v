@@ -18,7 +18,7 @@ module v_hier_top (/*AUTOARG*/
 
    missing missing ();
 
-   // Width checks, bugvp65
+   // Width checks, bug65
    wire  	WC_w1;
    wire [0:0]   WC_w1b;
    wire [2:0]   WC_w3;

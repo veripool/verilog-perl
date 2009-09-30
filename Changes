@@ -22,7 +22,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix Preproc::defSubstitute not being called on parameterized macros.
 
-****	Fix Perl 5.8.8 compile error, rt48226. [Marek Rouchal]
+****	Fix Perl 5.8.8 compile error, bug115. [Marek Rouchal]
 
 * Verilog::Language 3.213 2009/09/10
 
@@ -32,7 +32,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix escaped preprocessor identifiers, bug106. [Nimrod Gileadi]
 
-****	Fix Perl 5.8.8 compile error, rt48226. [Marek Rouchal]
+****	Fix Perl 5.8.8 compile error, bug115. [Marek Rouchal]
 
 ****	Fix Perl 5.8.0 compile error with callbackgen. [Kjeld Svendsen]
 
@@ -52,7 +52,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix parsing empty commas in port lists, bug97.  [Noam Meir]
 
-****	Fix compatibility with Getopt-Long-2.38, rt47030.  [by Marek Rouchal]
+****	Fix compatibility with Getopt-Long-2.38, bug167.  [by Marek Rouchal]
 
 ****	Fix compile error under GCC 3.3.5.
 
@@ -143,7 +143,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add "'{" as an operator.
 
-****	Fix "assign {{x,y},z}", bugrt43138. [Devendra Singh]
+****	Fix "assign {{x,y},z}", bug166. [Devendra Singh]
 
 ****	Fix documentation on ports_ordered, bug66.  [Nicky Ayoub]
 
@@ -202,7 +202,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix cpan-testers mis-reporting FAIL when no flex installed.
 
-****	Fix Perl Critic error when not installed, rt39654. [Andreas Koening]
+****	Fix Perl Critic error when not installed, bug164. [Andreas Koening]
 
 * Verilog::Language 3.042 2008/09/19
 
