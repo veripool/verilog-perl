@@ -12,7 +12,7 @@ use strict;
 @ISA = qw(Verilog::Netlist::Net::Struct
 	Verilog::Netlist::Subclass);
 
-$VERSION = '3.213';
+$VERSION = '3.220';
 
 my %_Type_Widths = (
     'bit'	=> 1,
