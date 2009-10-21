@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.22***
+
+****	Fix SystemPerl hitting "undefined find_interface..." in 3.220.
+
 * Verilog::Language 3.220 2009/09/30
 
 **	Add parsing of "assign", including SigParser::contassign callback,
