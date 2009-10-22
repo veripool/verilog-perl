@@ -306,9 +306,9 @@ verilog/example.v:005: unreadback '
 
 
 '
-verilog/example.v:005: PREPROC '`timescale 1ns/1ns
-'
+verilog/example.v:005: PREPROC '`timescale 1ns/1ns'
 verilog/example.v:007: unreadback '
+
 '
 verilog/example.v:007: KEYWORD 'module'
 verilog/example.v:007: unreadback ' '
