@@ -515,13 +515,13 @@ escid	\\[^ \t\f\r\n]+
 
   /************************************************************************/
   /* STRINGS */
-<STRING>{crnl}		{ yyerrorf("Unterminated string"); }
+<STRING><<EOF>>		{ yyerrorf("EOF in unterminated string"); yyleng = 0; yy_pop_state(); }
+<STRING>{crnl}		{ yyerrorf("Unterminated string"); NEXTLINE(); }
+<STRING>\\{crnl} 	{ NEXTLINE(); yymore(); }
 <STRING>\\.	 	{ yymore(); }
 <STRING>\" 		{ yy_pop_state();
 			  FL; VALTEXT; CALLBACK(stringCb); return yaSTRING; }
 <STRING>.	 	{ yymore(); }
-<STRING><<EOF>>		{ yyerrorf("EOF in string");
-			  yyleng = 0; yy_pop_state(); }
 
   /************************************************************************/
   /* Multi-line COMMENTS */
