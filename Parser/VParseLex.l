@@ -87,6 +87,7 @@ void yyerrorf(const char* format, ...) {
 %s V95 V01 V05 S05
 %s STRING ATTRMODE
 %s CMTMODE PROTMODE
+%s DUMMY_TO_AVOID_WARNING
 
 space	[ ]
 ws	[ \t\f\r]+
