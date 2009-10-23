@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix erroring on strings with backslashed newlines, bug168. [Pete Nixon]
 
+****	Fix compile error on RHEL3 with gettext, bug169. [Marek Rouchal]
+
 ****	Fix line number miscounting with `pragma.
 
 * Verilog::Language 3.220 2009/09/30

@@ -123,7 +123,7 @@ struct VPreprocImp : public VPreprocOpaque {
     int getToken();
     void parseTop();
     void parseUndef();
-    string gettext(bool stop_at_eol);
+    string getparseline(bool stop_at_eol);
     bool isEof() const { return (m_lexp==NULL); }
     void open(string filename, VFileLine* filelinep);
     void insertUnreadback(const string& text) { m_lineCmt += text; }
@@ -161,11 +161,11 @@ void VPreproc::open(string filename, VFileLine* filelinep) {
 }
 string VPreproc::getline() {
     VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
-    return idatap->gettext(true);
+    return idatap->getparseline(true);
 }
 string VPreproc::getall() {
     VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
-    return idatap->gettext(false);
+    return idatap->getparseline(false);
 }
 void VPreproc::debug(int level) {
     VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
@@ -871,7 +871,7 @@ int VPreprocImp::getToken() {
     }
 }
 
-string VPreprocImp::gettext(bool stop_at_eol) {
+string VPreprocImp::getparseline(bool stop_at_eol) {
     // Get a single line from the parse stream.  Buffer unreturned text until the newline.
     if (isEof()) return "";
     while (1) {
