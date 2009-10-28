@@ -12,7 +12,7 @@ use strict;
 @ISA = qw(Verilog::Netlist::Port::Struct
 	Verilog::Netlist::Subclass);
 
-$VERSION = '3.220';
+$VERSION = '3.221';
 
 structs('_new_base',
 	'Verilog::Netlist::Port::Struct'

@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.22***
+* Verilog::Language 3.221 2009/10/28
 
 ****	Fix SystemPerl hitting "undefined find_interface..." in 3.220.
 
