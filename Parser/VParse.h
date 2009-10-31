@@ -82,7 +82,7 @@ public:  // But for internalish use only
 	m_symTableNextId = entp;
     }
     void symReinsert(VAstType type, const string& name) {
-	return m_syms.reinsert(type,name);
+	m_syms.reinsert(type,name);
     }
     string symObjofUpward() {
 	return m_syms.objofUpward();

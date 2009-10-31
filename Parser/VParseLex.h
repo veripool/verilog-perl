@@ -120,11 +120,14 @@ class VParseLex {
 
     /// Called by VParse.cpp to inform lexer
     void unputString(const char* textp);
-    void unused();
 
     void debug(int level);
-    int lexToken(VParseBisonYYSType* yylvalp);
     void language(const char* value);
+
+    int lexToBison(VParseBisonYYSType* yylvalp);
+private:
+    void unused();
+    int lexToken(VParseBisonYYSType* yylvalp);
 };
 
 #endif // Guard

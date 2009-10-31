@@ -40,6 +40,8 @@
 
 #define YY_SKIP_YYWRAP
 
+#define STATE_VERILOG_RECENT  S05		// State name for most recent Verilog Version
+
 // Flex 2.5.35 has compile warning in ECHO, so we'll default our own rule
 #define ECHO yyerrorf("Missing VParseLex.l rule: ECHO rule invoked in state %d: %s", YY_START, yytext);
 
@@ -99,7 +101,7 @@ escid	\\[^ \t\f\r\n]+
 
 %%
 
-<INITIAL>.|\n 		{BEGIN S05; yyless(0); }
+<INITIAL>.|\n 		{BEGIN STATE_VERILOG_RECENT; yyless(0); }
 
   /* Verilog 1995 */
 <V95,V01,V05,S05>{
@@ -518,11 +520,11 @@ escid	\\[^ \t\f\r\n]+
   /* STRINGS */
 <STRING><<EOF>>		{ yyerrorf("EOF in unterminated string"); yyleng = 0; yy_pop_state(); }
 <STRING>{crnl}		{ yyerrorf("Unterminated string"); NEXTLINE(); }
-<STRING>\\{crnl} 	{ NEXTLINE(); yymore(); }
+<STRING>\\{crnl}	{ yymore(); NEXTLINE(); }
 <STRING>\\.	 	{ yymore(); }
 <STRING>\" 		{ yy_pop_state();
 			  FL; VALTEXT; CALLBACK(stringCb); return yaSTRING; }
-<STRING>.	 	{ yymore(); }
+<STRING>.		{ yymore(); }
 
   /************************************************************************/
   /* Multi-line COMMENTS */
@@ -556,39 +558,39 @@ escid	\\[^ \t\f\r\n]+
 }
 
   /************************************************************************/
-  /* Preprocssor */
+  /* Preprocessor */
 <V95,V01,V05,S05>{
-  "`accelerate"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`autoexpand_vectornets"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`celldefine"			{ FL; VALTEXT; CALLBACK(preprocCb); LEXP->m_inCellDefine=true; }
+  "`accelerate"				{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`autoexpand_vectornets"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`celldefine"				{ FL; VALTEXT; CALLBACK(preprocCb); LEXP->m_inCellDefine=true; }
   "`default_decay_time"{ws}+[^\n\r]*	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
   "`default_nettype"{ws}+[a-zA-Z0-9]*	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog 2001
-  "`delay_mode_distributed"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
-  "`delay_mode_path"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
-  "`delay_mode_unit"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
-  "`delay_mode_zero"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
-  "`disable_portfaults"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`enable_portfaults"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`endcelldefine"		{ FL; VALTEXT; CALLBACK(preprocCb); LEXP->m_inCellDefine=false; }
-  "`endprotect"			{ FL; VALTEXT; CALLBACK(preprocCb); }
-  "`expand_vectornets"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`inline"			{ FL; VALTEXT; CALLBACK(preprocCb); }
-  "`line"{ws}+[^\n\r]*{crnl}	{ LPARSEP->inLineDirective(yytext); FL; VALTEXT; CALLBACK(preprocCb); }
-  "`noaccelerate"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`noexpand_vectornets"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`noremove_gatenames"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`noremove_netnames"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`nosuppress_faults"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`nounconnected_drive"	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`portcoerce"			{ FL; VALTEXT; CALLBACK(preprocCb); }
-  "`pragma"{ws}+[^\n\r]*	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog 2005
-  "`protect"			{ FL; VALTEXT; CALLBACK(preprocCb); }
-  "`protected"			{ FL; VALTEXT; CALLBACK(preprocCb); yy_push_state(PROTMODE); }
-  "`remove_gatenames"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`remove_netnames"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`resetall"			{ FL; VALTEXT; CALLBACK(preprocCb); }
-  "`suppress_faults"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
-  "`timescale"{ws}+[^\n\r]*	{ FL; VALTEXT; CALLBACK(preprocCb); }
+  "`delay_mode_distributed"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
+  "`delay_mode_path"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
+  "`delay_mode_unit"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
+  "`delay_mode_zero"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
+  "`disable_portfaults"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`enable_portfaults"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`endcelldefine"			{ FL; VALTEXT; CALLBACK(preprocCb); LEXP->m_inCellDefine=false; }
+  "`endprotect"				{ FL; VALTEXT; CALLBACK(preprocCb); }
+  "`expand_vectornets"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`inline"				{ FL; VALTEXT; CALLBACK(preprocCb); }
+  "`line"{ws}+[^\n\r]*{crnl}		{ LPARSEP->inLineDirective(yytext); FL; VALTEXT; CALLBACK(preprocCb); }
+  "`noaccelerate"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`noexpand_vectornets"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`noremove_gatenames"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`noremove_netnames"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`nosuppress_faults"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`nounconnected_drive"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`portcoerce"				{ FL; VALTEXT; CALLBACK(preprocCb); }
+  "`pragma"{ws}+[^\n\r]*		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog 2005
+  "`protect"				{ FL; VALTEXT; CALLBACK(preprocCb); }
+  "`protected"				{ FL; VALTEXT; CALLBACK(preprocCb); yy_push_state(PROTMODE); }
+  "`remove_gatenames"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`remove_netnames"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`resetall"				{ FL; VALTEXT; CALLBACK(preprocCb); }
+  "`suppress_faults"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
+  "`timescale"{ws}+[^\n\r]*		{ FL; VALTEXT; CALLBACK(preprocCb); }
 
   /* See also setLanguage below */
   "`begin_keywords"[ \t]*\"1364-1995\"		{ yy_push_state(V95); CALLBACK(preprocCb); }
@@ -724,6 +726,17 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	// If add to above "else if", also add to "if (token" further above
     }
     return token;
+}
+
+int VParseLex::lexToBison(VParseBisonYYSType* yylvalp) {
+    int tok = lexToken(yylvalp);
+    if (yy_flex_debug || LPARSEP->debug()>=6) {  // When debugging flex OR bison
+	string shortstr = yylvalp->str; if (shortstr.length()>20) shortstr = string(shortstr,20)+"...";
+	cout<<"   lexToBison  TOKEN="<<tok<<" "<<VParseGrammar::tokenName(tok)<<" str=\""<<shortstr<<"\"";
+	if (yylvalp->entp) cout<<"  entp="<<yylvalp->entp->ascii();
+	cout<<endl;
+    }
+    return tok;
 }
 
 void VParseLex::debug(int level) {

@@ -52,15 +52,15 @@ public:
 	COVERGROUP,	// For yaID__COVERGROUP
 	ENUM,
 	FORK,
-	FUNCTION,				// NEED REF_IMPL CRE_IMPL ENDFUNCTION - big mess has scope
+	FUNCTION,
 	INTERFACE,
 	MODULE,
-	PACKAGE,	// For yaID__PACKAGE	// NEED REF_IMPL - package_scopeE etc
+	PACKAGE,	// For yaID__PACKAGE
 	PROGRAM,
 	PROPERTY,
 	SEQUENCE,
 	STRUCT,
-	TASK,					// NEED REF_IMPL CRE_IMPL ENDTASK - big mess has scope
+	TASK,
 	TYPE,		// For yaID__TYPE
 	UNION,
 	_MAX

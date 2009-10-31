@@ -109,14 +109,7 @@ void VParse::fakeBison() {
 }
 
 int VParse::lexToBison(VParseBisonYYSType* yylvalp) {
-    int tok = m_lexp->lexToken(yylvalp);
-    if (debug()>=9) {
-	string shortstr = yylvalp->str; if (shortstr.length()>20) shortstr = string(shortstr,20)+"...";
-	cout<<"   lexToBison  TOKEN="<<tok<<" "<<VParseGrammar::tokenName(tok)<<" str=\""<<shortstr<<"\"";
-	if (yylvalp->entp) cout<<"  entp="<<yylvalp->entp->ascii();
-	cout<<endl;
-    }
-    return tok;
+    return m_lexp->lexToBison(yylvalp);
 }
 
 int VParse::inputToLex(char* buf, int max_size) {
