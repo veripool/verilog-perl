@@ -649,21 +649,21 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	token = yylex();
     }
     // If an id, change the type based on symbol table
-    s_yylvalp->entp = NULL;
+    s_yylvalp->scp = NULL;
     if (token == yaID__LEX) {
-	VAstEnt* entp;
+	VAstEnt* scp;
 	if (VAstEnt* look_underp = LPARSEP->symTableNextId()) {
 	    if (yy_flex_debug) { cout<<"   lexToken: next id lookup forced under "<<look_underp
 				     <<" for \""<<s_yylvalp->str<<"\""<<endl; }
-	    entp = look_underp->findSym(s_yylvalp->str.c_str());
+	    scp = look_underp->findSym(s_yylvalp->str.c_str());
 	    // "consume" it.  Must set again if want another token under temp scope
 	    LPARSEP->symTableNextId(NULL);
 	} else {
-	    entp = LPARSEP->syms().findEntUpward(s_yylvalp->str);
+	    scp = LPARSEP->syms().findEntUpward(s_yylvalp->str);
 	}
-	if (entp) {
-	    s_yylvalp->entp = entp;
-	    switch (entp->type()) {
+	if (scp) {
+	    s_yylvalp->scp = scp;
+	    switch (scp->type()) {
 	    case VAstType::CLASS:	token = yaID__aCLASS;	    break;
 	    case VAstType::PACKAGE:	token = yaID__aPACKAGE;	    break;
 	    case VAstType::COVERGROUP:	token = yaID__aCOVERGROUP;  break;
@@ -733,7 +733,7 @@ int VParseLex::lexToBison(VParseBisonYYSType* yylvalp) {
     if (yy_flex_debug || LPARSEP->debug()>=6) {  // When debugging flex OR bison
 	string shortstr = yylvalp->str; if (shortstr.length()>20) shortstr = string(shortstr,20)+"...";
 	cout<<"   lexToBison  TOKEN="<<tok<<" "<<VParseGrammar::tokenName(tok)<<" str=\""<<shortstr<<"\"";
-	if (yylvalp->entp) cout<<"  entp="<<yylvalp->entp->ascii();
+	if (yylvalp->scp) cout<<"  scp="<<yylvalp->scp->ascii();
 	cout<<endl;
     }
     return tok;
