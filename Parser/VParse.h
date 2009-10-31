@@ -88,9 +88,9 @@ public:  // But for internalish use only
 	return m_syms.objofUpward();
     }
     void symPushNew(VAstType type, const string& name) {
-	symPushNewUnder(NULL, type, name);
+	symPushNewUnder(type, name, NULL);
     }
-    void symPushNewUnder(VAstEnt* parentp, VAstType type, const string& name) {
+    void symPushNewUnder(VAstType type, const string& name, VAstEnt* parentp) {
 	if (!parentp) parentp = m_syms.currentSymp();
 	m_syms.pushScope(parentp->findNewTable(type,name));
     }

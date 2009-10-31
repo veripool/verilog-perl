@@ -2311,7 +2311,7 @@ lifetime:			// ==IEEE: lifetime
 
 taskId:
 		tfIdScoped
-			{ PARSEP->symPushNewUnder($<entp>1, VAstType::TASK, $<str>1);
+			{ PARSEP->symPushNewUnder(VAstType::TASK, $<str>1, $<scp>1);
 			  PARSEP->taskCb($<fl>1,"task",$<str>1); }
 	;
 
@@ -2319,39 +2319,39 @@ funcId:				// IEEE: function_data_type_or_implicit + part of function_body_decla
 	//			// IEEE: function_data_type_or_implicit must be expanded here to prevent conflict
 	//			// function_data_type expanded here to prevent conflicts with implicit_type:empty vs data_type:ID
 		/**/			tfIdScoped
-			{ PARSEP->symPushNewUnder($<entp>1, VAstType::FUNCTION, $<str>1);
+			{ PARSEP->symPushNewUnder(VAstType::FUNCTION, $<str>1, $<scp>1);
 			  PARSEP->functionCb($<fl>1,"function",$<str>1,""); }
 	|	signingE rangeList	tfIdScoped
-			{ PARSEP->symPushNewUnder($<entp>3, VAstType::FUNCTION, $<str>3);
+			{ PARSEP->symPushNewUnder(VAstType::FUNCTION, $<str>3, $<scp>3);
 			  PARSEP->functionCb($<fl>3,"function",$<str>3,SPACED($1,$2)); }
 	|	signing			tfIdScoped
-			{ PARSEP->symPushNewUnder($<entp>2, VAstType::FUNCTION, $<str>2);
+			{ PARSEP->symPushNewUnder(VAstType::FUNCTION, $<str>2, $<scp>2);
 			  PARSEP->functionCb($<fl>2,"function",$<str>2,$1); }
 	|	yVOID			tfIdScoped
-			{ PARSEP->symPushNewUnder($<entp>2, VAstType::FUNCTION, $<str>2);
+			{ PARSEP->symPushNewUnder(VAstType::FUNCTION, $<str>2, $<scp>2);
 			  PARSEP->functionCb($<fl>2,"function",$<str>2,$1); }
 	|	data_type		tfIdScoped
-			{ PARSEP->symPushNewUnder($<entp>2, VAstType::FUNCTION, $<str>2);
+			{ PARSEP->symPushNewUnder(VAstType::FUNCTION, $<str>2, $<scp>2);
 			  PARSEP->functionCb($<fl>2,"function",$<str>2,$1); }
 	;
 
 funcIdNew:			// IEEE: from class_constructor_declaration
 	 	yNEW__ETC
-			{ PARSEP->symPushNewUnder(NULL, VAstType::FUNCTION, "new");
+			{ PARSEP->symPushNewUnder(VAstType::FUNCTION, "new", NULL);
 			  PARSEP->functionCb($<fl>1,"function","new",""); }
 	| 	yNEW__PAREN
-			{ PARSEP->symPushNewUnder(NULL, VAstType::FUNCTION, "new");
+			{ PARSEP->symPushNewUnder(VAstType::FUNCTION, "new", NULL);
 			  PARSEP->functionCb($<fl>1,"function","new",""); }
 	|	class_scopeWithoutId yNEW__PAREN
-			{ PARSEP->symPushNewUnder($<entp>1, VAstType::FUNCTION, "new");
+			{ PARSEP->symPushNewUnder(VAstType::FUNCTION, "new", $<scp>1);
 			  PARSEP->functionCb($<fl>2,"function","new",""); }
 	;
 
-tfIdScoped<str_entp>:		// IEEE: part of function_body_declaration/task_body_declaration
+tfIdScoped<str_scp>:		// IEEE: part of function_body_declaration/task_body_declaration
  	//			// IEEE: [ interface_identifier '.' | class_scope ] function_identifier
-		id					{ $<fl>$=$<fl>1; $<entp>$=NULL;     $<str>$ = $1; }
-	|	id/*interface_identifier*/ '.' id	{ $<fl>$=$<fl>1; $<entp>$=NULL;     $<str>$ = $1+"."+$2; }
-	|	class_scope_id				{ $<fl>$=$<fl>1; $<entp>$=$<entp>1; $<str>$ = $<str>1; }
+		id					{ $<fl>$=$<fl>1; $<scp>$=NULL;     $<str>$ = $1; }
+	|	id/*interface_identifier*/ '.' id	{ $<fl>$=$<fl>1; $<scp>$=NULL;     $<str>$ = $1+"."+$2; }
+	|	class_scope_id				{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$ = $<str>1; }
 	;
 
 tfGuts:
@@ -3709,8 +3709,8 @@ class_scope_type<str>:		// class_scope + type
 		class_scopeIdFollows yaID__aTYPE	{ $<fl>$=$<fl>1; $$=$<str>1+$2; }
 	;
 
-class_scope_id<str_entp>:	// class_scope + id etc
-		class_scopeIdFollows id			{ $<fl>$=$<fl>1; $<entp>$=$<entp>1; $<str>$=$<str>1+$<str>2; }
+class_scope_id<str_scp>:	// class_scope + id etc
+		class_scopeIdFollows id			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1+$<str>2; }
 	;
 
 //=== Below rules assume special scoping per above
@@ -3725,28 +3725,28 @@ class_scopeWithoutId<str>:	// class_type standalone without following id
 		class_scopeIdFollows			{ $<fl>$=$<fl>1; $$=$<str>1; PARSEP->symTableNextId(NULL); }
 	;
 
-class_scopeIdFollows<str_entp>:	// IEEE: class_scope
+class_scopeIdFollows<str_scp>:	// IEEE: class_scope
 	//			// IEEE: "class_type yP_COLONCOLON"
 	//			// IMPORTANT: The lexer will parse the following ID to be in the found package
 	//			// But class_type:'::' conflicts with class_scope:'::' so expand here
-		package_scopeIdFollowsE class_typeOneListColonIdFollows	{ $<fl>$=$<fl>2; $<entp>$=$<entp>2; $<str>$=$1+$<str>2; }
+		package_scopeIdFollowsE class_typeOneListColonIdFollows	{ $<fl>$=$<fl>2; $<scp>$=$<scp>2; $<str>$=$1+$<str>2; }
 	;
 
-class_typeOneListColonIdFollows<str_entp>: // IEEE: class_type ::
-		class_typeOneList yP_COLONCOLON 	{ $<fl>$=$<fl>1; $<entp>$=$<entp>1; $<str>$=$<str>1+$<str>2; PARSEP->symTableNextId($<entp>1); }
+class_typeOneListColonIdFollows<str_scp>: // IEEE: class_type ::
+		class_typeOneList yP_COLONCOLON 	{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1+$<str>2; PARSEP->symTableNextId($<scp>1); }
 	;
 
-class_typeOneList<str_entp>: // IEEE: class_type: "id [ parameter_value_assignment ]"
+class_typeOneList<str_scp>: // IEEE: class_type: "id [ parameter_value_assignment ]"
 	//			// If you follow the rules down, class_type is really a list via ps_class_identifier
-	//			// Must propagate entp up for next id
-		class_typeOne					{ $<fl>$=$<fl>1; $<entp>$=$<entp>1; $<str>$=$<str>1; }
-	|	class_typeOneListColonIdFollows class_typeOne	{ $<fl>$=$<fl>1; $<entp>$=$<entp>2; $<str>$=$<str>1+$<str>2; }
+	//			// Must propagate scp up for next id
+		class_typeOne					{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
+	|	class_typeOneListColonIdFollows class_typeOne	{ $<fl>$=$<fl>1; $<scp>$=$<scp>2; $<str>$=$<str>1+$<str>2; }
 	;
 
-class_typeOne<str_entp>:	// IEEE: class_type: "id [ parameter_value_assignment ]"
+class_typeOne<str_scp>:		// IEEE: class_type: "id [ parameter_value_assignment ]"
 	//			// If you follow the rules down, class_type is really a list via ps_class_identifier
 		yaID__aCLASS parameter_value_assignmentE
-			{ $<fl>$=$<fl>1; $<entp>$=$<entp>1; $<str>$=$<str>1; }
+			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
 	;
 
 package_scopeIdFollowsE<str>:	// IEEE: [package_scope]
@@ -3760,7 +3760,7 @@ package_scopeIdFollows<str>:	// IEEE: package_scope
 	//			//vv mid rule action needed otherwise we might not have NextId in time to parse the id token
 		yD_UNIT        { PARSEP->symTableNextId(PARSEP->syms().netlistSymp()); }
 	/*cont*/	yP_COLONCOLON	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>3; }
-	|	yaID__aPACKAGE { PARSEP->symTableNextId($<entp>1); }
+	|	yaID__aPACKAGE { PARSEP->symTableNextId($<scp>1); }
 	/*cont*/	yP_COLONCOLON	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>3; }
 	;
 

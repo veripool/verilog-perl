@@ -51,7 +51,7 @@ struct VParseGPin {
 struct VParseBisonYYSType {
     string	str;
     VFileLine*	fl;
-    VAstEnt*	entp;
+    VAstEnt*	scp;	// Symbol table scope for future lookups
 };
 #define YYSTYPE VParseBisonYYSType
 
