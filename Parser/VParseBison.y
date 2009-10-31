@@ -1841,25 +1841,23 @@ stmtBlock:			// IEEE: statement + seq_block + par_block
 
 seq_block:			// ==IEEE: seq_block
 	//			// IEEE doesn't allow declarations in unnamed blocks, but several simulators do.
-		yBEGIN blockDeclStmtList yEND		{ }
-	|	yBEGIN /**/	yEND			{ }
-	|	yBEGIN ':' seq_blockId blockDeclStmtList yEND endLabelE	{ PARSEP->symPopScope(VAstType::BLOCK); }
-	|	yBEGIN ':' seq_blockId /**/		 yEND endLabelE	{ PARSEP->symPopScope(VAstType::BLOCK); }
-	;
-
-seq_blockId:			// IEEE: part of seq_block
-		idAny/*new-block_identifier*/		{ PARSEP->symPushNew(VAstType::BLOCK,$1); }
+		seq_blockFront blockDeclStmtList yEND endLabelE	{ PARSEP->symPopScope(VAstType::BLOCK); }
+	|	seq_blockFront /**/		 yEND endLabelE	{ PARSEP->symPopScope(VAstType::BLOCK); }
 	;
 
 par_block:			// ==IEEE: par_block
-		yFORK blockDeclStmtList	yJOIN		{ }
-	|	yFORK /**/	yJOIN			{ }
-	|	yFORK ':' par_blockId blockDeclStmtList	yJOIN endLabelE	{ PARSEP->symPopScope(VAstType::FORK); }
-	|	yFORK ':' par_blockId /**/		yJOIN endLabelE	{ PARSEP->symPopScope(VAstType::FORK); }
+		par_blockFront blockDeclStmtList yJOIN endLabelE { PARSEP->symPopScope(VAstType::FORK); }
+	|	par_blockFront /**/		 yJOIN endLabelE { PARSEP->symPopScope(VAstType::FORK); }
 	;
 
-par_blockId:			// IEEE: part of par_block
-		idAny/*new-block_identifier*/		{ PARSEP->symPushNew(VAstType::FORK,$1); }
+seq_blockFront:			// IEEE: part of seq_block
+		yBEGIN					 	{ PARSEP->symPushNewAnon(VAstType::BLOCK); }
+	|	yBEGIN ':' idAny/*new-block_identifier*/	{ PARSEP->symPushNew(VAstType::BLOCK,$1); }
+	;
+
+par_blockFront:			// IEEE: part of par_block
+		yFORK					{ PARSEP->symPushNewAnon(VAstType::FORK); }
+	|	yFORK ':' idAny/*new-block_identifier*/	{ PARSEP->symPushNew(VAstType::FORK,$1); }
 	;
 
 blockDeclStmtList:		// IEEE: { block_item_declaration } { statement or null }
