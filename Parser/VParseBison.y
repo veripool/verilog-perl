@@ -547,12 +547,12 @@ timeunits_declaration:		// ==IEEE: timeunits_declaration
 // Packages
 
 package_declaration:		// ==IEEE: package_declaration
-		packageHdr package_itemListE yENDPACKAGE endLabelE
+		packageFront package_itemListE yENDPACKAGE endLabelE
 			{ PARSEP->endpackageCb($<fl>3,$3);
 			  PARSEP->symPopScope(VAstType::PACKAGE); }
 	;
 
-packageHdr:
+packageFront:
 		yPACKAGE idAny ';'
 			{ PARSEP->symPushNew(VAstType::PACKAGE, $2);
 			  PARSEP->packageCb($<fl>1,$1, $2); }
@@ -627,6 +627,8 @@ module_declaration:		// ==IEEE: module_declaration
 	;
 
 modFront:
+	//			// General note: all *Front functions must call symPushNew before
+	//			// any formal arguments, as the arguments must land in the new scope.
 		yMODULE lifetimeE idAny
 			{ PARSEP->symPushNew(VAstType::MODULE, $3);
 			  PARSEP->moduleCb($<fl>1,$1,$3,false,PARSEP->inCellDefine()); }
@@ -2265,7 +2267,7 @@ list_of_argumentsE<str>:	// IEEE: [list_of_arguments]
 	;
 
 task_declaration:		// ==IEEE: task_declaration
-	 	yTASK lifetimeE taskId tfGuts yENDTASK endLabelE
+		yTASK lifetimeE taskId tfGuts yENDTASK endLabelE
 			{ PARSEP->endtaskfuncCb($<fl>5,$5);
 			  PARSEP->symPopScope(VAstType::TASK); }
 	;
@@ -3155,19 +3157,17 @@ concurrent_assertion_item_declaration:	// ==IEEE: concurrent_assertion_item_decl
 	;
 
 property_declaration:		// ==IEEE: property_declaration
-		property_declarationFront property_declarationBody
+		property_declarationFront ';' property_declarationBody
+			yENDPROPERTY endLabelE
+			{ PARSEP->symPopScope(VAstType::PROPERTY); }
+	|	property_declarationFront '(' tf_port_listE ')' ';' property_declarationBody
 			yENDPROPERTY endLabelE
 			{ PARSEP->symPopScope(VAstType::PROPERTY); }
 	;
 
 property_declarationFront:	// IEEE: part of property_declaration
-		yPROPERTY property_declarationId ';'			{ }
-	|	yPROPERTY property_declarationId '(' tf_port_listE ')' ';'	{ }
-	;
-
-property_declarationId:		// IEEE: part of property_declaration
-		idAny/*property_identifier*/
-			{ PARSEP->symPushNew(VAstType::PROPERTY,$1); }
+		yPROPERTY idAny/*property_identifier*/
+			{ PARSEP->symPushNew(VAstType::PROPERTY,$2); }
 	;
 
 property_declarationBody:	// IEEE: part of property_declaration
@@ -3181,19 +3181,17 @@ assertion_variable_declarationList: // IEEE: part of assertion_variable_declarat
 	;
 
 sequence_declaration:		// ==IEEE: sequence_declaration
-		sequence_declarationHead sequence_declarationBody
+		sequence_declarationFront ';' sequence_declarationBody
+			yENDSEQUENCE endLabelE
+			{ PARSEP->symPopScope(VAstType::SEQUENCE); }
+	|	sequence_declarationFront '(' tf_port_listE ')' ';' sequence_declarationBody
 			yENDSEQUENCE endLabelE
 			{ PARSEP->symPopScope(VAstType::SEQUENCE); }
 	;
 
-sequence_declarationHead:	// IEEE: part of sequence_declaration
-		ySEQUENCE sequence_declarationId ';'			{ }
-	|	ySEQUENCE sequence_declarationId '(' tf_port_listE ')' ';'	{ }
-	;
-
-sequence_declarationId:		// IEEE: part of sequence_declaration
-		idAny/*new_sequence*/
-			{ PARSEP->symPushNew(VAstType::SEQUENCE,$1); }
+sequence_declarationFront:	// IEEE: part of sequence_declaration
+		ySEQUENCE idAny/*new_sequence*/
+			{ PARSEP->symPushNew(VAstType::SEQUENCE,$2); }
 	;
 
 sequence_declarationBody:	// IEEE: part of property_declaration
@@ -3360,18 +3358,16 @@ immediate_assert_statement:	// ==IEEE: immediate_assert_statement
 // Covergroup
 
 covergroup_declaration:		// ==IEEE: covergroup_declaration
-		covergroup_declarationHead coverage_spec_or_optionListE
+		covergroup_declarationFront coverage_eventE ';' coverage_spec_or_optionListE
+			yENDGROUP endLabelE
+			{ PARSEP->symPopScope(VAstType::COVERGROUP); }
+	|	covergroup_declarationFront '(' tf_port_listE ')' coverage_eventE ';' coverage_spec_or_optionListE
 			yENDGROUP endLabelE
 			{ PARSEP->symPopScope(VAstType::COVERGROUP); }
 	;
 
-covergroup_declarationHead:	// IEEE: part of covergroup_declaration
-		yCOVERGROUP covergroup_declarationId coverage_eventE ';'	{ }
-	|	yCOVERGROUP covergroup_declarationId '(' tf_port_listE ')' coverage_eventE ';'	{ }
-	;
-
-covergroup_declarationId:	// IEEE: part of covergroup_declaration
-		idAny					{ PARSEP->symPushNew(VAstType::COVERGROUP,$1); }
+covergroup_declarationFront:	// IEEE: part of covergroup_declaration
+		yCOVERGROUP idAny 			{ PARSEP->symPushNew(VAstType::COVERGROUP,$1); }
 	;
 
 coverage_spec_or_optionListE:	// IEEE: [{coverage_spec_or_option}]
