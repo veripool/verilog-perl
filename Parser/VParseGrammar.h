@@ -67,7 +67,7 @@ public: // Only for VParseBison
     string	m_varDecl;
     string	m_varNet;
     string	m_varIO;
-    string	m_varType;
+    string	m_varDType;
     string	m_varRange;
 
     string	m_cellMod;

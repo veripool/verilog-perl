@@ -52,13 +52,13 @@
 
 #define VARRESET_LIST(decl)    { GRAMMARP->pinNum(1); VARRESET(); VARDECL(decl); }	// Start of pinlist
 #define VARRESET_NONLIST(decl) { GRAMMARP->pinNum(0); VARRESET(); VARDECL(decl); }	// Not in a pinlist
-#define VARRESET()	 { VARDECL(""); VARIO(""); VARNET(""); VARTYPE(""); }  // Start of one variable decl
+#define VARRESET()	 { VARDECL(""); VARIO(""); VARNET(""); VARDTYPE(""); }  // Start of one variable decl
 
 // VARDECL("") indicates inside a port list or IO list and we shouldn't declare the variable
 #define VARDECL(type)	 { GRAMMARP->m_varDecl = (type); }  // genvar, parameter, localparam
 #define VARIO(type)	 { GRAMMARP->m_varIO   = (type); }  // input, output, inout, ref, const ref
 #define VARNET(type)	 { GRAMMARP->m_varNet  = (type); }  // supply*,wire,tri
-#define VARTYPE(type)	 { GRAMMARP->m_varType = (type); }  // "signed", "int", etc
+#define VARDTYPE(type)	 { GRAMMARP->m_varDType = (type); }  // "signed", "int", etc
 
 #define PINNUMINC()	{ GRAMMARP->pinNumInc(); }
 
@@ -68,19 +68,19 @@ static void VARDONE(VFileLine* fl, const string& name, const string& array, cons
     if (GRAMMARP->m_varIO!="" && GRAMMARP->m_varDecl=="") GRAMMARP->m_varDecl="port";
     if (GRAMMARP->m_varDecl!="") {
 	PARSEP->varCb(fl, GRAMMARP->m_varDecl, name, PARSEP->symObjofUpward(), GRAMMARP->m_varNet,
-		      GRAMMARP->m_varType, array, value);
+		      GRAMMARP->m_varDType, array, value);
     }
     if (GRAMMARP->m_varIO!="" || GRAMMARP->pinNum()) {
 	PARSEP->portCb(fl, name, PARSEP->symObjofUpward(),
-		       GRAMMARP->m_varIO, GRAMMARP->m_varType, array, GRAMMARP->pinNum());
+		       GRAMMARP->m_varIO, GRAMMARP->m_varDType, array, GRAMMARP->pinNum());
     }
-    if (GRAMMARP->m_varType == "type") {
+    if (GRAMMARP->m_varDType == "type") {
 	PARSEP->symReinsert(VAstType::TYPE,name);
     }
 }
 
 static void VARDONETYPEDEF(VFileLine* fl, const string& name, const string& type, const string& array) {
-    VARRESET(); VARDECL("typedef"); VARTYPE(type);
+    VARRESET(); VARDECL("typedef"); VARDTYPE(type);
     VARDONE(fl,name,array,"");
     // TYPE shouldn't override a more specific node type, as often is forward reference
     PARSEP->symReinsert(VAstType::TYPE,name);
@@ -684,10 +684,10 @@ portE:				// ==IEEE: [ port ]
 	//			// Expanded interface_port_header
 	//			// We use instantCb here because the non-port form looks just like a module instantiation
 		/* empty */				{ }
-	|	portDirNetE id/*interface*/                   idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $3, $4, ""); PARSEP->instantCb($<fl>2, $2, $3, $4); PINNUMINC(); }
-	|	portDirNetE yINTERFACE                        idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $3, $4, ""); PINNUMINC(); }
-	|	portDirNetE id/*interface*/ '.' idAny/*modport*/ idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $5, $6, ""); PARSEP->instantCb($<fl>2, $2, $5, $6); PINNUMINC(); }
-	|	portDirNetE yINTERFACE      '.' idAny/*modport*/ idAny/*port*/ regArRangeE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }
+	|	portDirNetE id/*interface*/                   idAny/*port*/ regArRangeE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $3, $4, ""); PARSEP->instantCb($<fl>2, $2, $3, $4); PINNUMINC(); }
+	|	portDirNetE yINTERFACE                        idAny/*port*/ regArRangeE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $3, $4, ""); PINNUMINC(); }
+	|	portDirNetE id/*interface*/ '.' idAny/*modport*/ idAny/*port*/ regArRangeE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $5, $6, ""); PARSEP->instantCb($<fl>2, $2, $5, $6); PINNUMINC(); }
+	|	portDirNetE yINTERFACE      '.' idAny/*modport*/ idAny/*port*/ regArRangeE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }
 	//
 	//			// IEEE: ansi_port_declaration, with [port_direction] removed
 	//			//   IEEE: [ net_port_header | interface_port_header ] port_identifier { unpacked_dimension }
@@ -714,30 +714,30 @@ portE:				// ==IEEE: [ port ]
 	//
 	//			// Note implicit rules looks just line declaring additional followon port
 	//			// No VARDECL("port") for implicit, as we don't want to declare variables for them
-	|	portDirNetE data_type	       '.' portSig '(' portAssignExprE ')' sigAttrListE	{ VARTYPE($2); VARDONE($<fl>4, $4, "", ""); PINNUMINC(); }
-	|	portDirNetE yVAR data_type     '.' portSig '(' portAssignExprE ')' sigAttrListE	{ VARTYPE($3); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
-	|	portDirNetE yVAR implicit_type '.' portSig '(' portAssignExprE ')' sigAttrListE	{ VARTYPE($3); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
-	|	portDirNetE signingE rangeList '.' portSig '(' portAssignExprE ')' sigAttrListE	{ VARTYPE(SPACED($2,$3)); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
-	|	portDirNetE /*implicit*/       '.' portSig '(' portAssignExprE ')' sigAttrListE	{ /*VARTYPE-same*/ VARDONE($<fl>3, $3, "", ""); PINNUMINC(); }
+	|	portDirNetE data_type	       '.' portSig '(' portAssignExprE ')' sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>4, $4, "", ""); PINNUMINC(); }
+	|	portDirNetE yVAR data_type     '.' portSig '(' portAssignExprE ')' sigAttrListE	{ VARDTYPE($3); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
+	|	portDirNetE yVAR implicit_type '.' portSig '(' portAssignExprE ')' sigAttrListE	{ VARDTYPE($3); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
+	|	portDirNetE signingE rangeList '.' portSig '(' portAssignExprE ')' sigAttrListE	{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
+	|	portDirNetE /*implicit*/       '.' portSig '(' portAssignExprE ')' sigAttrListE	{ /*VARDTYPE-same*/ VARDONE($<fl>3, $3, "", ""); PINNUMINC(); }
 	//
-	|	portDirNetE data_type          portSig variable_dimensionListE sigAttrListE	{ VARTYPE($2); VARDONE($<fl>3, $3, $4, ""); PINNUMINC(); }
-	|	portDirNetE yVAR data_type     portSig variable_dimensionListE sigAttrListE	{ VARTYPE($3); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
-	|	portDirNetE yVAR implicit_type portSig variable_dimensionListE sigAttrListE	{ VARTYPE($3); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
-	|	portDirNetE signingE rangeList portSig variable_dimensionListE sigAttrListE	{ VARTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
-	|	portDirNetE /*implicit*/       portSig variable_dimensionListE sigAttrListE	{ /*VARTYPE-same*/ VARDONE($<fl>2, $2, $3, ""); PINNUMINC(); }
+	|	portDirNetE data_type          portSig variable_dimensionListE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, ""); PINNUMINC(); }
+	|	portDirNetE yVAR data_type     portSig variable_dimensionListE sigAttrListE	{ VARDTYPE($3); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
+	|	portDirNetE yVAR implicit_type portSig variable_dimensionListE sigAttrListE	{ VARDTYPE($3); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
+	|	portDirNetE signingE rangeList portSig variable_dimensionListE sigAttrListE	{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
+	|	portDirNetE /*implicit*/       portSig variable_dimensionListE sigAttrListE	{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, ""); PINNUMINC(); }
 	//
-	|	portDirNetE data_type          portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARTYPE($2); VARDONE($<fl>3, $3, $4, $7); PINNUMINC(); }
-	|	portDirNetE yVAR data_type     portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARTYPE($3); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
-	|	portDirNetE yVAR implicit_type portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARTYPE($3); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
-	|	portDirNetE /*implicit*/       portSig variable_dimensionListE sigAttrListE '=' constExpr	{ /*VARTYPE-same*/ VARDONE($<fl>2, $2, $3, $6); PINNUMINC(); }
+	|	portDirNetE data_type          portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, $7); PINNUMINC(); }
+	|	portDirNetE yVAR data_type     portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE($3); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
+	|	portDirNetE yVAR implicit_type portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE($3); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
+	|	portDirNetE /*implicit*/       portSig variable_dimensionListE sigAttrListE '=' constExpr	{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, $6); PINNUMINC(); }
 	;
 
 portDirNetE:			// IEEE: part of port, optional net type and/or direction
 		/* empty */				{ }
 	//			// Per spec, if direction given default the nettype.
-	//			// The higher level rule may override this VARTYPE with one later in the parse.
-	|	port_direction				{ VARTYPE(""/*default_nettype*/); }
-	|	port_direction net_type			{ VARTYPE(""/*default_nettype*/); } // net_type calls VARNET
+	//			// The higher level rule may override this VARDTYPE with one later in the parse.
+	|	port_direction				{ VARDTYPE(""/*default_nettype*/); }
+	|	port_direction net_type			{ VARDTYPE(""/*default_nettype*/); } // net_type calls VARNET
 	|	net_type				{ } // net_type calls VARNET
 	;
 
@@ -959,23 +959,23 @@ parameter_declaration:		// IEEE: parameter_declaration
 	;
 
 local_parameter_declarationFront: // IEEE: local_parameter_declaration w/o assignment
-		varLParamReset implicit_type 		{ VARRESET(); VARDECL("localparam"); VARTYPE($2); }
-	|	varLParamReset data_type		{ VARRESET(); VARDECL("localparam"); VARTYPE($2); }
-	|	varLParamReset yTYPE			{ VARRESET(); VARDECL("localparam"); VARTYPE($2); }
+		varLParamReset implicit_type 		{ VARRESET(); VARDECL("localparam"); VARDTYPE($2); }
+	|	varLParamReset data_type		{ VARRESET(); VARDECL("localparam"); VARDTYPE($2); }
+	|	varLParamReset yTYPE			{ VARRESET(); VARDECL("localparam"); VARDTYPE($2); }
 	;
 
 parameter_declarationFront:	// IEEE: parameter_declaration w/o assignment
-		varGParamReset implicit_type 		{ VARRESET(); VARDECL("parameter"); VARTYPE($2); }
-	|	varGParamReset data_type		{ VARRESET(); VARDECL("parameter"); VARTYPE($2); }
-	|	varGParamReset yTYPE			{ VARRESET(); VARDECL("parameter"); VARTYPE($2); }
+		varGParamReset implicit_type 		{ VARRESET(); VARDECL("parameter"); VARDTYPE($2); }
+	|	varGParamReset data_type		{ VARRESET(); VARDECL("parameter"); VARDTYPE($2); }
+	|	varGParamReset yTYPE			{ VARRESET(); VARDECL("parameter"); VARDTYPE($2); }
 	;
 
 parameter_port_declarationFront: // IEEE: parameter_port_declaration w/o assignment
 	//			// IEEE: parameter_declaration (minus assignment)
 		parameter_declarationFront		{ }
 	//
-	|	data_type				{ VARTYPE($1); }
-	|	yTYPE 					{ VARTYPE($1); }
+	|	data_type				{ VARDTYPE($1); }
+	|	yTYPE 					{ VARDTYPE($1); }
 	;
 
 net_declaration:		// IEEE: net_declaration - excluding implict
@@ -983,7 +983,7 @@ net_declaration:		// IEEE: net_declaration - excluding implict
 	;
 
 net_declarationFront:		// IEEE: beginning of net_declaration
-		net_declRESET net_type   strengthSpecE signingE delayrange { VARTYPE(SPACED($4,$5));}
+		net_declRESET net_type   strengthSpecE signingE delayrange { VARDTYPE(SPACED($4,$5));}
 	;
 
 net_declRESET:
@@ -1038,22 +1038,22 @@ port_declaration:		// ==IEEE: port_declaration
 	//			// IEEE: input_declaration
 	//			// IEEE: output_declaration
 	//			// IEEE: ref_declaration
-		port_directionReset port_declNetE data_type          { VARTYPE($3); } list_of_variable_decl_assignments	{ }
-	|	port_directionReset port_declNetE yVAR data_type     { VARTYPE($4); } list_of_variable_decl_assignments	{ }
-	|	port_directionReset port_declNetE yVAR implicit_type { VARTYPE($4); } list_of_variable_decl_assignments	{ }
-	|	port_directionReset port_declNetE signingE rangeList { VARTYPE(SPACED($3,$4)); } list_of_variable_decl_assignments	{ }
-	|	port_directionReset port_declNetE signing	     { VARTYPE($3); } list_of_variable_decl_assignments	{ }
-	|	port_directionReset port_declNetE /*implicit*/       { VARTYPE("");/*default_nettype*/} list_of_variable_decl_assignments	{ }
+		port_directionReset port_declNetE data_type          { VARDTYPE($3); } list_of_variable_decl_assignments	{ }
+	|	port_directionReset port_declNetE yVAR data_type     { VARDTYPE($4); } list_of_variable_decl_assignments	{ }
+	|	port_directionReset port_declNetE yVAR implicit_type { VARDTYPE($4); } list_of_variable_decl_assignments	{ }
+	|	port_directionReset port_declNetE signingE rangeList { VARDTYPE(SPACED($3,$4)); } list_of_variable_decl_assignments	{ }
+	|	port_directionReset port_declNetE signing	     { VARDTYPE($3); } list_of_variable_decl_assignments	{ }
+	|	port_directionReset port_declNetE /*implicit*/       { VARDTYPE("");/*default_nettype*/} list_of_variable_decl_assignments	{ }
 	;
 
 tf_port_declaration:		// ==IEEE: tf_port_declaration
 	//			// Used inside function; followed by ';'
 	//			// SIMILAR to port_declaration
 	//
-		port_directionReset      data_type     { VARTYPE($2); }  list_of_tf_variable_identifiers ';'	{ }
-	|	port_directionReset      implicit_type { VARTYPE($2); }  list_of_tf_variable_identifiers ';'	{ }
-	|	port_directionReset yVAR data_type     { VARTYPE($3); }  list_of_tf_variable_identifiers ';'	{ }
-	|	port_directionReset yVAR implicit_type { VARTYPE($3); }  list_of_tf_variable_identifiers ';'	{ }
+		port_directionReset      data_type     { VARDTYPE($2); }  list_of_tf_variable_identifiers ';'	{ }
+	|	port_directionReset      implicit_type { VARDTYPE($2); }  list_of_tf_variable_identifiers ';'	{ }
+	|	port_directionReset yVAR data_type     { VARDTYPE($3); }  list_of_tf_variable_identifiers ';'	{ }
+	|	port_directionReset yVAR implicit_type { VARDTYPE($3); }  list_of_tf_variable_identifiers ';'	{ }
 	;
 
 integer_atom_type<str>:		// ==IEEE: integer_atom_type
@@ -1164,7 +1164,7 @@ struct_union_memberList:	// IEEE: { struct_union_member }
 	;
 
 struct_union_member:		// ==IEEE: struct_union_member
-		random_qualifierE data_type_or_void { VARRESET_NONLIST("member"); VARTYPE(SPACED($1,$2)); }
+		random_qualifierE data_type_or_void { VARRESET_NONLIST("member"); VARDTYPE(SPACED($1,$2)); }
 	/*cont*/	list_of_variable_decl_assignments ';'	{ }
 	;
 
@@ -1322,14 +1322,14 @@ data_declarationVarClass:	// IEEE: part of data_declaration (for class_property)
 
 data_declarationVarFront:	// IEEE: part of data_declaration
 	//			// implicit_type expanded into /*empty*/ or "signingE rangeList"
-		constE yVAR lifetimeE data_type	 { VARRESET(); VARDECL("var"); VARTYPE(SPACED($1,$4)); }
-	|	constE yVAR lifetimeE		 { VARRESET(); VARDECL("var"); VARTYPE($1); }
-	|	constE yVAR lifetimeE signingE rangeList { VARRESET(); VARDECL("var"); VARTYPE(SPACED($1,SPACED($4,$5))); }
+		constE yVAR lifetimeE data_type	 { VARRESET(); VARDECL("var"); VARDTYPE(SPACED($1,$4)); }
+	|	constE yVAR lifetimeE		 { VARRESET(); VARDECL("var"); VARDTYPE($1); }
+	|	constE yVAR lifetimeE signingE rangeList { VARRESET(); VARDECL("var"); VARDTYPE(SPACED($1,SPACED($4,$5))); }
 	//
 	//			// Expanded: "constE lifetimeE data_type"
-	|	/**/		      data_type	{ VARRESET(); VARDECL("var"); VARTYPE($1); }
-	|	/**/	    lifetime  data_type	{ VARRESET(); VARDECL("var"); VARTYPE($2); }
-	|	yCONST__ETC lifetimeE data_type	{ VARRESET(); VARDECL("var"); VARTYPE(SPACED($1,$3)); }
+	|	/**/		      data_type	{ VARRESET(); VARDECL("var"); VARDTYPE($1); }
+	|	/**/	    lifetime  data_type	{ VARRESET(); VARDECL("var"); VARDTYPE($2); }
+	|	yCONST__ETC lifetimeE data_type	{ VARRESET(); VARDECL("var"); VARDTYPE(SPACED($1,$3)); }
 	//			// = class_new is in variable_decl_assignment
 	;
 
@@ -1337,12 +1337,12 @@ data_declarationVarFrontClass:	// IEEE: part of data_declaration (for class_prop
 	//			// VARRESET called before this rule
 	//			// yCONST is removed, added to memberQual rules
 	//			// implicit_type expanded into /*empty*/ or "signingE rangeList"
-		yVAR lifetimeE data_type	 { VARDECL("var"); VARTYPE(SPACED(GRAMMARP->m_varType,$3)); }
-	|	yVAR lifetimeE			 { VARDECL("var"); VARTYPE(GRAMMARP->m_varType); }
-	|	yVAR lifetimeE signingE rangeList { VARDECL("var"); VARTYPE(SPACED(GRAMMARP->m_varType,SPACED($3,$4))); }
+		yVAR lifetimeE data_type	 { VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_varDType,$3)); }
+	|	yVAR lifetimeE			 { VARDECL("var"); VARDTYPE(GRAMMARP->m_varDType); }
+	|	yVAR lifetimeE signingE rangeList { VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_varDType,SPACED($3,$4))); }
 	//
 	//			// Expanded: "constE lifetimeE data_type"
-	|	/**/		      data_type	{ VARDECL("var"); VARTYPE(SPACED(GRAMMARP->m_varType,$1)); }
+	|	/**/		      data_type	{ VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_varDType,$1)); }
 	//			// lifetime is removed, added to memberQual rules to avoid conflict
 	//			// yCONST is removed, added to memberQual rules to avoid conflict
 	//			// = class_new is in variable_decl_assignment
@@ -2190,7 +2190,7 @@ for_initializationItemList:	// IEEE: [for_variable_declaration...]
 
 for_initializationItem:		// IEEE: variable_assignment + for_variable_declaration
 	//			// IEEE: for_variable_declaration
-		data_type idAny/*new*/ '=' expr		{ VARTYPE($1); }
+		data_type idAny/*new*/ '=' expr		{ VARDTYPE($1); }
 	//			// IEEE: variable_assignment
 	|	variable_lvalue '=' expr		{ }
 	;
@@ -2399,18 +2399,18 @@ tf_port_item:			// ==IEEE: tf_port_item
 	;
 
 tf_port_itemFront:		// IEEE: part of tf_port_item, which has the data type
-		data_type				{ VARTYPE($1); }
-	|	signingE rangeList			{ VARTYPE(SPACED($1,$2)); }
-	|	signing					{ VARTYPE($1); }
-	|	yVAR data_type				{ VARTYPE($2); }
-	|	yVAR implicit_type			{ VARTYPE($2); }
+		data_type				{ VARDTYPE($1); }
+	|	signingE rangeList			{ VARDTYPE(SPACED($1,$2)); }
+	|	signing					{ VARDTYPE($1); }
+	|	yVAR data_type				{ VARDTYPE($2); }
+	|	yVAR implicit_type			{ VARDTYPE($2); }
 	//
-	|	tf_port_itemDir /*implicit*/		{ VARTYPE(""); /*default_nettype-see spec*/ }
-	|	tf_port_itemDir data_type		{ VARTYPE($2); }
-	|	tf_port_itemDir signingE rangeList	{ VARTYPE(SPACED($2,$3)); }
-	|	tf_port_itemDir signing			{ VARTYPE($2); }
-	|	tf_port_itemDir yVAR data_type		{ VARTYPE($3); }
-	|	tf_port_itemDir yVAR implicit_type	{ VARTYPE($3); }
+	|	tf_port_itemDir /*implicit*/		{ VARDTYPE(""); /*default_nettype-see spec*/ }
+	|	tf_port_itemDir data_type		{ VARDTYPE($2); }
+	|	tf_port_itemDir signingE rangeList	{ VARDTYPE(SPACED($2,$3)); }
+	|	tf_port_itemDir signing			{ VARDTYPE($2); }
+	|	tf_port_itemDir yVAR data_type		{ VARDTYPE($3); }
+	|	tf_port_itemDir yVAR implicit_type	{ VARDTYPE($3); }
 	;
 
 tf_port_itemDir:		// IEEE: part of tf_port_item, direction
@@ -3803,8 +3803,8 @@ class_item_qualifier<str>:	// IEEE: class_item_qualifier minus ySTATIC
 memberQualResetListE:		// Called from class_property for all qualifiers before yVAR
 	//			// Also before method declarations, to prevent grammar conflict
 	//			// Thus both types of qualifiers (method/property) are here
-		/*empty*/				{ VARRESET(); VARTYPE(""); }
-	|	memberQualList				{ VARRESET(); VARTYPE($1); }
+		/*empty*/				{ VARRESET(); VARDTYPE(""); }
+	|	memberQualList				{ VARRESET(); VARDTYPE($1); }
 	;
 
 memberQualList<str>:
