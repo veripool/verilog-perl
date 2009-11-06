@@ -254,6 +254,29 @@ design.  It's also in very common usage, including by many IP providers.
 
 =back
 
+=head1 FAQ
+
+=over 4
+
+=item Why do I get "unexpected `do'" or "unexpected `bit'" errors?
+
+Do, bit, ref, return, and other words are now SystemVerilog keywords.  You
+should change your code to not use them to insure it works with newer
+tools.  Alternatively, surround them by the Verilog 2005/SystemVerilog
+begin_keywords pragma to indicate Verilog 2001 code.
+
+   `begin_keywords "1364-2001"
+      integer bit; initial bit = 1;
+   `end_keywords
+
+Alternatively use the --language (for vhier) or
+Verilog::Language::language_standard call to specify "1364-2001", or for
+really old code, "1364-1995".
+
+But, again, you really should fix the Verilog code.
+
+=back
+
 =head1 DISTRIBUTION
 
 Verilog-Perl is part of the L<http://www.veripool.org/> free Verilog EDA
