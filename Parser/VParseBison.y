@@ -2230,7 +2230,7 @@ funcRef<str>:			// IEEE: part of tf_call
 	//			//      or function_identifier
 	//			//      or property_identifier
 		id '(' list_of_argumentsE ')'		{ $<fl>$=$<fl>1; $$=$1+"("+$3+")"; }
-	|	package_scopeIdFollows id '(' list_of_argumentsE ')'	{ $<fl>$=$<fl>2; $$=$2+"("+$4+")"; }
+	|	package_scopeIdFollows id '(' list_of_argumentsE ')'	{ $<fl>$=$<fl>2; $$=$1+$2+"("+$4+")"; }
 	;
 
 task_subroutine_callNoMethod<str>:	// function_subroutine_callNoMethod (as task)
