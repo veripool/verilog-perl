@@ -14,7 +14,7 @@ module pinorder4 (
    wire d_o;
    foo foo1 (.abcconst(3'h0), .noconnect(), .y(b_i));
    foo2 foo2 (.x(b_i), .y(d_o), .z(a_i[0]));
-   assign a_i = 0
-   assign b_i = 0
+   assign a_i = 0;
+   assign b_i = 0;
 endmodule
 

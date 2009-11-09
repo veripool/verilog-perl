@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.2***
 
+****	Fix missing ; in ContAssign::verilog_text, bug177.  [Nicolas Wilhelm]
+
 ****	Fix typedef scoping under anonymous begin blocks.
 
 * Verilog::Language 3.221 2009/10/28

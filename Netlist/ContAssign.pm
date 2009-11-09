@@ -52,7 +52,7 @@ sub link {}
 
 sub verilog_text {
     my $self = shift;
-    my @out = ($self->keyword," ",$self->lhs," = ",$self->rhs);
+    my @out = ($self->keyword," ",$self->lhs," = ",$self->rhs,";");
     return (wantarray ? @out : join('',@out));
 }
 
