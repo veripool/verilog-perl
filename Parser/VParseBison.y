@@ -1113,8 +1113,8 @@ data_type<str>:			// ==IEEE: data_type
 	//			// This expansion also replicated elsewhere, IE data_type__AndID
 		data_typeNoRef				{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: [ class_scope | package_scope ] type_identifier { packed_dimension }
-	|	ps_type  packed_dimensionE		{ $<fl>$=$<fl>1; $$=$1+$2; }
-	|	class_scope_type packed_dimensionE	{ $<fl>$=$<fl>1; $$=$1+$2; }
+	|	ps_type  packed_dimensionListE		{ $<fl>$=$<fl>1; $$=$1+$2; }
+	|	class_scope_type packed_dimensionListE	{ $<fl>$=$<fl>1; $$=$1+$2; }
 	//			// IEEE: class_type
 	|	class_typeWithoutId			{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: ps_covergroup_identifier
@@ -1126,9 +1126,11 @@ data_typeNoRef<str>:		// ==IEEE: data_type, excluding class_type etc references
 	|	integer_atom_type signingE			{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	|	non_integer_type			{ $<fl>$=$<fl>1; $$=$1; }
 	|	ySTRUCT        packedSigningE '{' { PARSEP->symPushNew(VAstType::STRUCT, " unknown"); }
-	/*cont*/	struct_union_memberList '}' packed_dimensionE	{ $<fl>$=$<fl>1; $$=$1; PARSEP->symPopScope(VAstType::STRUCT); }
+	/*cont*/	struct_union_memberList '}' packed_dimensionListE
+			{ $<fl>$=$<fl>1; $$=$1; PARSEP->symPopScope(VAstType::STRUCT); }
 	|	yUNION taggedE packedSigningE '{' { PARSEP->symPushNew(VAstType::UNION, " unknown"); }
-	/*cont*/	struct_union_memberList '}' packed_dimensionE	{ $<fl>$=$<fl>1; $$=$1; PARSEP->symPopScope(VAstType::UNION); }
+	/*cont*/	struct_union_memberList '}' packed_dimensionListE
+			{ $<fl>$=$<fl>1; $$=$1; PARSEP->symPopScope(VAstType::UNION); }
 	|	enumDecl				{ $<fl>$=$<fl>1; $$=$1; }
 	|	ySTRING					{ $<fl>$=$<fl>1; $$=$1; }
 	|	yCHANDLE				{ $<fl>$=$<fl>1; $$=$1; }
@@ -1686,9 +1688,14 @@ anyrange<str>:
 		'[' constExpr ':' constExpr ']'		{ $<fl>$=$<fl>1; $$ = "["+$2+":"+$4+"]"; }
 	;
 
-packed_dimensionE<str>:		// IEEE: [ packed_dimension ]
+packed_dimensionListE<str>:	// IEEE: [{ packed_dimension }]
 		/* empty */				{ $$=""; }
-	|	packed_dimension			{ $<fl>$=$<fl>1; $$=$1; }
+	|	packed_dimensionList			{ $<fl>$=$<fl>1; $$=$1; }
+	;
+
+packed_dimensionList<str>:	// IEEE: { packed_dimension }
+		packed_dimension			{ $<fl>$=$<fl>1; $$=$1; }
+	|	packed_dimensionList packed_dimension	{ $<fl>$=$<fl>1; $$=$1+$2; }
 	;
 
 packed_dimension<str>:		// ==IEEE: packed_dimension
