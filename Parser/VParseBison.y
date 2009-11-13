@@ -684,10 +684,10 @@ portE:				// ==IEEE: [ port ]
 	//			// Expanded interface_port_header
 	//			// We use instantCb here because the non-port form looks just like a module instantiation
 		/* empty */				{ }
-	|	portDirNetE id/*interface*/                   idAny/*port*/ regArRangeE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $3, $4, ""); PARSEP->instantCb($<fl>2, $2, $3, $4); PINNUMINC(); }
-	|	portDirNetE yINTERFACE                        idAny/*port*/ regArRangeE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $3, $4, ""); PINNUMINC(); }
-	|	portDirNetE id/*interface*/ '.' idAny/*modport*/ idAny/*port*/ regArRangeE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $5, $6, ""); PARSEP->instantCb($<fl>2, $2, $5, $6); PINNUMINC(); }
-	|	portDirNetE yINTERFACE      '.' idAny/*modport*/ idAny/*port*/ regArRangeE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }
+	|	portDirNetE id/*interface*/                   idAny/*port*/ rangeListE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $3, $4, ""); PARSEP->instantCb($<fl>2, $2, $3, $4); PINNUMINC(); }
+	|	portDirNetE yINTERFACE                        idAny/*port*/ rangeListE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $3, $4, ""); PINNUMINC(); }
+	|	portDirNetE id/*interface*/ '.' idAny/*modport*/ idAny/*port*/ rangeListE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $5, $6, ""); PARSEP->instantCb($<fl>2, $2, $5, $6); PINNUMINC(); }
+	|	portDirNetE yINTERFACE      '.' idAny/*modport*/ idAny/*port*/ rangeListE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }
 	//
 	//			// IEEE: ansi_port_declaration, with [port_direction] removed
 	//			//   IEEE: [ net_port_header | interface_port_header ] port_identifier { unpacked_dimension }
@@ -710,7 +710,7 @@ portE:				// ==IEEE: [ port ]
 	//			//     net_port_type | [ port_direction ] var_data_type '.' port_identifier '(' [ expr ] ')'
 	//			// Expand implicit_type
 	//
-	//			// variable_dimensionListE instead of regArRangeE to avoid conflicts
+	//			// variable_dimensionListE instead of rangeListE to avoid conflicts
 	//
 	//			// Note implicit rules looks just line declaring additional followon port
 	//			// No VARDECL("port") for implicit, as we don't want to declare variables for them
@@ -1122,8 +1122,8 @@ data_type<str>:			// ==IEEE: data_type
 	;
 
 data_typeNoRef<str>:		// ==IEEE: data_type, excluding class_type etc references
-		integer_vector_type signingE regArRangeE	{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
-	|	integer_atom_type signingE			{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
+		integer_vector_type signingE rangeListE	{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
+	|	integer_atom_type signingE		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	|	non_integer_type			{ $<fl>$=$<fl>1; $$=$1; }
 	|	ySTRUCT        packedSigningE '{' { PARSEP->symPushNew(VAstType::STRUCT, " unknown"); }
 	/*cont*/	struct_union_memberList '}' packed_dimensionListE
@@ -1665,20 +1665,13 @@ regrangeE<str>:
 	|	anyrange 				{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
-regArRangeE<str>:
-		/* empty */    		               	{ $$=""; }
-	|	regArRangeList 				{ $<fl>$=$<fl>1; $$=$1; }
-	;
-
-// Complication here is "[#:#]" is a range, while "[#:#][#:#]" is an array and range.
-regArRangeList<str>:
-		anyrange				{ $<fl>$=$<fl>1; $$=$1; }
-	|	regArRangeList anyrange			{ $<fl>$=$<fl>1; $$=$1+$2; }
-	;
-
 bit_selectE<str>:		// IEEE: constant_bit_select (IEEE included empty)
 		/* empty */				{ $$ = ""; }
 	|	'[' constExpr ']'			{ $<fl>$=$<fl>1; $$ = "["+$2+"]"; }
+	;
+
+wirerangeE<str>:
+		rangeListE				{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 // IEEE: select
@@ -1704,9 +1697,9 @@ packed_dimension<str>:		// ==IEEE: packed_dimension
 	;
 
 delayrange<str>:
-		rangeListE delayE 			{ $<fl>$=$<fl>1; $$=$1; }
-	|	ySCALARED rangeListE delayE 		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
-	|	yVECTORED rangeListE delayE		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
+		wirerangeE delayE 			{ $<fl>$=$<fl>1; $$=$1; }
+	|	ySCALARED wirerangeE delayE 		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
+	|	yVECTORED wirerangeE delayE		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	;
 
 //************************************************
