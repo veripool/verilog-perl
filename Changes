@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix multi-dimensional arrayed typedefs, bug183.  [Vesselin Kavalov]
 
+****	Fix "assert () else" action_blocks.  [Vesselin Kavalov]
+
 ****	Fix typedef scoping under anonymous begin blocks.
 
 * Verilog::Language 3.221 2009/10/28

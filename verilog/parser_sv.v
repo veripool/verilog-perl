@@ -273,3 +273,9 @@ t_bug91 v_bug91;
 module bug98(interfacex x_if);
    h inst_h(.push(x_if.pop));
 endmodule
+
+module bugas;
+   initial begin
+      ASSERT_CHK: assert (0) else $error("%m -- not allowed %d", 0);
+   end
+endmodule

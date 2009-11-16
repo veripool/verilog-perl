@@ -2060,6 +2060,7 @@ unique_priorityE:		// IEEE: unique_priority + empty
 action_block:			// ==IEEE: action_block
 		stmt	%prec prLOWER_THAN_ELSE		{ }
 	|	stmt yELSE stmt				{ }
+	|	yELSE stmt				{ }
 	;
 
 caseStart:			// IEEE: part of case_statement
