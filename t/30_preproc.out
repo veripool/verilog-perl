@@ -247,5 +247,11 @@ verilog/inc1.v:193: // misparsed comma in submacro
 verilog/inc1.v:194:  
 verilog/inc1.v:195:  
 verilog/inc1.v:196:  
-verilog/inc1.v:197: x,y)--bee  submacro has comma paren
-verilog/inc1.v:198: `line 198 "verilog/inc1.v" 2
+verilog/inc1.v:197:  
+verilog/inc1.v:198: x,y)--bee  submacro has comma paren
+verilog/inc1.v:199: 
+verilog/inc1.v:200: //======================================================================
+verilog/inc1.v:201: // bug191
+verilog/inc1.v:202:  
+verilog/inc1.v:203: $display("bits %d %d", $bits(foo), `10);
+verilog/inc1.v:204: `line 204 "verilog/inc1.v" 2

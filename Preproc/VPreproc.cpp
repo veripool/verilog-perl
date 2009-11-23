@@ -320,6 +320,7 @@ string VPreprocImp::defineSubst(VPreDefRef* refp) {
 	    //cout << "CH "<<*cp<<"  an "<<argName<<"\n";
 	    if (!quote) {
 		if ( isalpha(*cp) || *cp=='_'
+		     || *cp=='$' // Won't replace system functions, since no $ in argValueByName
 		     || (argName!="" && (isdigit(*cp) || *cp=='$'))) {
 		    argName += *cp;
 		    continue;

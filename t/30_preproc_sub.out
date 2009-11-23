@@ -366,5 +366,13 @@ verilog/inc1.v:193:  /*CMT*/
 verilog/inc1.v:194:  
 verilog/inc1.v:195:  
 verilog/inc1.v:196:  
-verilog/inc1.v:197: DS<DS<x,y)>--DS<bee>>  submacro has comma paren
-verilog/inc1.v:198: `line 198 "verilog/inc1.v" 2
+verilog/inc1.v:197:  
+verilog/inc1.v:198: DS<DS<x,y)>--DS<bee>>  submacro has comma paren
+verilog/inc1.v:199: 
+COMMENT: //======================================================================
+verilog/inc1.v:200:  /*CMT*/ 
+COMMENT: // bug191
+verilog/inc1.v:201:  /*CMT*/ 
+verilog/inc1.v:202:  
+verilog/inc1.v:203: DS<$display("bits %d %d", $bits(foo), `10);>
+verilog/inc1.v:204: `line 204 "verilog/inc1.v" 2
