@@ -3368,7 +3368,7 @@ covergroup_declaration:		// ==IEEE: covergroup_declaration
 	;
 
 covergroup_declarationFront:	// IEEE: part of covergroup_declaration
-		yCOVERGROUP idAny 			{ PARSEP->symPushNew(VAstType::COVERGROUP,$1); }
+		yCOVERGROUP idAny 			{ PARSEP->symPushNew(VAstType::COVERGROUP,$2); }
 	;
 
 coverage_spec_or_optionListE:	// IEEE: [{coverage_spec_or_option}]

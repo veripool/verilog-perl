@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.22**
+
+****	Fix covergroup instantiation syntax error, bug192.  [Vesselin Kavalov]
+
 * Verilog::Language 3.222 2009/11/24
 
 ****	Fix missing ; in ContAssign::verilog_text, bug177.  [Nicolas Wilhelm]

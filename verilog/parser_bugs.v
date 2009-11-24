@@ -381,3 +381,12 @@ module bug183
    typedef logic [WIDTH-1:0] val_t;
    val_t [NLOG:0][NUM-1:0] tree;
 endmodule
+
+module bug192;
+   covergroup cg192 @(posedge cclk);
+      count_tag_busy: coverpoint countones_tag_busy {
+	 bins count[] = {[0:DEPTH]};
+      }
+   endgroup: cg192
+   cg192 cover_ts = new();
+endmodule

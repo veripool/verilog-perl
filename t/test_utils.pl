@@ -59,6 +59,8 @@ sub files_identical {
 	    if ($ENV{HARNESS_UPDATE_GOLDEN}) {  # Update golden files with current
 		warn "%Warning: HARNESS_UPDATE_GOLDEN set: cp $fn1 $fn2\n";
 		copy($fn1,$fn2);
+	    } else {
+		warn "To update reference: HARNESS_UPDATE_GOLDEN=1 ".join(" ",$0,@ARGV)."\n";
 	    }
 	    return 0;
 	}
