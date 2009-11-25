@@ -390,3 +390,5 @@ module bug192;
    endgroup: cg192
    cg192 cover_ts = new();
 endmodule
+
+function bit func_implied_in (bit i); g_bit = ~i; endfunction

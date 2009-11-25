@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.22**
 
+****	Add implied "input" to function var callbacks.
+
 ****	Fix covergroup instantiation syntax error, bug192.  [Vesselin Kavalov]
 
 * Verilog::Language 3.222 2009/11/24

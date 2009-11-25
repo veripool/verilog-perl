@@ -2384,7 +2384,8 @@ tf_item_declaration:		// ==IEEE: tf_item_declaration
 
 tf_port_listE:			// IEEE: tf_port_list + empty
 	//			// Empty covered by tf_port_item
-		{VARRESET_LIST(""); } tf_port_listList	{ VARRESET_NONLIST(""); }
+		{ VARRESET_LIST(""); VARIO("input"); }
+			tf_port_listList		{ VARRESET_NONLIST(""); }
 	;
 
 tf_port_listList:		// IEEE: part of tf_port_list
