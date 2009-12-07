@@ -50,6 +50,7 @@ if (! GetOptions (
 		  "modules!"		=> \$Opt_Modules,
 		  "input-files!"	=> \$Opt_InFiles,
 		  "resolve-files!"	=> \$Opt_ResolveFiles,
+		  "sv!"			=> sub { shift; Verilog::Language::language_standard("1800-2005"); },
 		  "language=s"		=> sub { shift; Verilog::Language::language_standard(shift); },
 		  "missing!"		=> \$Opt_Missing,
 		  "missing-modules!"	=> \$Opt_Missing_Modules,
@@ -321,6 +322,12 @@ for include directories or libraries.
 
 Specify the extensions that should be used for finding modules.  If for
 example module I<x> is referenced, look in I<x>.I<ext>.
+
+=item -sv
+
+Specifies SystemVerilog language features should be enabled; equivalent to
+"--language 1800-2005".  This option is selected by default, it exists for
+compatibility with other simulators.
 
 =item -y I<dir>
 
