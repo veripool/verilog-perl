@@ -1,8 +1,8 @@
 // -*- C++ -*-
 //*************************************************************************
-// DESCRIPTION: SystemC bison parser
+// DESCRIPTION: Verilog-Perl bison parser
 //
-// This file is part of SystemC-Perl.
+// This file is part of Verilog-Perl.
 //
 // Author: Wilson Snyder <wsnyder@wsnyder.org>
 //
@@ -1287,7 +1287,6 @@ enumNameStartE:			// IEEE: third part of enum_name_declaration
 		/* empty */				{ }
 	|	'=' constExpr				{ }
 	;
-
 
 //************************************************
 // Typedef
