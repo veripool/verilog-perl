@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix covergroup instantiation syntax error, bug192.  [Vesselin Kavalov]
 
+****	Fix parsing enums with implicit types.
+
 * Verilog::Language 3.222 2009/11/24
 
 ****	Fix missing ; in ContAssign::verilog_text, bug177.  [Nicolas Wilhelm]

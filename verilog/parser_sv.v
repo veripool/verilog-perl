@@ -279,3 +279,5 @@ module bugas;
       ASSERT_CHK: assert (0) else $error("%m -- not allowed %d", 0);
    end
 endmodule
+
+typedef enum [2:0] { ENUM_RANGED_VALUE } enum_ranged_t;
