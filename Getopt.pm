@@ -114,7 +114,7 @@ sub _parameter_parse {
 	}
 	elsif (($param =~ /^\+define\+([^+=]*)[+=](.*)$/
 		|| $param =~ /^\+define\+(.*?)()$/) && $self->{vcs_style}) {
-	    $self->define ($1, $2);
+	    $self->define($1,$2,undef,1);
 	}
 	# Ignored
 	elsif ($param =~ /^\+librescan$/ && $self->{vcs_style}) {
@@ -123,7 +123,7 @@ sub _parameter_parse {
 	### GCC style
 	elsif (($param =~ /^-D([^=]*)=(.*)$/
 		|| $param =~ /^-D([^=]*)()$/) && $self->{gcc_style}) {
-	    $self->define($1,$2);
+	    $self->define($1,$2,undef,1);
 	}
 	elsif (($param =~ /^-U([^=]*)$/) && $self->{gcc_style}) {
 	    $self->undef($1);
@@ -430,14 +430,25 @@ sub map_directories {
 #######################################################################
 # Getopt functions
 
+sub defcmdline {
+    my $self = shift;
+    my $token = shift;
+    my $val = $self->{defines}{$token};
+    if (ref $val) {
+	return $val->[2];
+    } else {
+	return undef;
+    }
+}
+
 sub defparams {
     my $self = shift;
     my $token = shift;
     my $val = $self->{defines}{$token};
     if (!defined $val) {
 	return undef;
-    } elsif (ref $val) {
-	return $val->[1];  # Has parameters, return param list
+    } elsif (ref $val && defined $val->[1]) {
+	return $val->[1];  # Has parameters hash, return param list or undef
     } else {
 	return 0;
     }
@@ -468,8 +479,9 @@ sub define {
     if (@_) {
 	my $token = shift;
 	my $value = shift;
-	my $params = shift||"";
-	print "Define $token $params= $value\n" if $Debug;
+	my $params = shift;
+	my $cmdline = shift;
+	print "Define $token ".($params||'')."= $value\n" if $Debug;
 	my $oldval = $self->{defines}{$token};
 	my $oldparams;
 	if (ref $oldval eq 'ARRAY') {
@@ -477,12 +489,12 @@ sub define {
 	}
 	if (defined $oldval
 	    && (($oldval ne $value)
-		|| (defined $oldparams && $oldparams ne $params))
+		|| (($oldparams||'') ne ($params||'')))
 	    && $self->{define_warnings}) {
 	    warn "%Warning: ".$self->fileline().": Redefining `$token\n";
 	}
-	if ($params) {
-	    $self->{defines}{$token} = [$value, $params];
+	if ($params || $cmdline) {
+	    $self->{defines}{$token} = [$value, $params, $cmdline];
 	} else {
 	    $self->{defines}{$token} = $value;
 	}
@@ -496,6 +508,15 @@ sub undef {
     #(defined $oldval or !$self->{define_warnings})
     #	or carp "%Warning: ".$self->fileline().": No definition to undef for $token,";
     delete $self->{defines}{$token};
+}
+
+sub undefineall {
+    my $self = shift;
+    foreach my $def (keys %{$self->{defines}}) {
+	if (!$self->defcmdline($def)) {
+	    delete $self->{defines}{$def};
+	}
+    }
 }
 
 sub remove_defines {
@@ -603,6 +624,10 @@ This method is called when a define is recognized.  The default behavior
 loads a hash that is used to fulfill define references.  This function may
 also be called outside parsing to predefine values.
 
+An optional third argument specifies parameters to the define, and a fourth
+argument if true indicates the define was set on the command line and
+should not be removed by `undefineall.
+
 =item $self->defparams ( $token )
 
 This method returns the parameter list of the define.  This will be defined,
@@ -669,6 +694,10 @@ Return string with any definitions in the token removed.
 Deletes a hash element that is used to fulfill define references.  This
 function may also be called outside parsing to erase a predefined value.
 
+=item $self->undefineall ()
+
+Deletes all non-command line definitions, for implementing `undefineall.
+
 =back
 
 =head1 DISTRIBUTION
@@ -689,5 +718,5 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 L<Verilog-Perl>,
 L<Verilog::Language>
-
-=cut
+=
+cut

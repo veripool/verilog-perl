@@ -201,3 +201,11 @@ Not a \`define
 // bug191
 `define bug191(bits) $display("bits %d %d", $bits(foo), `bits);
 `bug191(10)
+
+//======================================================================
+// 1800-2009
+`define UDALL
+`ifndef PREDEF_COMMAND_LINE `error "Test setup error, PREDEF_COMMAND_LINE pre-missing" `endif
+`undefineall
+`ifdef UDALL `error "undefineall failed" `endif
+`ifndef PREDEF_COMMAND_LINE `error "Deleted too much, no PREDEF_COMMAND_LINE" `endif

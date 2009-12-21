@@ -96,4 +96,7 @@ verilog/inc1.v:188:  got_escaped
 verilog/inc1.v:190: Not a \`define
 verilog/inc1.v:198: x,y)--bee submacro has comma paren
 verilog/inc1.v:203: $display("bits %d %d", $bits(foo), `10);
-verilog/inc1.v:204: `line 204 "verilog/inc1.v" 2
+verilog/inc1.v:208: `line 208 "verilog/inc1.v" 0
+verilog/inc1.v:210: `line 210 "verilog/inc1.v" 0
+verilog/inc1.v:211: `line 211 "verilog/inc1.v" 0
+verilog/inc1.v:212: `line 212 "verilog/inc1.v" 2

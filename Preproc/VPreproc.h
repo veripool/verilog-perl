@@ -81,6 +81,7 @@ public:
     virtual void include(string filename);	///< Request a include file be processed
     virtual void define(string name, string value, string params); ///< `define without any parameters
     virtual void undef(string name);		///< Remove a definition
+    virtual void undefineall();			///< Remove all non-command-line definitions
     virtual bool defExists(string name);	///< Return true if define exists
     virtual string defParams(string name);	///< Return parameter list if define exists
     virtual string defValue(string name);	///< Return value of given define (should exist)

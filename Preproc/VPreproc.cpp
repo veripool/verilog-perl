@@ -196,6 +196,9 @@ void VPreproc::include(string filename) {
 void VPreproc::undef(string define) {
     cout<<"UNDEF "<<define<<endl;
 }
+void VPreproc::undefineall() {
+    error("Undefineall not implemented\n");
+}
 bool VPreproc::defExists(string define) {
     return defParams(define)!="";
 }
@@ -239,6 +242,7 @@ const char* VPreprocImp::tokenName(int tok) {
     case VP_DEFREF	: return("DEFREF");
     case VP_DEFARG	: return("DEFARG");
     case VP_ERROR	: return("ERROR");
+    case VP_UNDEFINEALL	: return("UNDEFINEALL");
     default: return("?");
     }
 }
@@ -853,6 +857,12 @@ int VPreprocImp::getToken() {
 		error("`ifdef not terminated at EOF\n");
 	    }
 	    return tok;
+	case VP_UNDEFINEALL:
+	    if (!m_off) {
+		if (debug()) cout<<"Undefineall "<<endl;
+		m_preprocp->undefineall();
+	    }
+	    goto next_tok;
 	case VP_SYMBOL:
 	case VP_STRING:
 	case VP_TEXT: {

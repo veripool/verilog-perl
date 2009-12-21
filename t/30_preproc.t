@@ -38,6 +38,7 @@ sub prep {
     my $opt = new Verilog::Getopt;
     $opt->parameter (qw(
 			+incdir+verilog
+			+define+PREDEF_COMMAND_LINE
 			));
     return $opt;
 }

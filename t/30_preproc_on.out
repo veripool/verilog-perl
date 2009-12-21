@@ -308,4 +308,18 @@ verilog/inc1.v:200: //==========================================================
 verilog/inc1.v:201: // bug191
 verilog/inc1.v:202:  
 verilog/inc1.v:203: $display("bits %d %d", $bits(foo), `10);
-verilog/inc1.v:204: `line 204 "verilog/inc1.v" 2
+verilog/inc1.v:204: 
+verilog/inc1.v:205: //======================================================================
+verilog/inc1.v:206: // 1800-2009
+verilog/inc1.v:207:  
+verilog/inc1.v:208:     
+verilog/inc1.v:208: `line 208 "verilog/inc1.v" 0
+verilog/inc1.v:208: 
+verilog/inc1.v:209: 
+verilog/inc1.v:210:     
+verilog/inc1.v:210: `line 210 "verilog/inc1.v" 0
+verilog/inc1.v:210: 
+verilog/inc1.v:211:     
+verilog/inc1.v:211: `line 211 "verilog/inc1.v" 0
+verilog/inc1.v:211: 
+verilog/inc1.v:212: `line 212 "verilog/inc1.v" 2

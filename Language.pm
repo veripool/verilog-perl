@@ -255,6 +255,7 @@ foreach my $kwd (
     "`timescale",
     "`unconnected_drive",
     "`undef",			# Preprocessor
+    "`undefineall",		# Preprocessor
 
     # Commercial Extensions
     "`accelerate",		# Verilog-XL compatibility
