@@ -8,7 +8,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 19 }
+BEGIN { plan tests => 23 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Language;
@@ -18,7 +18,11 @@ ok (Verilog::Language::is_keyword("input"));
 ok (!Verilog::Language::is_keyword("not_input"));
 ok (Verilog::Language::is_compdirect("`define"));
 
-ok (Verilog::Language::language_standard() eq '1800-2005');
+ok (Verilog::Language::language_standard() eq '1800-2009');
+ok (Verilog::Language::language_standard('1800-2009') eq '1800-2009');
+ok (Verilog::Language::is_keyword("checker"));
+ok (Verilog::Language::language_standard('1800-2005') eq '1800-2005');
+ok (!Verilog::Language::is_keyword("checker"));
 ok (Verilog::Language::is_keyword("do"));
 ok (Verilog::Language::language_standard('1364-2005') eq '1364-2005');
 ok (Verilog::Language::is_keyword("uwire"));

@@ -51,7 +51,7 @@ if (! GetOptions (
 		  "modules!"		=> \$Opt_Modules,
 		  "input-files!"	=> \$Opt_InFiles,
 		  "resolve-files!"	=> \$Opt_ResolveFiles,
-		  "sv!"			=> sub { shift; Verilog::Language::language_standard("1800-2005"); },
+		  "sv!"			=> sub { shift; Verilog::Language::language_standard("1800-2009"); },
 		  "language=s"		=> sub { shift; Verilog::Language::language_standard(shift); },
 		  "missing!"		=> \$Opt_Missing,
 		  "missing-modules!"	=> \$Opt_Missing_Modules,
@@ -327,7 +327,7 @@ example module I<x> is referenced, look in I<x>.I<ext>.
 =item -sv
 
 Specifies SystemVerilog language features should be enabled; equivalent to
-"--language 1800-2005".  This option is selected by default, it exists for
+"--language 1800-2009".  This option is selected by default, it exists for
 compatibility with other simulators.
 
 =item -y I<dir>
@@ -358,7 +358,7 @@ Show the module name of all cells in top-down order.
 Show all input filenames.  Copying all of these files should result in only
 those files needed to represent the entire design.
 
-=item --language <1364-1995|1364-2001|1364-2005|1800-2005>
+=item --language <1364-1995|1364-2001|1364-2005|1800-2005|1800-2009>
 
 Set the language standard for the files.  This determines which tokens are
 signals versus keywords, such as the ever-common "do" (data-out signal,

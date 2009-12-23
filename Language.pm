@@ -34,7 +34,7 @@ General functions will be added as needed.
 
 Return true if the given symbol string is a Verilog reserved keyword.
 Value indicates the language standard as per the `begin_keywords macro,
-'1364-1995', '1364-2001', '1364-2005', or '1800-2005'.
+'1364-1995', '1364-2001', '1364-2005', '1800-2005' or '1800-2009'.
 
 =item Verilog::Language::is_compdirect ($symbol_string)
 
@@ -49,8 +49,8 @@ Return true if the given symbol is a built in gate primitive; for example
 
 Sets the language standard to indicate what are keywords.  If undef, all
 standards apply.  The year is indicates the language standard as per the
-`begin_keywords macro, '1364-1995', '1364-2001', '1364-2005', or
-'1800-2005'.
+`begin_keywords macro, '1364-1995', '1364-2001', '1364-2005', '1800-2005'
+or '1800-2009'.
 
 =item Verilog::Language::number_bigint ($number_string)
 
@@ -194,6 +194,13 @@ foreach my $kwd (qw(
 		    wait_order wildcard with within
 		    )) { $Keywords{'1800-2005'}{$kwd} = '1800-2005'; }
 
+foreach my $kwd (qw(
+		    accept_on checker endchecker eventually global implies
+		    let nexttime reject_on restrict s_always s_eventually
+		    s_nexttime s_until s_until_with strong sync_accept_on
+		    sync_reject_on unique0 until until_with untyped weak
+		    )) { $Keywords{'1800-2009'}{$kwd} = '1800-2009'; }
+
 foreach my $kwd (
     # Speced
     "`celldefine",
@@ -247,7 +254,7 @@ foreach my $kwd (
 		 "`pragma",
 		 ) { $Keywords{$kwd}{'1364-2005'} = $Compdirect{$kwd} = '1364-2005'; }
 
-language_standard ('1800-2005');  # Default standard
+language_standard ('1800-2009');  # Default standard
 
 foreach my $kwd (qw(
 		    and buf bufif0 bufif1 cmos nand nmos nor not notif0
@@ -274,6 +281,9 @@ sub language_standard {
 	} elsif ($standard eq 'sv31' || $standard eq '1800-2005') {
 	    $Standard = '1800-2005';
 	    @subsets = ('1800-2005', '1364-2005', '1364-2001', '1364-1995');
+	} elsif ($standard eq 'latest' || $standard eq '1800-2009') {
+	    $Standard = '1800-2009';
+	    @subsets = ('1800-2009', '1800-2005', '1364-2005', '1364-2001', '1364-1995');
 	} else {
 	    croak "%Error: Verilog::Language::language_standard passed bad value: $standard,";
 	}
