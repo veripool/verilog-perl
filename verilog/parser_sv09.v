@@ -12,3 +12,5 @@ endmodule
 module mantis907_default_parameter
   #(REQUIRED);
 endmodule
+module mantis1619_default_input (input integer deflt = 10);
+endmodule

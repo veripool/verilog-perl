@@ -713,3 +713,7 @@ verilog/parser_sv09.v:012: MODULE  'module' 'mantis907_default_parameter' undef 
 verilog/parser_sv09.v:013: VAR  'parameter' 'REQUIRED' 'module' '' '' '' ''
 verilog/parser_sv09.v:013: PORT  'REQUIRED' 'module' '' '' '' '1'
 verilog/parser_sv09.v:014: ENDMODULE  'endmodule'
+verilog/parser_sv09.v:015: MODULE  'module' 'mantis1619_default_input' undef '0'
+verilog/parser_sv09.v:015: VAR  'port' 'deflt' 'module' '' 'integer' '' '10'
+verilog/parser_sv09.v:015: PORT  'deflt' 'module' 'input' 'integer' '' '1'
+verilog/parser_sv09.v:016: ENDMODULE  'endmodule'
