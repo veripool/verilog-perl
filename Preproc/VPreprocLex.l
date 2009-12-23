@@ -39,11 +39,13 @@
 
 VPreprocLex* VPreprocLex::s_currentLexp = NULL;	// Current lexing point
 
-#define linenoInc()  { VPreprocLex::s_currentLexp->linenoInc(); }
-bool pedantic() { return VPreprocLex::s_currentLexp->m_pedantic; }
-bool keepWhitespace() { return VPreprocLex::s_currentLexp->m_keepWhitespace; }
-void yyerror(char* msg) { VPreprocLex::s_currentLexp->m_curFilelinep->error(msg); }
-void appendDefValue(const char* t,int l) { VPreprocLex::s_currentLexp->appendDefValue(t,l); }
+#define LEXP VPreprocLex::s_currentLexp
+
+#define linenoInc()  { LEXP->linenoInc(); }
+bool pedantic() { return LEXP->m_pedantic; }
+bool keepWhitespace() { return LEXP->m_keepWhitespace; }
+void yyerror(char* msg) { LEXP->m_curFilelinep->error(msg); }
+void appendDefValue(const char* t,int l) { LEXP->appendDefValue(t,l); }
 
 void yyerrorf(const char* format, ...) {
     char msg[1024];
@@ -81,7 +83,7 @@ drop		[\032]
 	/**************************************************************/
 %%
 
-<INITIAL>^{ws}*"`line"{ws}+.*{crnl}	{ VPreprocLex::s_currentLexp->lineDirective(yytext);
+<INITIAL>^{ws}*"`line"{ws}+.*{crnl}	{ LEXP->lineDirective(yytext);
 					  return(VP_LINE); }
 
 	/* Special directives we recognize */
@@ -98,13 +100,13 @@ drop		[\032]
 	/* Optional directives we recognize */
 <INITIAL>"`__FILE__"	{ if (!pedantic()) {
 			     static string rtnfile;
-			     rtnfile = '"'; rtnfile += VPreprocLex::s_currentLexp->m_curFilelinep->cfilename();
+			     rtnfile = '"'; rtnfile += LEXP->m_curFilelinep->cfilename();
 			     rtnfile += '"'; yytext=(char*)rtnfile.c_str(); yyleng = rtnfile.length();
 			     return (VP_STRING);
 	                  } else return(VP_DEFREF); }
 <INITIAL>"`__LINE__"	{ if (!pedantic()) {
 	                     static char buf[10];
-			     sprintf(buf, "%d",VPreprocLex::s_currentLexp->m_curFilelinep->lineno());
+			     sprintf(buf, "%d",LEXP->m_curFilelinep->lineno());
 	                     yytext = buf; yyleng = strlen(yytext); return (VP_TEXT);
 	                  } else return(VP_DEFREF); }
 <INITIAL>"`error"	{ if (!pedantic()) return (VP_ERROR); else return(VP_DEFREF); }
@@ -117,7 +119,7 @@ drop		[\032]
 <STRMODE>{backslash}{crnl}	{ linenoInc(); yymore(); }
 <STRMODE>{backslash}.	{ yymore(); }
 <STRMODE>{quote} 	{ yy_pop_state();
-			  if (VPreprocLex::s_currentLexp->m_parenLevel) appendDefValue(yytext,yyleng);
+			  if (LEXP->m_parenLevel) appendDefValue(yytext,yyleng);
 			  else return (VP_STRING); }
 
 	/* Protected blocks */
@@ -172,26 +174,26 @@ drop		[\032]
 <ARGMODE><<EOF>>	{ yyerrorf("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
 <ARGMODE>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
-<ARGMODE>[{\[]		{ VPreprocLex::s_currentLexp->m_parenLevel++;
+<ARGMODE>[{\[]		{ LEXP->m_parenLevel++;
 			  appendDefValue(yytext,yyleng); }
-<ARGMODE>[}\]]		{ VPreprocLex::s_currentLexp->m_parenLevel--;
+<ARGMODE>[}\]]		{ LEXP->m_parenLevel--;
 			  appendDefValue(yytext,yyleng); }
-<ARGMODE>[(]		{ VPreprocLex::s_currentLexp->m_parenLevel++;
+<ARGMODE>[(]		{ LEXP->m_parenLevel++;
 			  // Note paren level 0 means before "(" of starting args
 			  // Level 1 means "," between arguments
 			  // Level 2+ means one argument's internal ()
-			  if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
+			  if (LEXP->m_parenLevel>1) {
 			      appendDefValue(yytext,yyleng);
 			  } else {
 			      return (VP_TEXT);
 			}}
-<ARGMODE>[)]		{ VPreprocLex::s_currentLexp->m_parenLevel--;
-			  if (VPreprocLex::s_currentLexp->m_parenLevel>0) {
+<ARGMODE>[)]		{ LEXP->m_parenLevel--;
+			  if (LEXP->m_parenLevel>0) {
 			      appendDefValue(yytext,yyleng);
 			  } else {
 			      yy_pop_state(); return (VP_DEFARG);
 			}}
-<ARGMODE>[,]		{ if (VPreprocLex::s_currentLexp->m_parenLevel>1) {
+<ARGMODE>[,]		{ if (LEXP->m_parenLevel>1) {
 			      appendDefValue(yytext,yyleng);
 			  } else {
 			      yy_pop_state(); return (VP_DEFARG);
