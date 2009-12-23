@@ -1771,6 +1771,9 @@ param_assignment:		// ==IEEE: param_assignment
 	//			// constant_param_expression: '$' is in expr
 		id/*new-parameter*/ sigAttrListE '=' exprOrDataType
 			{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, "", $4); }
+	//			// only legal in port list; throws error if not set
+	|	id/*new-parameter*/ sigAttrListE
+			{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, "", ""); NEED_S09($<fl>1,"optional parameter defaults"); }
 	;
 
 list_of_param_assignments:	// ==IEEE: list_of_param_assignments

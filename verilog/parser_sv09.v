@@ -8,4 +8,7 @@ module mantis1134_decoder
    (input [BITS-1:0] A, output reg [OUT_BITS-1:0] Y);
    assign Y = 1 << A;
 endmodule
-
+// 1800-2009 mantis907
+module mantis907_default_parameter
+  #(REQUIRED);
+endmodule
