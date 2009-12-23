@@ -569,7 +569,8 @@ description:			// ==IEEE: description
 	;
 
 timeunits_declaration:		// ==IEEE: timeunits_declaration
-		yTIMEUNIT       yaTIMENUM ';'		{ }
+		yTIMEUNIT yaTIMENUM ';'			{ }
+	|	yTIMEUNIT yaTIMENUM '/' yaTIMENUM ';'	{ NEED_S09($<fl>1,"timeunit /"); }
 	| 	yTIMEPRECISION  yaTIMENUM ';'		{ }
 	;
 
