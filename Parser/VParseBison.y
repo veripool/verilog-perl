@@ -1314,7 +1314,7 @@ packedSigningE:
 
 // IEEE: part of data_type
 enumDecl<str>:
-		yENUM enum_base_typeE '{' enum_nameList '}' { $$=$2; }
+		yENUM enum_base_typeE '{' enum_nameList '}' rangeListE { $$=$2; }
 	;
 
 enum_base_typeE<str>:	// IEEE: enum_base_type
