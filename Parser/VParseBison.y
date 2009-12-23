@@ -1889,6 +1889,8 @@ senitemEdge:			// IEEE: part of event_expression
 	|	yPOSEDGE expr yIFF expr			{ }
 	|	yNEGEDGE expr				{ }
 	|	yNEGEDGE expr yIFF expr			{ }
+	|	yEDGE expr				{ NEED_S09($<fl>1,"edge"); }
+	|	yEDGE expr yIFF expr			{ NEED_S09($<fl>1,"edge"); }
 	;
 
 //************************************************
@@ -3186,6 +3188,8 @@ clocking_skew:			// ==IEEE: clocking_skew
 	|	yPOSEDGE delay_control			{ }
 	|	yNEGEDGE				{ }
 	|	yNEGEDGE delay_control			{ }
+	|	yEDGE					{ NEED_S09($<fl>1,"edge"); }
+	|	yEDGE delay_control			{ NEED_S09($<fl>1,"edge"); }
 	|	delay_control				{ }
 	;
 
