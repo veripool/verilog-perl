@@ -1028,6 +1028,7 @@ parameter_declarationFront:	// IEEE: parameter_declaration w/o assignment
 parameter_port_declarationFront: // IEEE: parameter_port_declaration w/o assignment
 	//			// IEEE: parameter_declaration (minus assignment)
 		parameter_declarationFront		{ }
+	|	local_parameter_declarationFront	{ /*NEED_S09(CURLINE(),"port localparams");*/ }
 	//
 	|	data_type				{ VARDTYPE($1); }
 	|	yTYPE 					{ VARDTYPE($1); }
