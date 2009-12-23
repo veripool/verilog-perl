@@ -115,6 +115,11 @@ static void ERRSVKWD(VFileLine* fileline, const string& tokname) {
     if (!toldonce++) fileline->error("Modify the Verilog-2001 code to avoid SV keywords, or use `begin_keywords or --language.");
 }
 
+static void NEED_S09(VFileLine*, const string&) {
+    //Let lint tools worry about it
+    //fileline->error((string)"Advanced feature: \""+tokname+"\" is a 1800-2009 construct, but used under --lanugage 1800-2005 or earlier.");
+}
+
 %}
 
 %pure_parser
@@ -491,7 +496,7 @@ static void ERRSVKWD(VFileLine* fileline, const string& tokname) {
 
 %left		'{' '}'
 //%nonassoc	'=' yP_PLUSEQ yP_MINUSEQ yP_TIMESEQ yP_DIVEQ yP_MODEQ yP_ANDEQ yP_OREQ yP_XOREQ yP_SLEFTEQ yP_SRIGHTEQ yP_SSRIGHTEQ yP_COLONEQ yP_COLONDIV yP_LTE
-%right		yP_MINUSGT
+%right		yP_MINUSGT yP_LTMINUSGT
 %right		'?' ':'
 %left		yP_OROR
 %left		yP_ANDAND
@@ -2107,6 +2112,7 @@ unique_priorityE:		// IEEE: unique_priority + empty
 		/*empty*/				{ }
 	|	yPRIORITY				{ }
 	|	yUNIQUE					{ }
+	|	yUNIQUE0				{ NEED_S09($<fl>1, "unique0"); }
 	;
 
 action_block:			// ==IEEE: action_block
