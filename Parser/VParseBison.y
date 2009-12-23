@@ -584,9 +584,10 @@ package_declaration:		// ==IEEE: package_declaration
 	;
 
 packageFront:
-		yPACKAGE idAny ';'
-			{ PARSEP->symPushNew(VAstType::PACKAGE, $2);
-			  PARSEP->packageCb($<fl>1,$1, $2); }
+	//			// Lifetime is 1800-2009
+		yPACKAGE lifetimeE idAny ';'
+			{ PARSEP->symPushNew(VAstType::PACKAGE, $3);
+			  PARSEP->packageCb($<fl>1,$1, $3); }
 	;
 
 package_itemListE:		// IEEE: [{ package_item }]
