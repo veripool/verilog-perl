@@ -2678,6 +2678,15 @@ expr<str>:			// IEEE: part of expression/constant_expression/primary
 	//
 	//			// IEEE: multiple_concatenation/constant_multiple_concatenation
 	|	'{' constExpr '{' cateList '}' '}'	{ $<fl>$=$<fl>1; $$ = "{"+$2+"{"+$4+"}}"; }
+	//			// IEEE: multiple_concatenation/constant_multiple_concatenation+ constant_range_expression (1800-2009)
+	|	'{' constExpr '{' cateList '}' '}' '[' expr ']'
+			{ $<fl>$=$<fl>1; $$ = "{"+$2+"{"+$4+"}}["+$8+"]";        NEED_S09($<fl>6,"{}[]"); }
+	|	'{' constExpr '{' cateList '}' '}' '[' expr ':' expr ']'
+			{ $<fl>$=$<fl>1; $$ = "{"+$2+"{"+$4+"}}["+$8+$9+$10+"]"; NEED_S09($<fl>6,"{}[]"); }
+	|	'{' constExpr '{' cateList '}' '}' '[' expr yP_PLUSCOLON  expr ']'
+			{ $<fl>$=$<fl>1; $$ = "{"+$2+"{"+$4+"}}["+$8+$9+$10+"]"; NEED_S09($<fl>6,"{}[]"); }
+	|	'{' constExpr '{' cateList '}' '}' '[' expr yP_MINUSCOLON expr ']'
+			{ $<fl>$=$<fl>1; $$ = "{"+$2+"{"+$4+"}}["+$8+$9+$10+"]"; NEED_S09($<fl>6,"{}[]"); }
 	//
 	|	function_subroutine_callNoMethod	{ $$ = $1; }
 	//			// method_call
@@ -2749,6 +2758,11 @@ exprOkLvalue<str>:		// expression that's also OK to use as a variable_lvalue
 		~l~exprScope				{ $<fl>$=$<fl>1; $$ = $1; }
 	//			// IEEE: concatenation/constant_concatenation
 	|	'{' cateList '}'			{ $<fl>$=$<fl>1; $$ = "{"+$2+"}"; }
+	//			// IEEE: concatenation/constant_concatenation+ constant_range_expression (1800-2009)
+	|	'{' cateList '}' '[' expr ']'				{ $<fl>$=$<fl>1; $$ = "{"+$2+"}["+$5+"]";       NEED_S09($<fl>4,"{}[]"); }
+	|	'{' cateList '}' '[' expr ':' expr ']'			{ $<fl>$=$<fl>1; $$ = "{"+$2+"}["+$5+$6+$7+"]"; NEED_S09($<fl>4,"{}[]"); }
+	|	'{' cateList '}' '[' expr yP_PLUSCOLON  expr ']'	{ $<fl>$=$<fl>1; $$ = "{"+$2+"}["+$5+$6+$7+"]"; NEED_S09($<fl>4,"{}[]"); }
+	|	'{' cateList '}' '[' expr yP_MINUSCOLON expr ']'	{ $<fl>$=$<fl>1; $$ = "{"+$2+"}["+$5+$6+$7+"]"; NEED_S09($<fl>4,"{}[]"); }
 	//			// IEEE: assignment_pattern_expression
 	//			// IEEE: [ assignment_pattern_expression_type ] == [ ps_type_id /ps_paremeter_id]
 	//			// We allow more here than the spec requires
