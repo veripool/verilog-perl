@@ -123,6 +123,7 @@ verilog/inc_def09.v
 verilog/inc_ifdef.v
 verilog/parser_bugs.v
 verilog/parser_sv.v
+verilog/parser_sv09.v
 verilog/pinorder.v
 verilog/pli.v
 verilog/test.v

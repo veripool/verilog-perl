@@ -70,6 +70,7 @@ read_test("verilog/v_hier_sub.v", $dump_fh);
 read_test("verilog/parser_bugs.v", $dump_fh);
 read_test("verilog/pinorder.v", $dump_fh);
 read_test("verilog/parser_sv.v", $dump_fh);
+read_test("verilog/parser_sv09.v", $dump_fh);
 ok(1);
 $dump_fh->close();
 

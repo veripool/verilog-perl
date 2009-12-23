@@ -403,8 +403,12 @@ static void NEED_S09(VFileLine*, const string&) {
 %token<str>		yXNOR		"xnor"
 %token<str>		yXOR		"xor"
 
+%token<str>		yD_ERROR	"$error"
+%token<str>		yD_FATAL	"$fatal"
+%token<str>		yD_INFO		"$info"
 %token<str>		yD_ROOT		"$root"
 %token<str>		yD_UNIT		"$unit"
+%token<str>		yD_WARNING	"$warning"
 
 %token<str>		yP_TICK		"'"
 %token<str>		yP_TICKBRA	"'{"
@@ -916,6 +920,7 @@ program_generate_item:		// ==IEEE: program_generate_item
 		loop_generate_construct			{ }
 	|	conditional_generate_construct		{ }
 	|	generate_region				{ }
+	|	elaboration_system_task			{ }
 	;
 
 extern_tf_declaration:		// ==IEEE: extern_tf_declaration
@@ -1498,6 +1503,7 @@ module_common_item:		// ==IEEE: module_common_item
 	|	yALWAYS stmtBlock			{ }
 	|	loop_generate_construct			{ }
 	|	conditional_generate_construct		{ }
+	|	elaboration_system_task			{ }
 	//
 	|	error ';'				{ }
 	;
@@ -2317,10 +2323,31 @@ system_t_call<str>:		// IEEE: system_tf_call (as task)
 	;
 
 system_f_call<str>:		// IEEE: system_tf_call (as func)
-		ygenSYSCALL				{ $<fl>$=$<fl>1; $$ = $1; }
-	|	ygenSYSCALL '(' ')'			{ $<fl>$=$<fl>1; $$ = $1; }
+		ygenSYSCALL parenE			{ $<fl>$=$<fl>1; $$ = $1; }
 	//			// Allow list of data_type to support "x,,,y"
 	|	ygenSYSCALL '(' exprOrDataTypeList ')'	{ $<fl>$=$<fl>1; $$ = $1+"("+$3+")"; }
+	//			// Standard doesn't explicity list system calls
+	//			// But these match elaboration calls in 1800-2009
+	|	yD_FATAL parenE				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	yD_FATAL '(' exprOrDataTypeList ')'	{ $<fl>$=$<fl>1; $$ = $1+"("+$3+")"; }
+	|	yD_ERROR parenE				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	yD_ERROR '(' exprOrDataTypeList ')'	{ $<fl>$=$<fl>1; $$ = $1+"("+$3+")"; }
+	|	yD_WARNING parenE			{ $<fl>$=$<fl>1; $$ = $1; }
+	|	yD_WARNING '(' exprOrDataTypeList ')'	{ $<fl>$=$<fl>1; $$ = $1+"("+$3+")"; }
+	|	yD_INFO parenE				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	yD_INFO '(' exprOrDataTypeList ')'	{ $<fl>$=$<fl>1; $$ = $1+"("+$3+")"; }
+	;
+
+elaboration_system_task<str>:	// IEEE: elaboration_system_task (1800-2009)
+	//			// $fatal first argument is exit number, must be constant
+		yD_FATAL parenE ';'			{ $<fl>$=$<fl>1; $$ = $1;            NEED_S09($<fl>1,"elaboration system tasks"); }
+	|	yD_FATAL '(' exprOrDataTypeList ')' ';'	{ $<fl>$=$<fl>1; $$ = $1+"("+$3+")"; NEED_S09($<fl>1,"elaboration system tasks"); }
+	|	yD_ERROR parenE	';'			{ $<fl>$=$<fl>1; $$ = $1;            NEED_S09($<fl>1,"elaboration system tasks"); }
+	|	yD_ERROR '(' exprOrDataTypeList ')' ';'	{ $<fl>$=$<fl>1; $$ = $1+"("+$3+")"; NEED_S09($<fl>1,"elaboration system tasks"); }
+	|	yD_WARNING parenE ';'			{ $<fl>$=$<fl>1; $$ = $1;            NEED_S09($<fl>1,"elaboration system tasks"); }
+	|	yD_WARNING '(' exprOrDataTypeList ')' ';' {$<fl>$=$<fl>1; $$ = $1+"("+$3+")"; NEED_S09($<fl>1,"elaboration system tasks"); }
+	|	yD_INFO parenE ';'			{ $<fl>$=$<fl>1; $$ = $1;            NEED_S09($<fl>1,"elaboration system tasks"); }
+	|	yD_INFO '(' exprOrDataTypeList ')' ';'	{ $<fl>$=$<fl>1; $$ = $1+"("+$3+")"; NEED_S09($<fl>1,"elaboration system tasks"); }
 	;
 
 list_of_argumentsE<str>:	// IEEE: [list_of_arguments]
@@ -2495,6 +2522,11 @@ tf_port_itemAssignment:		// IEEE: part of tf_port_item, which has assignment
 //				// IEEE: built_in_method_call
 //				//   method_call_root not needed, part of expr resolution
 //				// What's left is below array_methodNoRoot
+
+parenE:
+		/* empty */				{ }
+	|	'(' ')'					{ }
+	;
 
 array_methodNoRoot<str>:	// ==IEEE: built_in_method_call without root
 	//			//   method_call_root not needed, part of expr resolution

@@ -251,8 +251,12 @@ word	[a-zA-Z0-9_]+
   /* System Verilog 2005 */
 <S05,S09>{
   /*     System Tasks */
+  "$error"		{ FL; VALTEXT; CALLBACK(keywordCb); return yD_ERROR; }
+  "$fatal"		{ FL; VALTEXT; CALLBACK(keywordCb); return yD_FATAL; }
+  "$info"		{ FL; VALTEXT; CALLBACK(keywordCb); return yD_INFO; }
   "$root"		{ FL; VALTEXT; CALLBACK(keywordCb); return yD_ROOT; }
   "$unit"		{ FL; VALTEXT; CALLBACK(keywordCb); return yD_UNIT; }
+  "$warning"		{ FL; VALTEXT; CALLBACK(keywordCb); return yD_WARNING; }
   /*     Keywords */
   "alias"		{ FL; VALTEXT; CALLBACK(keywordCb); return yALIAS; }
   "always_comb"		{ FL; VALTEXT; CALLBACK(keywordCb); return yALWAYS; }
