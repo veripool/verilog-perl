@@ -119,7 +119,7 @@ drop		[\032]
 <STRMODE>{backslash}{crnl}	{ linenoInc(); yymore(); }
 <STRMODE>{backslash}.	{ yymore(); }
 <STRMODE>{quote} 	{ yy_pop_state();
-			  if (LEXP->m_parenLevel) appendDefValue(yytext,yyleng);
+			  if (LEXP->m_parenLevel || LEXP->m_formalLevel) { appendDefValue(yytext,yyleng); yyleng=0; }
 			  else return (VP_STRING); }
 
 	/* Protected blocks */
@@ -138,21 +138,24 @@ drop		[\032]
 
 	/* Reading definition formal parenthesis (or not) to begin formal arguments */
 	/* Note '(' must IMMEDIATELY follow definition name */
-<DEFFPAR>[(]		{ appendDefValue("(",1); BEGIN(DEFFORM); }
+<DEFFPAR>[(]		{ appendDefValue("(",1); LEXP->m_formalLevel=1; BEGIN(DEFFORM); }
 <DEFFPAR>{crnl}		{ yy_pop_state(); unput('\n'); yyleng=0; return VP_DEFFORM; } /* DEFVAL will later grab the return */
 <DEFFPAR><<EOF>>	{ yy_pop_state(); return VP_DEFFORM; }  /* empty formals */
 <DEFFPAR>.		{ yy_pop_state(); unput(yytext[yyleng-1]); yyleng=0; return VP_DEFFORM; }  /* empty formals */
 
 	/* Reading definition formals */
-<DEFFORM>[(]		{ yy_pop_state(); yyerrorf("Extra ( in define formal arguments.\n"); yyleng=0; return VP_DEFFORM; }
-<DEFFORM>[)]		{ yy_pop_state(); appendDefValue(yytext,yyleng); yyleng=0; return VP_DEFFORM; }
+<DEFFORM>[(]		{ appendDefValue(yytext,yyleng); yyleng=0; ++LEXP->m_formalLevel; }
+<DEFFORM>[)]		{ appendDefValue(yytext,yyleng); yyleng=0; if ((--LEXP->m_formalLevel)==0) { yy_pop_state(); return VP_DEFFORM; } }
 <DEFFORM>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <DEFFORM>"//"[^\n\r]*	{ return (VP_COMMENT);}
-<DEFFORM>{drop}	{ }
+<DEFFORM>{drop}		{ }
 <DEFFORM><<EOF>>	{ linenoInc(); yy_pop_state(); yyerrorf("Unterminated ( in define formal arguments."); yyleng=0; return VP_DEFFORM; }
 <DEFFORM>{crnl}		{ linenoInc(); appendDefValue((char*)"\n",1); } /* Include return so can maintain output line count */
 <DEFFORM>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\n",1); } /* Include return so can maintain output line count */
-<DEFFORM>[^\/\*\n\r\\()]+	|
+<DEFFORM>{quote}	{ yy_push_state(STRMODE); yymore(); }
+<DEFFORM>[{\[]		{ LEXP->m_formalLevel++; appendDefValue(yytext,yyleng); }
+<DEFFORM>[}\]]		{ LEXP->m_formalLevel--; appendDefValue(yytext,yyleng); }
+<DEFFORM>[^\/\*\n\r\\(){}\[\]\"]+	|
 <DEFFORM>[\\][^\n\r]	|
 <DEFFORM>.		{ appendDefValue(yytext,yyleng); }
 
@@ -174,10 +177,8 @@ drop		[\032]
 <ARGMODE><<EOF>>	{ yyerrorf("EOF in define argument list\n"); yyleng = 0; yyterminate(); }
 <ARGMODE>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
-<ARGMODE>[{\[]		{ LEXP->m_parenLevel++;
-			  appendDefValue(yytext,yyleng); }
-<ARGMODE>[}\]]		{ LEXP->m_parenLevel--;
-			  appendDefValue(yytext,yyleng); }
+<ARGMODE>[{\[]		{ LEXP->m_parenLevel++; appendDefValue(yytext,yyleng); }
+<ARGMODE>[}\]]		{ LEXP->m_parenLevel--; appendDefValue(yytext,yyleng); }
 <ARGMODE>[(]		{ LEXP->m_parenLevel++;
 			  // Note paren level 0 means before "(" of starting args
 			  // Level 1 means "," between arguments

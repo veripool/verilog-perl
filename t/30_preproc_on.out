@@ -1,8 +1,80 @@
-verilog/inc_ifdef.v:1: `line 1 "verilog/inc1.v" 1
-verilog/inc_ifdef.v:1: `line 1 "verilog/inc1.v" 0
-verilog/inc_ifdef.v:1: `line 1 "verilog/inc2.v" 1
-verilog/inc_ifdef.v:1: `line 1 "verilog/inc2.v" 0
-verilog/inc_ifdef.v:1: `line 1 "verilog/inc_ifdef.v" 1
+verilog/inc_def09.v:1: `line 1 "verilog/inc1.v" 1
+verilog/inc_def09.v:1: `line 1 "verilog/inc1.v" 0
+verilog/inc_def09.v:1: `line 1 "verilog/inc2.v" 1
+verilog/inc_def09.v:1: `line 1 "verilog/inc2.v" 0
+verilog/inc_def09.v:1: `line 1 "verilog/inc_ifdef.v" 1
+verilog/inc_def09.v:1: `line 1 "verilog/inc_ifdef.v" 0
+verilog/inc_def09.v:1: `line 1 "verilog/inc_def09.v" 1
+verilog/inc_def09.v:1: 
+verilog/inc_def09.v:2: 
+verilog/inc_def09.v:3: // Definitions as speced
+verilog/inc_def09.v:4: // Note there are trailing spaces, which spec doesn't show properly
+verilog/inc_def09.v:5:  
+verilog/inc_def09.v:6: 'initial $display("start", "msg1"  , "msg2" , "end");'
+verilog/inc_def09.v:7: 'initial $display("start", "msg1"  , "msg2" , "end");'
+verilog/inc_def09.v:8: 'initial $display("start", " msg1" , , "end");'
+verilog/inc_def09.v:9: 'initial $display("start", " msg1" , , "end");'
+verilog/inc_def09.v:10: 'initial $display("start",  , "msg2 ", "end");'
+verilog/inc_def09.v:11: 'initial $display("start",  , "msg2 ", "end");'
+verilog/inc_def09.v:12: 'initial $display("start",  , , "end");'
+verilog/inc_def09.v:13: 'initial $display("start",  , , "end");'
+verilog/inc_def09.v:14: 'initial $display("start",  , , "end");'
+verilog/inc_def09.v:15: 'initial $display("start",  , , "end");'
+verilog/inc_def09.v:16: //`D("msg1") // ILLEGAL: only one argument
+verilog/inc_def09.v:17: //`D()       // ILLEGAL: only one empty argument
+verilog/inc_def09.v:18: //`D(,,)     // ILLEGAL: more actual than formal arguments
+verilog/inc_def09.v:19: 
+verilog/inc_def09.v:20: // Defaults:
+verilog/inc_def09.v:21:  
+verilog/inc_def09.v:22: '$display(5,,2,,3 );'
+verilog/inc_def09.v:23: '$display(5,,2,,3);'
+verilog/inc_def09.v:24: '$display(1 ,,"B",,3 );'
+verilog/inc_def09.v:25: '$display(1 ,,"B",,3 );'
+verilog/inc_def09.v:26: '$display(5,,2,,);'
+verilog/inc_def09.v:27: '$display(5,,2,,);'
+verilog/inc_def09.v:28: //`MACRO1 ( 1 )  // ILLEGAL: b and c omitted, no default for c
+verilog/inc_def09.v:29: 
+verilog/inc_def09.v:30:  
+verilog/inc_def09.v:31: '$display(1,,,,3);'
+verilog/inc_def09.v:32: '$display(5,,,,"C");'
+verilog/inc_def09.v:33: '$display(5,,2,,"C");'
+verilog/inc_def09.v:34: '$display(5,,2,,"C");'
+verilog/inc_def09.v:35: '$display(5,,2,,"C");'
+verilog/inc_def09.v:36: '$display(5,,2,,"C");'
+verilog/inc_def09.v:37: 
+verilog/inc_def09.v:38:  
+verilog/inc_def09.v:39: '$display(1 ,,0,,"C");'
+verilog/inc_def09.v:40: '$display(1 ,,0,,"C");'
+verilog/inc_def09.v:41: '$display(5,,0,,"C");'
+verilog/inc_def09.v:42: '$display(5,,0,,"C");'
+verilog/inc_def09.v:43: //`MACRO3    // ILLEGAL: parentheses required
+verilog/inc_def09.v:44: 
+verilog/inc_def09.v:45:  
+verilog/inc_def09.v:46: 'b + 1 + 42 + a '
+verilog/inc_def09.v:47: 'b + 1 + 42 + a'
+verilog/inc_def09.v:48: 
+verilog/inc_def09.v:49: // Local tests
+verilog/inc_def09.v:50:  
+verilog/inc_def09.v:51: '"==)" "((((" () ';
+verilog/inc_def09.v:52: '"==)" "((((" () ';
+verilog/inc_def09.v:53: 
+verilog/inc_def09.v:54: // Also check our line counting doesn't go bad
+verilog/inc_def09.v:57:  
+verilog/inc_def09.v:57: 
+verilog/inc_def09.v:57: 
+verilog/inc_def09.v:58: 
+verilog/inc_def09.v:59: 
+verilog/inc_def09.v:60: 
+verilog/inc_def09.v:61: 
+verilog/inc_def09.v:62: 
+verilog/inc_def09.v:63: 
+verilog/inc_def09.v:64: 
+verilog/inc_def09.v:65: '(6) (eq=al) ZOT'
+verilog/inc_def09.v:66: HERE-Line66
+verilog/inc_def09.v:67: 
+verilog/inc_def09.v:68: //======================================================================
+verilog/inc_def09.v:69: `line 69 "verilog/inc_def09.v" 2
+verilog/inc_def09.v:69: `line 1 "verilog/inc_ifdef.v" 0
 verilog/inc_ifdef.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc_ifdef.v:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/inc_ifdef.v:3: // without warranty, 2000-2009 by Wilson Snyder.

@@ -87,6 +87,7 @@ sub test {
     $pp->open("inc1.v");
     $pp->open("inc2.v");
     $pp->open("inc_ifdef.v");
+    $pp->open("inc_def09.v");
 
     my $fhout = IO::File->new(">test_dir/inc${id}.out");
     $::OUTTO = $fhout;
