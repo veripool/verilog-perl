@@ -5,7 +5,10 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.22***
 
-****	Support 1800-2009 defines with default arguments.
+***	Support 1800-2009 defines with default arguments.
+
+***	Pedantic no longer disables `__FILE__ and `__LINE__ as they
+	are now part of SystemVerilog 2009 (IEEE 1800-2009).
 
 * Verilog::Language 3.223 2009/12/20
 
@@ -96,7 +99,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.210 2009/05/19
 
-***	`__FILE__ now expands to a string, per draft SystemVerilog 2010(ish).
+***	`__FILE__ now expands to a string, per SystemVerilog 2009.
 
 ***	Fix parsing external declarations using appropriate class scope.
 

@@ -114,7 +114,7 @@ class VPreprocLex {
     static VPreprocLex* s_currentLexp;	///< Current lexing point
     int		m_keepComments;		///< Emit comments in output text
     int		m_keepWhitespace;	///< Emit all whitespace in output text
-    bool	m_pedantic;	///< Obey standard; don't Substitute `__FILE__ and `__LINE__
+    bool	m_pedantic;	///< Obey standard; don't Substitute `error
 
     // State from lexer
     int		m_formalLevel;	///< Parenthesis counting inside def formals

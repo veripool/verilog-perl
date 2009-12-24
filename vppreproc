@@ -190,9 +190,9 @@ Remove `line directives.
 
 =item --pedantic
 
-Rigorously obey the Verilog spec.  This disables the `__FILE__ and
-`__LINE__ features, and may disable other features that are not specified
-in the approved language reference manual. Defaults false.
+Rigorously obey the Verilog spec.  This disables the `error feature, and
+may disable other features that are not specified in the approved language
+reference manual. Defaults false.
 
 =item --simple
 
@@ -216,14 +216,14 @@ The following additional constructs may be added to your Verilog code.
 =item `__FILE__
 
 The __FILE__ define expands to the current filename as a string, like C++'s
-__FILE__.  This is in the draft SystemVerilog 2009 standard (but supported
-by Verilog-Perl since 2004!)
+__FILE__.  This was incorporated into to the 1800-2009 standard (but
+supported by Verilog-Perl since 2004!)
 
 =item `__LINE__
 
-The __LINE__ define expands to the current line number, like C++'s __LINE__.
-This is in the draft SystemVerilog 2009 standard (but supported by
-Verilog-Perl since 2004!)
+The __LINE__ define expands to the current filename as a string, like C++'s
+__LINE__.  This was incorporated into to the 1800-2009 standard (but
+supported by Verilog-Perl since 2004!)
 
 =item `error I<string>
 

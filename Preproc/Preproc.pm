@@ -204,12 +204,13 @@ Verilog::Preproc - Preprocess Verilog files
 =head1 DESCRIPTION
 
 Verilog::Preproc reads Verilog files, and preprocesses them according to
-the SystemVerilog 2005 specification.  Programs can be easily converted
-from reading a IO::File into reading preprocessed output from
+the SystemVerilog 2009 (1800-2009) specification which is the most recent
+extension of SystemVerilog 2005 (1800-2005).  Programs can be easily
+converted from reading a IO::File into reading preprocessed output from
 Verilog::Preproc.
 
-See the "Which Package" section of L<Verilog::Language> if you are unsure
-which parsing package to use for a new application.
+See the "Which Package" section of L<Verilog-Perl> if you are unsure which
+parsing package to use for a new application.
 
 =head1 MEMBER FUNCTIONS
 
@@ -301,9 +302,11 @@ classes may be used, as long as their interface matches that of Getopt.
 
 =item pedantic=>1
 
-With pedantic set, rigorously obey the Verilog pedantic.  This disables
-the `__FILE__ and `__LINE__ features, and may disable other features that
-are not specified in the language pedantic. Defaults false.
+With pedantic set, rigorously obey the Verilog pedantic.  This used to
+disable the `__FILE__ and `__LINE__ features but no longer does as they
+were added to the 1800-2009 standard.  It remains to disable `error and may
+disable other future features that are not specified in the language
+standard. Defaults false.
 
 =back
 
@@ -364,21 +367,27 @@ after resolving the filename with the options parameter.
 
 =head1 COMPLIANCE
 
-The preprocessor supports the constructs defined in the Verilog 2005 and
-SystemVerilog 2005 standards.
+The preprocessor supports the constructs defined in the SystemVerilog 2009
+standard (IEEE 1800-2009), which is a superset of Verilog 1995 (IEEE
+1364-1995), Verilog 2001 (IEEE 1364-2001), Verilog 2005 (IEEE 1364-2005)
+and SystemVerilog 2005 (IEEE 1800-2005).
 
-Verilog::Preproc adds the following features (unless the pedantic parameter
-is set.):
+Verilog::Preproc adds the `error macro (unless the pedantic parameter is
+set.):
 
 =over 4
 
 =item `__FILE__
 
-`__FILE__ will be replaced by the current filename. (Like C++ __FILE__.)
+The __FILE__ define expands to the current filename as a string, like C++'s
+__FILE__.  This was incorporated into to the 1800-2009 standard (but
+supported by Verilog-Perl since 2004!)
 
 =item `__LINE__
 
-`__LINE__  will be replaced by the current line number. (Like C++ __LINE__.)
+The __LINE__ define expands to the current filename as a string, like C++'s
+__LINE__.  This was incorporated into to the 1800-2009 standard (but
+supported by Verilog-Perl since 2004!)
 
 =item `error I<"string">
 

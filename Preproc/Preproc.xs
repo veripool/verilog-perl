@@ -58,7 +58,7 @@ public:
     virtual int  keepComments() { return m_keepComments; }	// Return comments
     virtual int  keepWhitespace() { return m_keepWhitespace; }	// Return extra whitespace
     virtual bool lineDirectives() { return m_lineDirectives; }	// Insert `line directives
-    virtual bool pedantic() { return m_pedantic; }		// Obey standard; Don't substitute `__FILE__ and `__LINE__
+    virtual bool pedantic() { return m_pedantic; }		// Obey standard; Don't substitute `error
 
     // Callback methods
     virtual void comment(string filename);	// Comment for keepComments=>sub
