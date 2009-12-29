@@ -185,8 +185,8 @@ public:
     // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen
 
     // UTILITIES
-    void error(string msg) { inFilelinep()->error(msg); }	///< Report a error
-    void fatal(string msg) { inFilelinep()->fatal(msg); }	///< Report a fatal error
+    void error(const string& msg) { inFilelinep()->error(msg); }	///< Report a error
+    void fatal(const string& msg) { inFilelinep()->fatal(msg); }	///< Report a fatal error
 };
 
 #endif // Guard

@@ -176,22 +176,22 @@ class VFileLineParseXs : public VFileLine {
 public:
     VFileLineParseXs(int called_only_for_default) : VFileLine(called_only_for_default) {}
     virtual ~VFileLineParseXs() { }
-    virtual VFileLine* create(const string filename, int lineno);
-    virtual void error(const string msg);	// Report a error at given location
+    virtual VFileLine* create(const string& filename, int lineno);
+    virtual void error(const string& msg);	// Report a error at given location
     void setParser(VParserXs* pp) { m_vParserp=pp; }
 };
 
 #//**********************************************************************
 #// Overrides error handling virtual functions to invoke callbacks
 
-VFileLine* VFileLineParseXs::create(const string filename, int lineno) {
+VFileLine* VFileLineParseXs::create(const string& filename, int lineno) {
     VFileLineParseXs* filelp = new VFileLineParseXs(true);
     filelp->init(filename, lineno);
     filelp->m_vParserp = m_vParserp;
     return filelp;
 }
 
-void VFileLineParseXs::error(string msg) {
+void VFileLineParseXs::error(const string& msg) {
     static string holdmsg; holdmsg = msg;
     m_vParserp->cbFileline(this);
     // Call always, not just if callbacks enabled

@@ -29,7 +29,7 @@ int VFileLine::s_numErrors = 0;		///< Number of errors detected
 
 //============================================================================
 
-VFileLine* VFileLine::create(const string filename, int lineno) {
+VFileLine* VFileLine::create(const string& filename, int lineno) {
     VFileLine* filelp = new VFileLine(true);
     filelp->init(filename, lineno);
     return filelp;
@@ -44,7 +44,7 @@ VFileLine* VFileLine::create_default() {
     return filelp;
 }
 
-void VFileLine::init(const string filename, int lineno) {
+void VFileLine::init(const string& filename, int lineno) {
     m_filename = filename;
     m_lineno = lineno;
 }
@@ -58,12 +58,12 @@ const string VFileLine::filebasename () const {
     return name;
 }
 
-void VFileLine::fatal(const string msg) {
+void VFileLine::fatal(const string& msg) {
     error(msg);
     error("Fatal Error detected");
     abort();
 }
-void VFileLine::error(const string msg) {
+void VFileLine::error(const string& msg) {
     VFileLine::s_numErrors++;
     if (msg[msg.length()-1] != '\n') {
 	fprintf (stderr, "%%Error: %s", msg.c_str());

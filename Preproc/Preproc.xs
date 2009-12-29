@@ -79,22 +79,22 @@ class VFileLineXs : public VFileLine {
 public:
     VFileLineXs(int called_only_for_default) : VFileLine(called_only_for_default) {}
     virtual ~VFileLineXs() { }
-    virtual VFileLine* create(const string filename, int lineno);
-    virtual void error(const string msg);	// Report a error at given location
+    virtual VFileLine* create(const string& filename, int lineno);
+    virtual void error(const string& msg);	// Report a error at given location
     void setPreproc(VPreprocXs* pp) { m_vPreprocp=pp; }
 };
 
 #//**********************************************************************
 #// Overrides error handling virtual functions to invoke callbacks
 
-VFileLine* VFileLineXs::create(const string filename, int lineno) {
+VFileLine* VFileLineXs::create(const string& filename, int lineno) {
     VFileLineXs* filelp = new VFileLineXs(true);
     filelp->init(filename, lineno);
     filelp->m_vPreprocp = m_vPreprocp;
     return filelp;
 }
 
-void VFileLineXs::error(string msg) {
+void VFileLineXs::error(const string& msg) {
     static string holdmsg; holdmsg = msg;
     m_vPreprocp->call(NULL, 1,"error",holdmsg.c_str());
 }

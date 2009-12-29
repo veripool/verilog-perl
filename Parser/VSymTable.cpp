@@ -104,8 +104,8 @@ class VFileLineTest : public VFileLine {
 public:
     VFileLineTest(int called_only_for_default) : VFileLine(called_only_for_default) {}
     virtual ~VFileLineTest() { }
-    virtual VFileLine* create(const string filename, int lineno) { return new VFileLineTest(true); }
-    virtual void error(const string msg) { cout << msg; }
+    virtual VFileLine* create(const string& filename, int lineno) { return new VFileLineTest(true); }
+    virtual void error(const string& msg) { cout << msg; }
 };
 
 void VSymStack::selftest() {
