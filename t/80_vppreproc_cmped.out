@@ -2,7 +2,7 @@
 
 
 
-At file `__FILE__  line `__LINE__
+At file "verilog/inc2.v"  line 4
  
 `line 5 "verilog/inc2.v" 0
 `line 1 "verilog/inc3.v" 1
@@ -15,7 +15,7 @@ At file `__FILE__  line `__LINE__
   
   
   
-  At file `__FILE__  line `__LINE__
+  At file "inc3_a_filename_from_line_directive"  line 10
 
    
 
