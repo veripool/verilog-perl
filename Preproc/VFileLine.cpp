@@ -29,21 +29,6 @@ int VFileLine::s_numErrors = 0;		///< Number of errors detected
 
 //============================================================================
 
-VFileLine* VFileLine::create(const string& filename, int lineno) {
-    VFileLine* filelp = new VFileLine(true);
-    filelp->init(filename, lineno);
-    return filelp;
-}
-
-VFileLine* VFileLine::create(int lineno) {
-    return (this->create(this->filename(), lineno));
-}
-
-VFileLine* VFileLine::create_default() {
-    VFileLine* filelp = new VFileLine(true);
-    return filelp;
-}
-
 void VFileLine::init(const string& filename, int lineno) {
     m_filename = filename;
     m_lineno = lineno;

@@ -47,10 +47,9 @@ public:
     /// Create a new fileline, for a new file and/or line number.
     /// Member functions, so that if a user provides another class, a change in the
     /// filename/linenumber will create a new element using the derived class.
-    virtual VFileLine* create(const string& filename, int lineno);
+    virtual VFileLine* create(const string& filename, int lineno) = 0;
     /// Create with same filename, new line number; just calls create(fn,ln)
-    virtual VFileLine* create(int lineno);
-    static VFileLine* create_default();
+    virtual VFileLine* create(int lineno) { return create(filename(), lineno); }
     virtual void init(const string& filename, int lineno);
     virtual ~VFileLine() {}
     // ACCESSORS
