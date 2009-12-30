@@ -34,7 +34,9 @@ using namespace std;
 #endif
 
 /// Generic opaque pointer to VPreprocImp implementation class.
-class VPreprocOpaque {};
+struct VPreprocOpaque {
+    virtual ~VPreprocOpaque() {}
+};
 class VDefine;
 
 //**********************************************************************
@@ -47,7 +49,7 @@ class VDefine;
 class VPreproc {
 public:
     VPreproc(VFileLine* filelinep);
-    virtual ~VPreproc() {};
+    virtual ~VPreproc();
 
     // CONSTANTS
     static const unsigned DEFINE_RECURSION_LEVEL_MAX = 50;	///< How many `def substitutions before an error

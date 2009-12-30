@@ -28,6 +28,7 @@
 
 /* Mine: */
 #include "VPreproc.h"
+#include <deque>
 
 /* Perl */
 extern "C" {
@@ -40,19 +41,22 @@ extern "C" {
 # undef open	/* Perl 64 bit on solaris has a nasty hack that redefines open */
 #endif
 
+class VFileLineXs;
+
 #//**********************************************************************
 #// Preprocessor derived classes, so we can override the callbacks to call perl.
 
 class VPreprocXs : public VPreproc {
 public:
-    SV*		m_self;	// Class called from
+    SV*		m_self;	// Class called from (the hash, not SV pointing to the hash)
     int		m_keepComments;
     int		m_keepWhitespace;
     bool	m_lineDirectives;
     bool	m_pedantic;
+    deque<VFileLineXs*> m_filelineps;
 
     VPreprocXs(VFileLine* filelinep) : VPreproc(filelinep) {}
-    virtual ~VPreprocXs() {}
+    virtual ~VPreprocXs();
 
     // Control methods
     virtual int  keepComments() { return m_keepComments; }	// Return comments
@@ -77,26 +81,37 @@ public:
 class VFileLineXs : public VFileLine {
     VPreprocXs*	m_vPreprocp;		// Parser handling the errors
 public:
-    VFileLineXs(int called_only_for_default) : VFileLine(called_only_for_default) {}
+    VFileLineXs(VPreprocXs* pp) : VFileLine(true), m_vPreprocp(pp) { if (pp) pushFl(); }
     virtual ~VFileLineXs() { }
-    virtual VFileLine* create(const string& filename, int lineno);
+    virtual VFileLine* create(const string& filename, int lineno) {
+	VFileLineXs* filelp = new VFileLineXs(m_vPreprocp);
+	filelp->init(filename, lineno);
+	return filelp;
+    }
     virtual void error(const string& msg);	// Report a error at given location
-    void setPreproc(VPreprocXs* pp) { m_vPreprocp=pp; }
+    void setPreproc(VPreprocXs* pp) {
+	m_vPreprocp=pp;
+	pushFl(); // The very first construction used pp=NULL, as pp wasn't created yet so make it now
+    }
+    // Record the structure so we can delete it later
+    void pushFl() { m_vPreprocp->m_filelineps.push_back(this); }
 };
 
 #//**********************************************************************
 #// Overrides error handling virtual functions to invoke callbacks
 
-VFileLine* VFileLineXs::create(const string& filename, int lineno) {
-    VFileLineXs* filelp = new VFileLineXs(true);
-    filelp->init(filename, lineno);
-    filelp->m_vPreprocp = m_vPreprocp;
-    return filelp;
-}
-
 void VFileLineXs::error(const string& msg) {
     static string holdmsg; holdmsg = msg;
     m_vPreprocp->call(NULL, 1,"error",holdmsg.c_str());
+}
+
+#//**********************************************************************
+#// VPreprocXs functions
+
+VPreprocXs::~VPreprocXs() {
+    for (deque<VFileLineXs*>::iterator it=m_filelineps.begin(); it!=m_filelineps.end(); ++it) {
+	delete *it;
+    }
 }
 
 #//**********************************************************************
@@ -157,13 +172,17 @@ void VPreprocXs::call (
 	ENTER;				/* everything created after here */
 	SAVETMPS;			/* ...is a temporary variable. */
 	PUSHMARK(SP);			/* remember the stack pointer */
-	XPUSHs(m_self);			/* $self-> */
+	SV* selfsv = newRV_inc(m_self);	/* $self-> */
+	XPUSHs(sv_2mortal(selfsv));
 
 	while (params--) {
-	    char *text;
-	    SV *sv;
-	    text = va_arg(ap, char *);
-	    sv = newSVpv (text, 0);
+	    char* text = va_arg(ap, char *);
+	    SV* sv;
+	    if (text) {
+		sv = sv_2mortal(newSVpv (text, 0));
+	    } else {
+		sv = &PL_sv_undef;
+	    }
 	    XPUSHs(sv);			/* token */
 	}
 
@@ -210,10 +229,11 @@ PROTOTYPE: $$$$$
 CODE:
 {
     if (CLASS) {}  /* Prevent unused warning */
-    VFileLineXs* filelinep = new VFileLineXs(1/*ok,for initial*/);
+    if (!SvROK(SELF)) { warn("${Package}::$func_name() -- SELF is not a hash reference"); }
+    VFileLineXs* filelinep = new VFileLineXs(NULL/*ok,for initial*/);
     VPreprocXs* preprocp = new VPreprocXs(filelinep);
     filelinep->setPreproc(preprocp);
-    preprocp->m_self = newSVsv(SELF);
+    preprocp->m_self = SvRV(SELF);
     preprocp->m_keepComments = keepcmt;
     preprocp->m_keepWhitespace = keepwhite;
     preprocp->m_lineDirectives = linedir;

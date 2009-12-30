@@ -118,6 +118,9 @@ struct VPreprocImp : public VPreprocOpaque {
 	m_rawAtBol = true;
 	m_defDepth = 0;
     }
+    ~VPreprocImp() {
+	if (m_lexp) { delete m_lexp; m_lexp = NULL; }
+    }
     const char* tokenName(int tok);
     int getRawToken();
     int getToken();
@@ -149,6 +152,10 @@ VPreproc::VPreproc(VFileLine* filelinep) {
     VPreprocImp* idatap = new VPreprocImp(filelinep);
     m_opaquep = idatap;
     idatap->m_preprocp = this;
+}
+
+VPreproc::~VPreproc() {
+    if (m_opaquep) { delete m_opaquep; m_opaquep = NULL; }
 }
 
 //*************************************************************************

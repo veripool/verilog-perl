@@ -10,6 +10,8 @@ indicates the contributor was also the author of the fix; Thanks!
 ***	Pedantic no longer disables `__FILE__ and `__LINE__ as they
 	are now part of SystemVerilog 2009 (IEEE 1800-2009).
 
+****	Fix memory leaks.  [Thriller Wu]
+
 * Verilog::Language 3.223 2009/12/20
 
 ***	Support `undefineall.

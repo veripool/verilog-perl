@@ -48,6 +48,18 @@ sub new {
     return $self;
 }
 
+sub delete {
+    my $self = shift;
+    # Break circular references to netlist
+    foreach my $subref ($self->modules) { $subref->delete; }
+    foreach my $subref ($self->interfaces) { $subref->delete; }
+    foreach my $subref ($self->files) { $subref->delete; }
+    $self->{_modules} = {};
+    $self->{_interfaces} = {};
+    $self->{_files} = {};
+    $self->{_need_link} = {};
+}
+
 ######################################################################
 #### Functions
 
@@ -587,6 +599,13 @@ Adds an additional input dependency for dependency_write.
 =item $netlist->dependency_out(I<filename>)
 
 Adds an additional output dependency for dependency_write.
+
+=item $netlist->delete
+
+Delete the netlist, reclaim memory.  Unfortunately netlists will not
+disappear simply with normal garbage collection from leaving of scope due
+to complications with reference counting and weaking Class::Struct
+structures; solutions welcome.
 
 =item $netlist->files
 

@@ -31,6 +31,7 @@
 #include "VSymTable.h"
 #include "VAst.h"
 #include <cstring>
+#include <deque>
 
 /* Perl */
 extern "C" {
@@ -43,13 +44,16 @@ extern "C" {
 # undef open	/* Perl 64 bit on solaris has a nasty hack that redefines open */
 #endif
 
+class VFileLineParseXs;
+
 #//**********************************************************************
 #// Parseressor derived classes, so we can override the callbacks to call perl.
 
 class VParserXs : public VParse {
 public:
-    SV*		m_self;	// Class called from
+    SV*		m_self;	// Class called from (the hash, not SV pointing to the hash)
     VFileLine*	m_cbFilelinep;	///< Last callback's starting point
+    deque<VFileLineParseXs*> m_filelineps;
 
     // CALLBACKGEN_H_MEMBERS
     // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen
@@ -94,7 +98,7 @@ public:
 	: VParse(filelinep, symsp, sigparser, useUnreadback)
 	, m_cbFilelinep(filelinep)
 	{ set_cb_use(); }
-    virtual ~VParserXs() {}
+    virtual ~VParserXs();
 
     // CALLBACKGEN_CB_USE
     // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen
@@ -174,22 +178,24 @@ public:
 class VFileLineParseXs : public VFileLine {
     VParserXs*	m_vParserp;		// Parser handling the errors
 public:
-    VFileLineParseXs(int called_only_for_default) : VFileLine(called_only_for_default) {}
+    VFileLineParseXs(VParserXs* pp) : VFileLine(true), m_vParserp(pp) { if (pp) pushFl(); }
     virtual ~VFileLineParseXs() { }
-    virtual VFileLine* create(const string& filename, int lineno);
+    virtual VFileLine* create(const string& filename, int lineno) {
+	VFileLineParseXs* filelp = new VFileLineParseXs(m_vParserp);
+	filelp->init(filename, lineno);
+	return filelp;
+    }
     virtual void error(const string& msg);	// Report a error at given location
-    void setParser(VParserXs* pp) { m_vParserp=pp; }
+    void setParser(VParserXs* pp) {
+	m_vParserp=pp;
+	pushFl(); // The very first construction used pp=NULL, as pp wasn't created yet so make it now
+    }
+    // Record the structure so we can delete it later
+    void pushFl() { m_vParserp->m_filelineps.push_back(this); }
 };
 
 #//**********************************************************************
 #// Overrides error handling virtual functions to invoke callbacks
-
-VFileLine* VFileLineParseXs::create(const string& filename, int lineno) {
-    VFileLineParseXs* filelp = new VFileLineParseXs(true);
-    filelp->init(filename, lineno);
-    filelp->m_vParserp = m_vParserp;
-    return filelp;
-}
 
 void VFileLineParseXs::error(const string& msg) {
     static string holdmsg; holdmsg = msg;
@@ -204,7 +210,13 @@ void VFileLineParseXs::error(const string& msg) {
 #include "Parser_callbackgen.cpp"
 
 #//**********************************************************************
-#// Manually created callbacks
+#// VParserXs functions
+
+VParserXs::~VParserXs() {
+    for (deque<VFileLineParseXs*>::iterator it=m_filelineps.begin(); it!=m_filelineps.end(); ++it) {
+	delete *it;
+    }
+}
 
 #//**********************************************************************
 #// General callback invoker
@@ -224,14 +236,14 @@ void VParserXs::call (
 	ENTER;				/* everything created after here */
 	SAVETMPS;			/* ...is a temporary variable. */
 	PUSHMARK(SP);			/* remember the stack pointer */
-	XPUSHs(m_self);			/* $self-> */
+	SV* selfsv = newRV_inc(m_self);	/* $self-> */
+	XPUSHs(sv_2mortal(selfsv));
 
 	while (params--) {
-	    char *text;
-	    SV *sv;
-	    text = va_arg(ap, char *);
+	    char* text = va_arg(ap, char *);
+	    SV* sv;
 	    if (text) {
-		sv = newSVpv (text, 0);
+		sv = sv_2mortal(newSVpv (text, 0));
 	    } else {
 		sv = &PL_sv_undef;
 	    }
@@ -276,10 +288,11 @@ PROTOTYPE: $$$$
 CODE:
 {
     if (CLASS) {}  /* Prevent unused warning */
-    VFileLineParseXs* filelinep = new VFileLineParseXs(1/*ok,for initial*/);
+    if (!SvROK(SELF)) { warn("${Package}::$func_name() -- SELF is not a hash reference"); }
+    VFileLineParseXs* filelinep = new VFileLineParseXs(NULL/*ok,for initial*/);
     VParserXs* parserp = new VParserXs(filelinep, symsp, sigparser, useUnreadback);
     filelinep->setParser(parserp);
-    parserp->m_self = newSVsv(SELF);
+    parserp->m_self = SvRV(SELF);
     RETVAL = parserp;
 }
 OUTPUT: RETVAL

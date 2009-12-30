@@ -364,6 +364,11 @@ package Verilog::Netlist::File;
 ######################################################################
 #### Functions
 
+sub delete {
+    my $self = shift;
+    $self->netlist(undef);  # Break circular
+}
+
 sub logger {
     my $self = shift;
     return $self->netlist->logger;

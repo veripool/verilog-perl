@@ -109,7 +109,13 @@ void VAstEnt::initAVEnt(AV* avp, VAstType type, AV* parentp) {
     // $avp = [type, parent, {}]
     av_push(avp, newSViv(type));
     if (parentp) {
-	av_push(avp, newRV((SV*)parentp) );
+	SV* parentsv = newRV((SV*)parentp);
+#ifdef SvWEAKREF // Newer perls
+	// We're making a circular reference, so to garbage collect properly we need to break it
+	// On older Perl's we'll just leak.
+	sv_rvweaken(parentsv);
+#endif
+	av_push(avp, parentsv );
     } else { // netlist top
 	av_push(avp, &PL_sv_undef);
     }
