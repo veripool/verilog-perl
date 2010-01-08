@@ -59,7 +59,7 @@ sub verilog_text {
 sub dump {
     my $self = shift;
     my $indent = shift||0;
-    print " "x$indent,"ContAssign:",$self->keyword,"  lhs:",$self->lhs,"  rhs",$self->rhs;
+    print " "x$indent,"ContAssign:",$self->keyword,"  lhs:",$self->lhs,"  rhs:",$self->rhs;
     print "\n";
 }
 

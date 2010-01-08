@@ -67,7 +67,7 @@ Module:v_hier_top  Kwd:module  File:verilog/v_hier_top.v
               Port:clk  Dir:in  DataT:  Array:
     Pin:qvec  Net:qvec[3:0]
               Port:qvec  Dir:out  DataT:[3:0]  Array:
-  ContAssign:assign  lhs:asn_clk  rhsclk
+  ContAssign:assign  lhs:asn_clk  rhs:clk
 Module:v_hier_top2  Kwd:module  File:verilog/v_hier_top2.v
   Port:clk  Dir:in  DataT:  Array:
   Net:clk  O  DeclT:port  NetT:  DataT:  Array:

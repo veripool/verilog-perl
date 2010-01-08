@@ -99,8 +99,8 @@ private:
 public:
     static void debug(int flag) { s_debug=flag; }
     static int debug() { return s_debug; }
-private:
 
+private:
     // CREATORS
     VAstEnt() { assert(0); }	// Not made by users, it's an AV*
     ~VAstEnt() { assert(0); }	// Not made by users, it's an AV*

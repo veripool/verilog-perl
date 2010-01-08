@@ -177,6 +177,7 @@ public:
 
 class VFileLineParseXs : public VFileLine {
     VParserXs*	m_vParserp;		// Parser handling the errors
+
 public:
     VFileLineParseXs(VParserXs* pp) : VFileLine(true), m_vParserp(pp) { if (pp) pushFl(); }
     virtual ~VFileLineParseXs() { }
