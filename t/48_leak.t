@@ -22,7 +22,7 @@ use POSIX qw();
 ######################################################################
 
 my $mem = get_memory_usage();
-my $loops = 20;  # At least 10
+my $loops = 50;  # At least 10
 my $mem_end; my $mem_mid;
 my $handle;
 for (my $i=0; $i<$loops; $i++) {
@@ -50,7 +50,13 @@ if ($mem == 0) {
     ok(1);
 } else {
     warn "%Warning: Leaked ",int(1024*($mem_end-$mem_mid)/($loops/2))," bytes per parse\n";
-    ok(0);
+    if (!$ENV{VERILATOR_AUTHOR_SITE}) {
+	# It's somewhat sensitive unless there's a lot of loops,
+	# and lots of loops is too slow for users to deal with.
+	skip("leaked, but author only test",1);
+    } else {
+	ok(0);
+    }
 }
 
 ######################################################################
@@ -69,7 +75,7 @@ sub read_test {
     my $pp = Verilog::Preproc->new(keep_comments=>1);
     my $parser = Verilog::SigParser->new();
     #my $parser = Verilog::Parser->new();
-    $pp->open($filename);  # Orig 41216/parse
+    $pp->open($filename);
     ##Preproc_Only_Test:  while (defined($pp->getline())) {}
 
     $parser->parse_preproc_file($pp);
