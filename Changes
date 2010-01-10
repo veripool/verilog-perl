@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.22***
 
+**	Support interface modports, bug200.  [by Thriller Wu]
+
 ***	Support 1800-2009 defines with default arguments.
 
 ***	Pedantic no longer disables `__FILE__ and `__LINE__ as they

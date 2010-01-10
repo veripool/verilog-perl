@@ -894,7 +894,16 @@ modport_itemList:		// IEEE: part of modport_declaration
 	;
 
 modport_item:			// ==IEEE: modport_item
-		id/*new-modport*/ '(' modportPortsDeclList ')'		{ }
+		modport_idFront '(' {VARRESET_LIST("");} modportPortsDeclList ')'
+			{ VARRESET_NONLIST("");
+			  PARSEP->endmodportCb($<fl>1, "endmodport");
+			  PARSEP->symPopScope(VAstType::MODPORT); }
+	;
+
+modport_idFront:
+		id/*new-modport*/
+			{ PARSEP->symPushNew(VAstType::MODPORT,$1);
+			  PARSEP->modportCb($<fl>1,"modport",$1); }
 	;
 
 modportPortsDeclList:
@@ -919,9 +928,10 @@ modportPortsDecl:
 	;
 
 modportSimplePort:		// IEEE: modport_simple_port or modport_tf_port, depending what keyword was earlier
-		id					{ }
-	|	'.' idAny '(' ')'			{ }
-	|	'.' idAny '(' expr ')'			{ }
+	//			// Note 'init' field is used to say what to connect to
+		id					{ VARDONE($<fl>1,$1,"",$1); PINNUMINC(); }
+	|	'.' idAny '(' ')'			{ VARDONE($<fl>1,$2,"",""); PINNUMINC(); }
+	|	'.' idAny '(' expr ')'			{ VARDONE($<fl>1,$2,"",$4); PINNUMINC(); }
 	;
 
 modport_tf_port:		// ==IEEE: modport_tf_port

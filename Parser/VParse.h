@@ -164,6 +164,7 @@ public:
     virtual void contassignCb(VFileLine* fl, const string& kwd, const string& lhs, const string& rhs) = 0;
     virtual void endcellCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endinterfaceCb(VFileLine* fl, const string& kwd) = 0;
+    virtual void endmodportCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endmoduleCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endpackageCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endprogramCb(VFileLine* fl, const string& kwd) = 0;
@@ -172,6 +173,7 @@ public:
     virtual void importCb(VFileLine* fl, const string& package, const string& id) = 0;
     virtual void instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range) = 0;
     virtual void interfaceCb(VFileLine* fl, const string& kwd, const string& name) = 0;
+    virtual void modportCb(VFileLine* fl, const string& kwd, const string& name) = 0;
     virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool, bool celldefine) = 0;
     virtual void packageCb(VFileLine* fl, const string& kwd, const string& name) = 0;
     virtual void parampinCb(VFileLine* fl, const string& name, const string& conn, int index) = 0;

@@ -54,6 +54,7 @@ public:
 	FORK,
 	FUNCTION,
 	INTERFACE,
+	MODPORT,
 	MODULE,
 	PACKAGE,	// For yaID__PACKAGE
 	PROGRAM,
@@ -75,7 +76,7 @@ public:
 	"NOT_FOUND", "netlist", "error", "unknown",
 	"block", "class", "clocking", "covergroup",
 	"enum", "fork", "function", "interface",
-	"module", "package", "program", "property",
+	"modport", "module", "package", "program", "property",
 	"sequence", "struct", "task", "type", "union",
 	"_MAX"
 	};

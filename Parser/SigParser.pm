@@ -21,6 +21,7 @@ our @_Callback_Names = qw(
   contassign
   endcell
   endinterface
+  endmodport
   endtaskfunc
   endmodule
   endpackage
@@ -29,6 +30,7 @@ our @_Callback_Names = qw(
   import
   instant
   interface
+  modport
   module
   package
   parampin
@@ -105,6 +107,10 @@ sub endinterface {
     my $self = shift;
 }
 
+sub endmodport {
+    my $self = shift;
+}
+
 sub endtaskfunc {
     my $self = shift;
 }
@@ -142,6 +148,12 @@ sub instant {
 }
 
 sub interface {
+    my $self = shift;
+    my $keyword = shift;
+    my $name = shift;
+}
+
+sub modport {
     my $self = shift;
     my $keyword = shift;
     my $name = shift;
@@ -290,6 +302,11 @@ clean up routines.
 This method is called at a endfunction or endtask keyword.  It is useful
 for writing clean up routines.
 
+=item $self->endmodport ( $token )
+
+This method is called at a endmodport keyword. It is useful for writing
+clean up routines.
+
 =item $self->endmodule ( $token )
 
 This method is called at a endmodule keyword. It is useful for writing
@@ -328,6 +345,10 @@ this callback. This has been replaced with the parampin callback.
 =item $self->interface ( $keyword, $name )
 
 This method is called when an interface is defined.
+
+=item $self->modport ( $keyword, $name )
+
+This method is called when an interface modport is defined.
 
 =item $self->module ( $keyword, $name, ignored, $in_celldefine )
 

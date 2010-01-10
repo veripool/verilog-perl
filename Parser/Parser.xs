@@ -63,6 +63,7 @@ public:
         bool m_useCb_contassign:1;
         bool m_useCb_endcell:1;
         bool m_useCb_endinterface:1;
+        bool m_useCb_endmodport:1;
         bool m_useCb_endmodule:1;
         bool m_useCb_endpackage:1;
         bool m_useCb_endparse:1;
@@ -73,6 +74,7 @@ public:
         bool m_useCb_instant:1;
         bool m_useCb_interface:1;
         bool m_useCb_keyword:1;
+        bool m_useCb_modport:1;
         bool m_useCb_module:1;
         bool m_useCb_number:1;
         bool m_useCb_operator:1;
@@ -108,6 +110,7 @@ public:
        m_useCb_contassign = true;
        m_useCb_endcell = true;
        m_useCb_endinterface = true;
+       m_useCb_endmodport = true;
        m_useCb_endmodule = true;
        m_useCb_endpackage = true;
        m_useCb_endparse = true;
@@ -118,6 +121,7 @@ public:
        m_useCb_instant = true;
        m_useCb_interface = true;
        m_useCb_keyword = true;
+       m_useCb_modport = true;
        m_useCb_module = true;
        m_useCb_number = true;
        m_useCb_operator = true;
@@ -151,6 +155,7 @@ public:
     virtual void contassignCb(VFileLine* fl, const string& kwd, const string& lhs, const string& rhs);
     virtual void endcellCb(VFileLine* fl, const string& kwd);
     virtual void endinterfaceCb(VFileLine* fl, const string& kwd);
+    virtual void endmodportCb(VFileLine* fl, const string& kwd);
     virtual void endmoduleCb(VFileLine* fl, const string& kwd);
     virtual void endpackageCb(VFileLine* fl, const string& kwd);
     virtual void endprogramCb(VFileLine* fl, const string& kwd);
@@ -159,6 +164,7 @@ public:
     virtual void importCb(VFileLine* fl, const string& package, const string& id);
     virtual void instantCb(VFileLine* fl, const string& mod, const string& cell, const string& range);
     virtual void interfaceCb(VFileLine* fl, const string& kwd, const string& name);
+    virtual void modportCb(VFileLine* fl, const string& kwd, const string& name);
     virtual void moduleCb(VFileLine* fl, const string& kwd, const string& name, bool, bool celldefine);
     virtual void packageCb(VFileLine* fl, const string& kwd, const string& name);
     virtual void parampinCb(VFileLine* fl, const string& name, const string& conn, int index);
