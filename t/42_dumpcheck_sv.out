@@ -8,7 +8,9 @@ Interface:v_sv_intf  File:verilog/v_sv_intf.v
 Interface:v_sv_intf2  File:verilog/v_sv_intf.v
 Module:v_sv_mod  Kwd:module  File:verilog/v_sv_mod.v
   Port:clk  Dir:in  DataT:  Array:
+  Port:intf  Dir:interface  DataT:v_sv_intf  Array:
   Net:clk  IO  DeclT:port  NetT:  DataT:  Array:
+  Net:intf    DeclT:port  NetT:  DataT:v_sv_intf  Array:
   Cell:if_ported  is-a:sv_if_ported
             Interface:sv_if_ported  File:verilog/v_sv_mod.v
     Pin:clk  Net:clk

@@ -684,10 +684,14 @@ portE:				// ==IEEE: [ port ]
 	//			// Expanded interface_port_header
 	//			// We use instantCb here because the non-port form looks just like a module instantiation
 		/* empty */				{ }
-	|	portDirNetE id/*interface*/                   idAny/*port*/ rangeListE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $3, $4, ""); PARSEP->instantCb($<fl>2, $2, $3, $4); PINNUMINC(); }
-	|	portDirNetE yINTERFACE                        idAny/*port*/ rangeListE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $3, $4, ""); PINNUMINC(); }
-	|	portDirNetE id/*interface*/ '.' idAny/*modport*/ idAny/*port*/ rangeListE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $5, $6, ""); PARSEP->instantCb($<fl>2, $2, $5, $6); PINNUMINC(); }
-	|	portDirNetE yINTERFACE      '.' idAny/*modport*/ idAny/*port*/ rangeListE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }
+	|	portDirNetE id/*interface*/                      idAny/*port*/ rangeListE sigAttrListE
+			{ VARDTYPE($2); VARIO("interface"); VARDONE($<fl>2, $3, $4, ""); PARSEP->instantCb($<fl>2, $2, $3, $4); PINNUMINC(); }
+	|	portDirNetE yINTERFACE                           idAny/*port*/ rangeListE sigAttrListE
+			{ VARDTYPE($2); VARIO("interface"); VARDONE($<fl>2, $3, $4, ""); PINNUMINC(); }
+	|	portDirNetE id/*interface*/ '.' idAny/*modport*/ idAny/*port*/ rangeListE sigAttrListE
+			{ VARDTYPE($2+"."+$4); VARIO("interface"); VARDONE($<fl>2, $5, $6, ""); PARSEP->instantCb($<fl>2, $2, $5, $6); PINNUMINC(); }
+	|	portDirNetE yINTERFACE      '.' idAny/*modport*/ idAny/*port*/ rangeListE sigAttrListE
+			{ VARDTYPE($2+"."+$4); VARIO("interface"); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }
 	//
 	//			// IEEE: ansi_port_declaration, with [port_direction] removed
 	//			//   IEEE: [ net_port_header | interface_port_header ] port_identifier { unpacked_dimension }

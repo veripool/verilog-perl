@@ -382,8 +382,9 @@ port header, the second call at the input/output declaration.
 
 The first argument $name, is the name of the port.  $objof is what the port
 is an object of ('module', 'function', etc).  $direction is the port
-direction ('input', 'output', 'inout', 'ref', 'const ref').  $data_type is
-the data type ('reg', 'user_type_t', 'signed [31:0]', etc).  $array is the
+direction ('input', 'output', 'inout', 'ref', 'const ref', or 'interface').
+$data_type is the data type ('reg', 'user_type_t', 'signed [31:0]', etc, or
+for interfaces the "{interface_id}.{modport_name}").  $array is the
 arraying of the port ('[1:0][2:0]', '', etc).  $pinnum is set to the pin
 number for ANSI style declarations, and 0 for Verilog 1995 declarations
 made outside the port list.
