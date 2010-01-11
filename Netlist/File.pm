@@ -112,6 +112,22 @@ sub interface {
     $self->{_cmtref} = $self->{modref};
 }
 
+sub modport {
+    my $self = shift;
+    my $keyword = shift;
+    my $name = shift;
+
+    print " Modport $name\n" if $Verilog::Netlist::Debug;
+    my $modref = $self->{modref};
+    if (!$modref) {
+	return $self->error ("MODPORT outside of interface definition", $name);
+    }
+    $self->{_modportref} = $modref->new_modport
+	 (name=>$name,
+	  filename=>$self->filename, lineno=>$self->lineno);
+    $self->{_cmtref} = $self->{modref};
+}
+
 sub module {
     my $self = shift;
     my $keyword = shift;
@@ -139,6 +155,12 @@ sub program {
 sub endinterface {
     my $self = shift;
     $self->endmodule(@_);
+}
+
+sub endmodport {
+    my $self = shift;
+    $self->{_cmtref} = $self->{modref};
+    $self->{_modportref} = undef;
 }
 
 sub endmodule {
@@ -183,13 +205,15 @@ sub port {
     my $array = shift;
     my $pinnum = shift;
 
-    return if !($objof eq 'module' || $objof eq 'interface');
+    return if !($objof eq 'module' || $objof eq 'interface' || $objof eq 'modport');
+
+    my $underref = $self->{_modportref} || $self->{modref};
 
     if ($pinnum) {  # Else a "input" etc outside the "(...)"s
-	$self->{modref}->_portsordered($pinnum-1, $name);  # -1 because [0] has first pin
+	$underref->_portsordered($pinnum-1, $name);  # -1 because [0] has first pin
     }
     if ($direction) {  # Else just a pin number without declaration
-	my $port = $self->{modref}->new_port
+	my $port = $underref->new_port
 	    (name=>$name,
 	     filename=>$self->filename, lineno=>$self->lineno,
 	     direction=>$direction, data_type=>$type,
@@ -209,7 +233,7 @@ sub var {
     my $value = shift;
     print " Sig $name dt=$decl_type nt=$net_type d=$data_type\n" if $Verilog::Netlist::Debug;
 
-    return if $objof ne 'module';
+    return if !($objof eq 'module' || $objof eq 'interface' || $objof eq 'modport');
 
     my $msb;
     my $lsb;
@@ -219,15 +243,15 @@ sub var {
 	$msb = $lsb = $1;
     }
 
-    my $modref = $self->{modref};
-    if (!$modref) {
+    my $underref = $self->{_modportref} || $self->{modref};
+    if (!$underref) {
 	return $self->error ("Signal declaration outside of module definition", $name);
     }
 
     my $signed = ($data_type =~ /signed/);
 
-    my $net = $modref->find_net ($name);
-    $net or $net = $modref->new_net
+    my $net = $underref->find_net ($name);
+    $net or $net = $underref->new_net
 	(name=>$name,
 	 filename=>$self->filename, lineno=>$self->lineno,
 	 simple_type=>1, data_type=>$data_type, array=>$array,

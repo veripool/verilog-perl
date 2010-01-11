@@ -11,4 +11,5 @@ endinterface
 
 interface v_sv_intf2;
    v_sv_pkg::byte_t byte_port;
+   modport Master(input data, output addr);
 endinterface
