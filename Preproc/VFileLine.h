@@ -56,7 +56,6 @@ public:
     virtual int lineno () const { return m_lineno; }	///< Return line number
     virtual const string filename () const { return m_filename; }	///< Return filename
     virtual const string filebasename () const;	///< Filename with any directory stripped
-    virtual const char* cfilename () const { return m_filename.c_str(); }
     // METHODS
     virtual void fatal(const string& msg);	///< Report a fatal error at given location
     virtual void error(const string& msg);	///< Report a error at given location

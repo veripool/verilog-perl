@@ -96,7 +96,7 @@ VFileLine* VFileLine::lineDirective(const char* textp) {
 
 ostream& operator<<(ostream& os, VFileLine* flp) {
     if (flp->filename()!="") {
-	os <<flp->cfilename()<<":"<<dec<<flp->lineno()<<": "<<hex;
+	os <<flp->filename()<<":"<<dec<<flp->lineno()<<": "<<hex;
     }
     return(os);
 }
