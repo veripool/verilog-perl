@@ -97,7 +97,8 @@ sub DESTROY {
 ####  Accessors
 
 sub callback_names {
-    return sort @_Callback_Names;
+    my @out = sort @_Callback_Names;
+    return @out;
 }
 
 sub debug {
