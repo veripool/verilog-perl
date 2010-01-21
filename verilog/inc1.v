@@ -1,6 +1,6 @@
 // DESCRIPTION: Verilog::Preproc: Example source code
 // This file ONLY is placed into the Public Domain, for any use,
-// without warranty, 2000-2009 by Wilson Snyder.
+// without warranty, 2000-2010 by Wilson Snyder.
    text.
 
 `define FOOBAR  foo /*but not */ bar   /* or this either */

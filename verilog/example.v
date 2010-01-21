@@ -1,6 +1,6 @@
 // DESCRIPTION: Example top verilog file for vpassert program
 // This file ONLY is placed into the Public Domain, for any use,
-// without warranty, 2000-2009 by Wilson Snyder.
+// without warranty, 2000-2010 by Wilson Snyder.
 
 `timescale 1ns/1ns
 
