@@ -3941,6 +3941,7 @@ memberQualOne<str>:			// IEEE: property_qualifier + method_qualifier
 		class_item_qualifier			{ $<fl>$=$<fl>1; $$=$1; }
 	//			// Part of method_qualifier only
 	|	yVIRTUAL__ETC				{ $<fl>$=$<fl>1; $$=$1; }
+	|	yPURE yVIRTUAL__ETC			{ $<fl>$=$<fl>1; $$=$1+" "+$2; }
 	//			// Part of property_qualifier only
 	|	random_qualifier			{ $<fl>$=$<fl>1; $$=$1; }
 	//			// Part of lifetime, but here as ySTATIC can be in different positions
