@@ -14,3 +14,8 @@ module mantis907_default_parameter
 endmodule
 module mantis1619_default_input (input integer deflt = 10);
 endmodule
+module global_anal;  // Don't be anal about "global" in old code
+   integer global = 1;
+   global clocking z @(posedge clk);  // But still get it right
+   endclocking
+endmodule

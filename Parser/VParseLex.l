@@ -365,7 +365,7 @@ word	[a-zA-Z0-9_]+
   "checker"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return yCHECKER; }
   "endchecker"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return yENDCHECKER; }
   "eventually"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return yEVENTUALLY; }
-  "global"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return yGLOBAL; }
+  "global"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return yGLOBAL__LEX; }
   "implies"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return yIMPLIES; }
   "let"		 	{ FL; VALTEXT; CALLBACK(keywordCb); return yLET; }
   "nexttime"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return yNEXTTIME; }
@@ -693,7 +693,64 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	s_yylvalp = yylvalp;  // Read by yylex()
 	token = yylex();
     }
+    // If a paren, read another
+    if (token == '('
+	|| token == yCONST__LEX
+	|| token == yGLOBAL__LEX
+	|| token == yNEW__LEX
+	|| token == ySTATIC__LEX
+	|| token == yVIRTUAL__LEX
+	|| token == yWITH__LEX
+	// Never put yID_* here; below symbol table resolution would break
+	) {
+#ifdef FLEX_DEBUG
+	if (yy_flex_debug) { cout<<"   lexToken: reading ahead to find possible strength"<<endl; }
+#endif
+	VParseBisonYYSType curValue = *s_yylvalp;  // Remember value, as about to read ahead
+	int nexttok = yylex();
+	m_ahead = true;
+	m_aheadToken = nexttok;
+	m_aheadVal = *s_yylvalp;
+	*s_yylvalp = curValue;
+	// Now potentially munge the current token
+	if (token == '(' && (nexttok == ygenSTRENGTH
+			     || nexttok == ySUPPLY0
+			     || nexttok == ySUPPLY1)) {
+	    token = yP_PAR__STRENGTH;
+	}
+	else if (token == yCONST__LEX) {
+	    if (nexttok == yREF) token = yCONST__REF;
+	    else token = yCONST__ETC;
+	}
+	else if (token == yGLOBAL__LEX) {
+	    if (nexttok == yCLOCKING) token = yGLOBAL__CLOCKING;
+	    else { token = yaID__LEX; s_yylvalp->str = "global"; }  // Avoid 2009 "global" conflicting with old code when we can
+	}
+	else if (token == yNEW__LEX) {
+	    if (nexttok == '(') token = yNEW__PAREN;
+	    else token = yNEW__ETC;
+	}
+	else if (token == ySTATIC__LEX) {
+	    if (nexttok == yCONSTRAINT) token = ySTATIC__CONSTRAINT;
+	    else token = ySTATIC__ETC;
+	}
+	else if (token == yVIRTUAL__LEX) {
+	    if (nexttok == yCLASS) token = yVIRTUAL__CLASS;
+	    else if (nexttok == yINTERFACE) token = yVIRTUAL__INTERFACE;
+	    else if (nexttok == yaID__ETC || nexttok == yaID__LEX)
+		     // || nexttok == yaID__aINTERFACE	// but we may not know interfaces yet.
+		token = yVIRTUAL__anyID;
+	    else token = yVIRTUAL__ETC;
+	}
+	else if (token == yWITH__LEX) {
+	    if (nexttok == '(') token = yWITH__PAREN;
+	    else if (nexttok == '[') token = yWITH__BRA;
+	    else token = yWITH__ETC;
+	}
+	// If add to above "else if", also add to "if (token" further above
+    }
     // If an id, change the type based on symbol table
+    // Note above sometimes converts yGLOBAL to a yaID__LEX
     s_yylvalp->scp = NULL;
     if (token == yaID__LEX) {
 	VAstEnt* scp;
@@ -718,57 +775,6 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	} else {  // Not found
 	    token = yaID__ETC;
 	}
-    }
-    // If a paren, read another
-    else if (token == '('
-	|| token == yCONST__LEX
-	|| token == yNEW__LEX
-	|| token == ySTATIC__LEX
-	|| token == yVIRTUAL__LEX
-	|| token == yWITH__LEX
-	// Never put yID_* here; above symbol table resolution would break
-	) {
-#ifdef FLEX_DEBUG
-	if (yy_flex_debug) { cout<<"   lexToken: reading ahead to find possible strength"<<endl; }
-#endif
-	VParseBisonYYSType curValue = *s_yylvalp;  // Remember value, as about to read ahead
-	int nexttok = yylex();
-	m_ahead = true;
-	m_aheadToken = nexttok;
-	m_aheadVal = *s_yylvalp;
-	*s_yylvalp = curValue;
-	// Now potentially munge the current token
-	if (token == '(' && (nexttok == ygenSTRENGTH
-			     || nexttok == ySUPPLY0
-			     || nexttok == ySUPPLY1)) {
-	    token = yP_PAR__STRENGTH;
-	}
-	else if (token == yCONST__LEX) {
-	    if (nexttok == yREF) token = yCONST__REF;
-	    else token = yCONST__ETC;
-	}
-	else if (token == yNEW__LEX) {
-	    if (nexttok == '(') token = yNEW__PAREN;
-	    else token = yNEW__ETC;
-	}
-	else if (token == ySTATIC__LEX) {
-	    if (nexttok == yCONSTRAINT) token = ySTATIC__CONSTRAINT;
-	    else token = ySTATIC__ETC;
-	}
-	else if (token == yVIRTUAL__LEX) {
-	    if (nexttok == yCLASS) token = yVIRTUAL__CLASS;
-	    else if (nexttok == yINTERFACE) token = yVIRTUAL__INTERFACE;
-	    else if (nexttok == yaID__ETC || nexttok == yaID__LEX)
-		     // || nexttok == yaID__aINTERFACE	// but we may not know interfaces yet.
-		token = yVIRTUAL__anyID;
-	    else token = yVIRTUAL__ETC;
-	}
-	else if (token == yWITH__LEX) {
-	    if (nexttok == '(') token = yWITH__PAREN;
-	    else if (nexttok == '[') token = yWITH__BRA;
-	    else token = yWITH__ETC;
-	}
-	// If add to above "else if", also add to "if (token" further above
     }
     return token;
 }

@@ -274,7 +274,8 @@ static void NEED_S09(VFileLine*, const string&) {
 %token<str>		yFUNCTION	"function"
 %token<str>		yGENERATE	"generate"
 %token<str>		yGENVAR		"genvar"
-%token<str>		yGLOBAL		"global"
+%token<str>		yGLOBAL__LEX	"global-in-lex"
+%token<str>		yGLOBAL__CLOCKING "global-then-clocking"
 %token<str>		yIF		"if"
 %token<str>		yIFF		"iff"
 %token<str>		yIGNORE_BINS	"ignore_bins"
@@ -563,6 +564,7 @@ descriptionList:		// IEEE: part of source_text
 
 description:			// ==IEEE: description
 		module_declaration			{ }
+	//			// udp_declaration moved into module_declaration
 	|	interface_declaration			{ }
 	|	program_declaration			{ }
 	|	package_declaration			{ }
@@ -3177,13 +3179,16 @@ endLabelE:
 clocking_declaration:		// IEEE: clocking_declaration
 		clockingFront clocking_event ';'
 			clocking_itemListE yENDCLOCKING endLabelE { PARSEP->symPopScope(VAstType::CLOCKING); }
+	//			// global clocking below - we allow item list, though not in grammar
 	;
 
 clockingFront:			// IEEE: part of class_declaration
 		yCLOCKING				{ PARSEP->symPushNewAnon(VAstType::CLOCKING); }
-	|	yCLOCKING idAny/*clocking_identifier*/	{ PARSEP->symPushNew(VAstType::CLOCKING,$1); }
+	|	yCLOCKING idAny/*clocking_identifier*/	{ PARSEP->symPushNew(VAstType::CLOCKING,$2); }
 	|	yDEFAULT yCLOCKING			{ PARSEP->symPushNewAnon(VAstType::CLOCKING); }
-	|	yDEFAULT yCLOCKING idAny/*clocking_identifier*/	{ PARSEP->symPushNew(VAstType::CLOCKING,$1); }
+	|	yDEFAULT yCLOCKING idAny/*clocking_identifier*/	{ PARSEP->symPushNew(VAstType::CLOCKING,$3); }
+	|	yGLOBAL__CLOCKING yCLOCKING			{ PARSEP->symPushNewAnon(VAstType::CLOCKING); }
+	|	yGLOBAL__CLOCKING yCLOCKING idAny/*clocking_identifier*/	{ PARSEP->symPushNew(VAstType::CLOCKING,$3); }
 	;
 
 clocking_event:			// ==IEEE: clocking_event
