@@ -493,6 +493,7 @@ word	[a-zA-Z0-9_]+
   "["{ws}*"*"		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_BRASTAR; }
   "["{ws}*"="		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_BRAEQ; }
   "["{ws}*"->"		{ FL; VALTEXT; CALLBACK(operatorCb); return yP_BRAMINUSGT; }
+  "["{ws}*"+"{ws}*"]"	{ FL; VALTEXT; CALLBACK(operatorCb); return yP_BRAPLUSKET; }
 }
 
   /* SystemVerilog 2009 Operators */

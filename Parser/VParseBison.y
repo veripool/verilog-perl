@@ -455,6 +455,7 @@ static void NEED_S09(VFileLine*, const string&) {
 %token<str>		yP_BRASTAR	"[*"
 %token<str>		yP_BRAEQ	"[="
 %token<str>		yP_BRAMINUSGT	"[->"
+%token<str>		yP_BRAPLUSKET	"[+]"
 
 %token<str>		yP_PLUSPLUS	"++"
 %token<str>		yP_MINUSMINUS	"--"
@@ -497,7 +498,7 @@ static void NEED_S09(VFileLine*, const string&) {
 %right		yTHROUGHOUT
 %left		prPOUNDPOUND_MULTI
 %left		yP_POUNDPOUND
-%left		yP_BRASTAR yP_BRAEQ yP_BRAMINUSGT
+%left		yP_BRASTAR yP_BRAEQ yP_BRAMINUSGT yP_BRAPLUSKET
 
 %left		'{' '}'
 //%nonassoc	'=' yP_PLUSEQ yP_MINUSEQ yP_TIMESEQ yP_DIVEQ yP_MODEQ yP_ANDEQ yP_OREQ yP_XOREQ yP_SLEFTEQ yP_SRIGHTEQ yP_SSRIGHTEQ yP_COLONEQ yP_COLONDIV yP_LTE
@@ -2025,7 +2026,7 @@ statement_item:			// IEEE: statement_item
 	|	yFOR '(' for_initialization expr ';' for_stepE ')' stmtBlock
 				{ }
 	|	yDO stmtBlock yWHILE '(' expr ')'	{ }
-	//			// IEEE says array_identifier here, but dotted accepted in VMM
+	//			// IEEE says array_identifier here, but dotted accepted in VMM and 1800-2009
 	|	yFOREACH '(' idClassForeach/*array_id[loop_variables]*/ ')' stmt	{ }
 	//
 	//			// IEEE: jump_statement
@@ -2052,10 +2053,8 @@ statement_item:			// IEEE: statement_item
 	|	immediate_assert_statement		{ }
 	//
 	//			// IEEE: clocking_drive ';'
-	//			// Pattern w/o cycle_delay handled by nonblocking_assign above
 	//			// clockvar_expression made to fexprLvalue to prevent reduce conflict
 	//			// Note LTE in this context is highest precedence, so first on left wins
-	|	cycle_delay fexprLvalue yP_LTE ';'	{ }
 	|	fexprLvalue yP_LTE cycle_delay expr ';'	{ }
 	//
 	|	randsequence_statement			{ }
@@ -2804,7 +2803,7 @@ exprOkLvalue<str>:		// expression that's also OK to use as a variable_lvalue
 	|	'{' cateList '}' '[' expr yP_PLUSCOLON  expr ']'	{ $<fl>$=$<fl>1; $$ = "{"+$2+"}["+$5+$6+$7+"]"; NEED_S09($<fl>4,"{}[]"); }
 	|	'{' cateList '}' '[' expr yP_MINUSCOLON expr ']'	{ $<fl>$=$<fl>1; $$ = "{"+$2+"}["+$5+$6+$7+"]"; NEED_S09($<fl>4,"{}[]"); }
 	//			// IEEE: assignment_pattern_expression
-	//			// IEEE: [ assignment_pattern_expression_type ] == [ ps_type_id /ps_paremeter_id]
+	//			// IEEE: [ assignment_pattern_expression_type ] == [ ps_type_id /ps_paremeter_id/data_type]
 	//			// We allow more here than the spec requires
 	|	~l~exprScope assignment_pattern		{ $<fl>$=$<fl>1; $$=$1+$2; }
 	|	data_type assignment_pattern		{ $<fl>$=$<fl>1; $$=$1+$2; }
@@ -3456,6 +3455,8 @@ sequence_match_item:		// ==IEEE: sequence_match_item
 boolean_abbrev:			// ==IEEE: boolean_abbrev
 	//			// IEEE: consecutive_repetition
 		yP_BRASTAR const_or_range_expression ']'	{ }
+	|	yP_BRASTAR ']'				{ }
+	|	yP_BRAPLUSKET				{ }
 	//			// IEEE: non_consecutive_repetition
 	|	yP_BRAEQ const_or_range_expression ']'		{ }
 	//			// IEEE: goto_repetition
@@ -3954,8 +3955,10 @@ memberQualOne<str>:			// IEEE: property_qualifier + method_qualifier
 class_constraint:		// ==IEEE: class_constraint
 	//			// IEEE: constraint_declaration
 		constraintStaticE yCONSTRAINT idAny constraint_block	{ }
-	//			// IEEE: constraint_prototype
-	|	constraintStaticE yCONSTRAINT idAny ';'	{ }
+	//			// IEEE: constraint_prototype + constraint_prototype_qualifier
+	|	constraintStaticE yCONSTRAINT idAny ';'		{ }
+	|	yEXTERN constraintStaticE yCONSTRAINT idAny ';'	{ }
+	|	yPURE constraintStaticE yCONSTRAINT idAny ';'	{ }
 	;
 
 constraint_block:		// ==IEEE: constraint_block
@@ -3968,8 +3971,18 @@ constraint_block_itemList:	// IEEE: { constraint_block_item }
 	;
 
 constraint_block_item:		// ==IEEE: constraint_block_item
-		ySOLVE identifier_list yBEFORE identifier_list ';'	{ }
+		ySOLVE solve_before_list yBEFORE solve_before_list ';'	{ }
 	|	constraint_expression			{ }
+	;
+
+solve_before_list:		// ==IEEE: solve_before_list
+		solve_before_primary			{ }
+	|	solve_before_list ',' solve_before_primary	{ }
+	;
+
+solve_before_primary:		// ==IEEE: solve_before_primary
+	//			// exprScope more general than: [ implicit_class_handle '.' | class_scope ] hierarchical_identifier select
+		exprScope				{ }
 	;
 
 constraint_expressionList:	// ==IEEE: { constraint_expression }
@@ -3982,7 +3995,7 @@ constraint_expression:		// ==IEEE: constraint_expression
 	|	expr yP_MINUSGT constraint_set		{ }
 	|	yIF '(' expr ')' constraint_set	%prec prLOWER_THAN_ELSE	{ }
 	|	yIF '(' expr ')' constraint_set	yELSE constraint_set	{ }
-	//			// IEEE says array_identifier here, but dotted accepted in VMM
+	//			// IEEE says array_identifier here, but dotted accepted in VMM + 1800-2009
 	|	yFOREACH '(' idClassForeach/*array_id[loop_variables]*/ ')' constraint_set	{ }
 	;
 
