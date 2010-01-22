@@ -621,8 +621,8 @@ package_or_generate_item_declaration:	// ==IEEE: package_or_generate_item_declar
 	|	extern_constraint_declaration		{ }
 	|	class_declaration			{ }
 	//			// class_constructor_declaration is part of function_declaration
+	|	local_parameter_declaration ';'		{ }
 	|	parameter_declaration ';'		{ }
-	|	local_parameter_declaration		{ }
 	|	covergroup_declaration			{ }
 	|	overload_declaration			{ }
 	|	concurrent_assertion_item_declaration	{ }
@@ -1004,7 +1004,7 @@ genvar_identifierDecl:		// IEEE: genvar_identifier (for declaration)
 
 local_parameter_declaration:	// IEEE: local_parameter_declaration
 	//			// See notes in parameter_declaration
-		local_parameter_declarationFront list_of_param_assignments ';'	{ }
+		local_parameter_declarationFront list_of_param_assignments	{ }
 	;
 
 parameter_declaration:		// IEEE: parameter_declaration
@@ -1949,7 +1949,7 @@ block_item_declarationList:	// IEEE: [ block_item_declaration ]
 
 block_item_declaration:		// ==IEEE: block_item_declaration
 		data_declaration 			{ }
-	|	local_parameter_declaration 		{ }
+	|	local_parameter_declaration ';'		{ }
 	|	parameter_declaration ';' 		{ }
 	|	overload_declaration 			{ }
 	;
@@ -3900,6 +3900,8 @@ class_item:			// ==IEEE: class_item
 	|	class_declaration			{ }
 	|	timeunits_declaration			{ }
 	|	covergroup_declaration			{ }
+	|	local_parameter_declaration ';'		{ } // 1800-2009
+	|	parameter_declaration ';'		{ } // 1800-2009
 	|	';'					{ }
 	;
 
