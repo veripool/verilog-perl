@@ -1561,10 +1561,8 @@ bind_instantiation:		// ==IEEE: bind_instantiation
 //************************************************
 // Generates
 
-generate_block_or_null:		// IEEE: generate_block_or_null
-	//	';'		// is included in
-	//			// IEEE: generate_block
-		genItem					{ }
+generate_block:			// IEEE: generate_block
+		generate_item				{ }
 	|	genItemBegin				{ }
 	;
 
@@ -1583,23 +1581,25 @@ genItemBegin:			// IEEE: part of generate_block
 	;
 
 genItemList:
-		genItem					{ }
-	|	genItemList genItem			{ }
+		generate_item				{ }
+	|	genItemList generate_item		{ }
 	;
 
-genItem:			// IEEE: module_or_interface_or_generate_item
+generate_item:			// IEEE: generate_item
 		module_or_generate_item			{ }
 	|	interface_or_generate_item		{ }
 	;
 
 conditional_generate_construct:	// ==IEEE: conditional_generate_construct
+	//			// IEEE: case_generate_construct
 		yCASE  '(' expr ')' case_generate_itemListE yENDCASE	{ }
-	|	yIF '(' expr ')' generate_block_or_null	%prec prLOWER_THAN_ELSE	{ }
-	|	yIF '(' expr ')' generate_block_or_null yELSE generate_block_or_null	{ }
+	//			// IEEE: if_generate_construct
+	|	yIF '(' expr ')' generate_block	%prec prLOWER_THAN_ELSE	{ }
+	|	yIF '(' expr ')' generate_block yELSE generate_block	{ }
 	;
 
 loop_generate_construct:	// ==IEEE: loop_generate_construct
-		yFOR '(' genvar_initialization ';' expr ';' genvar_iteration ')' generate_block_or_null
+		yFOR '(' genvar_initialization ';' expr ';' genvar_iteration ')' generate_block
 			{ }
 	;
 
@@ -1640,9 +1640,9 @@ case_generate_itemList:		// IEEE: { case_generate_itemList }
 	;
 
 case_generate_item:		// ==IEEE: case_generate_item
-		caseCondList ':' generate_block_or_null	{ }
-	|	yDEFAULT ':' generate_block_or_null	{ }
-	|	yDEFAULT generate_block_or_null		{ }
+		caseCondList ':' generate_block		{ }
+	|	yDEFAULT ':' generate_block		{ }
+	|	yDEFAULT generate_block			{ }
 	;
 
 //************************************************
