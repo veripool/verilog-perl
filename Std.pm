@@ -43,12 +43,12 @@ __DATA__
 
 `line 1 "Perl_Verilog::Std_module" 0
 // Verilog-Perl Verilog::Std
-// The basis for this package is described in IEEE 1800 Annex C
+// The basis for this package is described in IEEE 1800-2009 Annex G
 package std;
 
 class semaphore;
    extern function new(int keyCount = 0);
-   extern task put(int keyCount = 1);
+   extern function void put(int keyCount = 1);
    extern task get(int keyCount = 1);
    extern function int try_get(int keyCount = 1);
 endclass
@@ -68,10 +68,10 @@ class process;
    typedef enum { FINISHED, RUNNING, WAITING, SUSPENDED, KILLED } state;
    extern static function process self();
    extern function state status();
-   extern task kill();
+   extern function void kill();
    extern task await();
-   extern task suspend();
-   extern task resume();
+   extern function void suspend();
+   extern function void resume();
 endclass
 
 //Compiler built-in due to specialized arguments
