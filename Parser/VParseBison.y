@@ -630,6 +630,11 @@ package_or_generate_item_declaration:	// ==IEEE: package_or_generate_item_declar
 	|	';'					{ }
 	;
 
+package_import_declarationList:
+		package_import_declaration		{ }
+	|	package_import_declarationList ',' package_import_declaration { }
+	;
+
 package_import_declaration:	// ==IEEE: package_import_declaration
 		yIMPORT package_import_itemList ';'	{ }
 	;
@@ -656,12 +661,12 @@ package_import_itemObj<str>:	// IEEE: part of package_import_item
 module_declaration:		// ==IEEE: module_declaration
 	//			// timeunits_declaration instead in module_item
 	//			// IEEE: module_nonansi_header + module_ansi_header
-		modFront parameter_port_listE portsStarE ';'
+		modFront importsAndParametersE portsStarE ';'
 			module_itemListE yENDMODULE endLabelE
 			{ PARSEP->endmoduleCb($<fl>6,$6);
 			  PARSEP->symPopScope(VAstType::MODULE); }
 	//
-	|	yEXTERN modFront parameter_port_listE portsStarE ';'
+	|	yEXTERN modFront importsAndParametersE portsStarE ';'
 			{ PARSEP->symPopScope(VAstType::MODULE); }
 	;
 
@@ -671,6 +676,12 @@ modFront:
 		yMODULE lifetimeE idAny
 			{ PARSEP->symPushNew(VAstType::MODULE, $3);
 			  PARSEP->moduleCb($<fl>1,$1,$3,false,PARSEP->inCellDefine()); }
+	;
+
+importsAndParametersE:		// IEEE: common part of module_declaration, interface_declaration, program_declaration
+	//			// { package_import_declaration } [ parameter_port_list ]
+		parameter_port_listE			{ }
+	|	package_import_declarationList parameter_port_listE	{ }
 	;
 
 parameter_value_assignmentE:	// IEEE: [ parameter_value_assignment ]
@@ -808,11 +819,11 @@ portSig<str>:
 
 interface_declaration:		// IEEE: interface_declaration + interface_nonansi_header + interface_ansi_header:
 	//			// timeunits_delcarationE is instead in interface_item
-		intFront parameter_port_listE portsStarE ';'
+		intFront importsAndParametersE portsStarE ';'
 			interface_itemListE yENDINTERFACE endLabelE
 			{ PARSEP->endinterfaceCb($<fl>6, $6);
 			  PARSEP->symPopScope(VAstType::INTERFACE); }
-	|	yEXTERN	intFront parameter_port_listE portsStarE ';'	{ }
+	|	yEXTERN	intFront importsAndParametersE portsStarE ';'	{ }
 	;
 
 intFront:
@@ -879,11 +890,11 @@ anonymous_program_item:		// ==IEEE: anonymous_program_item
 
 program_declaration:		// IEEE: program_declaration + program_nonansi_header + program_ansi_header:
 	//			// timeunits_delcarationE is instead in program_item
-		pgmFront parameter_port_listE portsStarE ';'
+		pgmFront importsAndParametersE portsStarE ';'
 			program_itemListE yENDPROGRAM endLabelE
 			{ PARSEP->endprogramCb($<fl>6,$6);
 			  PARSEP->symPopScope(VAstType::PROGRAM); }
-	|	yEXTERN	pgmFront parameter_port_listE portsStarE ';'
+	|	yEXTERN	pgmFront importsAndParametersE portsStarE ';'
 			{ PARSEP->symPopScope(VAstType::PROGRAM); }
 	;
 
