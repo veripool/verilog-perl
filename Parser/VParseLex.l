@@ -498,7 +498,6 @@ word	[a-zA-Z0-9_]+
 
   /* SystemVerilog 2009 Operators */
 <S09>{
-  "->"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_MINUSGT; }
   "<->"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_LTMINUSGT; }
 }
 
