@@ -274,8 +274,8 @@ static void NEED_S09(VFileLine*, const string&) {
 %token<str>		yFUNCTION	"function"
 %token<str>		yGENERATE	"generate"
 %token<str>		yGENVAR		"genvar"
-%token<str>		yGLOBAL__LEX	"global-in-lex"
 %token<str>		yGLOBAL__CLOCKING "global-then-clocking"
+%token<str>		yGLOBAL__LEX	"global-in-lex"
 %token<str>		yIF		"if"
 %token<str>		yIFF		"iff"
 %token<str>		yIGNORE_BINS	"ignore_bins"
@@ -746,7 +746,7 @@ portE:				// ==IEEE: [ port ]
 			{ VARDTYPE($2+"."+$4); VARIO("interface"); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }
 	//
 	//			// IEEE: ansi_port_declaration, with [port_direction] removed
-	//			//   IEEE: [ net_port_header | interface_port_header ] port_identifier { unpacked_dimension }
+	//			//   IEEE: [ net_port_header | interface_port_header ] port_identifier { unpacked_dimension } [ '=' constant_expression ]
 	//			//   IEEE: [ net_port_header | variable_port_header ] '.' port_identifier '(' [ expression ] ')'
 	//			//   IEEE: [ variable_port_header ] port_identifier { variable_dimension } [ '=' constant_expression ]
 	//			//   Substitute net_port_header = [ port_direction ] net_port_type
@@ -785,6 +785,7 @@ portE:				// ==IEEE: [ port ]
 	|	portDirNetE data_type           portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, $7); PINNUMINC(); }
 	|	portDirNetE yVAR data_type      portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE($3); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
 	|	portDirNetE yVAR implicit_typeE portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE($3); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
+	|	portDirNetE signingE rangeList  portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
 	|	portDirNetE /*implicit*/        portSig variable_dimensionListE sigAttrListE '=' constExpr	{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, $6); PINNUMINC(); }
 	//
 	|	'{' list_of_portsE '}'			{ }
@@ -1983,6 +1984,8 @@ statement_item:			// IEEE: statement_item
 		foperator_assignment ';'		{ }
 	//
 	//		 	// IEEE: blocking_assignment
+	//			// 1800-2009 restricts LHS of assignment to new to not have a range
+	//			// This is ignored to avoid conflicts
 	|	fexprLvalue '=' class_new ';'		{ }
 	|	fexprLvalue '=' dynamic_array_new ';'	{ }
 	//
@@ -2323,6 +2326,7 @@ task_subroutine_callNoMethod<str>:	// function_subroutine_callNoMethod (as task)
 		funcRef					{ $<fl>$=$<fl>1; $$=$1; }
 	|	system_t_call				{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: method_call requires a "." so is in expr
+	//			// IEEE: ['std::'] not needed, as normal std package resolution will find it
 	|	randomize_call 				{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
@@ -2331,6 +2335,7 @@ function_subroutine_callNoMethod<str>:	// IEEE: function_subroutine_call (as fun
 		funcRef					{ $<fl>$=$<fl>1; $$=$1; }
 	|	system_f_call				{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: method_call requires a "." so is in expr
+	//			// IEEE: ['std::'] not needed, as normal std package resolution will find it
 	|	randomize_call 				{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
@@ -2728,7 +2733,7 @@ expr<str>:			// IEEE: part of expression/constant_expression/primary
 	//
 	//			// IEEE: multiple_concatenation/constant_multiple_concatenation
 	|	'{' constExpr '{' cateList '}' '}'	{ $<fl>$=$<fl>1; $$ = "{"+$2+"{"+$4+"}}"; }
-	//			// IEEE: multiple_concatenation/constant_multiple_concatenation+ constant_range_expression (1800-2009)
+	//			// IEEE: multiple_concatenation/constant_multiple_concatenation+ range_expression (1800-2009)
 	|	'{' constExpr '{' cateList '}' '}' '[' expr ']'
 			{ $<fl>$=$<fl>1; $$ = "{"+$2+"{"+$4+"}}["+$8+"]";        NEED_S09($<fl>6,"{}[]"); }
 	|	'{' constExpr '{' cateList '}' '}' '[' expr ':' expr ']'
@@ -2838,6 +2843,7 @@ pexprOkLvalue<str>:		// exprOkLValue, For use by property_expr
 exprScope<str>:			// scope and variable for use to inside an expression
 	// 			// Here we've split method_call_root | implicit_class_handle | class_scope | package_scope
 	//			// from the object being called and let expr's "." deal with resolving it.
+	//			// (note method_call_root was simplified to require a primary in 1800-2009)
 	//
 	//			// IEEE: [ implicit_class_handle . | class_scope | package_scope ] hierarchical_identifier select
 	//			// Or method_call_body without parenthesis
@@ -3670,6 +3676,7 @@ bins_expression:		// ==IEEE: bins_expression
 coverage_eventE:		// IEEE: [ coverage_event ]
 		/* empty */				{ }
 	|	clocking_event				{ }
+	|	yWITH__ETC yFUNCTION idAny/*"sample"*/ '(' tf_port_listE ')'	{ }
 	|	yP_ATAT '(' block_event_expression ')'	{ }
 	;
 
