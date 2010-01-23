@@ -70,6 +70,8 @@ Module:v_hier_top  Kwd:module  File:verilog/v_hier_top.v
   ContAssign:assign  lhs:asn_clk  rhs:clk
 Module:v_hier_top2  Kwd:module  File:verilog/v_hier_top2.v
   Port:clk  Dir:in  DataT:  Array:
+  Port:iosig  Dir:inout  DataT:[2:0]  Array:
   Net:clk  O  DeclT:port  NetT:  DataT:  Array:
+  Net:iosig    DeclT:port  NetT:  DataT:[2:0]  Array:  2:0
   Cell:noport  is-a:v_hier_noport
             Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v

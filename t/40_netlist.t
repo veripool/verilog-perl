@@ -8,7 +8,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 23 }
+BEGIN { plan tests => 25 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::Netlist::Debug = 1;
@@ -26,10 +26,13 @@ $opt->parameter( "+incdir+verilog",
 
 # Prepare netlist
 my $nl = new Verilog::Netlist (options => $opt,
+			       keep_comments => 1,
 			       link_read_nonfatal=>1,
     );
-foreach my $file ('verilog/v_hier_top.v', 'verilog/v_hier_top2.v',
-		  'verilog/v_sv_mod.v') {
+foreach my $file ('verilog/v_hier_top.v',
+		  'verilog/v_hier_top2.v',
+		  'verilog/v_sv_mod.v'
+    ) {
     $nl->read_file (filename=>$file);
 }
 # Read in any sub-modules
@@ -76,8 +79,17 @@ ok ($mods[6], 'v_sv_mod');
     ok ($#o == 2 && $o[0]->name eq 'clk');
 }
 
-ok(1);
+# Comments
+{
+    my $mod = $nl->find_module("v_hier_top2");
 
+    my $net = $mod->find_net("iosig");
+    ok($net);
+    # Someday ->comment should include stuff before the ; also
+    ok($net->comment eq "/* synthesis aftersemi*/\n// NetListName=F12_IO");
+}
+
+ok(1);
 
 sub _width_of {
     my $mod = shift;
