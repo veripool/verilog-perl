@@ -1456,7 +1456,8 @@ assertion_variable_declarationId: // IEEE: part of assertion_variable_declaratio
 type_declaration:		// ==IEEE: type_declaration
 	//			// Use idAny, as we can redeclare a typedef on an existing typedef
 		yTYPEDEF data_type idAny variable_dimensionListE ';'	{ VARDONETYPEDEF($<fl>1,$3,$2,$4); }
-	|	yTYPEDEF id/*interface*/ '.' idAny/*type*/ idAny/*type*/ ';'	{ VARDONETYPEDEF($<fl>1,$5,$2+"."+$4,""); }
+	|	yTYPEDEF id/*interface*/ bit_selectE '.' idAny/*type*/ idAny/*type*/ ';'
+			{ VARDONETYPEDEF($<fl>1,$6,$2+$3+"."+$5,""); }
 	//			// Combines into above "data_type id" rule
 	|	yTYPEDEF id ';'				{ VARDONETYPEDEF($<fl>1,$2,"",""); }
 	|	yTYPEDEF yENUM idAny ';'		{ PARSEP->symReinsert(VAstType::ENUM, $3); }
