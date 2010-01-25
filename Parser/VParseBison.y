@@ -1541,6 +1541,7 @@ module_or_generate_item_declaration:	// ==IEEE: module_or_generate_item_declarat
 	| 	genvar_declaration			{ }
 	|	clocking_declaration			{ }
 	|	yDEFAULT yCLOCKING idAny/*new-clocking_identifier*/ ';'	{ }
+	|	yDEFAULT yDISABLE yIFF expr/*expression_or_dist*/ ';'	{ }
 	;
 
 aliasEqList:			// IEEE: part of net_alias
