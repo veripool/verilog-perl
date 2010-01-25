@@ -610,6 +610,7 @@ package_itemList:		// IEEE: { package_item }
 package_item:			// ==IEEE: package_item
 		package_or_generate_item_declaration	{ }
 	|	anonymous_program			{ }
+	|	package_export_declaration		{ }
 	|	timeunits_declaration			{ }
 	;
 
@@ -653,6 +654,11 @@ package_import_item:		// ==IEEE: package_import_item
 package_import_itemObj<str>:	// IEEE: part of package_import_item
 		idAny					{ $<fl>$=$<fl>1; $$=$1; }
 	|	'*'					{ $<fl>$=$<fl>1; $$=$1; }
+	;
+
+package_export_declaration<str>: // IEEE: package_export_declaration
+		yEXPORT '*' yP_COLONCOLON '*' ';'	{ }
+	|	yEXPORT package_import_itemList ';'	{ }
 	;
 
 //**********************************************************************
