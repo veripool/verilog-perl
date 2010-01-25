@@ -3295,9 +3295,11 @@ concurrent_assertion_statement:	// ==IEEE: concurrent_assertion_statement
 	//			// IEEE: assert_property_statement
 		yASSERT yPROPERTY '(' property_spec ')' action_block	{ }
 	//			// IEEE: assume_property_statement
-	|	yASSUME yPROPERTY '(' property_spec ')' ';'		{ }
+	|	yASSUME yPROPERTY '(' property_spec ')' action_block	{ }
 	//			// IEEE: cover_property_statement
 	|	yCOVER yPROPERTY '(' property_spec ')' stmtBlock	{ }
+	//			// IEEE: restrict_property_statement
+	|	yRESTRICT yPROPERTY '(' property_spec ')' ';'		{ }
 	;
 
 concurrent_assertion_item_declaration:	// ==IEEE: concurrent_assertion_item_declaration
