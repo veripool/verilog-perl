@@ -84,6 +84,7 @@ sub test {
 
     my $opt = prep();
     my $pp = new MyPreproc (options=>$opt, @args);
+    #$pp->debug(9);
     $pp->open("inc1.v");
     $pp->open("inc2.v");
     $pp->open("inc_ifdef.v");

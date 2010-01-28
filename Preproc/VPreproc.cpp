@@ -124,6 +124,7 @@ struct VPreprocImp : public VPreprocOpaque {
     const char* tokenName(int tok);
     int getRawToken();
     int getToken();
+    void debugToken(int tok, const char* cmtp);
     void parseTop();
     void parseUndef();
     string getparseline(bool stop_at_eol);
@@ -517,7 +518,8 @@ int VPreprocImp::getRawToken() {
 	    m_lineAdd--;
 	    m_rawAtBol = true;
 	    yytext=(char*)"\n"; yyleng=1;
-	    return (VP_TEXT);
+	    if (debug()) debugToken(VP_WHITE, "LNA");
+	    return (VP_WHITE);
 	}
 	if (m_lineCmt!="") {
 	    // We have some `line directive or other processed data to return to the user.
@@ -534,6 +536,7 @@ int VPreprocImp::getRawToken() {
 		VPreprocLex::s_currentLexp->appendDefValue(yytext,yyleng);
 		goto next_tok;
 	    } else {
+		if (debug()) debugToken(VP_TEXT, "LCM");
 		return (VP_TEXT);
 	    }
 	}
@@ -544,15 +547,7 @@ int VPreprocImp::getRawToken() {
 	VPreprocLex::s_currentLexp = m_lexp;   // Tell parser where to get/put data
 	int tok = yylex();
 
-	if (debug()) {
-	    string buf = string (yytext, yyleng);
-	    string::size_type pos;
-	    while ((pos=buf.find("\n")) != string::npos) { buf.replace(pos, 1, "\\n"); }
-	    while ((pos=buf.find("\r")) != string::npos) { buf.replace(pos, 1, "\\r"); }
-	    fprintf (stderr, "%d: RAW %s s%d dr%d:  <%d>%-10s: %s\n",
-		     m_filelinep->lineno(), m_off?"of":"on", m_state, (int)m_defRefs.size(),
-		     m_lexp->currentStartState(), tokenName(tok), buf.c_str());
-	}
+	if (debug()) debugToken(tok, "RAW");
 
 	// On EOF, try to pop to upper level includes, as needed.
 	if (tok==VP_EOF) {
@@ -562,6 +557,18 @@ int VPreprocImp::getRawToken() {
 
 	if (yyleng) m_rawAtBol = (yytext[yyleng-1]=='\n');
 	return tok;
+    }
+}
+
+void VPreprocImp::debugToken(int tok, const char* cmtp) {
+    if (debug()) {
+	string buf = string (yytext, yyleng);
+	string::size_type pos;
+	while ((pos=buf.find("\n")) != string::npos) { buf.replace(pos, 1, "\\n"); }
+	while ((pos=buf.find("\r")) != string::npos) { buf.replace(pos, 1, "\\r"); }
+	fprintf (stderr, "%d: %s %s s%d dr%d:  <%d>%-10s: %s\n",
+		 m_filelinep->lineno(), cmtp, m_off?"of":"on", m_state, (int)m_defRefs.size(),
+		 m_lexp->currentStartState(), tokenName(tok), buf.c_str());
     }
 }
 
@@ -642,6 +649,11 @@ int VPreprocImp::getToken() {
 		else fatalSrc("Bad case\n");
 		goto next_tok;
 	    }
+	    else if (tok==VP_TEXT) {
+		// IE, something like comment between define and symbol
+		if (!m_off) return tok;
+		else goto next_tok;
+	    }
 	    else {
 		error((string)"Expecting define name. Found: "+tokenName(tok)+"\n");
 		goto next_tok;
@@ -692,7 +704,8 @@ int VPreprocImp::getToken() {
 		    m_preprocp->define(m_lastSym, value, formals);
 		}
 	    } else {
-		fatalSrc("Bad define text\n");
+		string msg = string("Bad define text, unexpected ")+tokenName(tok)+"\n";
+		fatalSrc(msg);
 	    }
 	    m_state = ps_TOP;
 	    // DEFVALUE is terminated by a return, but lex can't return both tokens.

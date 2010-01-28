@@ -474,4 +474,49 @@ verilog/inc1.v:210:
 verilog/inc1.v:211:     
 verilog/inc1.v:211: `line 211 "verilog/inc1.v" 0
 verilog/inc1.v:211: 
-verilog/inc1.v:212: `line 212 "verilog/inc1.v" 2
+verilog/inc1.v:212: 
+COMMENT: //======================================================================
+verilog/inc1.v:213:  /*CMT*/ 
+COMMENT: // bug202
+verilog/inc1.v:214:  /*CMT*/ 
+COMMENT: /* multi-line comment					\
+	 multi-line comment */
+verilog/inc1.v:215:  
+verilog/inc1.v:219: 
+verilog/inc1.v:219: 
+verilog/inc1.v:219: 
+verilog/inc1.v:219: 
+verilog/inc1.v:219: 
+verilog/inc1.v:219: 
+verilog/inc1.v:219: 
+verilog/inc1.v:219: 
+verilog/inc1.v:219: 
+verilog/inc1.v:219: 
+verilog/inc1.v:226: 
+verilog/inc1.v:227: DS< 							          	         					   
+verilog/inc1.v:227: `line 227 "verilog/inc1.v" 0
+verilog/inc1.v:227: 								      					           		     
+verilog/inc1.v:227: `line 227 "verilog/inc1.v" 0
+verilog/inc1.v:227: 							      assign a3 = ~b3 ;						   >
+verilog/inc1.v:228: 
+COMMENT: /* multi	\
+	 line1*/
+verilog/inc1.v:229:  
+verilog/inc1.v:230:  /*CMT*/ 	\
+COMMENT: /*multi	\
+	   line2*/
+verilog/inc1.v:231:  
+COMMENT: /* multi		\
+      line 3*/
+verilog/inc1.v:233:  /*CMT*/ 
+verilog/inc1.v:235: 
+verilog/inc1.v:235: 
+verilog/inc1.v:235: 
+verilog/inc1.v:235: 
+verilog/inc1.v:235: 
+COMMENT: /*CMT*/
+verilog/inc1.v:238: DS< /*CMT*/  		    def foo>
+verilog/inc1.v:239: 
+COMMENT: //======================================================================
+verilog/inc1.v:240:  /*CMT*/ 
+verilog/inc1.v:241: `line 241 "verilog/inc1.v" 2

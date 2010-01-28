@@ -50,7 +50,7 @@ if ($mem == 0) {
     ok(1);
 } else {
     warn "%Warning: Leaked ",int(1024*($mem_end-$mem_mid)/($loops/2))," bytes per parse\n";
-    if (!$ENV{VERILATOR_AUTHOR_SITE}) {
+    if (!$ENV{VERILATOR_AUTHOR_SITE} || $ENV{HARNESS_FAST}) {
 	# It's somewhat sensitive unless there's a lot of loops,
 	# and lots of loops is too slow for users to deal with.
 	skip("leaked, but author only test",1);

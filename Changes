@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.23***
+
+****	Fix defines with comments w/o keep_whitespace, bug202. [Rick Ramus]
+
 * Verilog::Language 3.230 2010/01/21
 
 **	Support interface modports, bug200.  [by Thriller Wu]

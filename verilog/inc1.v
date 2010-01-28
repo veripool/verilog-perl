@@ -209,3 +209,32 @@ Not a \`define
 `undefineall
 `ifdef UDALL `error "undefineall failed" `endif
 `ifndef PREDEF_COMMAND_LINE `error "Deleted too much, no PREDEF_COMMAND_LINE" `endif
+
+//======================================================================
+// bug202
+`define FC_INV3(out, in)					\
+  `ifdef DC							\
+     cell \inv_``out <$typeof(out)> (.a(<in>), .o(<out>));	\
+      /* multi-line comment					\
+	 multi-line comment */					\
+  `else								\
+    `ifdef MACRO_ATTRIBUTE					\
+      (* macro_attribute = `"INV (out``,in``)`" *)		\
+    `endif							\
+     assign out = ~in ;						\
+  `endif
+
+`FC_INV3(a3,b3)
+
+`define /* multi	\
+	 line1*/	\
+ bug202( i /*multi	\
+	   line2*/	\
+     )			\
+   /* multi		\
+      line 3*/		\
+   def i		\
+
+`bug202(foo)
+
+//======================================================================
