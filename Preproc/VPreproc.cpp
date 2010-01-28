@@ -27,6 +27,17 @@
 #include <vector>
 #include <map>
 #include <cassert>
+#include <cerrno>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__CYGWIN__)
+# include <io.h>
+#else
+# include <unistd.h>
+#endif
 
 #include "VPreproc.h"
 #include "VPreprocLex.h"
@@ -129,7 +140,8 @@ struct VPreprocImp : public VPreprocOpaque {
     void parseUndef();
     string getparseline(bool stop_at_eol);
     bool isEof() const { return (m_lexp==NULL); }
-    void open(string filename, VFileLine* filelinep);
+    bool readWholefile(const string& filename, string& out);
+    void openFile(string filename, VFileLine* filelinep);
     void insertUnreadback(const string& text) { m_lineCmt += text; }
     void insertUnreadbackAtBol(const string& text);
 private:
@@ -140,7 +152,7 @@ private:
     string defineSubst(VPreDefRef* refp);
     void addLineComment(int enter_exit_level);
     string trimWhitespace(const string& strg, bool trailing);
-    void unputString(const string& strg);
+    void unputString(const string& strg, bool first=false);
 
     void parsingOn() { m_off--; assert(m_off>=0); if (!m_off) addLineComment(0); }
     void parsingOff() { m_off++; }
@@ -163,9 +175,9 @@ VPreproc::~VPreproc() {
 // VPreproc Methods.  Just call the implementation functions.
 
 void VPreproc::comment(string cmt) { }
-void VPreproc::open(string filename, VFileLine* filelinep) {
+void VPreproc::openFile(string filename, VFileLine* filelinep) {
     VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
-    idatap->open (filename,filelinep);
+    idatap->openFile (filename,filelinep);
 }
 string VPreproc::getline() {
     VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
@@ -199,7 +211,7 @@ void VPreproc::insertUnreadback(string text) {
 // This probably will want to be overridden for given child users of this class.
 
 void VPreproc::include(string filename) {
-    open(filename, filelinep());
+    openFile(filename, filelinep());
 }
 void VPreproc::undef(string define) {
     cout<<"UNDEF "<<define<<endl;
@@ -255,14 +267,16 @@ const char* VPreprocImp::tokenName(int tok) {
     }
 }
 
-void VPreprocImp::unputString(const string& strg) {
+void VPreprocImp::unputString(const string& strg, bool first) {
     // We used to just m_lexp->unputString(strg.c_str());
     // However this can lead to "flex scanner push-back overflow"
     // so instead we scan from a temporary buffer, then on EOF return.
     // This is also faster than the old scheme, amazingly.
-    if (m_lexp->m_bufferStack.empty() || m_lexp->m_bufferStack.top()!=m_lexp->currentBuffer()) {
-	fatalSrc("bufferStack missing current buffer; will return incorrectly");
-	// Hard to debug lost text as won't know till much later
+    if (!first) {  // Else the initial creation
+	if (m_lexp->m_bufferStack.empty() || m_lexp->m_bufferStack.top()!=m_lexp->currentBuffer()) {
+	    fatalSrc("bufferStack missing current buffer; will return incorrectly");
+	    // Hard to debug lost text as won't know till much later
+	}
     }
     m_lexp->scanBytes(strg);
 }
@@ -431,17 +445,50 @@ string VPreprocImp::defineSubst(VPreDefRef* refp) {
 //**********************************************************************
 // Parser routines
 
-void VPreprocImp::open(string filename, VFileLine* filelinep) {
+bool VPreprocImp::readWholefile(const string& filename, string& out) {
+    int fd = open (filename.c_str(), O_RDONLY);
+    if (!fd) return false;
+
+#define INFILTER_IPC_BUFSIZ 64*1024
+    char buf[INFILTER_IPC_BUFSIZ];
+    bool eof = false;
+    while (!eof) {
+	int todo = INFILTER_IPC_BUFSIZ;
+	int got = read (fd, buf, todo);
+	if (got>0) out.append(buf, got);
+	else if (errno == EINTR || errno == EAGAIN
+#ifdef EWOULDBLOCK
+		 || errno == EWOULDBLOCK
+#endif
+	    ) {
+	} else { eof = true; break; }
+    }
+
+    close(fd);
+    return true;
+}
+
+void VPreprocImp::openFile(string filename, VFileLine* filelinep) {
     // Open a new file, possibly overriding the current one which is active.
     if (filelinep) {
 	m_filelinep = filelinep;
     }
 
-    FILE* fp = fopen (filename.c_str(), "r");
-    if (!fp) {
+    string wholefile;
+    bool ok = readWholefile(filename, wholefile/*ref*/);
+    if (!ok) {
 	error("File not found: "+filename+"\n");
 	return;
     }
+
+    // Filter all DOS CR's en-mass.  This avoids bugs with lexing CRs in the wrong places.
+    // This will also strip them from strings, but strings aren't supposed to be multi-line without a "\"
+    string wholefilecr;
+    size_t wholesize = wholefile.length();
+    for (size_t i=0; i<wholesize; i++) {  // Not a c_str(), as we keep '\0's for now.
+	if (wholefile[i] != '\r' && wholefile[i] != '\0') wholefilecr += wholefile[i];
+    }
+    wholefile.resize(0); // free memory
 
     if (m_lexp) {
 	// We allow the same include file twice, because occasionally it pops
@@ -455,13 +502,15 @@ void VPreprocImp::open(string filename, VFileLine* filelinep) {
 	addLineComment(0);
     }
 
-    m_lexp = new VPreprocLex (fp);
+    m_lexp = new VPreprocLex ();
     m_lexp->m_keepComments = m_preprocp->keepComments();
     m_lexp->m_keepWhitespace = m_preprocp->keepWhitespace();
     m_lexp->m_pedantic = m_preprocp->pedantic();
     m_lexp->m_curFilelinep = m_preprocp->filelinep()->create(filename, 1);
     m_filelinep = m_lexp->m_curFilelinep;  // Remember token start location
     addLineComment(1); // Enter
+
+    unputString(wholefilecr,true);
 }
 
 void VPreprocImp::insertUnreadbackAtBol(const string& text) {

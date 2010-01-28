@@ -357,7 +357,7 @@ PROTOTYPE: $$
 CODE:
 {
     if (!THIS) XSRETURN_UNDEF;
-    THIS->open(filename);
+    THIS->openFile(filename);
     RETVAL = 1;
 }
 OUTPUT: RETVAL

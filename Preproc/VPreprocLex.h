@@ -107,7 +107,6 @@ class VPreprocLex {
     VFileLine*	m_curFilelinep;	///< Current processing point
 
     // Parse state
-    FILE*	m_fp;		///< File state is for
     stack<YY_BUFFER_STATE> m_bufferStack;	///< Stack of inserted text above current point
 
     // State to lexer
@@ -123,19 +122,15 @@ class VPreprocLex {
     string	m_defValue;	///< Definition value being built.
 
     // CONSTRUCTORS
-    VPreprocLex(FILE* fp) {
-	m_fp = fp;
+    VPreprocLex() {
 	m_keepComments = 0;
 	m_keepWhitespace = 1;
 	m_pedantic = false;
 	m_formalLevel = 0;
 	m_parenLevel = 0;
 	m_defCmtSlash = false;
-	m_bufferStack.push(yy_create_buffer (fp, YY_BUF_SIZE));
-	yy_switch_to_buffer(m_bufferStack.top());
     }
     ~VPreprocLex() {
-	fclose(m_fp);
 	while (!m_bufferStack.empty()) { yy_delete_buffer(m_bufferStack.top()); m_bufferStack.pop(); }
     }
 

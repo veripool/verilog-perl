@@ -44,7 +44,7 @@ class VDefine;
 /// Verilog Preprocessor.
 ////
 /// This defines a preprocessor.  Functions are virtual so users can override them.
-/// After creating, call open(), then getline() in a loop.  The class will to the rest...
+/// After creating, call openFile(), then getline() in a loop.  The class will to the rest...
 
 class VPreproc {
 public:
@@ -57,7 +57,7 @@ public:
 
     // ACCESSORS
     /// Insert given file into this point in input stream
-    virtual void open(string filename, VFileLine* filelinep=NULL);
+    virtual void openFile(string filename, VFileLine* filelinep=NULL);
     virtual void debug(int level);	///< Set debugging level
     virtual string getall();		///< Return all lines. (Null if done.)
     virtual string getline();		///< Return next line/lines. (Null if done.)
