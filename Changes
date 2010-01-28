@@ -5,7 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.23***
 
-****	Fix defines with comments w/o keep_whitespace, bug202. [Rick Ramus]
+****	Support 1800-2009 /*comments*/ in define values.
+
+****	Fix error on define comments w/o keep_whitespace, bug202. [Rick Ramus]
 
 * Verilog::Language 3.230 2010/01/21
 

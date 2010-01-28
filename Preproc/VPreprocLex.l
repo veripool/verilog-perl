@@ -66,6 +66,7 @@ void yyerrorf(const char* format, ...) {
 %x DEFFPAR
 %x DEFFORM
 %x DEFVAL
+%x DEFCMT
 %x ARGMODE
 %x INCMODE
 %x PRTMODE
@@ -157,15 +158,26 @@ drop		[\032]
 <DEFFORM>.		{ appendDefValue(yytext,yyleng); }
 
 	/* Reading definition value */
-<DEFVAL>"/*"		{ yy_push_state(CMTMODE); yymore(); }
+<DEFVAL>"/*"		{ LEXP->m_defCmtSlash=false; yy_push_state(DEFCMT); yymore(); }  /* Special comment parser */
 <DEFVAL>"//"[^\n\r]*	{ return (VP_COMMENT);}
 <DEFVAL>{drop}		{ }
 <DEFVAL><<EOF>>		{ linenoInc(); yy_pop_state(); yytext=(char*)"\n"; yyleng=1; return (VP_DEFVALUE); } /* Technically illegal, but people complained */
 <DEFVAL>{crnl}		{ linenoInc(); yy_pop_state(); yytext=(char*)"\n"; yyleng=1; return (VP_DEFVALUE); }
-<DEFVAL>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\n",1); } /* Include return so can maintain output line count */
+<DEFVAL>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\n",1); } /* Return, but not \ is part of define value */
 <DEFVAL>[^\/\*\n\r\\]+	|
 <DEFVAL>[\\][^\n\r]	|
 <DEFVAL>.		{ appendDefValue(yytext,yyleng); }
+
+	/* Comments inside define values - if embedded get added to define value per spec */
+	/* - if no \{crnl} ending then the comment belongs to the next line, as a non-embedded comment */
+	/* - if all but (say) 3rd line is missing \ then it's indeterminate */
+<DEFCMT>"*/"		{ yy_pop_state(); appendDefValue(yytext,yyleng); }
+<DEFCMT>[\\]{crnl}	{ linenoInc(); LEXP->m_defCmtSlash=true;
+	 		  appendDefValue(yytext,yyleng-2); appendDefValue((char*)"\n",1); }  /* Return but not \ */
+<DEFCMT>{crnl}		{ linenoInc(); yymore(); if (LEXP->m_defCmtSlash) yyerrorf("One line of /* ... */ is missing \\ before newline");
+			  BEGIN(CMTMODE); }
+<DEFCMT>.		{ yymore(); }
+<DEFCMT><<EOF>>		{ yyerrorf("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
 
 	/* Define arguments */
 <ARGMODE>"/*"		{ yy_push_state(CMTMODE); yymore(); }
@@ -204,6 +216,7 @@ drop		[\032]
 <INITIAL>"//"[^\n\r]* 	{ return (VP_COMMENT); }
 
 	/* C-style comments. */
+	/**** See also DEFCMT */
 <INITIAL>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <CMTMODE>"*/"		{ yy_pop_state(); return(VP_COMMENT); }
 <CMTMODE>{crnl}		{ linenoInc(); yymore(); }

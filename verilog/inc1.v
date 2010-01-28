@@ -3,7 +3,7 @@
 // without warranty, 2000-2010 by Wilson Snyder.
    text.
 
-`define FOOBAR  foo /*but not */ bar   /* or this either */
+`define FOOBAR  foo /*this */ bar   /* this too */
 `define FOOBAR2  foobar2 // but not
 `FOOBAR
 `FOOBAR2
@@ -236,5 +236,21 @@ Not a \`define
    def i		\
 
 `bug202(foo)
+
+//======================================================================
+
+`define CMT1 // NOT IN DEFINE
+`define CMT2 /* PART OF DEFINE */
+`define CMT3 /* NOT PART
+	        OF DEFINE */
+`define CMT4 /* PART \
+	        OF DEFINE */
+1 `CMT1 (nodef)
+2 `CMT2 (hasdef)
+3 `CMT3 (nodef)
+4 `CMT4 (nodef)
+`define NL HAS a NEW \
+LINE
+`NL
 
 //======================================================================

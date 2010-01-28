@@ -40,9 +40,9 @@ verilog/inc1.v:2: // This file ONLY is placed into the Public Domain, for any us
 verilog/inc1.v:3: // without warranty, 2000-2010 by Wilson Snyder.
 verilog/inc1.v:4:    text.
 verilog/inc1.v:5: 
-verilog/inc1.v:6:  /*but not *//* or this either */
+verilog/inc1.v:6:  
 verilog/inc1.v:7:  // but not
-verilog/inc1.v:8: foo  bar
+verilog/inc1.v:8: foo /*this */ bar   /* this too */
 verilog/inc1.v:9: foobar2
 verilog/inc1.v:10: 
 verilog/inc1.v:11:  
@@ -271,17 +271,17 @@ verilog/inc1.v:211:
 verilog/inc1.v:212: 
 verilog/inc1.v:213: //======================================================================
 verilog/inc1.v:214: // bug202
-verilog/inc1.v:215:  /* multi-line comment					\
-verilog/inc1.v:219: 	 multi-line comment */
-verilog/inc1.v:219: 
-verilog/inc1.v:219: 
-verilog/inc1.v:219: 
-verilog/inc1.v:219: 
-verilog/inc1.v:219: 
-verilog/inc1.v:219: 
-verilog/inc1.v:219: 
-verilog/inc1.v:219: 
-verilog/inc1.v:219: 
+verilog/inc1.v:215:  
+verilog/inc1.v:215: 
+verilog/inc1.v:215: 
+verilog/inc1.v:215: 
+verilog/inc1.v:215: 
+verilog/inc1.v:215: 
+verilog/inc1.v:215: 
+verilog/inc1.v:215: 
+verilog/inc1.v:215: 
+verilog/inc1.v:215: 
+verilog/inc1.v:215: 
 verilog/inc1.v:226: 
 verilog/inc1.v:227:  							          	       					   
 verilog/inc1.v:227: `line 227 "verilog/inc1.v" 0
@@ -292,13 +292,29 @@ verilog/inc1.v:228:
 verilog/inc1.v:229:  /* multi	\
 verilog/inc1.v:230: 	 line1*/	\
 verilog/inc1.v:231:  /*multi	\
-verilog/inc1.v:233: 	   line2*//* multi		\
-verilog/inc1.v:235:       line 3*/
-verilog/inc1.v:235: 
-verilog/inc1.v:235: 
-verilog/inc1.v:235: 
-verilog/inc1.v:235: 
-verilog/inc1.v:238: def foo
+verilog/inc1.v:233: 	   line2*/
+verilog/inc1.v:233: 
+verilog/inc1.v:233: 
+verilog/inc1.v:233: 
+verilog/inc1.v:233: 
+verilog/inc1.v:233: 
+verilog/inc1.v:238: /* multi		       line 3*/		    def foo
 verilog/inc1.v:239: 
 verilog/inc1.v:240: //======================================================================
-verilog/inc1.v:241: `line 241 "verilog/inc1.v" 2
+verilog/inc1.v:241: 
+verilog/inc1.v:242:  // NOT IN DEFINE
+verilog/inc1.v:243:  
+verilog/inc1.v:244:  /* NOT PART
+verilog/inc1.v:245: 	        OF DEFINE */
+verilog/inc1.v:246:  
+verilog/inc1.v:246: 
+verilog/inc1.v:248: 1  (nodef)
+verilog/inc1.v:249: 2 /* PART OF DEFINE */ (hasdef)
+verilog/inc1.v:250: 3  (nodef)
+verilog/inc1.v:251: 4 /* PART  	        OF DEFINE */ (nodef)
+verilog/inc1.v:252:  
+verilog/inc1.v:252: 
+verilog/inc1.v:254: HAS a NEW  LINE
+verilog/inc1.v:255: 
+verilog/inc1.v:256: //======================================================================
+verilog/inc1.v:257: `line 257 "verilog/inc1.v" 2

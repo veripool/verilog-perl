@@ -61,7 +61,7 @@ inc3_a_filename_from_line_directive:18: `line 5 "verilog/inc2.v" 0
 verilog/inc2.v:6: `line 6 "verilog/inc2.v" 2
 verilog/inc2.v:6: `line 1 "verilog/inc1.v" 0
 verilog/inc1.v:4:  text.
-verilog/inc1.v:8: foo bar
+verilog/inc1.v:8: foo  bar 
 verilog/inc1.v:9: foobar2
 verilog/inc1.v:15: first part second part
 verilog/inc1.v:22: deep deep
@@ -139,5 +139,10 @@ verilog/inc1.v:227: `line 227 "verilog/inc1.v" 0
 verilog/inc1.v:227: `line 227 "verilog/inc1.v" 0
 verilog/inc1.v:227:  assign a3 = ~b3 ; 
 verilog/inc1.v:230:  \
-verilog/inc1.v:238: def foo
-verilog/inc1.v:241: `line 241 "verilog/inc1.v" 2
+verilog/inc1.v:238:  def foo
+verilog/inc1.v:248: 1  (nodef)
+verilog/inc1.v:249: 2  (hasdef)
+verilog/inc1.v:250: 3  (nodef)
+verilog/inc1.v:251: 4  (nodef)
+verilog/inc1.v:254: HAS a NEW LINE
+verilog/inc1.v:257: `line 257 "verilog/inc1.v" 2

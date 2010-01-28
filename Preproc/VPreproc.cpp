@@ -684,13 +684,17 @@ int VPreprocImp::getToken() {
 		string formals = m_formals;
 		string value = m_lexp->m_defValue;
 		// Remove returns
-		for (unsigned i=0; i<formals.length(); i++) {
+		// Not removing returns in values has two problems,
+		// 1. we need to correct line numbers with `line after each substitution
+		// 2. Substituting in " .... " with embedded returns requires \ escape.
+		//    This is very difficult in the presence of `".
+		for (size_t i=0; i<formals.length(); i++) {
 		    if (formals[i] == '\n') {
 			formals[i] = ' ';
 			newlines += "\n";
 		    }
 		}
-		for (unsigned i=0; i<value.length(); i++) {
+		for (size_t i=0; i<value.length(); i++) {
 		    if (value[i] == '\n') {
 			value[i] = ' ';
 			newlines += "\n";

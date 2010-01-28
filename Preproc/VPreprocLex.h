@@ -119,6 +119,7 @@ class VPreprocLex {
     // State from lexer
     int		m_formalLevel;	///< Parenthesis counting inside def formals
     int		m_parenLevel;	///< Parenthesis counting inside def args
+    bool	m_defCmtSlash;	///< /*...*/ comment in define had \ ending
     string	m_defValue;	///< Definition value being built.
 
     // CONSTRUCTORS
@@ -129,6 +130,7 @@ class VPreprocLex {
 	m_pedantic = false;
 	m_formalLevel = 0;
 	m_parenLevel = 0;
+	m_defCmtSlash = false;
 	m_bufferStack.push(yy_create_buffer (fp, YY_BUF_SIZE));
 	yy_switch_to_buffer(m_bufferStack.top());
     }
