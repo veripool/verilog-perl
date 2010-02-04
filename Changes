@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix error on define comments w/o keep_whitespace, bug202. [Rick Ramus]
 
+****	Fix "parser thinks ending" error on unions, bug202. [Rick Ramus]
+
 * Verilog::Language 3.230 2010/01/21
 
 **	Support interface modports, bug200.  [by Thriller Wu]

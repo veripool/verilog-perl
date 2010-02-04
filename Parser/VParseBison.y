@@ -1141,10 +1141,10 @@ data_typeNoRef<str>:		// ==IEEE: data_type, excluding class_type etc references
 		integer_vector_type signingE rangeListE	{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
 	|	integer_atom_type signingE		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	|	non_integer_type			{ $<fl>$=$<fl>1; $$=$1; }
-	|	ySTRUCT        packedSigningE '{' { PARSEP->symPushNew(VAstType::STRUCT, " unknown"); }
+	|	ySTRUCT        packedSigningE '{' { PARSEP->symPushNewAnon(VAstType::STRUCT); }
 	/*cont*/	struct_union_memberList '}' packed_dimensionListE
 			{ $<fl>$=$<fl>1; $$=$1; PARSEP->symPopScope(VAstType::STRUCT); }
-	|	yUNION taggedE packedSigningE '{' { PARSEP->symPushNew(VAstType::UNION, " unknown"); }
+	|	yUNION taggedE packedSigningE '{' { PARSEP->symPushNewAnon(VAstType::UNION); }
 	/*cont*/	struct_union_memberList '}' packed_dimensionListE
 			{ $<fl>$=$<fl>1; $$=$1; PARSEP->symPopScope(VAstType::UNION); }
 	|	enumDecl				{ $<fl>$=$<fl>1; $$=$1; }
