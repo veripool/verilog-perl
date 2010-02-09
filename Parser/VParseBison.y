@@ -1973,6 +1973,7 @@ block_item_declaration:		// ==IEEE: block_item_declaration
 	|	local_parameter_declaration ';'		{ }
 	|	parameter_declaration ';' 		{ }
 	|	overload_declaration 			{ }
+	|	let_declaration 			{ }
 	;
 
 stmtList:
@@ -2325,6 +2326,7 @@ funcRef<str>:			// IEEE: part of tf_call
 	//			// id is-a sequence_identifier
 	//			//      or function_identifier
 	//			//      or property_identifier
+	//			//      or let_expression / let_identifier
 		id '(' list_of_argumentsE ')'		{ $<fl>$=$<fl>1; $$=$1+"("+$3+")"; }
 	|	package_scopeIdFollows id '(' list_of_argumentsE ')'	{ $<fl>$=$<fl>2; $$=$1+$2+"("+$4+")"; }
 	;
@@ -2756,6 +2758,9 @@ expr<str>:			// IEEE: part of expression/constant_expression/primary
 	|	~l~expr '.' function_subroutine_callNoMethod	{ $<fl>$=$<fl>1; $$=$1+"."+$3; }
 	//			// method_call:array_method requires a '.'
 	|	~l~expr '.' array_methodNoRoot		{ $<fl>$=$<fl>1; $$ = $1+"."+$3; }
+	//
+	//			// IEEE: let_expression
+	//			// see funcRef
 	//
 	//			// IEEE: '(' mintypmax_expression ')'
 	|	~noPar__IGNORE~'(' expr ')'			{ $<fl>$=$<fl>1; $$ = "("+$2+")"; }
@@ -3503,6 +3508,27 @@ cycle_delay_const_range_expression:	// ==IEEE: cycle_delay_const_range_expressio
 immediate_assert_statement:	// ==IEEE: immediate_assert_statement
 		yASSERT '(' expr ')' action_block	{ }
 	;
+
+//************************************************
+// Let
+
+let_declaration:		// ==IEEE: let_declaration
+		let_declarationFront let_port_listE '=' expr ';'
+			{ PARSEP->symPopScope(VAstType::LET); }
+	;
+
+let_declarationFront:		// IEEE: part of let_declaration
+		yLET idAny/*let_identifier*/
+			{ PARSEP->symPushNew(VAstType::LET,$2); }
+	;
+
+let_port_listE:			// ==IEEE: let_port_list
+		/* empty */
+	//			// IEEE: let_port_list
+	//			// No significant difference from task ports
+	|	'(' tf_port_listE ')'
+			{ VARRESET_NONLIST(""); }
+ 	;
 
 //************************************************
 // Covergroup

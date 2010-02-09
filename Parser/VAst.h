@@ -54,6 +54,7 @@ public:
 	FORK,
 	FUNCTION,
 	INTERFACE,
+	LET,
 	MODPORT,
 	MODULE,
 	PACKAGE,	// For yaID__PACKAGE
@@ -75,7 +76,7 @@ public:
 	static const char* names[] = {
 	"NOT_FOUND", "netlist", "error", "unknown",
 	"block", "class", "clocking", "covergroup",
-	"enum", "fork", "function", "interface",
+	"enum", "fork", "function", "interface", "let",
 	"modport", "module", "package", "program", "property",
 	"sequence", "struct", "task", "type", "union",
 	"_MAX"
