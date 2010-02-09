@@ -292,7 +292,9 @@ static void NEED_S09(VFileLine*, const string&) {
 %token<str>		yINTERSECT	"intersect"
 %token<str>		yJOIN		"join"
 %token<str>		yLET		"let"
-%token<str>		yLOCAL		"local"
+%token<str>		yLOCAL__COLONCOLON "local-then-::"
+%token<str>		yLOCAL__ETC	"local"
+%token<str>		yLOCAL__LEX	"local-in-lex"
 %token<str>		yLOCALPARAM	"localparam"
 %token<str>		yLOGIC		"logic"
 %token<str>		yLONGINT	"longint"
@@ -3928,10 +3930,13 @@ package_scopeIdFollowsE<str>:	// IEEE: [package_scope]
 
 package_scopeIdFollows<str>:	// IEEE: package_scope
 	//			// IMPORTANT: The lexer will parse the following ID to be in the found package
+	//			// class_qualifier := [ yLOCAL '::'  ] [ implicit_class_handle '.' | class_scope ]
 	//			//vv mid rule action needed otherwise we might not have NextId in time to parse the id token
 		yD_UNIT        { PARSEP->symTableNextId(PARSEP->syms().netlistSymp()); }
 	/*cont*/	yP_COLONCOLON	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>3; }
 	|	yaID__aPACKAGE { PARSEP->symTableNextId($<scp>1); }
+	/*cont*/	yP_COLONCOLON	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>3; }
+	|	yLOCAL__COLONCOLON { PARSEP->symTableNextId($<scp>1); }
 	/*cont*/	yP_COLONCOLON	{ $<fl>$=$<fl>1; $<str>$=$<str>1+$<str>3; }
 	;
 
@@ -3975,7 +3980,7 @@ class_method:			// ==IEEE: class_method
 class_item_qualifier<str>:	// IEEE: class_item_qualifier minus ySTATIC
 	//			// IMPORTANT: yPROTECTED | yLOCAL is in a lex rule
 		yPROTECTED				{ $<fl>$=$<fl>1; $$=$1; }
-	|	yLOCAL					{ $<fl>$=$<fl>1; $$=$1; }
+	|	yLOCAL__ETC				{ $<fl>$=$<fl>1; $$=$1; }
 	|	ySTATIC__ETC				{ $<fl>$=$<fl>1; $$=$1; }
 	;
 

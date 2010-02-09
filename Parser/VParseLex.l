@@ -311,7 +311,7 @@ word	[a-zA-Z0-9_]+
   "intersect"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINTERSECT; }
   "join_any"		{ FL; VALTEXT; CALLBACK(keywordCb); return yJOIN; }
   "join_none"		{ FL; VALTEXT; CALLBACK(keywordCb); return yJOIN; }
-  "local"		{ FL; VALTEXT; CALLBACK(keywordCb); return yLOCAL; }
+  "local"		{ FL; VALTEXT; CALLBACK(keywordCb); return yLOCAL__LEX; }
   "logic"		{ FL; VALTEXT; CALLBACK(keywordCb); return yLOGIC; }
   "longint"		{ FL; VALTEXT; CALLBACK(keywordCb); return yLONGINT; }
   "matches"		{ FL; VALTEXT; CALLBACK(keywordCb); return yMATCHES; }
@@ -697,6 +697,7 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
     if (token == '('
 	|| token == yCONST__LEX
 	|| token == yGLOBAL__LEX
+	|| token == yLOCAL__LEX
 	|| token == yNEW__LEX
 	|| token == ySTATIC__LEX
 	|| token == yVIRTUAL__LEX
@@ -725,6 +726,10 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	else if (token == yGLOBAL__LEX) {
 	    if (nexttok == yCLOCKING) token = yGLOBAL__CLOCKING;
 	    else { token = yaID__LEX; s_yylvalp->str = "global"; }  // Avoid 2009 "global" conflicting with old code when we can
+	}
+	else if (token == yLOCAL__LEX) {
+	    if (nexttok == yP_COLONCOLON) token = yLOCAL__COLONCOLON;
+	    else token = yLOCAL__ETC;
 	}
 	else if (token == yNEW__LEX) {
 	    if (nexttok == '(') token = yNEW__PAREN;
