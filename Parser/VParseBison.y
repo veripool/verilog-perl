@@ -1218,9 +1218,18 @@ data_typeNoRef<str>:		// ==IEEE: data_type, excluding class_type etc references
 	|	enumDecl				{ $<fl>$=$<fl>1; $$=$1; }
 	|	ySTRING					{ $<fl>$=$<fl>1; $$=$1; }
 	|	yCHANDLE				{ $<fl>$=$<fl>1; $$=$1; }
+	//			// Rules overlap virtual_interface_declaration
+	//			// Parameters here are SV2009
+	|	yVIRTUAL__INTERFACE yINTERFACE id/*interface*/ parameter_value_assignmentE
+			{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
+	|	yVIRTUAL__anyID                id/*interface*/ parameter_value_assignmentE
+			{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
+	//
+	//			// IEEE: [ class_scope | package_scope ] type_identifier { packed_dimension }
+	//			// See data_type
+	//			// IEEE: class_type
+	//			// See data_type
 	|	yEVENT					{ $<fl>$=$<fl>1; $$=$1; }
-	|	yVIRTUAL__INTERFACE yINTERFACE id/*interface*/	{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
-	|	yVIRTUAL__anyID                id/*interface*/	{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	|	type_reference				{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: class_scope: see data_type above
 	//			// IEEE: class_type: see data_type above
