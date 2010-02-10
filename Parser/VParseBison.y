@@ -1170,10 +1170,15 @@ signing<str>:			// ==IEEE: signing
 // Data Types
 
 casting_type<str>:		// IEEE: casting_type
+		simple_type				{ $<fl>$=$<fl>1; $$=$1; }
+	//			// IEEE: constant_primary
+	//			// In expr:cast this is expanded to just "expr"
+	//
 	//			// IEEE: signing
-		ySIGNED					{ $<fl>$=$<fl>1; $$=$1; }
+	|	ySIGNED					{ $<fl>$=$<fl>1; $$=$1; }
 	|	yUNSIGNED				{ $<fl>$=$<fl>1; $$=$1; }
-	|	simple_type				{ $<fl>$=$<fl>1; $$=$1; }
+	|	ySTRING					{ $<fl>$=$<fl>1; $$=$1; }
+	|	yCONST__ETC/*then `*/			{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 simple_type<str>:		// ==IEEE: simple_type
@@ -3459,6 +3464,7 @@ sexpr<str>:			// ==IEEE: sequence_expr  (The name sexpr is important as regexps 
 	|	yFIRST_MATCH '(' sexpr ',' sequence_match_itemList ')'	{ }
 	|	sexpr/*sexpression_or_dist*/ yTHROUGHOUT sexpr		{ }
 	|	sexpr yWITHIN sexpr			{ }
+	//			// Note concurrent_assertion had duplicate rule for below
 	|	clocking_event sexpr %prec prSEQ_CLOCKING	{ }
 	//
 	//============= expr rules copied for sequence_expr
@@ -3530,7 +3536,7 @@ let_port_listE:			// ==IEEE: let_port_list
 	//			// No significant difference from task ports
 	|	'(' tf_port_listE ')'
 			{ VARRESET_NONLIST(""); }
- 	;
+	;
 
 //************************************************
 // Covergroup
@@ -4050,7 +4056,7 @@ constraint_expressionList:	// ==IEEE: { constraint_expression }
 	;
 
 constraint_expression:		// ==IEEE: constraint_expression
-		expr/*expression_or_dist*/ ';'			{ }
+		expr/*expression_or_dist*/ ';'		{ }
 	|	expr yP_MINUSGT constraint_set		{ }
 	|	yIF '(' expr ')' constraint_set	%prec prLOWER_THAN_ELSE	{ }
 	|	yIF '(' expr ')' constraint_set	yELSE constraint_set	{ }
