@@ -2727,6 +2727,14 @@ expr<str>:			// IEEE: part of expression/constant_expression/primary
 	|	~l~expr yP_SLEFT ~r~expr		{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	~l~expr yP_SRIGHT ~r~expr		{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
 	|	~l~expr yP_SSRIGHT ~r~expr		{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
+	|	~l~expr yP_LTMINUSGT ~r~expr		{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
+	//
+	//			// IEEE: expr yP_MINUSGT expr  (1800-2009)
+	//			// Conflicts with constraint_expression:"expr yP_MINUSGT constraint_set"
+	//			// To duplicating expr for constraints, just allow the more general form
+	//			// Later Ast processing must ignore constraint terms where inappropriate
+	|	~l~expr yP_MINUSGT constraint_set		{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
+	//
 	//			// <= is special, as we need to disambiguate it with <= assignment
 	//			// We copy all of expr to fexpr and rename this token to a fake one.
 	|	~l~expr yP_LTE~f__IGNORE~ ~r~expr		{ $<fl>$=$<fl>1; $$ = $1+$2+$3; }
@@ -4059,23 +4067,25 @@ solve_before_primary:		// ==IEEE: solve_before_primary
 		exprScope				{ }
 	;
 
-constraint_expressionList:	// ==IEEE: { constraint_expression }
-		constraint_expression				{ }
-	|	constraint_expressionList constraint_expression	{ }
+constraint_expressionList<str>:	// ==IEEE: { constraint_expression }
+		constraint_expression				{ $$=$1; }
+	|	constraint_expressionList constraint_expression	{ $$=$1+" "+$2; }
 	;
 
-constraint_expression:		// ==IEEE: constraint_expression
-		expr/*expression_or_dist*/ ';'		{ }
-	|	expr yP_MINUSGT constraint_set		{ }
-	|	yIF '(' expr ')' constraint_set	%prec prLOWER_THAN_ELSE	{ }
-	|	yIF '(' expr ')' constraint_set	yELSE constraint_set	{ }
+constraint_expression<str>:	// ==IEEE: constraint_expression
+		expr/*expression_or_dist*/ ';'		{ $$=$1; }
+	//			// IEEE: expr yP_MINUSGT constraint_set
+	//			// Conflicts with expr:"expr yP_MINUSGT expr"; rule moved there
+	//
+	|	yIF '(' expr ')' constraint_set	%prec prLOWER_THAN_ELSE	{ $$=$1; }
+	|	yIF '(' expr ')' constraint_set	yELSE constraint_set	{ $$=$1;}
 	//			// IEEE says array_identifier here, but dotted accepted in VMM + 1800-2009
-	|	yFOREACH '(' idClassForeach/*array_id[loop_variables]*/ ')' constraint_set	{ }
+	|	yFOREACH '(' idClassForeach/*array_id[loop_variables]*/ ')' constraint_set	{ $$=$1; }
 	;
 
-constraint_set:			// ==IEEE: constraint_set
-		constraint_expression			{ }
-	|	'{' constraint_expressionList '}'	{ }
+constraint_set<str>:		// ==IEEE: constraint_set
+		constraint_expression			{ $$=$1; }
+	|	'{' constraint_expressionList '}'	{ $$=$1+$2+$3; }
 	;
 
 dist_list:			// ==IEEE: dist_list
