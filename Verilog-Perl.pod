@@ -189,6 +189,13 @@ on how low level and complete the information you need is.
 
 =over 4
 
+=item VParseBison.y
+
+The low level VParse* source files may be of use when you need a starting
+point for your own a full C++ SystemVerilog grammar parser, using Bison and
+Flex.  It understands the full SystemVerilog 2009 grammar (1800-2009
+Appendix A).
+
 =item Verilog::Preproc
 
 Verilog::Preproc is useful when you need only text out, or a list of
