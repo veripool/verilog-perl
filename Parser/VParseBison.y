@@ -446,6 +446,8 @@ static void NEED_S09(VFileLine*, const string&) {
 %token<str>		yP_ASTGT	"*>"
 %token<str>		yP_ANDANDAND	"&&&"
 %token<str>		yP_POUNDPOUND	"##"
+%token<str>		yP_POUNDMINUSPD	"#-#"
+%token<str>		yP_POUNDEQPD	"#=#"
 %token<str>		yP_DOTSTAR	".*"
 
 %token<str>		yP_ATAT		"@@"
@@ -492,9 +494,14 @@ static void NEED_S09(VFileLine*, const string&) {
 
 // Lowest precedence
 // These are in IEEE 17.7.1
-// Assumed yP_ORMINUSGT yP_OREQGT matches yOR
-%left		yOR    yP_ORMINUSGT yP_OREQGT
+%nonassoc	yALWAYS yS_ALWAYS yEVENTUALLY yS_EVENTUALLY yACCEPT_ON yREJECT_ON ySYNC_ACCEPT_ON ySYNC_REJECT_ON
+
+%right		yP_ORMINUSGT yP_OREQGT yP_POUNDMINUSPD yP_POUNDEQPD
+%right		yUNTIL yS_UNTIL yUNTIL_WITH yS_UNTIL_WITH yIMPLIES
+%right		yIFF
+%left		yOR
 %left		yAND
+%nonassoc	yNOT yNEXTTIME yS_NEXTTIME
 %left		yINTERSECT
 %left		yWITHIN
 %right		yTHROUGHOUT
@@ -3427,16 +3434,20 @@ pexpr<str>:			// IEEE: property_expr  (The name pexpr is important as regexps ju
 	//			// Below pexpr's are really sequence_expr, but avoid conflict
 	//			// "'(' sexpr ')' boolean_abbrev" matches "[sexpr:'(' expr ')'] boolean_abbrev" so we can simply drop it
 	|	'(' pexpr ')'				{ }
-	|	'(' pexpr ',' sequence_match_itemList ')'			{ }
+	|	'(' pexpr ',' sequence_match_itemList ')'	{ }
 	//
+	//			// IEEE: sexpr yINTERSECT sexpr
 	|	pexpr yINTERSECT sexpr			{ }
+	//			// IEEE: sexpr yAND sexpr
 	//			// Instead above:  sequence_expr yAND sequence_expr
+	//			// IEEE: sexpr yOR sexpr
 	//			// Instead above:  sequence_expr yOR sequence_expr
 	//
 	|	yFIRST_MATCH '(' sexpr ')'		{ }
 	|	yFIRST_MATCH '(' sexpr ',' sequence_match_itemList ')'	{ }
 	|	pexpr/*pexpression_or_dist*/ yTHROUGHOUT sexpr		{ }
 	//			// Below pexpr's are really sequence_expr, but avoid conflict
+	//			// IEEE: sexpr yWITHIN sexpr
 	|	pexpr yWITHIN sexpr			{ }
 	//			// Instead above: clocking_event sequence_expr %prec prSEQ_CLOCKING	{ }
 	//
