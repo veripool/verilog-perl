@@ -211,6 +211,7 @@ sub clean_input {
     my $outname = shift || $filename;  # Can == filename if desired
     print "  edit $filename $outname\n";
 
+    $Self->{filename} = $filename;
     my $fh = IO::File->new("<$filename") or die "%Error: $! $filename\n";
     my @lines = $fh->getlines;
     $fh->close;
@@ -308,20 +309,7 @@ sub clean_input {
 	foreach my $line (@linesin) {
 	    $l++;
 	    if ($line =~ /BISONPRE_COPY/) {
-		($line =~ s/BISONPRE_COPY\((\S+)\s*,\s*{([^}]*)}\s*\)/{HERE}/)
-		    or die "%Error: $filename:$l: Bad form of BISONPRE_NOT: $line\n";
-		my $rule = $1;  my $code = $2;
-		$rules{$rule} or die "%Error: $filename:$l: Can't find definition for rule: $rule\n";
-		# Push it all onto one line to avoid error messages changing
-		my $insert = $rules{$rule}{rules_and_productions};
-		$insert =~ s/^\S+://g;	# Strip rule name
-		#print "COPY code $code\n";
-		#print "COPY in   $insert\n";
-		$_=$insert; eval("$code; \$_;");  $insert = $_;
-		#print "COPY out  $insert\n";
-		while ($insert =~ s/[ \t\n]+\n/\n/go) {}
-		while ($insert =~ s/\n/ /go) {}   # Optional - preserve line numbering
-		$line =~ s/{HERE}/$insert/;
+		$line = _bisonpre_copy($line,$l,0);
 	    }
 	    push @lines, $line;
 	}
@@ -372,6 +360,37 @@ sub clean_input {
     $fh->close;
 }
 
+sub _bisonpre_copy {
+    my $text = shift;
+    my $l  = shift;
+    my $depth = shift;
+    while ($text =~ /BISONPRE_COPY/) {
+	($text =~ s/BISONPRE_COPY(_ONCE)?\((\S+)\s*,\s*{([^}]*)}\s*\)/{HERE}/)
+	    or die "%Error: $Self->{filename}:$l: Bad form of BISONPRE_NOT: $text\n";
+	my $once = $1; my $rule = $2;  my $code = $3;
+	$Self->{rules}{$rule} or die "%Error: $Self->{filename}:$l: Can't find definition for rule: $rule\n";
+	if ($depth > 0 && $once) {
+	    # _ONCE means don't inherit
+	    $text =~ s/\|[ \t]+{HERE}//;	# Don't OR in nothing
+	    $text =~ s/{HERE}//;
+	} else {
+	    # Push it all onto one line to avoid error messages changing
+	    my $insert = $Self->{rules}{$rule}{rules_and_productions};
+	    $insert =~ s/^\S+://g;	# Strip rule name
+	    # Recurse so BISONPRE under B
+	    #print "COPY $l code $code\n";
+	    #print "COPY $l in   $insert\n";
+	    $_=$insert; eval("$code; \$_;");  $insert = $_;
+	    #print "COPY $l out  $insert\n";
+	    while ($insert =~ s/[ \t\n]+\n/\n/go) {}
+	    while ($insert =~ s/\n/ /go) {}   # Optional - preserve line numbering
+	    $text =~ s/{HERE}/$insert/;
+	}
+	$depth++;
+    }
+    return $text;
+}
+
 #######################################################################
 __END__
 
@@ -415,6 +434,11 @@ rule.  The type will be inserted where /*BISONPRE_TYPES*/ is encountered.
 
 Copy the rules and productions from the specified rule, filter through the
 Perl code provided in the {} and insert here into the output file.
+
+=item BISONPRE_COPY_ONCE(rule, {code})
+
+As with BISONPRE_COPY, but if called from underneath another BISONPRE_COPY
+rule, ignore it.
 
 =item BISONPRE_NOT(token[, token...])
 
