@@ -1911,39 +1911,53 @@ cellpinItemE:			// IEEE: named_port_connection + named_parameter_assignment + em
 
 event_control:			// ==IEEE: event_control
 		'@' '(' event_expression ')'		{ }
-	|	'@' '(' '*' ')'				{ }
 	|	'@' '*'					{ }
+	|	'@' '(' '*' ')'				{ }
 	//			// IEEE: hierarchical_event_identifier
-	|	'@' idClassSel/*event_id*/			{ }
-	//			// IEEE: sequence_instance
+	|	'@' idClassSel/*event_id or ps_or_hierarchical_sequence_identifier*/		{ }
+	//			// IEEE: ps_or_hierarchical_sequence_identifier
 	//			// sequence_instance without parens matches idClassSel above.
 	//			// Ambiguity: "'@' sequence (-for-sequence" versus expr:delay_or_event_controlE "'@' id (-for-expr
 	//			// For now we avoid this, as it's very unlikely someone would mix
 	//			// 1995 delay with a sequence with parameters.
 	//			// Alternatively split this out of event_control, and delay_or_event_controlE
 	//			// and anywhere delay_or_event_controlE is called allow two expressions
-	//|	'@' idClassSel '(' list_of_argumentsE ')'	{ }
 	;
 
 event_expression:		// IEEE: event_expression - split over several
+	//			// Rules expanded/duplicated in pev_expr
+	//
+	//			// IEEE: [ edge_identifier ] expression [ yIFF expression ]
 		senitem					{ }
+	//			// IEEE: sequence_instance [ yIFF expression ]
+	//			// seq_inst is in expr, so matches senitem rule above
+	//			// IEEE: event_expression yOR event_expression
+	//			// Fix left recursion
 	|	event_expression yOR senitem		{ }
+	//			// IEEE: event_expression ',' event_expression
+	//			// IEEE: Footnote: () required when , is as an argument
 	|	event_expression ',' senitem		{ }	/* Verilog 2001 */
 	;
 
 senitem:			// IEEE: part of event_expression, non-'OR' ',' terms
 		senitemEdge				{ }
-	|	expr					{ }
-	|	expr yIFF expr				{ }
+	//			// IEEE: expr
+	//			// expr:'(' x ')' conflicts with event_expression:'(' event_expression ')'
+	//			// so we use a special expression class
+	|	ev_expr					{ }
+	|	ev_expr yIFF expr			{ }
+	//			// IEEE: '(' event_expression ')'
+	//			// See ev_expr
 	;
 
-senitemEdge:			// IEEE: part of event_expression
-		yPOSEDGE expr				{ }
-	|	yPOSEDGE expr yIFF expr			{ }
-	|	yNEGEDGE expr				{ }
-	|	yNEGEDGE expr yIFF expr			{ }
-	|	yEDGE expr				{ NEED_S09($<fl>1,"edge"); }
-	|	yEDGE expr yIFF expr			{ NEED_S09($<fl>1,"edge"); }
+senitemEdge<str>:		// IEEE: part of event_expression
+	//			// Also called by pev_expr
+		yPOSEDGE expr				{ $<fl>$=$<fl>1; $$=$1+" "+$2; }
+	|	yPOSEDGE expr yIFF expr			{ $<fl>$=$<fl>1; $$=$1+" "+$2+" iff "+$4; }
+	|	yNEGEDGE expr				{ $<fl>$=$<fl>1; $$=$1+" "+$2; }
+	|	yNEGEDGE expr yIFF expr			{ $<fl>$=$<fl>1; $$=$1+" "+$2+" iff "+$4; }
+	|	yEDGE expr				{ $<fl>$=$<fl>1; $$=$1+" "+$2; NEED_S09($<fl>1,"edge"); }
+	|	yEDGE expr yIFF expr			{ $<fl>$=$<fl>1; $$=$1+" "+$2+" iff "+$4; NEED_S09($<fl>1,"edge"); }
 	;
 
 //************************************************
@@ -2146,6 +2160,10 @@ sinc_or_dec_expression<str>:	// IEEE: inc_or_dec_expression (for sequence_expres
 
 pinc_or_dec_expression<str>:	// IEEE: inc_or_dec_expression (for property_expression)
 		BISONPRE_COPY(inc_or_dec_expression,{s/~l~/p/g})	// {copied}
+	;
+
+ev_inc_or_dec_expression<str>:	// IEEE: inc_or_dec_expression (for ev_expr)
+		BISONPRE_COPY(inc_or_dec_expression,{s/~l~/ev_/g})	// {copied}
 	;
 
 class_new<str>:			// ==IEEE: class_new
@@ -2837,6 +2855,15 @@ fexpr<str>:			// For use as first part of statement (disambiguates <=)
 		BISONPRE_COPY(expr,{s/~l~/f/g; s/~r~/f/g; s/~f__IGNORE~/__IGNORE/g;})	// {copied}
 	;
 
+ev_expr<str>:			// For use in event_expression
+		BISONPRE_COPY(expr,{s/~l~/ev_/g; s/~r~/ev_/g; s/~p~/ev_/g; s/~noPar__IGNORE~/yP_PAR__IGNORE /g;})	// {copied}
+	//			// From event_expression
+	|	'(' event_expression ')'		{ $<fl>$=$<fl>1; $$ = "(...)"; }
+	//			// IEEE: From normal expr: '(' expr ':' expr ':' expr ')'
+	//			// But must avoid conflict
+	|	'(' event_expression ':' expr ':' expr ')'	{ $<fl>$=$<fl>1; $$ = "(...)"; }
+	;
+
 //sexpr: See elsewhere
 //pexpr: See elsewhere
 
@@ -2879,6 +2906,10 @@ pexprOkLvalue<str>:		// exprOkLValue, For use by property_expr
 		BISONPRE_COPY(exprOkLvalue,{s/~l~/p/g})	// {copied}
 	;
 
+ev_exprOkLvalue<str>:		// exprOkLValue, For use by ev_expr
+		BISONPRE_COPY(exprOkLvalue,{s/~l~/ev_/g})	// {copied}
+	;
+
 exprScope<str>:			// scope and variable for use to inside an expression
 	// 			// Here we've split method_call_root | implicit_class_handle | class_scope | package_scope
 	//			// from the object being called and let expr's "." deal with resolving it.
@@ -2910,6 +2941,9 @@ pexprScope<str>:		// exprScope, For use by property_expr
 		BISONPRE_COPY(exprScope,{s/~l~/p/g})	// {copied}
 	;
 
+ev_exprScope<str>:		// exprScope, For use by ev_expr
+		BISONPRE_COPY(exprScope,{s/~l~/ev_/g})	// {copied}
+	;
 // Generic expressions
 exprOrDataType<str>:		// expr | data_type: combined to prevent conflicts
 		expr					{ $<fl>$=$<fl>1; $$ = $1; }
