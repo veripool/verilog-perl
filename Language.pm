@@ -214,6 +214,7 @@ foreach my $kwd (
     "`accelerate",		# Verilog-XL compatibility
     "`autoexpand_vectornets",	# Verilog-XL compatibility
     "`default_decay_time",	# Verilog spec - delays only
+    "`default_trireg_strength",	# Verilog spec
     "`delay_mode_distributed",	# Verilog spec - delays only
     "`delay_mode_path",		# Verilog spec - delays only
     "`delay_mode_unit",		# Verilog spec - delays only

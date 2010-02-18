@@ -565,6 +565,7 @@ escid	\\[^ \t\f\r\n]+
   "`celldefine"				{ FL; VALTEXT; CALLBACK(preprocCb); LEXP->m_inCellDefine=true; }
   "`default_decay_time"{ws}+[^\n\r]*	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
   "`default_nettype"{ws}+[a-zA-Z0-9]*	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog 2001
+  "`default_trireg_strength"{ws}+[^\n\r]*	{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog 2009
   "`delay_mode_distributed"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
   "`delay_mode_path"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
   "`delay_mode_unit"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog spec - delays only
