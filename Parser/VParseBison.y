@@ -1189,19 +1189,14 @@ simple_type<str>:		// ==IEEE: simple_type
 	//			// Need to determine if generate_block_identifier can be lex-detected
 	;
 
-data_type<str>:			// ==IEEE: data_type
-	//			// This expansion also replicated elsewhere, IE data_type__AndID
-		data_typeNoRef				{ $<fl>$=$<fl>1; $$=$1; }
-	//			// IEEE: [ class_scope | package_scope ] type_identifier { packed_dimension }
-	|	ps_type  packed_dimensionListE		{ $<fl>$=$<fl>1; $$=$1+$2; }
-	|	class_scope_type packed_dimensionListE	{ $<fl>$=$<fl>1; $$=$1+$2; }
-	//			// IEEE: class_type
-	|	class_typeWithoutId			{ $<fl>$=$<fl>1; $$=$1; }
-	//			// IEEE: ps_covergroup_identifier
-	|	ps_covergroup_identifier		{ $<fl>$=$<fl>1; $$=$1; }
+data_typeVar<str>:		// IEEE: data_type + virtual_interface_declaration
+		data_type				{ $<fl>$=$<fl>1; $$=$1; }
+	//			// IEEE: virtual_interface_declaration
+	|	yVIRTUAL__INTERFACE yINTERFACE id/*interface*/ parameter_value_assignmentE '.' id/*modport*/
+			{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
 	;
 
-data_typeNoRef<str>:		// ==IEEE: data_type, excluding class_type etc references
+data_type<str>:			// ==IEEE: data_type, excluding class_type etc references
 		integer_vector_type signingE rangeListE	{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
 	|	integer_atom_type signingE		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	|	non_integer_type			{ $<fl>$=$<fl>1; $$=$1; }
@@ -1227,9 +1222,17 @@ data_typeNoRef<str>:		// ==IEEE: data_type, excluding class_type etc references
 	//			// See data_type
 	|	yEVENT					{ $<fl>$=$<fl>1; $$=$1; }
 	|	type_reference				{ $<fl>$=$<fl>1; $$=$1; }
-	//			// IEEE: class_scope: see data_type above
-	//			// IEEE: class_type: see data_type above
-	//			// IEEE: ps_covergroup: see data_type above
+	//
+	//----------------------
+	//			// REFERENCES
+	//
+	//			// IEEE: [ class_scope | package_scope ] type_identifier { packed_dimension }
+	|	ps_type  packed_dimensionListE		{ $<fl>$=$<fl>1; $$=$1+$2; }
+	|	class_scope_type packed_dimensionListE	{ $<fl>$=$<fl>1; $$=$1+$2; }
+	//			// IEEE: class_type
+	|	class_typeWithoutId			{ $<fl>$=$<fl>1; $$=$1; }
+	//			// IEEE: ps_covergroup_identifier
+	|	ps_covergroup_identifier		{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 // IEEE: struct_union - not needed, expanded in data_type
@@ -1422,10 +1425,13 @@ data_declarationVarFront:	// IEEE: part of data_declaration
 	|	constE yVAR lifetimeE signingE rangeList { VARRESET(); VARDECL("var"); VARDTYPE(SPACED($1,SPACED($4,$5))); }
 	//
 	//			// Expanded: "constE lifetimeE data_type"
-	|	/**/		      data_type	{ VARRESET(); VARDECL("var"); VARDTYPE($1); }
-	|	/**/	    lifetime  data_type	{ VARRESET(); VARDECL("var"); VARDTYPE($2); }
-	|	yCONST__ETC lifetimeE data_type	{ VARRESET(); VARDECL("var"); VARDTYPE(SPACED($1,$3)); }
+	|	/**/		      data_typeVar	{ VARRESET(); VARDECL("var"); VARDTYPE($1); }
+	|	/**/	    lifetime  data_typeVar	{ VARRESET(); VARDECL("var"); VARDTYPE($2); }
+	|	yCONST__ETC lifetimeE data_typeVar	{ VARRESET(); VARDECL("var"); VARDTYPE(SPACED($1,$3)); }
 	//			// = class_new is in variable_decl_assignment
+	//
+	//			// IEEE: virtual_interface_declaration
+	//			// data_type includes VIRTUAL_INTERFACE, so added to data_typeVar
 	;
 
 data_declarationVarFrontClass:	// IEEE: part of data_declaration (for class_property)
