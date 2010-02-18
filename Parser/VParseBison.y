@@ -2921,7 +2921,12 @@ specifyJunk:
 	;
 
 specparam_declaration:		// ==IEEE: specparam_declaration
-		ySPECPARAM junkToSemi ';'		{ }
+		ySPECPARAM junkToSemiList ';'		{ }
+	;
+
+junkToSemiList:
+		junkToSemi 				{ } /* ignored */
+	|	junkToSemiList junkToSemi		{ } /* ignored */
 	;
 
 junkToSemi:

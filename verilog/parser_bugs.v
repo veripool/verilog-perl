@@ -392,3 +392,7 @@ module bug192;
 endmodule
 
 function bit func_implied_in (bit i); g_bit = ~i; endfunction
+
+module sparam;
+   specparam delay = 10;
+endmodule
