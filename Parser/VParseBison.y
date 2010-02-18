@@ -3496,10 +3496,18 @@ sexpr<str>:			// ==IEEE: sequence_expr  (The name sexpr is important as regexps 
 	;
 
 cycle_delay_range:		// IEEE: ==cycle_delay_range
+	//			// These three terms in 1800-2005 ONLY
 		yP_POUNDPOUND yaINTNUM			{ }
 	|	yP_POUNDPOUND id			{ }
 	|	yP_POUNDPOUND '(' constExpr ')'		{ }
+	//			// In 1800-2009 ONLY:
+	//			// IEEE: yP_POUNDPOUND constant_primary
+	//			// UNSUP: This causes a big grammer ambiguity
+	//			// as ()'s mismatch between primary and the following statement
+	//			// the sv-ac committee has been asked to clarify  (Mantis 1901)
 	|	yP_POUNDPOUND '[' cycle_delay_const_range_expression ']'	{ }
+	|	yP_POUNDPOUND yP_BRASTAR ']'		{ }
+	|	yP_POUNDPOUND yP_BRAPLUSKET		{ }
 	;
 
 sequence_match_itemList:	// IEEE: [sequence_match_item] part of sequence_expr
