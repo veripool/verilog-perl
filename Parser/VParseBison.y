@@ -636,7 +636,7 @@ package_or_generate_item_declaration:	// ==IEEE: package_or_generate_item_declar
 	|	parameter_declaration ';'		{ }
 	|	covergroup_declaration			{ }
 	|	overload_declaration			{ }
-	|	concurrent_assertion_item_declaration	{ }
+	|	assertion_item_declaration		{ }
 	|	';'					{ }
 	;
 
@@ -1533,7 +1533,7 @@ module_common_item:		// ==IEEE: module_common_item
 	//			// + IEEE: program_instantiation
 	//			// + module_instantiation from module_or_generate_item
 	|	etcInst					{ }
-	|	concurrent_assertion_item		{ }
+	|	assertion_item				{ }
 	|	bind_directive				{ }
 	|	continuous_assign			{ }
 	//			// IEEE: net_alias
@@ -2104,8 +2104,7 @@ statement_item:			// IEEE: statement_item
 	|	yWAIT_ORDER '(' hierarchical_identifierList ')' action_block	{ }
 	//
 	//			// IEEE: procedural_assertion_statement
-	|	concurrent_assertion_statement		{ }
-	|	immediate_assert_statement		{ }
+	|	procedural_assertion_statement		{ }
 	//
 	//			// IEEE: clocking_drive ';'
 	//			// clockvar_expression made to fexprLvalue to prevent reduce conflict
@@ -3298,7 +3297,7 @@ clocking_itemList:		// IEEE: [ clocking_item ]
 clocking_item:			// ==IEEE: clocking_item
 		yDEFAULT default_skew ';'		{ }
 	|	clocking_direction list_of_clocking_decl_assign ';'	{ }
-	|	concurrent_assertion_item_declaration	{ }
+	|	assertion_item_declaration		{ }
 	;
 
 default_skew:			// ==IEEE: default_skew
@@ -3348,6 +3347,53 @@ cycle_delay:			// ==IEEE: cycle_delay
 //************************************************
 // Asserts
 
+assertion_item_declaration:	// ==IEEE: assertion_item_declaration
+		property_declaration			{ }
+	|	sequence_declaration			{ }
+	|	let_declaration				{ }
+	;
+
+assertion_item:			// ==IEEE: assertion_item
+		concurrent_assertion_item		{ }
+	|	deferred_immediate_assertion_item	{ }
+	;
+
+deferred_immediate_assertion_item:	// ==IEEE: deferred_immediate_assertion_item
+		deferred_immediate_assertion_statement	{ }
+	|	id/*block_identifier*/ ':' deferred_immediate_assertion_statement	{ }
+	;
+
+procedural_assertion_statement:	// ==IEEE: procedural_assertion_statement
+		concurrent_assertion_statement		{ }
+	|	immediate_assertion_statement		{ }
+	//			// IEEE: checker_instantiation
+	//			// Unlike modules, checkers are the only "id id (...)" form in statements.
+	//UNSUP	checker_instantiation			{ }
+	;
+
+immediate_assertion_statement:	// ==IEEE: immediate_assertion_statement
+		simple_immediate_assertion_statement	{ }
+	|	deferred_immediate_assertion_statement	{ }
+	;
+
+simple_immediate_assertion_statement:	// ==IEEE: simple_immediate_assertion_statement
+	//			// IEEE: simple_immediate_assert_statement
+		yASSERT '(' expr ')' action_block	{ }
+	//			// IEEE: simple_immediate_assume_statement
+	|	yASSUME '(' expr ')' action_block	{ }
+	//			// IEEE: simple_immediate_cover_statement
+	|	yCOVER '(' expr ')' stmt 		{ }
+	;
+
+deferred_immediate_assertion_statement:	// ==IEEE: deferred_immediate_assertion_statement
+	//			// IEEE: deferred_immediate_assert_statement
+		yASSERT '#' yaINTNUM '(' expr ')' action_block	{ }	// yaINTNUM is always a '0'
+	//			// IEEE: deferred_immediate_assume_statement
+	|	yASSUME '#' yaINTNUM '(' expr ')' action_block	{ }	// yaINTNUM is always a '0'
+	//			// IEEE: deferred_immediate_cover_statement
+	|	yCOVER '#' yaINTNUM '(' expr ')' stmt	{ }	// yaINTNUM is always a '0'
+	;
+
 expect_property_statement:	// ==IEEE: expect_property_statement
 		yEXPECT '(' property_spec ')' action_block	{ }
 	;
@@ -3364,13 +3410,14 @@ concurrent_assertion_statement:	// ==IEEE: concurrent_assertion_statement
 	|	yASSUME yPROPERTY '(' property_spec ')' action_block	{ }
 	//			// IEEE: cover_property_statement
 	|	yCOVER yPROPERTY '(' property_spec ')' stmtBlock	{ }
+	//			// IEEE: cover_sequence_statement
+	|	yCOVER ySEQUENCE '(' sexpr ')' stmt	{ }
+	//			// IEEE: yCOVER ySEQUENCE '(' clocking_event sexpr ')' stmt
+	//			// sexpr already includes "clocking_event sexpr"
+	|	yCOVER ySEQUENCE '(' clocking_event yDISABLE yIFF '(' expr/*expression_or_dist*/ ')' sexpr ')' stmt	{ }
+	|	yCOVER ySEQUENCE '(' yDISABLE yIFF '(' expr/*expression_or_dist*/ ')' sexpr ')' stmt	{ }
 	//			// IEEE: restrict_property_statement
 	|	yRESTRICT yPROPERTY '(' property_spec ')' ';'		{ }
-	;
-
-concurrent_assertion_item_declaration:	// ==IEEE: concurrent_assertion_item_declaration
-		property_declaration			{ }
-	|	sequence_declaration			{ }
 	;
 
 property_declaration:		// ==IEEE: property_declaration
@@ -3576,10 +3623,6 @@ const_or_range_expression:	// ==IEEE: const_or_range_expression
 cycle_delay_const_range_expression:	// ==IEEE: cycle_delay_const_range_expression
 	//				// Note '$' is part of constExpr
 		constExpr ':' constExpr			{ }
-	;
-
-immediate_assert_statement:	// ==IEEE: immediate_assert_statement
-		yASSERT '(' expr ')' action_block	{ }
 	;
 
 //************************************************
