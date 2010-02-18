@@ -537,4 +537,35 @@ verilog/inc1.v:254: DS<HAS a NEW  LINE>
 verilog/inc1.v:255: 
 COMMENT: //======================================================================
 verilog/inc1.v:256:  /*CMT*/ 
-verilog/inc1.v:257: `line 257 "verilog/inc1.v" 2
+verilog/inc1.v:257: 
+verilog/inc1.v:258:  
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:270: 
+verilog/inc1.v:271:  
+verilog/inc1.v:272:  
+verilog/inc1.v:273: 
+verilog/inc1.v:274: EXP: clxx_scen
+verilog/inc1.v:275: DS<clxx_scen>
+verilog/inc1.v:276: EXP: clxx_scen
+verilog/inc1.v:277: "DS<clxx_scen>"
+verilog/inc1.v:278:  
+verilog/inc1.v:279: EXP: do if (start("verilog/inc1.v", 25)) begin  message({"Blah-", "clx_scen", " end"}); end  while(0);
+COMMENT: /* synopsys translate_off */
+verilog/inc1.v:280: DS<DS<do         /*CMT*/           
+verilog/inc1.v:280: `line 280 "verilog/inc1.v" 0
+COMMENT: /* synopsys translate_on */
+verilog/inc1.v:280:         if (start("verilog/inc1.v", 280)) begin    	 message({"Blah-", "DS<clx_scen>", " end"});        end         /*CMT*/      while(0)>;>
+verilog/inc1.v:281: 
+COMMENT: //======================================================================
+verilog/inc1.v:282:  /*CMT*/ 
+verilog/inc1.v:283: `line 283 "verilog/inc1.v" 2

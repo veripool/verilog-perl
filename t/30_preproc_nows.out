@@ -145,4 +145,12 @@ verilog/inc1.v:249: 2  (hasdef)
 verilog/inc1.v:250: 3  (nodef)
 verilog/inc1.v:251: 4  (nodef)
 verilog/inc1.v:254: HAS a NEW LINE
-verilog/inc1.v:257: `line 257 "verilog/inc1.v" 2
+verilog/inc1.v:274: EXP: clxx_scen
+verilog/inc1.v:275: clxx_scen
+verilog/inc1.v:276: EXP: clxx_scen
+verilog/inc1.v:277: "clxx_scen"
+verilog/inc1.v:279: EXP: do if (start("verilog/inc1.v", 25)) begin message({"Blah-", "clx_scen", " end"}); end while(0);
+verilog/inc1.v:280: do      
+verilog/inc1.v:280: `line 280 "verilog/inc1.v" 0
+verilog/inc1.v:280:  if (start("verilog/inc1.v", 280)) begin  message({"Blah-", "clx_scen", " end"}); end  while(0);
+verilog/inc1.v:283: `line 283 "verilog/inc1.v" 2

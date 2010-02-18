@@ -317,4 +317,32 @@ verilog/inc1.v:252:
 verilog/inc1.v:254: HAS a NEW  LINE
 verilog/inc1.v:255: 
 verilog/inc1.v:256: //======================================================================
-verilog/inc1.v:257: `line 257 "verilog/inc1.v" 2
+verilog/inc1.v:257: 
+verilog/inc1.v:258:  
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:258: 
+verilog/inc1.v:270: 
+verilog/inc1.v:271:  
+verilog/inc1.v:272:  
+verilog/inc1.v:273: 
+verilog/inc1.v:274: EXP: clxx_scen
+verilog/inc1.v:275: clxx_scen
+verilog/inc1.v:276: EXP: clxx_scen
+verilog/inc1.v:277: "clxx_scen"
+verilog/inc1.v:278:  
+verilog/inc1.v:279: EXP: do if (start("verilog/inc1.v", 25)) begin  message({"Blah-", "clx_scen", " end"}); end  while(0);
+verilog/inc1.v:280: do        /* synopsys translate_off */          
+verilog/inc1.v:280: `line 280 "verilog/inc1.v" 0
+verilog/inc1.v:280:         if (start("verilog/inc1.v", 280)) begin    	 message({"Blah-", "clx_scen", " end"});        end        /* synopsys translate_on */     while(0);
+verilog/inc1.v:281: 
+verilog/inc1.v:282: //======================================================================
+verilog/inc1.v:283: `line 283 "verilog/inc1.v" 2

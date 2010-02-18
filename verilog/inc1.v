@@ -254,3 +254,29 @@ LINE
 `NL
 
 //======================================================================
+
+`define msg_fatal(log, msg)  \
+   do \
+      /* synopsys translate_off */ \
+`ifdef NEVER \
+  `error "WTF" \
+`else \
+      if (start(`__FILE__, `__LINE__)) begin \
+`endif \
+	 message(msg); \
+      end \
+      /* synopsys translate_on */ \
+   while(0)
+
+`define msg_scen_(cl)   cl``_scen
+`define MSG_MACRO_TO_STRING(x) `"x`"
+
+EXP: clxx_scen
+`msg_scen_(clxx)
+EXP: clxx_scen
+`MSG_MACRO_TO_STRING(`msg_scen_(clxx))
+`define mf(clx) `msg_fatal(this.log, {"Blah-", `MSG_MACRO_TO_STRING(`msg_scen_(clx)), " end"});
+EXP: do if (start("verilog/inc1.v", 25)) begin  message({"Blah-", "clx_scen", " end"}); end  while(0);
+`mf(clx)
+
+//======================================================================
