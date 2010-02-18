@@ -9,7 +9,7 @@ use Pod::Usage;
 use strict;
 use vars qw ($Debug $VERSION);
 
-$VERSION = '3.251';
+$VERSION = '3.300';
 
 our $Self;
 
@@ -233,7 +233,7 @@ sub clean_input {
 		$section++;
 		if ($section==2) { $last_rule = undef; }
 	    }
-	    elsif ($line =~ s/^([a-zA-Z0-9_]+)<(\S+)>:/$1:/) {
+	    elsif ($line =~ s/^([a-zA-Z0-9_]+)<(\S*)>:/$1:/) {
 		!$rules{$1}{name} or die "%Error: $filename:$l: Redeclaring '$1': $line\n";
 		$types{$2}{$1} = 1;
 		$rules{$1}{name} = $1;
@@ -334,6 +334,7 @@ sub clean_input {
 	    if ($line =~ m!//BISONPRE_TYPES!) {
 		push @lines, $line;
 		foreach my $type (sort keys %types) {
+		    next if !$type;
 		    my $line = "%type<$type>\t";
 		    foreach my $rule (sort keys %{$types{$type}}) {
 			$line.=" ".$rule;
