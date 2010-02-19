@@ -47,6 +47,7 @@ public:
 	UNKNOWN = 3,	// Things that need scope, but don't know type yet
 	//
 	BLOCK,
+	CHECKER,
 	CLASS,		// For yaID__CLASS
 	CLOCKING,
 	COVERGROUP,	// For yaID__COVERGROUP
@@ -75,7 +76,7 @@ public:
     const char* ascii() const {
 	static const char* names[] = {
 	"NOT_FOUND", "netlist", "error", "unknown",
-	"block", "class", "clocking", "covergroup",
+	"block", "checker", "class", "clocking", "covergroup",
 	"enum", "fork", "function", "interface", "let",
 	"modport", "module", "package", "program", "property",
 	"sequence", "struct", "task", "type", "union",
