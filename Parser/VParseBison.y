@@ -893,12 +893,12 @@ anonymous_program_itemList:	// IEEE: { anonymous_program_item }
 	;
 
 anonymous_program_item:		// ==IEEE: anonymous_program_item
-		task_declaration
-	|	function_declaration
-	|	class_declaration
-	|	covergroup_declaration
+		task_declaration			{ }
+	|	function_declaration			{ }
+	|	class_declaration			{ }
+	|	covergroup_declaration			{ }
 	//			// class_constructor_declaration is part of function_declaration
-	|	';'
+	|	';'					{ }
 	;
 
 program_declaration:		// IEEE: program_declaration + program_nonansi_header + program_ansi_header:
@@ -4237,7 +4237,7 @@ checker_or_generate_item_declaration:	// ==IEEE: checker_or_generate_item_declar
 	|	clocking_declaration			{ }
 	|	yDEFAULT yCLOCKING id/*clocking_identifier*/ ';'	{ }
 	|	yDEFAULT yDISABLE yIFF expr/*expression_or_dist*/ ';'	{ }
-	|	';'
+	|	';'					{ }
 	;
 
 checker_generate_item:		// ==IEEE: checker_generate_item
@@ -4383,6 +4383,8 @@ class_item:			// ==IEEE: class_item
 	|	local_parameter_declaration ';'		{ } // 1800-2009
 	|	parameter_declaration ';'		{ } // 1800-2009
 	|	';'					{ }
+	//
+	|	error ';'				{ }
 	;
 
 class_method:			// ==IEEE: class_method
