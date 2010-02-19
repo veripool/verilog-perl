@@ -289,3 +289,13 @@ class ln288;
    extern virtual function string extvirtstr;
    extern virtual task extvirttask;
 endclass
+
+class cl_to_init;
+  extern function new();
+  extern static function cl_to_init init();
+endclass
+function cl_to_init cl_to_init::init();
+endfunction
+function cl_to_init::new();
+endfunction
+cl_to_init cl_inited = cl_to_init::init();

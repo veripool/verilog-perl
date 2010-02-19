@@ -2419,6 +2419,7 @@ funcRef<str>:			// IEEE: part of tf_call
 	//
 		id '(' pev_list_of_argumentsE ')'	{ $<fl>$=$<fl>1; $$=$1+"("+$3+")"; }
 	|	package_scopeIdFollows id '(' pev_list_of_argumentsE ')'	{ $<fl>$=$<fl>2; $$=$1+$2+"("+$4+")"; }
+	|	class_scope_id '(' pev_list_of_argumentsE ')'	{ $<fl>$=$<fl>1; $$=$<str>1+"("+$3+")"; }
 	;
 
 task_subroutine_callNoMethod<str>:	// function_subroutine_callNoMethod (as task)
