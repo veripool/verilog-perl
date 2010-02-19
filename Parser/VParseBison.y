@@ -2131,7 +2131,7 @@ statement_item:			// IEEE: statement_item
 	//			// for's first ';' is in for_initalization
 	|	yFOR '(' for_initialization expr ';' for_stepE ')' stmtBlock
 				{ }
-	|	yDO stmtBlock yWHILE '(' expr ')'	{ }
+	|	yDO stmtBlock yWHILE '(' expr ')' ';'	{ }
 	//			// IEEE says array_identifier here, but dotted accepted in VMM and 1800-2009
 	|	yFOREACH '(' idClassForeach/*array_id[loop_variables]*/ ')' stmt	{ }
 	//
