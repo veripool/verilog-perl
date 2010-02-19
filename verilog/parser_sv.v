@@ -284,3 +284,8 @@ typedef enum [2:0] { ENUM_RANGED_VALUE } enum_ranged_t;
 
 typedef struct packed { logic val; } t_bug202_struct;
 typedef union packed { logic val; } t_bug202_union;
+
+class ln288;
+   extern virtual function string extvirtstr;
+   extern virtual task extvirttask;
+endclass
