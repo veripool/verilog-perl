@@ -328,7 +328,6 @@ word	[a-zA-Z0-9_]+
   "rand"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRAND; }
   "randc"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDC; }
   "randcase"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDCASE; }
-  "randomize"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDOMIZE; }
   "randsequence"	{ FL; VALTEXT; CALLBACK(keywordCb); return yRANDSEQUENCE; }
   "ref"			{ FL; VALTEXT; CALLBACK(keywordCb); return yREF; }
   "return"		{ FL; VALTEXT; CALLBACK(keywordCb); return yRETURN; }
@@ -752,6 +751,7 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	else if (token == yWITH__LEX) {
 	    if (nexttok == '(') token = yWITH__PAREN;
 	    else if (nexttok == '[') token = yWITH__BRA;
+	    else if (nexttok == '{') token = yWITH__CUR;
 	    else token = yWITH__ETC;
 	}
 	// If add to above "else if", also add to "if (token" further above

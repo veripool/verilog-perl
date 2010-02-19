@@ -326,7 +326,6 @@ static void NEED_S09(VFileLine*, const string&) {
 %token<str>		yRAND		"rand"
 %token<str>		yRANDC		"randc"
 %token<str>		yRANDCASE	"randcase"
-%token<str>		yRANDOMIZE	"randomize"
 %token<str>		yRANDSEQUENCE	"randsequence"
 %token<str>		yREAL		"real"
 %token<str>		yREALTIME	"realtime"
@@ -403,6 +402,7 @@ static void NEED_S09(VFileLine*, const string&) {
 %token<str>		yWIRE		"wire"
 %token<str>		yWITHIN		"within"
 %token<str>		yWITH__BRA	"with-then-["
+%token<str>		yWITH__CUR	"with-then-{"
 %token<str>		yWITH__ETC	"with"
 %token<str>		yWITH__LEX	"with-in-lex"
 %token<str>		yWITH__PAREN	"with-then-("
@@ -539,9 +539,6 @@ static void NEED_S09(VFileLine*, const string&) {
 
 %nonassoc prLOWER_THAN_ELSE
 %nonassoc yELSE
-
-%nonassoc prLOWER
-%nonassoc prHIGHER
 
 //BISONPRE_TYPES
 //  Blank lines for type insertion
@@ -2433,7 +2430,10 @@ task_subroutine_callNoMethod<str>:	// function_subroutine_callNoMethod (as task)
 	|	system_t_call				{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: method_call requires a "." so is in expr
 	//			// IEEE: ['std::'] not needed, as normal std package resolution will find it
-	|	randomize_call 				{ $<fl>$=$<fl>1; $$=$1; }
+	//			// IEEE: randomize_call
+	//			// We implement randomize as a normal funcRef, since randomize isn't a keyword
+	//			// Note yNULL is already part of expressions, so they come for free
+	|	funcRef yWITH__CUR constraint_block	{ $<fl>$=$<fl>1; $$=$1+" with..."; }
 	;
 
 function_subroutine_callNoMethod<str>:	// IEEE: function_subroutine_call (as function)
@@ -2443,7 +2443,10 @@ function_subroutine_callNoMethod<str>:	// IEEE: function_subroutine_call (as fun
 	|	system_f_call				{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: method_call requires a "." so is in expr
 	//			// IEEE: ['std::'] not needed, as normal std package resolution will find it
-	|	randomize_call 				{ $<fl>$=$<fl>1; $$=$1; }
+	//			// IEEE: randomize_call
+	//			// We implement randomize as a normal funcRef, since randomize isn't a keyword
+	//			// Note yNULL is already part of expressions, so they come for free
+	|	funcRef yWITH__CUR constraint_block	{ $<fl>$=$<fl>1; $$=$1+" with..."; }
 	;
 
 system_t_call<str>:		// IEEE: system_tf_call (as task)
@@ -2707,18 +2710,6 @@ array_method_nameNoId<str>:	// IEEE: array_method_name minus method_identifier
 	|	yAND					{ $<fl>$=$<fl>1; $$=$1; }
 	|	yOR					{ $<fl>$=$<fl>1; $$=$1; }
 	|	yXOR					{ $<fl>$=$<fl>1; $$=$1; }
-	;
-
-randomize_call<str>:		// ==IEEE: randomize_call
-		yRANDOMIZE		 randomize_callWithE	{ $<fl>$=$<fl>1; $$=$1; }
-	|	yRANDOMIZE '(' ')'	 randomize_callWithE	{ $<fl>$=$<fl>1; $$=$1; }
-	|	yRANDOMIZE '(' yNULL ')' randomize_callWithE	{ $<fl>$=$<fl>1; $$=$1; }
-	|	yRANDOMIZE '(' identifier_list/*variable*/ ')' randomize_callWithE	{ $<fl>$=$<fl>1; $$=$1; }
-	;
-
-randomize_callWithE<str>:	// IEEE: part of randomize_call
-		/* empty */		%prec prLOWER	{ $$=""; }
-	|	yWITH__ETC/*{*/ constraint_block	%prec prHIGHER	{ $<fl>$=$<fl>1; $$=" with... "; }
 	;
 
 dpi_import_export:		// ==IEEE: dpi_import_export
@@ -3383,14 +3374,6 @@ idForeach<str>:			// IEEE: id + select + [loop_variables]
 
 strAsInt<str>:
 		yaSTRING				{ $<fl>$=$<fl>1; $$ = $1; }
-	;
-
-identifier_list<str>:		// ==IEEE: identifier_list
-	//			// Used by ySOLVE and yRANDOMIZE;
-	//			// IEEE: uses id below, but,
-	//			// VMM suggests idDotted is legal in many cases
-		idDotted				{ $<fl>$=$<fl>1; $$ = $1; }
-	|	identifier_list ',' idDotted		{ $<fl>$=$<fl>1; $$ = $1+","+$3; }
 	;
 
 endLabelE:

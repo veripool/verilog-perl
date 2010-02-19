@@ -319,4 +319,10 @@ endclass
 
 task rand_with_ln320();
    if (!randomize(v) with { v > 0 && v < maxval; }) begin end
+   if (randomize(null)) begin end
+endtask
+task apply_request(data_req, input bit randomize = 1);
+   if (randomize == 1) begin
+      data_req.randomize();  // Generic method, not std::randomize
+   end
 endtask

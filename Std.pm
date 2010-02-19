@@ -74,9 +74,11 @@ class process;
    extern function void resume();
 endclass
 
-//Compiler built-in due to specialized arguments
-//function int randomize( ... );
-// randomize( variable_identifier {, variable_identifier } ) [ with constraint_block ];
+// randomize is here, however the parsing rules are special,
+// For example there is "(null)", variable arguments, and "with {...}"
+// randomize really should be a language keyword.
+function int randomize();
+endfunction
 
 endpackage : std
 
