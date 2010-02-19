@@ -2429,6 +2429,7 @@ funcRef<str>:			// IEEE: part of tf_call
 task_subroutine_callNoMethod<str>:	// function_subroutine_callNoMethod (as task)
 	//			// IEEE: tf_call
 		funcRef					{ $<fl>$=$<fl>1; $$=$1; }
+	|	funcRef yWITH__PAREN '(' expr ')'	{ $<fl>$=$<fl>1; $$=$1+" "+$2+$3+$4+$5; }
 	|	system_t_call				{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: method_call requires a "." so is in expr
 	//			// IEEE: ['std::'] not needed, as normal std package resolution will find it
@@ -2438,6 +2439,7 @@ task_subroutine_callNoMethod<str>:	// function_subroutine_callNoMethod (as task)
 function_subroutine_callNoMethod<str>:	// IEEE: function_subroutine_call (as function)
 	//			// IEEE: tf_call
 		funcRef					{ $<fl>$=$<fl>1; $$=$1; }
+	|	funcRef yWITH__PAREN '(' expr ')'	{ $<fl>$=$<fl>1; $$=$1+" "+$2+$3+$4+$5; }
 	|	system_f_call				{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: method_call requires a "." so is in expr
 	//			// IEEE: ['std::'] not needed, as normal std package resolution will find it
@@ -2695,6 +2697,7 @@ array_methodNoRoot<str>:	// ==IEEE: built_in_method_call without root
 	;
 
 method_callWithE<str>:
+	//			// Code duplicated elsewhere
 		/* empty */				{ $$=""; }
 	|	yWITH__PAREN '(' expr ')'		{ $<fl>$=$<fl>1; $$=$1+$2+$3+$4; }
 	;
