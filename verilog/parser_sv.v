@@ -299,3 +299,9 @@ endfunction
 function cl_to_init::new();
 endfunction
 cl_to_init cl_inited = cl_to_init::init();
+
+// pure virtual functions have no endfunction.
+virtual class pure_virt_func_class;
+   pure virtual function string pure_virt_func();
+   pure virtual task pure_virt_task();
+endclass

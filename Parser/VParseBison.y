@@ -271,7 +271,9 @@ static void NEED_S09(VFileLine*, const string&) {
 %token<str>		yFOREVER	"forever"
 %token<str>		yFORK		"fork"
 %token<str>		yFORKJOIN	"forkjoin"
-%token<str>		yFUNCTION	"function"
+%token<str>		yFUNCTION__ETC	"function"
+%token<str>		yFUNCTION__LEX	"function-in-lex"
+%token<str>		yFUNCTION__aPUREV "function-is-pure-virtual"
 %token<str>		yGENERATE	"generate"
 %token<str>		yGENVAR		"genvar"
 %token<str>		yGLOBAL__CLOCKING "global-then-clocking"
@@ -361,7 +363,9 @@ static void NEED_S09(VFileLine*, const string&) {
 %token<str>		yS_UNTIL_WITH	"s_until_with"
 %token<str>		yTABLE		"table"
 %token<str>		yTAGGED		"tagged"
-%token<str>		yTASK		"task"
+%token<str>		yTASK__ETC	"task"
+%token<str>		yTASK__LEX	"task-in-lex"
+%token<str>		yTASK__aPUREV	"task-is-pure-virtual"
 %token<str>		yTHIS		"this"
 %token<str>		yTHROUGHOUT	"throughout"
 %token<str>		yTIME		"time"
@@ -2480,38 +2484,57 @@ property_actual_arg<str>:	// ==IEEE: property_actual_arg
 	//			// property_expr already includes sequence_expr
 	;
 
-task_declaration:		// ==IEEE: task_declaration
-		yTASK lifetimeE taskId tfGuts yENDTASK endLabelE
+task<fl>:
+		yTASK__ETC				{ $<fl>$=$<fl>1; }
+	|	yTASK__aPUREV				{ $<fl>$=$<fl>1; }
+	;
+
+task_declaration:		// IEEE: task_declaration
+		yTASK__ETC lifetimeE taskId tfGuts yENDTASK endLabelE
 			{ PARSEP->endtaskfuncCb($<fl>5,$5);
+			  PARSEP->symPopScope(VAstType::TASK); }
+	|	yTASK__aPUREV lifetimeE taskId tfGutsPureV
+			{ PARSEP->endtaskfuncCb($<fl>1,"endtask");
 			  PARSEP->symPopScope(VAstType::TASK); }
 	;
 
 task_prototype:			// ==IEEE: task_prototype
 	//			// IEEE: has '(' tf_port_list ')'
 	//			// However the () should be optional for OVA
-		yTASK taskId '(' tf_port_listE ')'	{ PARSEP->symPopScope(VAstType::TASK); }
-	|	yTASK taskId				{ PARSEP->symPopScope(VAstType::TASK); }
+		task taskId '(' tf_port_listE ')'	{ PARSEP->symPopScope(VAstType::TASK); }
+	|	task taskId				{ PARSEP->symPopScope(VAstType::TASK); }
+	;
+
+function<fl>:
+		yFUNCTION__ETC				{ $<fl>$=$<fl>1; }
+	|	yFUNCTION__aPUREV			{ $<fl>$=$<fl>1; }
 	;
 
 function_declaration:		// IEEE: function_declaration + function_body_declaration
-	 	yFUNCTION lifetimeE funcId tfGuts yENDFUNCTION endLabelE
+	 	yFUNCTION__ETC lifetimeE funcId tfGuts yENDFUNCTION endLabelE
 			{ PARSEP->endtaskfuncCb($<fl>5,$5);
 			  PARSEP->symPopScope(VAstType::FUNCTION); }
-	| 	yFUNCTION lifetimeE funcIdNew tfGuts yENDFUNCTION endLabelE
+	| 	yFUNCTION__ETC lifetimeE funcIdNew tfGuts yENDFUNCTION endLabelE
 			{ PARSEP->endtaskfuncCb($<fl>5,$5);
+			  PARSEP->symPopScope(VAstType::FUNCTION); }
+	|	yFUNCTION__aPUREV lifetimeE funcId tfGutsPureV
+			{ PARSEP->endtaskfuncCb($<fl>1,"endfunction");
+			  PARSEP->symPopScope(VAstType::FUNCTION); }
+	| 	yFUNCTION__aPUREV lifetimeE funcIdNew tfGutsPureV
+			{ PARSEP->endtaskfuncCb($<fl>1,"endfunction");
 			  PARSEP->symPopScope(VAstType::FUNCTION); }
 	;
 
 function_prototype:		// IEEE: function_prototype
 	//			// IEEE: has '(' tf_port_list ')'
 	//			// However the () should be optional for OVA
-		yFUNCTION funcId '(' tf_port_listE ')'	{ PARSEP->symPopScope(VAstType::FUNCTION); }
-	|	yFUNCTION funcId 			{ PARSEP->symPopScope(VAstType::FUNCTION); }
+		function funcId '(' tf_port_listE ')'	{ PARSEP->symPopScope(VAstType::FUNCTION); }
+	|	function funcId 			{ PARSEP->symPopScope(VAstType::FUNCTION); }
 	;
 
 class_constructor_prototype:	// ==IEEE: class_constructor_prototype
-		yFUNCTION funcIdNew '(' tf_port_listE ')' ';'	{ PARSEP->symPopScope(VAstType::FUNCTION); }
-	|	yFUNCTION funcIdNew ';'				{ PARSEP->symPopScope(VAstType::FUNCTION); }
+		function funcIdNew '(' tf_port_listE ')' ';'	{ PARSEP->symPopScope(VAstType::FUNCTION); }
+	|	function funcIdNew ';'				{ PARSEP->symPopScope(VAstType::FUNCTION); }
 	;
 
 method_prototype:
@@ -2578,6 +2601,11 @@ tfIdScoped<str_scp>:		// IEEE: part of function_body_declaration/task_body_decla
 tfGuts:
 		'(' tf_port_listE ')' ';' tfBodyE	{ }
 	|	';' tfBodyE				{ }
+	;
+
+tfGutsPureV:
+		'(' tf_port_listE ')' ';'		{ }
+	|	';'					{ }
 	;
 
 tfBodyE:		// IEEE: part of function_body_declaration/task_body_declaration
@@ -2693,8 +2721,8 @@ randomize_callWithE<str>:	// IEEE: part of randomize_call
 dpi_import_export:		// ==IEEE: dpi_import_export
 		yIMPORT yaSTRING dpi_tf_import_propertyE dpi_importLabelE function_prototype ';'	{ }
 	|	yIMPORT yaSTRING dpi_tf_import_propertyE dpi_importLabelE task_prototype ';'	{ }
-	|	yEXPORT yaSTRING dpi_importLabelE yFUNCTION idAny ';'	{ }
-	|	yEXPORT yaSTRING dpi_importLabelE yTASK     idAny ';'	{ }
+	|	yEXPORT yaSTRING dpi_importLabelE function idAny ';'	{ }
+	|	yEXPORT yaSTRING dpi_importLabelE task     idAny ';'	{ }
 	;
 
 dpi_importLabelE:		// IEEE: part of dpi_import_export
@@ -2709,7 +2737,7 @@ dpi_tf_import_propertyE:	// IEEE: [ dpi_function_import_property + dpi_task_impo
 	;
 
 overload_declaration:		// ==IEEE: overload_declaration
-		yBIND overload_operator yFUNCTION data_type idAny/*new-function_identifier*/
+		yBIND overload_operator function data_type idAny/*new-function_identifier*/
 			'(' overload_proto_formals ')' ';'	{ }
 	;
 
@@ -4072,7 +4100,7 @@ bins_expression:		// ==IEEE: bins_expression
 coverage_eventE:		// IEEE: [ coverage_event ]
 		/* empty */				{ }
 	|	clocking_event				{ }
-	|	yWITH__ETC yFUNCTION idAny/*"sample"*/ '(' tf_port_listE ')'	{ }
+	|	yWITH__ETC function idAny/*"sample"*/ '(' tf_port_listE ')'	{ }
 	|	yP_ATAT '(' block_event_expression ')'	{ }
 	;
 
@@ -4431,6 +4459,7 @@ memberQualOne<str>:			// IEEE: property_qualifier + method_qualifier
 		class_item_qualifier			{ $<fl>$=$<fl>1; $$=$1; }
 	//			// Part of method_qualifier only
 	|	yVIRTUAL__ETC				{ $<fl>$=$<fl>1; $$=$1; }
+	//			// IMPORTANT: lexer looks for yPURE yVIRTUAL
 	|	yPURE yVIRTUAL__ETC			{ $<fl>$=$<fl>1; $$=$1+" "+$2; }
 	//			// Part of property_qualifier only
 	|	random_qualifier			{ $<fl>$=$<fl>1; $$=$1; }

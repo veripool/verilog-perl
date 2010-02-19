@@ -80,6 +80,8 @@ class VParseLex {
     int		m_aheadToken;		///< Token we read ahead
     VParseBisonYYSType m_aheadVal;	///< aheadToken's value
 
+    int		m_pvstate;		///< "pure virtual" detection
+
     // Parse state
     YY_BUFFER_STATE  m_yyState;	///< flex input state
 
@@ -92,6 +94,7 @@ class VParseLex {
 	m_parsep = parsep;
 	m_inCellDefine = false;
 	m_ahead = false;
+	m_pvstate = 0;
 
 	m_yyState = yy_create_buffer(NULL, YY_BUF_SIZE);
 	s_currentLexp = this;

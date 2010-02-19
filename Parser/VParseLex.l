@@ -136,7 +136,7 @@ word	[a-zA-Z0-9_]+
   "force"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFORCE; }
   "forever"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFOREVER; }
   "fork"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFORK; }
-  "function"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFUNCTION; }
+  "function"		{ FL; VALTEXT; CALLBACK(keywordCb); return yFUNCTION__LEX; }
   "if"			{ FL; VALTEXT; CALLBACK(keywordCb); return yIF; }
   "initial"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINITIAL; }
   "inout"		{ FL; VALTEXT; CALLBACK(keywordCb); return yINOUT; }
@@ -165,7 +165,7 @@ word	[a-zA-Z0-9_]+
   "supply0"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySUPPLY0; }
   "supply1"		{ FL; VALTEXT; CALLBACK(keywordCb); return ySUPPLY1; }
   "table"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTABLE; }
-  "task"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTASK; }
+  "task"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTASK__LEX; }
   "time"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTIME; }
   "tri"			{ FL; VALTEXT; CALLBACK(keywordCb); return yTRI; }
   "tri0"		{ FL; VALTEXT; CALLBACK(keywordCb); return yTRI0; }
@@ -756,6 +756,33 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	}
 	// If add to above "else if", also add to "if (token" further above
     }
+
+    // Non-lookahead conversions
+    // If a function/task convert token based on earlier detection of yPURE yVIRTUAL
+    switch (token) {
+    case yPURE:
+	m_pvstate = 1;  // found pure
+	break;
+    case yVIRTUAL__ETC:
+	if (m_pvstate == 1) m_pvstate = 2;  // found pure virtual
+	else m_pvstate = 0;
+	break;
+    case yFUNCTION__LEX:
+	token = (m_pvstate==2) ? yFUNCTION__aPUREV : yFUNCTION__ETC;
+	m_pvstate = 0;
+	break;
+    case yTASK__LEX:
+	token = (m_pvstate==2) ? yTASK__aPUREV : yTASK__ETC;
+	m_pvstate = 0;
+	break;
+    case ';':  // Just to be safe
+	m_pvstate = 0;
+	break;
+    default:
+	if (m_pvstate == 1) m_pvstate = 0;
+	break;
+    }
+
     // If an id, change the type based on symbol table
     // Note above sometimes converts yGLOBAL to a yaID__LEX
     s_yylvalp->scp = NULL;
