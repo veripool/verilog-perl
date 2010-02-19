@@ -81,9 +81,6 @@ public:  // But for internalish use only
 	}
 	m_symTableNextId = entp;
     }
-    void symReinsert(VAstType type, const string& name) {
-	m_syms.reinsert(type,name);
-    }
     string symObjofUpward() {
 	return m_syms.objofUpward();
     }
@@ -92,7 +89,7 @@ public:  // But for internalish use only
     }
     void symPushNewUnder(VAstType type, const string& name, VAstEnt* parentp) {
 	if (!parentp) parentp = m_syms.currentSymp();
-	m_syms.pushScope(parentp->findNewTable(type,name));
+	m_syms.pushScope(parentp->replaceInsert(type,name));
     }
     void symPushNewAnon(VAstType type) {
 	string name = "__anon";

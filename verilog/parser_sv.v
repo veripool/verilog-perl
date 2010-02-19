@@ -305,3 +305,14 @@ virtual class pure_virt_func_class;
    pure virtual function string pure_virt_func();
    pure virtual task pure_virt_task();
 endclass
+
+class extend_base;
+   typedef enum { EN_A, EN_B } base_enum;
+   virtual function extend_base create(); return null; endfunction
+endclass
+class extended extends extend_base;
+   typedef base_enum be_t;  // type must come from base class
+   virtual function int create ();  // Must override base's create
+      be_t mye;
+   endfunction
+endclass

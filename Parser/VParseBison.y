@@ -75,7 +75,7 @@ static void VARDONE(VFileLine* fl, const string& name, const string& array, cons
 		       GRAMMARP->m_varIO, GRAMMARP->m_varDType, array, GRAMMARP->pinNum());
     }
     if (GRAMMARP->m_varDType == "type") {
-	PARSEP->symReinsert(VAstType::TYPE,name);
+	PARSEP->syms().replaceInsert(VAstType::TYPE,name);
     }
 }
 
@@ -83,7 +83,7 @@ static void VARDONETYPEDEF(VFileLine* fl, const string& name, const string& type
     VARRESET(); VARDECL("typedef"); VARDTYPE(type);
     VARDONE(fl,name,array,"");
     // TYPE shouldn't override a more specific node type, as often is forward reference
-    PARSEP->symReinsert(VAstType::TYPE,name);
+    PARSEP->syms().replaceInsert(VAstType::TYPE,name);
 }
 
 static void PINDONE(VFileLine* fl, const string& name, const string& expr) {
@@ -1238,7 +1238,7 @@ data_type<str>:			// ==IEEE: data_type, excluding class_type etc references
 	|	ps_type  packed_dimensionListE		{ $<fl>$=$<fl>1; $$=$1+$2; }
 	|	class_scope_type packed_dimensionListE	{ $<fl>$=$<fl>1; $$=$1+$2; }
 	//			// IEEE: class_type
-	|	class_typeWithoutId			{ $<fl>$=$<fl>1; $$=$1; }
+	|	class_typeWithoutId			{ $<fl>$=$<fl>1; $$=$<str>1; }
 	//			// IEEE: ps_covergroup_identifier
 	|	ps_covergroup_identifier		{ $<fl>$=$<fl>1; $$=$1; }
 	;
@@ -1481,10 +1481,10 @@ type_declaration:		// ==IEEE: type_declaration
 			{ VARDONETYPEDEF($<fl>1,$6,$2+$3+"."+$5,""); }
 	//			// Combines into above "data_type id" rule
 	|	yTYPEDEF id ';'				{ VARDONETYPEDEF($<fl>1,$2,"",""); }
-	|	yTYPEDEF yENUM idAny ';'		{ PARSEP->symReinsert(VAstType::ENUM, $3); }
-	|	yTYPEDEF ySTRUCT idAny ';'		{ PARSEP->symReinsert(VAstType::STRUCT, $3); }
-	|	yTYPEDEF yUNION idAny ';'		{ PARSEP->symReinsert(VAstType::UNION, $3); }
-	|	yTYPEDEF yCLASS idAny ';'		{ PARSEP->symReinsert(VAstType::CLASS, $3); }
+	|	yTYPEDEF yENUM idAny ';'		{ PARSEP->syms().replaceInsert(VAstType::ENUM, $3); }
+	|	yTYPEDEF ySTRUCT idAny ';'		{ PARSEP->syms().replaceInsert(VAstType::STRUCT, $3); }
+	|	yTYPEDEF yUNION idAny ';'		{ PARSEP->syms().replaceInsert(VAstType::UNION, $3); }
+	|	yTYPEDEF yCLASS idAny ';'		{ PARSEP->syms().replaceInsert(VAstType::CLASS, $3); }
 	;
 
 //************************************************
@@ -4296,6 +4296,8 @@ checker_instantiation:
 // Class
 
 class_declaration:		// ==IEEE: part of class_declaration
+	//			// The classExtendsE rule relys on classFront having the
+	//			// new class scope correct via classFront
 		classFront parameter_port_listE classExtendsE ';'
 			class_itemListE yENDCLASS endLabelE
 			{ PARSEP->symPopScope(VAstType::CLASS); }
@@ -4312,9 +4314,11 @@ classVirtualE:
 	;
 
 classExtendsE:			// IEEE: part of class_declaration
+	//			// The classExtendsE rule relys on classFront having the
+	//			// new class scope correct via classFront
 		/* empty */				{ }
-	|	yEXTENDS class_typeWithoutId		{ }
-	|	yEXTENDS class_typeWithoutId '(' list_of_argumentsE ')'	{ }
+	|	yEXTENDS class_typeWithoutId		{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
+	|	yEXTENDS class_typeWithoutId '(' list_of_argumentsE ')'	{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
 	;
 
 //=========
@@ -4344,14 +4348,14 @@ class_scope_id<str_scp>:	// class_scope + id etc
 
 //=== Below rules assume special scoping per above
 
-class_typeWithoutId<str>:	// class_type standalone without following id
+class_typeWithoutId<str_scp>:	// class_type standalone without following id
 	//			// and we thus don't need to resolve it in specified package
-		package_scopeIdFollowsE class_typeOneList	{ $<fl>$=$<fl>2; $$=$1+$<str>2; }
+		package_scopeIdFollowsE class_typeOneList	{ $<fl>$=$<fl>2; $<scp>$=$<scp>2; $<str>$=$1+$<str>2; }
 	;
 
-class_scopeWithoutId<str>:	// class_type standalone without following id
+class_scopeWithoutId<str_scp>:	// class_type standalone without following id
 	//			// and we thus don't need to resolve it in specified package
-		class_scopeIdFollows			{ $<fl>$=$<fl>1; $$=$<str>1; PARSEP->symTableNextId(NULL); }
+		class_scopeIdFollows			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; PARSEP->symTableNextId(NULL); }
 	;
 
 class_scopeIdFollows<str_scp>:	// IEEE: class_scope

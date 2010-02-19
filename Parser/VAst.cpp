@@ -122,26 +122,23 @@ void VAstEnt::initAVEnt(AV* avp, VAstType type, AV* parentp) {
     av_push(avp, newRV_noinc((SV*)newHV()) );
 }
 
-void VAstEnt::insert(VAstEnt* newentp, const string& name) {
-    if (debug()) cout<<"VAstEnt::insert under="<<this<<" "<<newentp->ascii(name)<<"\"\n";
-
+void VAstEnt::replaceInsert(VAstEnt* newentp, const string& name) {
+    if (debug()) cout<<"VAstEnt::replaceInsert under="<<this<<" "<<newentp->ascii(name)<<"\"\n";
     HV* hvp = subhash(); assert(hvp);
 
     // $svpp = $table{$name}
     SV** svpp = hv_fetch(hvp, name.c_str(), name.length(), 1/*create*/);
-    if (SvROK(*svpp)) return;  // Already exists
 
     // $avp = $newentp (premade avp)
     hv_store(hvp, name.c_str(), name.length(), newRV((SV*)newentp), 0);
 }
 
-VAstEnt* VAstEnt::insert(VAstType type, const string& name) {
-    if (debug()) cout<<"VAstEnt::insert under="<<this<<" "<<type.ascii()<<"-\""<<name<<"\"\n";
+VAstEnt* VAstEnt::replaceInsert(VAstType type, const string& name) {
+    if (debug()) cout<<"VAstEnt::replaceInsert under="<<this<<" "<<type.ascii()<<"-\""<<name<<"\"\n";
     HV* hvp = subhash(); assert(hvp);
 
     // $svpp = $table{$name}
     SV** svpp = hv_fetch(hvp, name.c_str(), name.length(), 1/*create*/);
-    if (SvROK(*svpp)) return avToSymEnt((AV*)(SvRV(*svpp)));  // Already exists
 
     // $avp = [type, this, {}]
     AV* sub_avp = newAVEnt(type);
@@ -163,10 +160,11 @@ VAstEnt* VAstEnt::findSym (const string& name) {
     return entp;
 }
 
-VAstEnt* VAstEnt::findNewTable (VAstType type, const string& name) {
+VAstEnt* VAstEnt::findInsert (VAstType type, const string& name) {
+    if (debug()) cout<<"VAstEnt::findInsert under="<<this<<" "<<type.ascii()<<"-\""<<name<<"\"\n";
     VAstEnt* symp = findSym(name);
     if (!symp) {
-	symp = insert(type,name);
+	symp = replaceInsert(type,name);
 	assert(symp && symp == findSym(name));
     }
     return symp;
@@ -176,7 +174,8 @@ void VAstEnt::import(VAstEnt* pkgEntp, const string& id_or_star) {
     if (id_or_star != "*") {  // Import single entry
 	if (VAstEnt* idEntp = pkgEntp->findSym(id_or_star)) {
 	    // We can just add a second reference to the same AstEnt object
-	    insert(idEntp, id_or_star);
+	    if (debug()) cout<<"VAstEnt::import under="<<this<<" "<<idEntp->ascii()<<"\n";
+	    replaceInsert(idEntp, id_or_star);
 	}
     } else {
 	// Walk old sym table
@@ -187,7 +186,9 @@ void VAstEnt::import(VAstEnt* pkgEntp, const string& id_or_star) {
 	    const char* namep = hv_iterkey(hep, &retlen);
 	    string name = string(namep,retlen);
 	    SV* svp = hv_iterval(hvp, hep);
-	    insert(avToSymEnt((AV*)(SvRV(svp))), name);
+	    VAstEnt* idEntp = avToSymEnt((AV*)(SvRV(svp)));
+	    if (debug()) cout<<"VAstEnt::import under="<<this<<" "<<idEntp->ascii(name)<<"\n";
+	    replaceInsert(idEntp, name);
 	}
     }
 }

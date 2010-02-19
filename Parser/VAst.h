@@ -119,7 +119,7 @@ private:
     struct hv* subhash();
 
     /// Insert into current table
-    void insert(VAstEnt* newentp, const string& name);
+    void replaceInsert(VAstEnt* newentp, const string& name);
 
 public:
     // ACCESSORS
@@ -140,11 +140,11 @@ public:
     /// Return internal pointer for given name or null
     VAstEnt* findSym (const string& name);
 
-    /// Insert into current table
-    VAstEnt* insert(VAstType type, const string& name);
+    /// Find or create a symbol under current entry
+    VAstEnt* findInsert (VAstType type, const string& name);
 
-    /// Find or create a symbol entry under current entry
-    VAstEnt* findNewTable (VAstType type, const string& name);
+    /// Replace or create a symbol entry under current entry
+    VAstEnt* replaceInsert (VAstType type, const string& name);
 
     /// Insert into current table from another imported package's table
     void import(VAstEnt* fromEntp, const string& id_or_star);

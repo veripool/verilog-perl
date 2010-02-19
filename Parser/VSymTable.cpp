@@ -123,27 +123,27 @@ void VSymStack::selftest() {
     assert(stack.findTypeUpward("missing") == VAstType::NOT_FOUND);
 
     DBG_UINFO(9,"=============\n");
-    stack.pushScope(stack.insert(VAstType::PACKAGE, "top"));
+    stack.pushScope(stack.findInsert(VAstType::PACKAGE, "top"));
     {
 	assert(stack.objofUpward() == "package");
 	assert(stack.findTypeUpward("top") == VAstType::PACKAGE);
 
-	stack.insert(VAstType::TYPE, "a");
+	stack.findInsert(VAstType::TYPE, "a");
 
 	DBG_UINFO(9,"=============\n");
-	stack.pushScope(stack.findNewTable(VAstType::MODULE, "lower"));
+	stack.pushScope(stack.findInsert(VAstType::MODULE, "lower"));
 	{
 	    assert(stack.findTypeUpward("lower") == VAstType::MODULE);  // IE ../lower exists.
 
 	    DBG_UINFO(9,"=============\n");
-	    stack.pushScope(stack.findNewTable(VAstType::FORK, "fork"));
+	    stack.pushScope(stack.findInsert(VAstType::FORK, "fork"));
 	    {
 		assert(stack.findTypeUpward("lower") == VAstType::MODULE);  // Ignores the fork
 	    }
 	    stack.popScope(fl);
 
 	    DBG_UINFO(9,"=============\n");
-	    stack.pushScope(stack.insert(VAstType::CLASS, "a"));  // Hides upper a
+	    stack.pushScope(stack.findInsert(VAstType::CLASS, "a"));  // Hides upper a
 	    {
 		assert(stack.objofUpward() == "class");
 		assert(stack.findTypeUpward("a") == VAstType::CLASS);

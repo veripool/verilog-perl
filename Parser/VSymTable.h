@@ -50,12 +50,12 @@ public:
 
     // METHODS
     /// Insert a new entry, and return the new entry
-    VAstEnt* insert(VAstType type, const string& name) {
-	return m_currentSymp->insert(type,name);
+    VAstEnt* replaceInsert(VAstType type, const string& name) {
+	return m_currentSymp->replaceInsert(type,name);
     }
     /// Insert an entry if it doesn't exist
-    void reinsert(VAstType type, const string& name) {
-	m_currentSymp->insert(type,name);
+    VAstEnt* findInsert(VAstType type, const string& name) {
+	return m_currentSymp->findInsert(type,name);
     }
 
     /// Return type of current lookup
@@ -91,11 +91,6 @@ public:
 	}
     }
 
-    /// Find or create a symbol table under current position
-    VAstEnt* findNewTable (VAstType type, const string& name) {
-	return m_currentSymp->findNewTable(type, name);
-    }
-
     /// Return what this object is a member of, ignoring blocks
     string objofUpward() {
 	for (VAstEnt* symp=currentSymp(); symp; symp=symp->parentp()) {
@@ -123,7 +118,9 @@ public:
 
     /// Import from package::id_or_star to this
     void import(VFileLine* fl, const string& pkg, const string& id_or_star) {
-	VAstEnt* entp = findEntUpward(pkg);
+	import (fl, pkg, findEntUpward(pkg), id_or_star);
+    }
+    void import(VFileLine* fl, const string& pkg, VAstEnt* entp, const string& id_or_star) {
 	if (!entp) {  // Internal problem, because we earlier found pkg to label it an ID__aPACKAGE
 	    fl->error("Internal: Import package not found: "+pkg);
 	    return;
