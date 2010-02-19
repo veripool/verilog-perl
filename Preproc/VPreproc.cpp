@@ -300,7 +300,8 @@ string VPreprocImp::trimWhitespace(const string& strg, bool trailing) {
 }
 
 string VPreprocImp::defineSubst(VPreDefRef* refp) {
-    // Substitute out defines in a argumented define reference.
+    // Substitute out defines in a define reference.
+    // (We also need to call here on non-param defines to handle `")
     // We could push the define text back into the lexer, but that's slow
     // and would make recursive definitions and parameter handling nasty.
     //
@@ -376,7 +377,9 @@ string VPreprocImp::defineSubst(VPreDefRef* refp) {
 	    if (*cp=='"') quote=!quote;
 	    if (*cp) token += *cp;
 	}
-	if (refp->args().size() > numArgs) {
+	if (refp->args().size() > numArgs
+	    // `define X() is ok to call with nothing
+	    && !(refp->args().size()==1 && numArgs==0 && trimWhitespace(refp->args()[0],false)=="")) {
 	    error("Define passed too many arguments: "+refp->name()+"\n");
 	    return " `"+refp->name()+" ";
 	}

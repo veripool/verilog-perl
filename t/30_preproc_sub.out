@@ -595,4 +595,9 @@ verilog/inc1.v:301: DS<This is fooed_2>>>
 verilog/inc1.v:302: 
 COMMENT: //======================================================================
 verilog/inc1.v:303:  /*CMT*/ 
-verilog/inc1.v:304: `line 304 "verilog/inc1.v" 2
+verilog/inc1.v:304:  
+verilog/inc1.v:305: DS<np>
+verilog/inc1.v:306: DS<np>
+COMMENT: //======================================================================
+verilog/inc1.v:307:  /*CMT*/ 
+verilog/inc1.v:308: `line 308 "verilog/inc1.v" 2
