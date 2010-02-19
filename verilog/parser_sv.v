@@ -316,3 +316,7 @@ class extended extends extend_base;
       be_t mye;
    endfunction
 endclass
+
+task rand_with_ln320();
+   if (!randomize(v) with { v > 0 && v < maxval; }) begin end
+endtask

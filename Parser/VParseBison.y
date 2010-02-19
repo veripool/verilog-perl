@@ -2718,7 +2718,7 @@ randomize_call<str>:		// ==IEEE: randomize_call
 
 randomize_callWithE<str>:	// IEEE: part of randomize_call
 		/* empty */		%prec prLOWER	{ $$=""; }
-	|	constraint_block	%prec prHIGHER	{ $<fl>$=$<fl>1; $$=" with... "; }
+	|	yWITH__ETC/*{*/ constraint_block	%prec prHIGHER	{ $<fl>$=$<fl>1; $$=" with... "; }
 	;
 
 dpi_import_export:		// ==IEEE: dpi_import_export
@@ -4372,7 +4372,7 @@ class_typeOneListColonIdFollows<str_scp>: // IEEE: class_type ::
 		class_typeOneList yP_COLONCOLON 	{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1+$<str>2; PARSEP->symTableNextId($<scp>1); }
 	;
 
-class_typeOneList<str_scp>: // IEEE: class_type: "id [ parameter_value_assignment ]"
+class_typeOneList<str_scp>:	// IEEE: class_type: "id [ parameter_value_assignment ]"
 	//			// If you follow the rules down, class_type is really a list via ps_class_identifier
 	//			// Must propagate scp up for next id
 		class_typeOne					{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
