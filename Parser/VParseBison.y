@@ -3295,17 +3295,21 @@ idClassSel<str>:		// Misc Ref to dotted, and/or arrayed, and/or bit-ranged varia
 	|	ySUPER '.' idDotted			{ $<fl>$=$<fl>1; $$ = "super."+$3; }
 	|	yTHIS '.' ySUPER '.' idDotted		{ $<fl>$=$<fl>1; $$ = "this.super."+$3; }
 	//			// Expanded: package_scope idDotted
-	|	package_scopeIdFollows idDotted		{ $<fl>$=$<fl>1; $$ = $1+$2; }
+	|	class_scopeIdFollows idDotted		{ $<fl>$=$<fl>1; $$ = $<str>1+$2; }
+	|	package_scopeIdFollows idDotted		{ $<fl>$=$<fl>1; $$ = $<str>1+$2; }
 	;
 
 idClassForeach<str>:		// Misc Ref to dotted, and/or arrayed, no bit range for foreach statement
+	//			// We can't just use the more general idClassSel
+	//			// because ,'s are allowed in the []'s
 		idDottedForeach				{ $<fl>$=$<fl>1; $$ = $1; }
 	//			// IEEE: [ implicit_class_handle . | package_scope ] hierarchical_variable_identifier select
 	|	yTHIS '.' idDottedForeach		{ $<fl>$=$<fl>1; $$ = "this."+$3; }
 	|	ySUPER '.' idDottedForeach		{ $<fl>$=$<fl>1; $$ = "super."+$3; }
 	|	yTHIS '.' ySUPER '.' idDottedForeach	{ $<fl>$=$<fl>1; $$ = "this.super."+$3; }
 	//			// Expanded: package_scope idDotted
-	|	package_scopeIdFollows idDottedForeach	{ $<fl>$=$<fl>1; $$ = $1+$2; }
+	|	class_scopeIdFollows idDottedForeach	{ $<fl>$=$<fl>1; $$ = $<str>1+$2; }
+	|	package_scopeIdFollows idDottedForeach	{ $<fl>$=$<fl>1; $$ = $<str>1+$2; }
 	;
 
 hierarchical_identifierList:	// IEEE: part of wait_statement

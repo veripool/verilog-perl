@@ -326,3 +326,7 @@ task apply_request(data_req, input bit randomize = 1);
       data_req.randomize();  // Generic method, not std::randomize
    end
 endtask
+
+task foreach_class_scope_ln330;
+   foreach (extended::some_array[i,j]) begin end
+endtask
