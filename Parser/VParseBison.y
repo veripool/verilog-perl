@@ -3518,7 +3518,7 @@ cross_itemList:			// IEEE: part of list_of_coverpoints
 	;
 
 cross_item:			// ==IEEE: cross_item
-		id/*cover_point_identifier or variable_identifier*/		{ }
+		idAny/*cover_point_identifier or variable_identifier*/		{ }
 	;
 
 select_bins_or_empty:		// ==IEEE: select_bins_or_empty
