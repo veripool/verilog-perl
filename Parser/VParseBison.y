@@ -4550,9 +4550,12 @@ void VParseGrammar::debug(int level) {
 }
 const char* VParseGrammar::tokenName(int token) {
 #if YYDEBUG || YYERROR_VERBOSE
-    if (token >= 255)
-	return yytname[token-255];
-    else {
+    if (token >= 255) {
+	switch (token) {
+	/*BISONPRE_TOKEN_NAMES*/
+	default: return yytname[token-255];
+	}
+    } else {
 	static char ch[2];  ch[0]=token; ch[1]='\0';
 	return ch;
     }

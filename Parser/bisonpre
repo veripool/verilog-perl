@@ -100,11 +100,11 @@ sub process {
 	die "bisonpre: %Error: $Opt_Yacc version $v run failed due to errors\n";
     }
 
-    clean_output(tmp_prefix().".output",output_prefix().".output", 1);
+    clean_output(tmp_prefix().".output",output_prefix().".output", 1,0);
     warning_check(output_prefix().".output");
 
-    clean_output(tmp_prefix().".c",	output_prefix().".c", 0);
-    clean_output(tmp_prefix().".h",	output_prefix().".h", 0);
+    clean_output(tmp_prefix().".c",	output_prefix().".c", 0,1);
+    clean_output(tmp_prefix().".h",	output_prefix().".h", 0,1);
     remove_tmp();
 }
 
@@ -150,6 +150,7 @@ sub clean_output {
     my $filename = shift;
     my $outname = shift || $filename;
     my $is_output = shift;
+    my $is_c = shift;
     print "  edit $filename $outname\n";
 
     my $fh = IO::File->new("<$filename") or die "%Error: $! $filename\n";
@@ -173,6 +174,28 @@ sub clean_output {
 		chomp $line;
 		$line .= " // line $state_line{$1}" if $state_line{$1};
 		$line .= "\n";
+	    }
+	    push @out, $line;
+	}
+	@lines = @out; @out = ();
+    }
+    if ($is_c) {
+	my %token_values;
+	my $in_en=0;
+	foreach my $line (@lines) {
+	    $in_en=1 if $line =~ /enum\s+yytokentype/;
+	    $in_en=0 if $line =~ /;/;
+	    $token_values{$2} = $1 if $in_en && $line =~ /\b(\S+) = (\d+)/;
+	}
+	my @out;
+	foreach my $line (@lines) {
+	    if ($line =~ /BISONPRE_TOKEN_NAMES/) {
+		push @out, $line;
+		foreach my $tv (sort keys %token_values) {
+		    push @out, sprintf("\tcase %d: return \"%s\";\n",
+				       $tv, $token_values{$tv});
+		}
+		next;
 	    }
 	    push @out, $line;
 	}
