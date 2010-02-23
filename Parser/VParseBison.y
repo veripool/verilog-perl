@@ -1067,11 +1067,21 @@ net_declaration:		// IEEE: net_declaration - excluding implict
 	;
 
 net_declarationFront:		// IEEE: beginning of net_declaration
-		net_declRESET net_type   strengthSpecE signingE delayrange { VARDTYPE(SPACED($4,$5));}
+		net_declRESET net_type strengthSpecE net_scalaredE net_dataType { VARDTYPE(SPACED($4,$5)); }
 	;
 
 net_declRESET:
 		/* empty */ 				{ VARRESET_NONLIST("net"); }
+	;
+
+net_scalaredE<str>:
+		/* empty */ 				{ $$=""; }
+	|	ySCALARED			 	{ $<fl>$=$<fl>1; $$=$1; }
+	|	yVECTORED				{ $<fl>$=$<fl>1; $$=$1; }
+	;
+
+net_dataType<str>:
+		signingE rangeListE delayE 		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	;
 
 net_type:			// ==IEEE: net_type
@@ -1818,10 +1828,6 @@ bit_selectE<str>:		// IEEE: constant_bit_select (IEEE included empty)
 	|	'[' constExpr ']'			{ $<fl>$=$<fl>1; $$ = "["+$2+"]"; }
 	;
 
-wirerangeE<str>:
-		rangeListE				{ $<fl>$=$<fl>1; $$=$1; }
-	;
-
 // IEEE: select
 // Merged into more general idArray
 
@@ -1842,12 +1848,6 @@ packed_dimensionList<str>:	// IEEE: { packed_dimension }
 packed_dimension<str>:		// ==IEEE: packed_dimension
 		anyrange				{ $<fl>$=$<fl>1; $$=$1; }
 	|	'[' ']'					{ $$="[]"; }
-	;
-
-delayrange<str>:
-		wirerangeE delayE 			{ $<fl>$=$<fl>1; $$=$1; }
-	|	ySCALARED wirerangeE delayE 		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
-	|	yVECTORED wirerangeE delayE		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	;
 
 //************************************************
