@@ -330,3 +330,7 @@ endtask
 task foreach_class_scope_ln330;
    foreach (extended::some_array[i,j]) begin end
 endtask
+
+module clkif_334;
+   always @(posedge top.clk iff !top.clken_l) begin end
+endmodule

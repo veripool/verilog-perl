@@ -1973,29 +1973,10 @@ event_control:			// ==IEEE: event_control
 	;
 
 event_expression:		// IEEE: event_expression - split over several
-	//			// Rules expanded/duplicated in pev_expr
-	//
-	//			// IEEE: [ edge_identifier ] expression [ yIFF expression ]
-		senitem					{ }
-	//			// IEEE: sequence_instance [ yIFF expression ]
-	//			// seq_inst is in expr, so matches senitem rule above
-	//			// IEEE: event_expression yOR event_expression
-	//			// Fix left recursion
-	|	event_expression yOR senitem		{ }
-	//			// IEEE: event_expression ',' event_expression
-	//			// IEEE: Footnote: () required when , is as an argument
-	|	event_expression ',' senitem		{ }	/* Verilog 2001 */
-	;
-
-senitem:			// IEEE: part of event_expression, non-'OR' ',' terms
-		senitemEdge				{ }
-	//			// IEEE: expr
-	//			// expr:'(' x ')' conflicts with event_expression:'(' event_expression ')'
-	//			// so we use a special expression class
-	|	ev_expr					{ }
-	|	ev_expr yIFF expr			{ }
-	//			// IEEE: '(' event_expression ')'
-	//			// See ev_expr
+	//			// ',' rules aren't valid in port lists - ev_expr is there.
+	//			// Also eliminates left recursion to appease conflicts
+		ev_expr					{ }
+	|	event_expression ',' ev_expr %prec yOR	{ }	/* Verilog 2001 */
 	;
 
 senitemEdge<str>:		// IEEE: part of event_expression
@@ -2941,9 +2922,29 @@ fexpr<str>:			// For use as first part of statement (disambiguates <=)
 		BISONPRE_COPY(expr,{s/~l~/f/g; s/~r~/f/g; s/~f__IGNORE~/__IGNORE/g;})	// {copied}
 	;
 
-ev_expr<str>:			// For use in event_expression
-		BISONPRE_COPY(expr,{s/~l~/ev_/g; s/~r~/ev_/g; s/~p~/ev_/g; s/~noPar__IGNORE~/yP_PAR__IGNORE /g;})	// {copied}
-	//			// From event_expression
+ev_expr<str>:			// IEEE: event_expression
+	//			// for yOR/, see event_expression
+	//
+	//			// IEEE: [ edge_identifier ] expression [ yIFF expression ]
+	//			// expr alone see below
+		senitemEdge				{ }
+	|	ev_expr yIFF expr			{ }
+	//
+	//			// IEEE: sequence_instance [ yIFF expression ]
+	//			// seq_inst is in expr, so matches senitem rule above
+	//
+	//			// IEEE: event_expression yOR event_expression
+	|	ev_expr yOR ev_expr			{ }
+	//			// IEEE: event_expression ',' event_expression
+	//			// See real event_expression rule
+	//
+	//---------------------
+	//			// IEEE: expr
+	|	BISONPRE_COPY(expr,{s/~l~/ev_/g; s/~r~/ev_/g; s/~p~/ev_/g; s/~noPar__IGNORE~/yP_PAR__IGNORE /g;})	// {copied}
+	//
+	//			// IEEE: '(' event_expression ')'
+	//			// expr:'(' x ')' conflicts with event_expression:'(' event_expression ')'
+	//			// so we use a special expression class
 	|	'(' event_expression ')'		{ $<fl>$=$<fl>1; $$ = "(...)"; }
 	//			// IEEE: From normal expr: '(' expr ':' expr ':' expr ')'
 	//			// But must avoid conflict
