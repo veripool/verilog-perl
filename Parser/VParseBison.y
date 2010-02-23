@@ -1856,11 +1856,11 @@ delayrange<str>:
 param_assignment:		// ==IEEE: param_assignment
 	//			// IEEE: constant_param_expression
 	//			// constant_param_expression: '$' is in expr
-		id/*new-parameter*/ sigAttrListE '=' exprOrDataType
-			{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, "", $4); }
+		id/*new-parameter*/ variable_dimensionListE sigAttrListE '=' exprOrDataType
+			{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2, $5); }
 	//			// only legal in port list; throws error if not set
-	|	id/*new-parameter*/ sigAttrListE
-			{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, "", ""); NEED_S09($<fl>1,"optional parameter defaults"); }
+	|	id/*new-parameter*/ variable_dimensionListE sigAttrListE
+			{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2, ""); NEED_S09($<fl>1,"optional parameter defaults"); }
 	;
 
 list_of_param_assignments:	// ==IEEE: list_of_param_assignments

@@ -343,3 +343,7 @@ module gen_ln338;
       endcase
    endgenerate
 endmodule
+
+module par_packed;
+   parameter logic [31:0] P1 [3:0] = '{ 1, 2, 3, 4 } ; // unpacked array
+endmodule
