@@ -1666,7 +1666,7 @@ c_generate_item:			// IEEE: generate_item (for checkers)
 conditional_generate_construct:	// ==IEEE: conditional_generate_construct
 	//			// IEEE: case_generate_construct
 		yCASE  '(' expr ')' yENDCASE	{ }
-		yCASE  '(' expr ')' ~c~case_generate_itemList yENDCASE	{ }
+	|	yCASE  '(' expr ')' ~c~case_generate_itemList yENDCASE	{ }
 	//			// IEEE: if_generate_construct
 	|	yIF '(' expr ')' ~c~generate_block	%prec prLOWER_THAN_ELSE	{ }
 	|	yIF '(' expr ')' ~c~generate_block yELSE ~c~generate_block	{ }
