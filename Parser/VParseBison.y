@@ -1081,7 +1081,13 @@ net_scalaredE<str>:
 	;
 
 net_dataType<str>:
-		signingE rangeListE delayE 		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
+	//			// If there's a SV data type there shouldn't be a delay on this wire
+	//			// Otherwise #(...) can't be determined to be a delay or parameters
+	//			// Submit this as a footnote to the committee
+		var_data_type	 			{ $<fl>$=$<fl>1; $$=$1; }
+	|	signingE rangeList delayE 		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
+	|	signing delayE 				{ $<fl>$=$<fl>1; $$=$1; }
+	|	/*implicit*/ delayE 			{ $<fl>$=$<fl>1; $$=""; }
 	;
 
 net_type:			// ==IEEE: net_type
