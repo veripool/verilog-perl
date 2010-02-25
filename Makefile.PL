@@ -84,7 +84,7 @@ WriteMakefile(
 	      VERSION_FROM  => 'Language.pm',
 	      NO_META	=> 1,
 	      #OPTIMIZE	=> '-ggdb',
-	      PREREQ_PM => {'Pod::Usage' => 1,
+	      PREREQ_PM => {'Pod::Usage' => 1.34,
 			    'Data::Dumper' => 1,
 			    'Test' => 1,
 			    'warnings' => 1,
