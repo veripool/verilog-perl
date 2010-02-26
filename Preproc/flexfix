@@ -28,6 +28,8 @@ foreach my $line (<STDIN>) {
     $line =~ s!for \( n = 0; n < max_size && !for ( n = 0; ((size_t)n < (size_t)max_size) && !g;
     # Fix flex 2.5.4 and GCC 4.0.2 under FLEX_DEBUG
     $line =~ s!--accepting rule at line %d !--accepting rule at line %ld !g;
+    # Fix flex 2.5.35 to match patches on Mac OS-X
+    $line =~ s!int VPreprocLexleng;!size_t VPreprocLexleng;!;
 
     print "$line";
 }
