@@ -95,7 +95,7 @@ typedef size_t yy_size_t;
 extern int yylex();
 extern void yyrestart(FILE*);
 extern char* yytext;
-extern size_t yyleng;
+extern yy_size_t yyleng;
 
 YY_BUFFER_STATE yy_create_buffer ( FILE *file, int size );
 void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer );
