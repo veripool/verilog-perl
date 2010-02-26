@@ -60,8 +60,7 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
 extern int yylex();
 extern void yyrestart(FILE*);
-extern char* yytext;
-extern int yyleng;
+
 YY_BUFFER_STATE yy_create_buffer ( FILE *file, int size );
 YY_BUFFER_STATE yy_scan_bytes(const char *bytes, int len);
 void yy_switch_to_buffer( YY_BUFFER_STATE new_buffer );

@@ -650,7 +650,7 @@ int VPreprocImp::getToken() {
 	    // We're off or processed the comment specially.  If there are newlines
 	    // in it, we also return the newlines as TEXT so that the linenumber
 	    // count is maintained for downstream tools
-	    for (size_t len=0; len<yyleng; len++) { if (yytext[len]=='\n') m_lineAdd++; }
+	    for (size_t len=0; len<(size_t)yyleng; len++) { if (yytext[len]=='\n') m_lineAdd++; }
 	    goto next_tok;
 	}
 	if (tok==VP_LINE) {
