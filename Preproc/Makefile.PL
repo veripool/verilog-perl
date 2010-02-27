@@ -64,7 +64,7 @@ VPreprocLex_pretmp.cpp: VPreprocLex.l
 	$(LEX) $(LEXFLAGS) -o$@ $<
 
 VPreprocLex.cpp: $(FLEXFIX) VPreprocLex_pretmp.cpp
-	$(PERL) $(FLEXFIX) < VPreprocLex_pretmp.cpp > $@
+	$(PERL) $(FLEXFIX) VPreprocLex < VPreprocLex_pretmp.cpp > $@
 
 Preproc_cleaned.c: Preproc.c
 	$(PERL) $(XSUBPPFIX) < Preproc.c > Preproc_cleaned.c

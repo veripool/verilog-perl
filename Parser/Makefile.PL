@@ -74,7 +74,7 @@ VParseLex_pretmp.cpp: VParseLex.l
 	$(LEX) $(LEXFLAGS) -o$@ $<
 
 VParseLex.cpp: $(FLEXFIX) VParseLex_pretmp.cpp
-	$(PERL) $(FLEXFIX) < VParseLex_pretmp.cpp > $@
+	$(PERL) $(FLEXFIX) VParseLex < VParseLex_pretmp.cpp > $@
 
 VParseBison.h: VParseBison.cpp
 
