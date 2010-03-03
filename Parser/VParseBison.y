@@ -2415,9 +2415,9 @@ tf_port_listList:		// IEEE: part of tf_port_list
 
 tf_port_item:			// ==IEEE: tf_port_item
 	//			// We split tf_port_item into the type and assignment as don't know what follows a comma
-		/* empty */				{ }	// For example a ",," port
-	|	tf_port_itemFront tf_port_itemAssignment { }
-	|	tf_port_itemAssignment 			{ }
+		/* empty */				{ PINNUMINC(); }	// For example a ",," port
+	|	tf_port_itemFront tf_port_itemAssignment { PINNUMINC(); }
+	|	tf_port_itemAssignment 			{ PINNUMINC(); }
 	;
 
 tf_port_itemFront:		// IEEE: part of tf_port_item, which has the data type
