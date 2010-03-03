@@ -396,3 +396,32 @@ function bit func_implied_in (bit i); g_bit = ~i; endfunction
 module sparam;
    specparam delay = 10;
 endmodule
+
+// bug221
+sequence stable_before_s(sig, clks_before, clk, rst=1'b0);
+    @(clk) !rst throughout(##1 $stable(sig)[*clks_before-1]);
+endsequence : stable_before_s
+
+property stable_window(sample, sig, clks_before, clks_after, clk=$default_clk ,rst=1'b0);
+    @(clk) disable iff(rst)  ## clks_before  sample
+            |-> stable_before_s(sig, clks_before, clk, rst).ended ##1
+                    ($stable(sig)[*clks_after]);
+endproperty : stable_window
+
+property never(prop, clk=$default_clk , rst=1'b0);
+    @(clk) disable iff(rst) not(prop);
+endproperty : never
+
+property recur_triggers(trig, n, cond, clk=$default_clk , rst=1'b0);
+    @(clk) disable iff (rst)
+     not ( !cond throughout (trig ##1 trig[->(n-1)]) );
+endproperty : recur_triggers
+
+property data_transfer(
+         start_ev, start_data, end_ev, end_data, clk=$default_clk ,rst=1'b0);
+     logic [$bits(start_data)-1:0] local_data;
+     @(clk) disable iff (rst)
+     (start_ev, local_data = start_data) ##0
+       (end_ev or (!end_ev ##1 (!start_ev throughout end_ev[->1])))
+              |-> (local_data == end_data);
+endproperty : data_transfer

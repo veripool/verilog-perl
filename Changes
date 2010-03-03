@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.23**
 
+****	Fix "disable iff {property_expr}", bug221.  [Rick Ramus]
+
 ****	Fix Pod::Usage dependency, rt51024.  [Andreas Koenig]
 
 ****	Fix Mac OS-X compile issues.  [Joshua Wise]

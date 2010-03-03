@@ -3229,12 +3229,8 @@ sequence_declarationBody:	// IEEE: part of property_declaration
 property_spec:			// IEEE: property_spec
 	//			// IEEE: [clocking_event ] [ yDISABLE yIFF '(' expression_or_dist ')' ] property_expr
 	//			// matches property_spec: "clocking_event property_expr" so we put it there
-	|	property_specDisable pexpr		{ }
+		yDISABLE yIFF '(' expr ')' pexpr	{ }
 	|	pexpr			 		{ }
-	;
-
-property_specDisable:		// IEEE: part of property_spec
-		yDISABLE yIFF '(' expr ')'		{ }
 	;
 
 pexpr<str>:			// IEEE: property_expr  (The name pexpr is important as regexps just add an "p" to expr.)
@@ -3262,7 +3258,7 @@ pexpr<str>:			// IEEE: property_expr  (The name pexpr is important as regexps ju
 	//
 	|	clocking_event pexpr             %prec prSEQ_CLOCKING	{ }
 	//			// Include property_specDisable to match property_spec rule
-	|	clocking_event property_specDisable expr %prec prSEQ_CLOCKING	{ }
+	|	clocking_event yDISABLE yIFF '(' expr ')' pexpr	%prec prSEQ_CLOCKING	{ }
 	//
 	//
 	//============= sequence_expr rules copied for pexpr
