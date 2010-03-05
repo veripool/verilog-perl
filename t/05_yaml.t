@@ -15,9 +15,10 @@ if (!$ENV{VERILATOR_AUTHOR_SITE}) {
 } else {
     eval "use Test::YAML::Meta;";
     if ($@) {
-	plan tests => 2;
+	plan tests => 1;
 	skip("Test::YAML::Meta not installed so ignoring check (harmless)",1);
     } else {
+	plan tests => 2;
 	meta_yaml_ok();
     }
 }

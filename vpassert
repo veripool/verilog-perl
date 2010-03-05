@@ -75,6 +75,7 @@ $VERSION = '3.231';
 $Debug = 0;
 my $output_dirname = ".vpassert/";
 my $Opt_Quiet = 0;	# Don't blab about what files are being worked on
+my $Opt_Axiom;		# Athdl
 my $Opt_AllFiles = 0;	# Preprocess all files
 my $Opt_Date = 0;	# Check dates
 my $Opt_NoPli = 0;	# Delete all pli calls
@@ -83,6 +84,7 @@ $Opt_Chiponly = 0;	# Only chip model; apply Vpassert_Chiponly_Rename's
 my $Opt_RealIntent;	# RealIntent
 my $Opt_Stop = 1;	# Put $stop in error messages
 my $Opt_Verilator;	# Verilator
+my $Opt_Vcs;		# Vcs
 my $Last_ArgsDiffer;	# Last run's Opt_* mismatch
 my $Opt_Minimum;	# Include `__message_minimum
 my @Opt_Exclude;
@@ -106,6 +108,7 @@ $Opt = new Verilog::Getopt();
 if (! GetOptions (
 		  "-o=s"	=> \$output_dirname,
 		  "allfiles!"	=> \$Opt_AllFiles,
+		  "axiom!"	=> \$Opt_Axiom,
 		  "chiponly!"	=> \$Opt_Chiponly,	# For makeesim only
 		  "date!"	=> \$Opt_Date,
 		  "debug"	=> \&debug,
@@ -123,6 +126,7 @@ if (! GetOptions (
 		  "vericov!"	=> \$Opt_Vericov,
 		  "verilator!"	=> \$Opt_Verilator,
 		  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
+		  "vcs!"	=> \$Opt_Vcs,
 		  "<>"		=> \&parameter,
 		  )) {
     die "%Error: Bad usage, try 'vpassert --help'\n";
@@ -130,6 +134,7 @@ if (! GetOptions (
 sub _switch_line {
     # If any of these flags change, we must regenerate output
     my $sw = "";
+    $sw .= " --axiom" if $Opt_Axiom;
     $sw .= " --chiponly" if $Opt_Chiponly;
     $sw .= " --line" if $Opt_Line;
     $sw .= " --minimum=$Opt_Minimum" if defined $Opt_Minimum;
@@ -138,6 +143,7 @@ sub _switch_line {
     $sw .= " --stop" if $Opt_Stop;
     $sw .= " --vericov" if $Opt_Vericov;
     $sw .= " --verilator" if $Opt_Verilator;
+    $sw .= " --vcs" if $Opt_Vcs;
     return $sw;
 }
 
@@ -470,24 +476,46 @@ sub get_lineinfo {
 }
 
 use vars qw($Msg_Header_Level);
-sub message_header {
+sub coverage_off {
     my $out = "";
     if (!$Msg_Header_Level) {
-	$out .= "\n/*summit modcovoff -bpen*/\n" if $Vericov_Enabled;
-	$out .= "\n/*ri userpass BE on*/\n" if $Opt_RealIntent;
+	$out .= "/*summit modcovoff -bpen*/\n" if $Vericov_Enabled;
+	$out .= "/*ri userpass BE on*/\n" if $Opt_RealIntent;
+	$out .= "/*vcs coverage off*/\n" if $Opt_Vcs;
+	$out .= "/*ax_line_coverage_off*/\n" if $Opt_Axiom;
+	$out .= "/*verilator coverage_off*/\n" if $Opt_Verilator;
+	$out = "\n".$out if $out;
 	$out .= "/*vpassert*/";
     }
-    $out .= "begin ";
-    $out .= "`coverage_block_off " if ($Opt_Verilator && !$Msg_Header_Level);
     $Msg_Header_Level++;
+    return $out;
+}
+
+sub coverage_on {
+    my $out = "";
+    if ((--$Msg_Header_Level)==0) {
+	$out .= "/*verilator coverage_on*/\n" if $Opt_Verilator;
+	$out .= "/*vcs coverage on*/\n" if $Opt_Vcs;
+	$out .= "/*ax_line_coverage_on*/\n" if $Opt_Axiom;
+	$out .= "/*ri userpass BE off*/\n" if $Opt_RealIntent;
+	$out .= "/*summit modcovon -bpen*/\n" if $Vericov_Enabled;
+	$out = "\n".$out if $out;
+	$out = '/*vpassert*/'.$out;
+    }
+    return $out;
+}
+
+sub message_header {
+    my $off = coverage_off();
+    my $out = $off;
+    $out .= "begin ";
+    $out .= "/*verilator coverage_block_off*/" if ($Opt_Verilator && $off);
     return $out;
 }
 
 sub message_trailer {
     my $out = 'end ';
-    $out .= '/*vpassert*/' if ((--$Msg_Header_Level)==0);
-    $out .= "\n/*summit modcovon -bpen*/\n" if $Vericov_Enabled;
-    $out .= "\n/*ri userpass BE off*/\n" if $Opt_RealIntent;
+    $out .= coverage_on();
     return $out;
 }
 
@@ -700,7 +728,7 @@ sub vpassert_process {
     ($filename ne $outname) or die "%Error: $filename: Would overwrite self.";
 
     @Sendout = ();
-
+    $Msg_Header_Level = 0;
     @instance_tests_list = ();
 
     # Set up parsing
@@ -1313,6 +1341,10 @@ This option may speed up simulator compile times; the file will always be
 found in the preprocessed directory, saving the compiler from having to
 search a large number of -v directories to find it.
 
+=item --axiom
+
+Special Axiom ATHDL enables/disables added around unreachable code.
+
 =item --chiponly
 
 Special standalone chip compile
@@ -1395,6 +1427,10 @@ Special Verilator translations enabled.
 =item --version
 
 Displays program version and exits.
+
+=item --vcs
+
+Special Synopsys VCS enables/disables added around unreachable code.
 
 =back
 
