@@ -23,7 +23,7 @@ sub vppreproc {
     my $out = shift;
     my $flags = shift;
 
-    run_system ("${PERL} vppreproc ${flags} -y verilog inc2.v > $out");
+    run_system ("${PERL} ./vppreproc ${flags} -y verilog inc2.v > $out");
     ok(-r $out);
     ok(files_identical ($out, $checkname));
 }

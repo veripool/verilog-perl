@@ -9,7 +9,7 @@ use strict;
 use Test;
 use warnings;
 
-if (!$ENV{VERILATOR_AUTHOR_SITE}) {
+if (!$ENV{VERILATOR_AUTHOR_SITE} || $ENV{HARNESS_NO_CRITIC}) {
     plan tests => 1;
     skip("author only test (harmless)",1);
 } else {

@@ -25,7 +25,7 @@ sub vhier {
     my $flags = shift;
 
     my $out = "test_dir/vhier.v";
-    run_system ("${PERL} vhier ${flags} --nomissing -y verilog v_hier_top.v -o $out");
+    run_system ("${PERL} ./vhier ${flags} --nomissing -y verilog v_hier_top.v -o $out");
     ok(-r $out);
     #run_system ("/bin/cp $out $checkname");
     ok(files_identical ($checkname, $out));
