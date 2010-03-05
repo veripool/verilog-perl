@@ -19,8 +19,7 @@ use Verilog::Getopt;
 
 use vars qw ($VERSION $Debug $Opt %Vpassert_Conversions
 	     $Vpassert_Conversions_Regexp
-	     %Vpassert_Chiponly_Rename
-	     $Opt_Vericov $Opt_Chiponly
+	     $Opt_Vericov
 	     @Endmodule_Inserts
 	     $Last_Parser
 	     $Last_Module
@@ -60,15 +59,6 @@ $VERSION = '3.231';
        '$ucover_foreach_clk' =>	sub {shift; ucover_foreach_clk(@_); },
        );
 
-# Any tokens appearing here will be removed with the --chiponly option
-# This allows v files to be given to people that don't have our PLI library, and
-# cah have these "true-PLI" functions to do something simpler.
-%Vpassert_Chiponly_Rename = ();
-%Vpassert_Chiponly_Rename
-    = (#Token	  Convert to (0=remove)
-       '$cmd_stop' => '$stop',
-       );
-
 ######################################################################
 # main
 
@@ -80,7 +70,6 @@ my $Opt_AllFiles = 0;	# Preprocess all files
 my $Opt_Date = 0;	# Check dates
 my $Opt_NoPli = 0;	# Delete all pli calls
 $Opt_Vericov = 0;	# Add vericov on/off comments (messes up line # counts)
-$Opt_Chiponly = 0;	# Only chip model; apply Vpassert_Chiponly_Rename's
 my $Opt_RealIntent;	# RealIntent
 my $Opt_Stop = 1;	# Put $stop in error messages
 my $Opt_Verilator;	# Verilator
@@ -109,7 +98,6 @@ if (! GetOptions (
 		  "-o=s"	=> \$output_dirname,
 		  "allfiles!"	=> \$Opt_AllFiles,
 		  "axiom!"	=> \$Opt_Axiom,
-		  "chiponly!"	=> \$Opt_Chiponly,	# For makeesim only
 		  "date!"	=> \$Opt_Date,
 		  "debug"	=> \&debug,
 		  "exclude=s"	=> sub {shift; push @Opt_Exclude, shift;},
@@ -135,7 +123,6 @@ sub _switch_line {
     # If any of these flags change, we must regenerate output
     my $sw = "";
     $sw .= " --axiom" if $Opt_Axiom;
-    $sw .= " --chiponly" if $Opt_Chiponly;
     $sw .= " --line" if $Opt_Line;
     $sw .= " --minimum=$Opt_Minimum" if defined $Opt_Minimum;
     $sw .= " --nopli" if $Opt_NoPli;
@@ -547,7 +534,7 @@ sub message {
 
     if ($cond ne "1") {
 	# Conditional code, for $uassert
-	# Note this will only work in RTL code!  Chiponly build issues otherwise.
+	# Note this will only work in RTL code!
 	$out .= "if (!($cond) && (`__message_on)) ";
     } elsif ($params[0] =~ /^\s*0\s*$/) {
 	# Always enabled
@@ -588,8 +575,7 @@ sub message {
 	    print "MESSAGE $char, Parameter $p\n" if ($Debug);
 	}
 	$out .= ');';
-	$out .= $task    if ($task && !$Opt_Chiponly);
-	$out .= '$stop;' if ($task && $Opt_Chiponly);
+	$out .= $task    if $task;
 	$out .= ' end ';
     }
 
@@ -1017,12 +1003,10 @@ BEGIN {
 	 @Sendout
 	 $Last_Task
 	 $Last_Module
-	 $Opt_Chiponly
 	 $Opt_Vericov
 	 $ReqAck_Num
 	 $Vericov_Enabled
 	 %Vpassert_Conversions
-	 %Vpassert_Chiponly_Rename
 	 %Insure_Symbols
 	 @Endmodule_Inserts
 	 );
@@ -1118,7 +1102,6 @@ sub symbol {
 	$Params[$Param_Num] .= $since . $token;
     } else {
 	if ($Vpassert_Conversions {$token}
-		 || ($Opt_Chiponly && defined $Vpassert_Chiponly_Rename{$token} && !$Vpassert_Chiponly_Rename{$token})
 		 || ($Opt_NoPli && $token =~ /^\$/ && $Parens==0)) {
 	    push @Sendout, [$Last_Lineno, $since];
 	    print "Callback SYMBOL $token\n"    if ($Debug);
@@ -1126,9 +1109,6 @@ sub symbol {
 	    $Param_Num = 1;
 	    @Params = ();
 	    $Params[0] = $token;
-	} elsif ($Opt_Chiponly && defined $Vpassert_Chiponly_Rename{$token}
-		 && $Vpassert_Chiponly_Rename{$token}) {
-	    push @Sendout, [$Last_Lineno, $since . $Vpassert_Chiponly_Rename{$token}];
 	} else {
 	    # Actually a keyword; we check for that too
 	    push @Sendout, [$Last_Lineno, $since . $token];
@@ -1347,10 +1327,6 @@ search a large number of -v directories to find it.
 =item --axiom
 
 Special Axiom ATHDL enables/disables added around unreachable code.
-
-=item --chiponly
-
-Special standalone chip compile
 
 =item --date
 
