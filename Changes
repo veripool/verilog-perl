@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add vpassert --axiom and --vcs switches.
 
+****	Fix vpassert to insert `lines on every line where needed.
+
 ****	Pass pin numbers for functions/tasks to SigParser::port_cb.
 
 ****	Fix "disable iff {property_expr}", bug221.  [Rick Ramus]

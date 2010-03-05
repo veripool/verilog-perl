@@ -95,6 +95,7 @@ sub compare {
 	$file =~ s!.*/!!;
 	# SPECIAL FILES we processed!
 	next if $file eq 'example.v';
+	next if $file eq 'pli.v';
 
 
 	my $fn1 = "verilog/$file";
