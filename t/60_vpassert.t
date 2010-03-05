@@ -18,7 +18,8 @@ print "Checking vpassert...\n";
 mkdir "test_dir/.vpassert", 0777;
 system ("/bin/rm -rf test_dir/verilog");
 symlink ("../verilog", "test_dir/verilog");  # So `line files are found; ok if fails
-run_system ("${PERL} ./vpassert --minimum --nostop --date --verilator --vcs -o test_dir/.vpassert -y verilog/");
+run_system ("${PERL} ./vpassert --minimum --nostop --date --axiom --verilator --vcs"
+	    ." -o test_dir/.vpassert -y verilog/");
 ok(1);
 ok(-r 'test_dir/.vpassert/pli.v');
 

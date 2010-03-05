@@ -1247,23 +1247,31 @@ sub comment {
     # Callback from parser when a comment
     # *** To speed things up, this is only invoked when doing vericov
     my ($parser, $token) = @_;
-    if (!$Opt_Vericov) {
+    if (!$Opt_Vericov && $token !~ /_coverage_/) {
 	$parser->unreadback($parser->unreadback() . $token);
 	return;
     }
 
     my $since = $parser->unreadback(); $parser->unreadback('');
 
-    if ($Opt_Vericov
-	&& (($token =~ /summit\s+modcovon/
-	     || $token =~ /simtech\s+modcovon/))) {
-	$Vericov_Enabled = 1;
-    } elsif ($token =~ /summit\s+modcovoff/
-	     || $token =~ /simtech\s+modcovoff/) {
-	$Vericov_Enabled = 0;
+    if ($Opt_Vericov) {
+	if ($token =~ /summit\s+modcovon/
+	    || $token =~ /simtech\s+modcovon/) {
+	    $Vericov_Enabled = 1;
+	} elsif ($token =~ /summit\s+modcovoff/
+		|| $token =~ /simtech\s+modcovoff/) {
+	    $Vericov_Enabled = 0;
+	}
     }
 
     push @Sendout, [$Last_Lineno, $since . $token];
+    if ($token =~ /\b(cn|vp)_coverage_(off|on)/) {
+	if ($2 eq 'off') {
+	    push @Sendout, [0, ::coverage_off(0)];
+	} else {
+	    push @Sendout, [0, ::coverage_on(0)];
+	}
+    }
     $Last_Lineno = $parser->lineno;
 }
 
@@ -1418,6 +1426,16 @@ Special Synopsys VCS enables/disables added around unreachable code.
 These Verilog pseudo-pli calls are expanded:
 
 =over 4
+
+=item /*vp_coverage_off*/
+
+Disable coverage for all tools starting at this point.  Does not need to be
+on a unique line.
+
+=item /*vp_coverage_on*/
+
+Re-enable coverage after a vp_coverage_off.  Does not need to be on a
+unique line.
 
 =item $uassert (I<case>, "message", [I<vars>...] )
 

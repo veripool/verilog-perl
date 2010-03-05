@@ -110,4 +110,9 @@ module example;
       $ucover_foreach_clk(clk, "foreach_label", "27:3,1,0", (i[$ui]));
    end
 
+   // Meta coverage disables
+   // vp_coverage_off
+   never_will_occur: cover property (@(posedge clk) (1'b0));
+   // vp_coverage_on
+
 endmodule

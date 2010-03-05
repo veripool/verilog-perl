@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.23**
 
+***	Add vpassert vp_coverage_off/on pragmas.
+
 ***	Add vpassert --axiom and --vcs switches.
 
 ****	Fix vpassert to insert `lines on every line where needed.
