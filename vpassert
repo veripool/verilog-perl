@@ -364,7 +364,7 @@ sub umessage_clk {
     my $bot = (" always @ (posedge $clk) if ($sig) "
 	       .message (get_lineinfo(), 1, $char, 1, "", @_)
 	       ." ");
-    push @Endmodule_Inserts, $bot;
+    push @Endmodule_Inserts, [0, $bot];
 }
 
 sub ucover_foreach_clk {
@@ -429,7 +429,7 @@ sub _ucover_clk_guts {
     if ($Opt_Line) {
 	$bot .= "`line /*vpassert_endmod_line*/ \"".$Last_Parser->filename."\" 0\n";
     }
-    push @Endmodule_Inserts, $bot;
+    push @Endmodule_Inserts, [0, $bot];
 }
 
 sub _insert_always_begin {
@@ -1095,10 +1095,10 @@ sub keyword {
     }
     elsif ($token eq "endmodule") {
 	if ($#Endmodule_Inserts >= 0) {
-	    my $ins = join('',@Endmodule_Inserts);
+	    my $ins = join('',map {$_->[1]} @Endmodule_Inserts);
 	    my $lineno = $parser->lineno;
 	    $ins =~ s!/\*vpassert_endmod_line\*/!$lineno!g;
-	    ::sendout ("/*vpassert*/ ".$ins." /*vpassert*/");
+	    push @Sendout, [0, "/*vpassert*/ ".$ins." /*vpassert*/"];
 	    @Endmodule_Inserts = ();
 	}
 	push @Sendout, [$parser->lineno, $since . $token];
