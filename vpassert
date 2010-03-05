@@ -1095,9 +1095,6 @@ sub symbol {
     my ($parser, $token) = @_;
     my $since = $parser->unreadback(); $parser->unreadback('');
 
-    if ($token eq "__LINE__") { $token = $parser->lineno(); }
-    if ($token eq "__FILE__") { $token = '"'.$parser->filename().'"'; }
-
     if ($In_Message) {
 	$Params[$Param_Num] .= $since . $token;
     } else {
