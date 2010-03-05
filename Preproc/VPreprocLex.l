@@ -47,6 +47,11 @@ bool keepWhitespace() { return LEXP->m_keepWhitespace; }
 void yyerror(char* msg) { LEXP->m_curFilelinep->error(msg); }
 void appendDefValue(const char* t,int l) { LEXP->appendDefValue(t,l); }
 
+// Accessors, because flex keeps changing the type of yyleng
+char* yyourtext() { return yytext; }
+size_t yyourleng() { return (size_t)yyleng; }
+void yyourtext(const char* textp, size_t size) { yytext=(char*)textp; yyleng=size; }
+
 void yyerrorf(const char* format, ...) {
     char msg[1024];
 

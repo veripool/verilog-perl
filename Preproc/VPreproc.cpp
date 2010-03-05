@@ -570,7 +570,7 @@ int VPreprocImp::getRawToken() {
 	if (m_lineAdd) {
 	    m_lineAdd--;
 	    m_rawAtBol = true;
-	    yytext=(char*)"\n"; yyleng=1;
+	    yyourtext("\n",1);
 	    if (debug()) debugToken(VP_WHITE, "LNA");
 	    return (VP_WHITE);
 	}
@@ -582,11 +582,11 @@ int VPreprocImp::getRawToken() {
 		if (!m_rawAtBol) rtncmt = "\n"+rtncmt;
 		m_lineCmtNl = false;
 	    }
-	    yytext=(char*)rtncmt.c_str(); yyleng=rtncmt.length();
+	    yyourtext(rtncmt.c_str(), rtncmt.length());
 	    m_lineCmt = "";
-	    if (yyleng) m_rawAtBol = (yytext[yyleng-1]=='\n');
+	    if (yyourleng()) m_rawAtBol = (yyourtext()[yyourleng()-1]=='\n');
 	    if (m_state==ps_DEFVALUE) {
-		VPreprocLex::s_currentLexp->appendDefValue(yytext,yyleng);
+		VPreprocLex::s_currentLexp->appendDefValue(yyourtext(),yyourleng());
 		goto next_tok;
 	    } else {
 		if (debug()) debugToken(VP_TEXT, "LCM");
@@ -608,14 +608,14 @@ int VPreprocImp::getRawToken() {
 	    goto next_tok;  // Parse parent, or find the EOF.
 	}
 
-	if (yyleng) m_rawAtBol = (yytext[yyleng-1]=='\n');
+	if (yyourleng()) m_rawAtBol = (yyourtext()[yyourleng()-1]=='\n');
 	return tok;
     }
 }
 
 void VPreprocImp::debugToken(int tok, const char* cmtp) {
     if (debug()) {
-	string buf = string (yytext, yyleng);
+	string buf = string (yyourtext(), yyourleng());
 	string::size_type pos;
 	while ((pos=buf.find("\n")) != string::npos) { buf.replace(pos, 1, "\\n"); }
 	while ((pos=buf.find("\r")) != string::npos) { buf.replace(pos, 1, "\\r"); }
@@ -641,7 +641,7 @@ int VPreprocImp::getToken() {
 	    if (!m_off && m_lexp->m_keepComments) {
 		if (m_lexp->m_keepComments == KEEPCMT_SUB
 		    || m_lexp->m_keepComments == KEEPCMT_EXP) {
-		    string rtn; rtn.assign(yytext,yyleng);
+		    string rtn; rtn.assign(yyourtext(),yyourleng());
 		    m_preprocp->comment(rtn);
 		} else {
 		    return (tok);
@@ -650,7 +650,7 @@ int VPreprocImp::getToken() {
 	    // We're off or processed the comment specially.  If there are newlines
 	    // in it, we also return the newlines as TEXT so that the linenumber
 	    // count is maintained for downstream tools
-	    for (size_t len=0; len<(size_t)yyleng; len++) { if (yytext[len]=='\n') m_lineAdd++; }
+	    for (size_t len=0; len<(size_t)yyourleng(); len++) { if (yyourtext()[len]=='\n') m_lineAdd++; }
 	    goto next_tok;
 	}
 	if (tok==VP_LINE) {
@@ -665,7 +665,7 @@ int VPreprocImp::getToken() {
 	case ps_DEFNAME: {
 	    if (tok==VP_SYMBOL) {
 		m_state = ps_TOP;
-		m_lastSym.assign(yytext,yyleng);
+		m_lastSym.assign(yyourtext(),yyourleng());
 		if (m_stateFor==VP_IFDEF
 		    || m_stateFor==VP_IFNDEF) {
 		    bool enable = m_preprocp->defExists(m_lastSym);
@@ -767,11 +767,11 @@ int VPreprocImp::getToken() {
 	    m_state = ps_TOP;
 	    // DEFVALUE is terminated by a return, but lex can't return both tokens.
 	    // Thus, we emit a return here.
-	    yytext=(char*)(newlines.c_str()); yyleng=newlines.length();
+	    yyourtext(newlines.c_str(), newlines.length());
 	    return(VP_WHITE);
 	}
 	case ps_DEFPAREN: {
-	    if (tok==VP_TEXT && yyleng==1 && yytext[0]=='(') {
+	    if (tok==VP_TEXT && yyourleng()==1 && yyourtext()[0]=='(') {
 		m_state = ps_DEFARG;
 		goto next_tok;
 	    } else {
@@ -787,13 +787,13 @@ int VPreprocImp::getToken() {
 	    VPreDefRef* refp = &(m_defRefs.top());
 	    refp->nextarg(refp->nextarg()+m_lexp->m_defValue); m_lexp->m_defValue="";
 	    if (debug()) cout<<"defarg++ "<<refp->nextarg()<<endl;
-	    if (tok==VP_DEFARG && yyleng==1 && yytext[0]==',') {
+	    if (tok==VP_DEFARG && yyourleng()==1 && yyourtext()[0]==',') {
 		refp->args().push_back(refp->nextarg());
 		m_state = ps_DEFARG;
 		m_lexp->pushStateDefArg(1);
 		refp->nextarg("");
 		goto next_tok;
-	    } else if (tok==VP_DEFARG && yyleng==1 && yytext[0]==')') {
+	    } else if (tok==VP_DEFARG && yyourleng()==1 && yyourtext()[0]==')') {
 		refp->args().push_back(refp->nextarg());
 		string out = defineSubst(refp);
 		// Substitute in and prepare for next action
@@ -821,7 +821,7 @@ int VPreprocImp::getToken() {
 		// we'll append it when we push the argument.
 		break;
 	    } else if (tok==VP_SYMBOL || tok==VP_STRING || VP_TEXT || VP_WHITE) {
-		string rtn; rtn.assign(yytext,yyleng);
+		string rtn; rtn.assign(yyourtext(),yyourleng());
 		refp->nextarg(refp->nextarg()+rtn);
 		goto next_tok;
 	    } else {
@@ -833,7 +833,7 @@ int VPreprocImp::getToken() {
 	case ps_INCNAME: {
 	    if (tok==VP_STRING) {
 		m_state = ps_TOP;
-		m_lastSym.assign(yytext,yyleng);
+		m_lastSym.assign(yyourtext(),yyourleng());
 		if (debug()) cout<<"Include "<<m_lastSym<<endl;
 		// Drop leading and trailing quotes.
 		m_lastSym.erase(0,1);
@@ -841,7 +841,7 @@ int VPreprocImp::getToken() {
 		m_preprocp->include(m_lastSym);
 		goto next_tok;
 	    }
-	    else if (tok==VP_TEXT && yyleng==1 && yytext[0]=='<') {
+	    else if (tok==VP_TEXT && yyourleng()==1 && yyourtext()[0]=='<') {
 		// include <filename>
 		m_state = ps_INCNAME;  // Still
 		m_lexp->pushStateIncFilename();
@@ -861,7 +861,7 @@ int VPreprocImp::getToken() {
 	    if (tok==VP_STRING) {
 		m_state = ps_TOP;
 		if (!m_off) {
-		    m_lastSym.assign(yytext,yyleng);
+		    m_lastSym.assign(yyourtext(),yyourleng());
 		    error(m_lastSym);
 		}
 		goto next_tok;
@@ -914,7 +914,7 @@ int VPreprocImp::getToken() {
 
 	case VP_DEFREF: {
 	    if (!m_off) {
-		string name; name.append(yytext+1,yyleng-1);
+		string name; name.append(yyourtext()+1,yyourleng()-1);
 		if (debug()) cout<<"DefRef "<<name<<endl;
 		if (m_defDepth++ > VPreproc::DEFINE_RECURSION_LEVEL_MAX) {
 		    error("Recursive `define substitution: `"+name);
@@ -1001,7 +1001,7 @@ string VPreprocImp::getparseline(bool stop_at_eol) {
 	       && !gotEof) {
 	    int tok = getToken();
 	    if (debug()) {
-		string buf = string (yytext, yyleng);
+		string buf = string (yyourtext(), yyourleng());
 		string::size_type pos;
 		while ((pos=buf.find("\n")) != string::npos) { buf.replace(pos, 1, "\\n"); }
 		while ((pos=buf.find("\r")) != string::npos) { buf.replace(pos, 1, "\\r"); }
@@ -1017,7 +1017,7 @@ string VPreprocImp::getparseline(bool stop_at_eol) {
 		gotEof = true;
 	    }
 	    else {
-		m_lineChars.append(yytext,0,yyleng);
+		m_lineChars.append(yyourtext(),0,yyourleng());
 	    }
 	}
 
