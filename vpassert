@@ -30,7 +30,7 @@ use vars qw ($VERSION $Debug $Opt %Vpassert_Conversions
 	     $Got_Change
 	     @Sendout
 	     %Insure_Symbols
-	     %File_Mtime %File_Mtime_Read %File_Mtime_Read_Used
+	     %Files %Files_Read
 	     %File_Dest
 	     );
 $VERSION = '3.231';
@@ -806,8 +806,8 @@ sub vpassert_process {
 	$out =~ s%\n+(\n\`line[^\n]*)%$1%mg;
 	print $fh $out;
 	$fh->close;
-	if (defined $File_Mtime{$filename}) {
-	    utime $File_Mtime{$filename}, $File_Mtime{$filename}, $outname;
+	if (defined $Files{$filename}{mtime}) {
+	    utime $Files{$filename}{mtime}, $Files{$filename}{mtime}, $outname;
 	}
     }
 
@@ -847,10 +847,10 @@ sub vpassert_db_read_file {
 	    $now =~ s/\s+//g;
 	    $Last_ArgsDiffer = ($old ne $now);
 	} else {
-	    my ($tt_cmd, $tt_file, $tt_mtime) = split(/\t/,$line);
+	    my ($tt_cmd, $tt_file, $tt_mtime, $tt_size) = split(/\t/,$line);
 	    $tt_cmd .= "";	# Warning removal
-	    $File_Mtime_Read{$tt_file} = $tt_mtime;
-	    $File_Mtime_Read_Used{$tt_file} = 0;
+	    $Files_Read{$tt_file}{mtime} = $tt_mtime;
+	    $Files_Read{$tt_file}{size} = $tt_size;
 	}
     }
     $fh->close;
@@ -861,8 +861,8 @@ sub vpassert_db_write_file {
     my $filename = shift;
     my $fh = IO::File->new(">$filename") or die "%Error: $! $filename.\n";
     $fh->print ("switch\t"._switch_line()."\n");
-    foreach my $file (sort (keys %File_Mtime)) {
-	$fh->print ("unproc\t$file\t$File_Mtime{$file}\n");
+    foreach my $file (sort (keys %Files)) {
+	$fh->print ("unproc\t$file\t$Files{$file}{mtime}\t$Files{$file}{size}\n");
     }
     $fh->close;
 }
@@ -875,8 +875,8 @@ sub vpassert_recursive_prelude {
 
     $destdir .= "/"		if ($destdir !~ /[\\\/]$/);
 
-    %File_Mtime = ();
-    %File_Mtime_Read = ();
+    %Files = ();
+    %Files_Read = ();
     vpassert_db_read_file ("${destdir}/.vpassert_skipped_times");
     form_conversions_regexp();
 
@@ -885,18 +885,18 @@ sub vpassert_recursive_prelude {
     }
 
     # Don't include directory in time saving, as path may change dep how run
-    my $dest_mtime = $File_Mtime_Read{"vpassert"} || 0;
+    my $dest_mtime = $Files_Read{"vpassert"}{mtime} || 0;
     if (!$Opt_Date
 	|| ($Prog_Mtime > $dest_mtime)
 	|| $Last_ArgsDiffer) {
 	# Flush the whole read cache
-	%File_Mtime_Read = ();
+	%Files_Read = ();
 	print "\t    VPASSERT (or overall flags) changed... Two minutes...\n";
 	print "\t    Mtime = $Prog_Mtime\n" if $Debug;
     }
     #print "FF $Opt_Date, $Prog_Mtime, $dest_mtime, $Opt_Vericov, $Last_Vericov\n";
-    $File_Mtime{"vpassert"} = $Prog_Mtime;
-    $File_Mtime_Read_Used{"vpassert"} = 1;
+    $Files{"vpassert"}{mtime} = $Prog_Mtime;
+    $Files{"vpassert"}{size} = 1;
 }
 
 sub vpassert_recursive_postlude {
@@ -905,9 +905,9 @@ sub vpassert_recursive_postlude {
     # What to do after processing all files
 
     # Check for deletions
-    foreach my $srcfile (keys %File_Mtime_Read) {
-	if (defined $File_Mtime_Read_Used{$srcfile}
-	    && !$File_Mtime_Read_Used{$srcfile}) {
+    foreach my $srcfile (keys %Files_Read) {
+	if ($Files_Read{$srcfile}{mtime}
+	    && !$Files{$srcfile}{mtime}) {
 	    (my $basefile = $srcfile) =~ s/.*\///;
 	    my $destfile = "$destdir$basefile";
 	    # A file with the same basename may now be in a different dir,
@@ -958,16 +958,18 @@ sub vpassert_process_one {
     my $destfile = "$destdir$basefile";
     $File_Dest{$destfile} = 1;
 
-    my $src_mtime = (stat($srcfile))[9];
-    $src_mtime ||= 0;
-    my $dest_mtime = $File_Mtime_Read{$srcfile} || 0;
-    $File_Mtime_Read_Used{$srcfile} = 1;
+    my @stat = (stat($srcfile));
+    my $src_mtime = $stat[9] || 0;
+    my $src_size = $stat[7] || 0;
+    my $dest_mtime = $Files_Read{$srcfile}{mtime} || 0;
 
     # Mark times
     #print "BCK $basefile $src_mtime, $dest_mtime\n";
-    $File_Mtime{$srcfile} = $src_mtime;
+    $Files{$srcfile}{mtime} = $src_mtime;
+    $Files{$srcfile}{size} = $src_size;
 
-    if ($src_mtime != $dest_mtime) {
+    if ($src_mtime != $dest_mtime
+	|| $src_size != $Files_Read{$srcfile}{size}) {
 	my $no_output = 0;
 	unlink $destfile;
 	$Total_Files++;
@@ -1352,8 +1354,8 @@ Special standalone chip compile
 
 =item --date
 
-Check file dates versus the last run of VPASSERT and don't process if the
-given source file has not changed.
+Check file dates and sizes versus the last run of vpassert and don't
+process if the given source file has not changed.
 
 =item --exclude
 
