@@ -19,6 +19,7 @@ use Verilog::Getopt;
 
 use vars qw ($VERSION $Debug $Opt %Vpassert_Conversions
 	     $Vpassert_Conversions_Regexp
+	     $Opt_Synthcov
 	     $Opt_Vericov
 	     @Endmodule_Inserts
 	     $Last_Parser
@@ -109,6 +110,7 @@ if (! GetOptions (
 		  "realintent!"	=> \$Opt_RealIntent,
 		  "quiet!"	=> \$Opt_Quiet,
 		  "stop!"	=> \$Opt_Stop,
+		  "synthcov!"	=> \$Opt_Synthcov,
 		  "timeformat-precision=s" => \$Opt_Timeformat_Precision,
 		  "timeformat-units=s"	=> \$Opt_Timeformat_Units,
 		  "vericov!"	=> \$Opt_Vericov,
@@ -459,7 +461,7 @@ sub coverage_off {
     if (!$Msg_Header_Level) {
 	$out .= "/*summit modcovoff -bpen*/\n" if $Vericov_Enabled;
 	$out .= "/*ri userpass BE on*/\n" if $Opt_RealIntent;
-	$out .= "/*vcs coverage off*/\n" if $Opt_Vcs;
+	$out .= "/*VCS coverage off*/\n" if $Opt_Vcs;
 	$out .= "/*ax_line_coverage_off*/\n" if $Opt_Axiom;
 	$out .= "/*verilator coverage_off*/\n" if $Opt_Verilator && !$subcall;
 	$out = "\n".$out if $out;
@@ -475,7 +477,7 @@ sub coverage_on {
     my $out = "";
     if ((--$Msg_Header_Level)==0) {
 	$out .= "/*verilator coverage_on*/\n" if $Opt_Verilator && !$subcall;
-	$out .= "/*vcs coverage on*/\n" if $Opt_Vcs;
+	$out .= "/*VCS coverage on*/\n" if $Opt_Vcs;
 	$out .= "/*ax_line_coverage_on*/\n" if $Opt_Axiom;
 	$out .= "/*ri userpass BE off*/\n" if $Opt_RealIntent;
 	$out .= "/*summit modcovon -bpen*/\n" if $Vericov_Enabled;
@@ -1004,6 +1006,7 @@ BEGIN {
 	 $Last_Task
 	 $Last_Module
 	 $Opt_Vericov
+	 $Opt_Synthcov
 	 $ReqAck_Num
 	 $Vericov_Enabled
 	 %Vpassert_Conversions
@@ -1022,12 +1025,15 @@ use strict;
 use vars (@GLOBALS,
 	  qw ( $Last_Keyword
 	       $Last_Lineno
+	       $Last_Prekwd
 	       @Last_Symbols
 	       @Last_Number_Ops
 	       $Need_Vpassert_Symbols
 	       @Params
 	       $Param_Num
 	       $Parens
+	       $PreLevel
+	       @PreCovOff
 	       $In_Message
 	       ));
 use Verilog::Parser;
@@ -1043,6 +1049,7 @@ sub new {
     @Endmodule_Inserts = ();
     $Last_Keyword = "";
     $Last_Lineno = 0;
+    $Last_Prekwd = 0;
     @Last_Symbols = ();
     @Last_Number_Ops = ();
     $Last_Task = "";
@@ -1051,6 +1058,8 @@ sub new {
     $Need_Vpassert_Symbols = 0;
     $Param_Num = 0;
     $Parens = 0;
+    $PreLevel = 0;
+    @PreCovOff = ();
     $In_Message = 0;
     #%module_symbols = ();
     %Insure_Symbols = ();
@@ -1124,6 +1133,21 @@ sub symbol {
 	$ReqAck_Num = 1;
 	$Parens = 0;
     }
+    if ($Last_Prekwd) {
+	if ($Last_Prekwd eq "`ifdef" || $Last_Prekwd eq "`elsif" || $Last_Prekwd eq "`ifndef") {
+	    if ($token eq "SYNTHESIS") {
+		my $ndef = ($Last_Prekwd eq "`ifndef");
+		$PreCovOff[$PreLevel] = $ndef;
+		if ($PreCovOff[$PreLevel] && $Opt_Synthcov) {
+		    push @Sendout, [0, ::coverage_off(0)];
+		}
+	    } else {
+		$PreCovOff[$PreLevel] = 0;
+	    }
+	}
+	$Last_Prekwd = 0;
+    }
+
     push @Last_Symbols, $token;
     $Last_Lineno = $parser->lineno;
 }
@@ -1272,6 +1296,45 @@ sub comment {
     $Last_Lineno = $parser->lineno;
 }
 
+sub preproc {
+    my ($self, $token) = @_;
+    if (Verilog::Language::is_compdirect($token)) {
+	my $since = $self->unreadback(); $self->unreadback('');
+	# Close previous endif
+	if ($Opt_Synthcov) {  # Else accelerate
+	    if ($token eq "`elsif"
+		|| $token eq "`else"
+		|| $token eq "`endif") {
+		if ($PreCovOff[$PreLevel] && $Opt_Synthcov) {
+		    push @Sendout, [0, ::coverage_on(0)];
+		}
+		$PreLevel--;
+	    }
+	}
+	# Current token
+	push @Sendout, [$Last_Lineno, $since . $token];
+	# Begin new endif
+	if ($Opt_Synthcov) {  # Else accelerate
+	    if ($token eq "`ifdef"
+		|| $token eq "`ifndef"
+		|| $token eq "`elsif") {
+		$PreLevel++;
+		$Last_Prekwd = $token;
+	    }
+	    elsif ($token eq "`else") {
+		$PreLevel++;
+		$PreCovOff[$PreLevel] = !$PreCovOff[$PreLevel];
+		if ($PreCovOff[$PreLevel] && $Opt_Synthcov) {
+		    push @Sendout, [0, ::coverage_off(0)];
+		}
+	    }
+	}
+	$Last_Lineno = $self->lineno;
+    } else {
+	$self->symbol($token);
+    }
+}
+
 package main;
 
 ######################################################################
@@ -1369,10 +1432,6 @@ not be changed, and thus may still need to be manually ifdef'ed out.
 Useful for reducing the amount of `ifdef's required to feed non-PLI
 competent synthesis programs.
 
-=item --quiet
-
-Suppress messages about what files are being preprocessed.
-
 =item --nostop
 
 By default, $error and $warn insert a $stop statement.  With --nostop, this
@@ -1385,9 +1444,23 @@ Use the given filename for output instead of the input name .vpassert.  If
 the name ends in a / it is used as a output directory with the default
 name.
 
+=item --quiet
+
+Suppress messages about what files are being preprocessed.
+
 =item --realintent
 
 Special RealIntent enable/disables added around unreachable code.
+
+=item --synthcov
+
+When "ifdef SYNTHESIS" is seen, disable coverage.  Resume on the `else or
+`endif.  This does NOT follow child defines, for example:
+
+  `ifdef SYNTHSIS
+    `define MYSYNTH
+  `endif
+  `ifdef MYSYNTH   // This will not be coveraged-off
 
 =item --timeformat-units I<units>
 

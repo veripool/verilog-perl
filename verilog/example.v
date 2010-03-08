@@ -111,8 +111,28 @@ module example;
    end
 
    // Meta coverage disables
-   // vp_coverage_off
-   never_will_occur: cover property (@(posedge clk) (1'b0));
-   // vp_coverage_on
+   initial begin
+      // vp_coverage_off
+      if (0) begin end // cover off'ed
+      // vp_coverage_on
+   end
+
+   // Ifdef based disables
+   initial begin
+`ifndef NEVER
+ `ifdef SYNTHESIS
+      if (1) begin end  // cover on
+ `elsif SYNTHESIS
+      if (1) begin end  // cover on
+ `else
+      if (1) begin end  // cover off'ed
+ `endif
+ `ifndef SYNTHESIS
+      if (1) begin end  // cover off'ed
+ `else
+      if (1) begin end  // cover on
+ `endif
+`endif
+    end
 
 endmodule

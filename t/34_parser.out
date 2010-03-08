@@ -1059,38 +1059,87 @@ verilog/example.v:110: OPERATOR ';'
 verilog/example.v:111: unreadback '
    '
 verilog/example.v:111: KEYWORD 'end'
-verilog/example.v:115: unreadback '
+verilog/example.v:114: unreadback '
 
-   
    
    '
-verilog/example.v:115: SYMBOL 'never_will_occur'
-verilog/example.v:115: OPERATOR ':'
-verilog/example.v:115: unreadback ' '
-verilog/example.v:115: KEYWORD 'cover'
-verilog/example.v:115: unreadback ' '
-verilog/example.v:115: KEYWORD 'property'
-verilog/example.v:115: unreadback ' '
-verilog/example.v:115: OPERATOR '('
-verilog/example.v:115: OPERATOR '@'
-verilog/example.v:115: OPERATOR '('
-verilog/example.v:115: KEYWORD 'posedge'
-verilog/example.v:115: unreadback ' '
-verilog/example.v:115: SYMBOL 'clk'
-verilog/example.v:115: OPERATOR ')'
-verilog/example.v:115: unreadback ' '
-verilog/example.v:115: OPERATOR '('
-verilog/example.v:115: NUMBER '1'b0'
-verilog/example.v:115: OPERATOR ')'
-verilog/example.v:115: OPERATOR ')'
-verilog/example.v:115: OPERATOR ';'
-verilog/example.v:118: unreadback '
+verilog/example.v:114: KEYWORD 'initial'
+verilog/example.v:114: unreadback ' '
+verilog/example.v:114: KEYWORD 'begin'
+verilog/example.v:116: unreadback '
+      
+      '
+verilog/example.v:116: KEYWORD 'if'
+verilog/example.v:116: unreadback ' '
+verilog/example.v:116: OPERATOR '('
+verilog/example.v:116: NUMBER '0'
+verilog/example.v:116: OPERATOR ')'
+verilog/example.v:116: unreadback ' '
+verilog/example.v:116: KEYWORD 'begin'
+verilog/example.v:116: unreadback ' '
+verilog/example.v:116: KEYWORD 'end'
+verilog/example.v:118: unreadback ' 
+      
+   '
+verilog/example.v:118: KEYWORD 'end'
+verilog/example.v:121: unreadback '
+
    
+   '
+verilog/example.v:121: KEYWORD 'initial'
+verilog/example.v:121: unreadback ' '
+verilog/example.v:121: KEYWORD 'begin'
+verilog/example.v:127: unreadback '
+ 
+  
+           
+  
+           
+ 
+'
+verilog/example.v:127: PREPROC '`line 127 "verilog/example.v" 0
+'
+verilog/example.v:128: unreadback '
+      '
+verilog/example.v:128: KEYWORD 'if'
+verilog/example.v:128: unreadback ' '
+verilog/example.v:128: OPERATOR '('
+verilog/example.v:128: NUMBER '1'
+verilog/example.v:128: OPERATOR ')'
+verilog/example.v:128: unreadback ' '
+verilog/example.v:128: KEYWORD 'begin'
+verilog/example.v:128: unreadback ' '
+verilog/example.v:128: KEYWORD 'end'
+verilog/example.v:131: unreadback '  
+ 
+  
+      '
+verilog/example.v:131: KEYWORD 'if'
+verilog/example.v:131: unreadback ' '
+verilog/example.v:131: OPERATOR '('
+verilog/example.v:131: NUMBER '1'
+verilog/example.v:131: OPERATOR ')'
+verilog/example.v:131: unreadback ' '
+verilog/example.v:131: KEYWORD 'begin'
+verilog/example.v:131: unreadback ' '
+verilog/example.v:131: KEYWORD 'end'
+verilog/example.v:134: unreadback '  
+ 
+           
+ 
+'
+verilog/example.v:134: PREPROC '`line 134 "verilog/example.v" 0
+'
+verilog/example.v:136: unreadback '
+
+    '
+verilog/example.v:136: KEYWORD 'end'
+verilog/example.v:138: unreadback '
 
 '
-verilog/example.v:118: KEYWORD 'endmodule'
-verilog/example.v:119: unreadback '
+verilog/example.v:138: KEYWORD 'endmodule'
+verilog/example.v:139: unreadback '
 '
-verilog/example.v:119: PREPROC '`line 119 "verilog/example.v" 2
+verilog/example.v:139: PREPROC '`line 139 "verilog/example.v" 2
 '
-verilog/example.v:119: ENDPARSE ''
+verilog/example.v:139: ENDPARSE ''

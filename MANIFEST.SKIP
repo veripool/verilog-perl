@@ -16,6 +16,7 @@
 \.dll$
 \.exp$
 \.tmp$
+\.vcs.*$
 \.pre\..*$
 _pretmp\..*$
 VPreprocLex\.cpp$

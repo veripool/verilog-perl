@@ -18,7 +18,7 @@ print "Checking vpassert...\n";
 mkdir "test_dir/.vpassert", 0777;
 system ("/bin/rm -rf test_dir/verilog");
 symlink ("../verilog", "test_dir/verilog");  # So `line files are found; ok if fails
-run_system ("${PERL} ./vpassert --minimum --nostop --date --axiom --verilator --vcs"
+run_system ("${PERL} ./vpassert --minimum --nostop --date --axiom --verilator --vcs --synthcov"
 	    ." -o test_dir/.vpassert -y verilog/");
 ok(1);
 ok(-r 'test_dir/.vpassert/pli.v');
@@ -35,6 +35,8 @@ if (!$ENV{VERILATOR_AUTHOR_SITE}) {
 elsif ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
     run_system (# We use VCS, insert your simulator here
 		"$ENV{VCS_HOME}/bin/vcs"
+		# check line coverage
+		." -cm line+assert"
 		# vpassert optionally uses SystemVerilog coverage for $ucover_clk
 		." -sverilog"
 		# vpassert uses `pli to point to the hierarchy of the pli module
