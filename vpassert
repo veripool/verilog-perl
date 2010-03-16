@@ -663,21 +663,33 @@ sub sendout {
 sub form_conversions_regexp {
     # Create $Vpassert_Conversions_Regexp, a regexp that matches any of the conversions
     # This regexp will allow us to quickly look at the file and ignore it if no matches
-    $Vpassert_Conversions_Regexp = '\$(';
+    my $re = '';
     my $last_tok = "\$ignore";
     foreach my $tok (sort (keys %Vpassert_Conversions)) {
 	($tok =~ s/^\$//) or die "%Error: Vpassert_Conversion $tok doesn't have leading \$\n";
 	if (substr ($tok, 0, length($last_tok)) eq $last_tok) {
 	    #print "Suppress $tok   $last_tok\n" if $Debug;
 	} else {
-	    $Vpassert_Conversions_Regexp .= "${tok}|";
+	    $re .= "|" if $re;
+	    $re .= '\$'.$tok;
 	    $last_tok = $tok;
 	}
     }
-    $Vpassert_Conversions_Regexp =~ s/\|$ /\)/x;
 
-    $Vpassert_Conversions_Regexp = "\$NEVER_MATCH_ANYTHING" if $Vpassert_Conversions_Regexp eq '\$()';
-    #print "CV REGEXP $Vpassert_Conversions_Regexp\n" if $Debug;
+    if ($Opt_NoPli) {
+	$re .= "|" if $re;
+	$re .= '\$';
+    }
+    if ($Opt_Synthcov) {
+	$re .= "|" if $re;
+	$re .= 'SYNTHESIS';
+    }
+
+    $re = "(".$re.")";
+    $re = "\$NEVER_MATCH_ANYTHING" if $re eq '\$()';
+    #print "CV REGEXP $re\n" if $Debug;
+
+    $Vpassert_Conversions_Regexp = qr/$re/;
 }
 
 sub vpassert_process {
@@ -712,8 +724,7 @@ sub vpassert_process {
     my $fh = IO::File->new("<$filename") or die "%Error: $! $filename.";
     if (!$Got_Change) {
 	while (<$fh>) {
-	    goto diff if (/$Vpassert_Conversions_Regexp/o);
-	    goto diff if ($Opt_NoPli && /\$/);
+	    goto diff if (/$Vpassert_Conversions_Regexp/);
 	}
 	print "$filename: No dollars, not processing\n" if ($Debug);
 	return;
