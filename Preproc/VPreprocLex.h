@@ -152,7 +152,7 @@ class VPreprocLex {
     void pushStateDefForm();
     void pushStateDefValue();
     void pushStateIncFilename();
-    void scanBytes(const string& strg);
+    void scanBytes(const char* strp, size_t len);
     /// Called by VPreproc.cpp to get data from lexer
     YY_BUFFER_STATE currentBuffer();
     int	 currentStartState();

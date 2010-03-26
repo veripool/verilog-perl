@@ -84,6 +84,7 @@ crnl		[\r]*[\n]
 quote		[\"]
 backslash	[\\]
 symb		([a-zA-Z_][a-zA-Z0-9_$]*|\\[^ \t\f\r\n]+)
+word		[a-zA-Z0-9_]+
 drop		[\032]
 
 	/**************************************************************/
@@ -118,6 +119,7 @@ drop		[\032]
 <INITIAL>{quote}	{ yy_push_state(STRMODE); yymore(); }
 <STRMODE><<EOF>>	{ linenoInc(); yyerrorf("EOF in unterminated string"); yyleng=0; yyterminate(); }
 <STRMODE>{crnl}		{ linenoInc(); yyerrorf("Unterminated string"); BEGIN(INITIAL); }
+<STRMODE>{word}		{ yymore(); }
 <STRMODE>[^\"\\]	{ yymore(); }
 <STRMODE>{backslash}{crnl}	{ linenoInc(); yymore(); }
 <STRMODE>{backslash}.	{ yymore(); }
@@ -172,6 +174,7 @@ drop		[\032]
 <DEFVAL>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\n",1); } /* Return, but not \ is part of define value */
 <DEFVAL>[^\/\*\n\r\\]+	|
 <DEFVAL>[\\][^\n\r]	|
+<DEFVAL>{word}		{ appendDefValue(yytext,yyleng); }
 <DEFVAL>.		{ appendDefValue(yytext,yyleng); }
 
 	/* Comments inside define values - if embedded get added to define value per spec */
@@ -182,6 +185,7 @@ drop		[\032]
 	 		  appendDefValue(yytext,yyleng-2); appendDefValue((char*)"\n",1); }  /* Return but not \ */
 <DEFCMT>{crnl}		{ linenoInc(); yymore(); if (LEXP->m_defCmtSlash) yyerrorf("One line of /* ... */ is missing \\ before newline");
 			  BEGIN(CMTMODE); }
+<DEFCMT>{word}		{ yymore(); }
 <DEFCMT>.		{ yymore(); }
 <DEFCMT><<EOF>>		{ yyerrorf("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
 
@@ -226,6 +230,7 @@ drop		[\032]
 <INITIAL>"/*"		{ yy_push_state(CMTMODE); yymore(); }
 <CMTMODE>"*/"		{ yy_pop_state(); return(VP_COMMENT); }
 <CMTMODE>{crnl}		{ linenoInc(); yymore(); }
+<CMTMODE>{word}		{ yymore(); }
 <CMTMODE>.		{ yymore(); }
 <CMTMODE><<EOF>>	{ yyerrorf("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
 
@@ -271,8 +276,8 @@ void VPreprocLex::pushStateIncFilename() {
     yymore();
 }
 
-void VPreprocLex::scanBytes(const string& strg) {
-    yy_scan_bytes(strg.c_str(), strg.length());
+void VPreprocLex::scanBytes(const char* strp, size_t len) {
+    yy_scan_bytes(strp, len);
     m_bufferStack.push(currentBuffer());  // yy_scan_bytes makes new buffer
 }
 

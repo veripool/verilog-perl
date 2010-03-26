@@ -89,6 +89,7 @@ t/42_dumpcheck_v2k.out
 t/44_create.t
 t/46_link.t
 t/48_leak.t
+t/49_largeish.t
 t/50_vrename.out
 t/50_vrename.t
 t/56_editfiles.t

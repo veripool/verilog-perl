@@ -29,7 +29,8 @@ for (my $i=0; $i<$loops; $i++) {
     test();
     my $newmem = get_memory_usage();
     my $delta = $newmem - $mem;
-    print "$i: Memory $newmem kb  Alloced $delta kb\n" if $delta;
+    printf "$i: Memory %6.3f MB  Alloced %6.3f MB\n"
+	, $newmem/1024/1024, $delta/1024/1024 if $delta;
     $mem_mid = $newmem if $i==int($loops/2)-1;
     $mem_end = $newmem if $i==$loops-1;
 
@@ -49,7 +50,7 @@ if ($mem == 0) {
 } elsif ($mem_end <= $mem_mid) {
     ok(1);
 } else {
-    warn "%Warning: Leaked ",int(1024*($mem_end-$mem_mid)/($loops/2))," bytes per parse\n";
+    warn "%Warning: Leaked ",int(($mem_end-$mem_mid)/($loops/2))," bytes per parse\n";
     if (!$ENV{VERILATOR_AUTHOR_SITE} || $ENV{HARNESS_FAST}) {
 	# It's somewhat sensitive unless there's a lot of loops,
 	# and lots of loops is too slow for users to deal with.

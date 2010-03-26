@@ -75,7 +75,7 @@ sub get_memory_usage {
 
     my $stat = $fh->getline || "";
     my @stats = split /\s+/, $stat;
-    return $stats[0]||0;  # vmsize
+    return ($stats[0]||0)*4096;  # vmsize
 }
 
 1;
