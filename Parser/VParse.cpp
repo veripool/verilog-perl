@@ -112,12 +112,12 @@ int VParse::lexToBison(VParseBisonYYSType* yylvalp) {
     return m_lexp->lexToBison(yylvalp);
 }
 
-int VParse::inputToLex(char* buf, int max_size) {
-    int got = 0;
+size_t VParse::inputToLex(char* buf, size_t max_size) {
+    size_t got = 0;
     while (got < max_size	// Haven't got enough
 	   && !m_buffers.empty()) {	// And something buffered
 	string front = m_buffers.front(); m_buffers.pop_front();
-	int len = front.length();
+	size_t len = front.length();
 	if (len > (max_size-got)) {  // Front string too big
 	    string remainder = front.substr(max_size-got);
 	    front = front.substr(0, max_size-got);

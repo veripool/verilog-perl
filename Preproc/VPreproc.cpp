@@ -464,8 +464,8 @@ bool VPreprocImp::readWholefile(const string& filename, StrList& outl) {
     char buf[INFILTER_IPC_BUFSIZ];
     bool eof = false;
     while (!eof) {
-	int todo = INFILTER_IPC_BUFSIZ;
-	int got = read (fd, buf, todo);
+	ssize_t todo = INFILTER_IPC_BUFSIZ;
+	ssize_t got = read (fd, buf, todo);
 	if (got>0) {
 	    outl.push_back(string(buf, got));
 	}
@@ -1054,7 +1054,7 @@ string VPreprocImp::getparseline(bool stop_at_eol) {
 	}
 
 	// Make new string with data up to the newline.
-	int len = stop_at_eol ? (rtnp-m_lineChars.c_str()+1) : m_lineChars.length();
+	size_t len = stop_at_eol ? (rtnp-m_lineChars.c_str()+1) : m_lineChars.length();
 	string theLine(m_lineChars, 0, len);
 	m_lineChars = m_lineChars.erase(0,len);	// Remove returned characters
 

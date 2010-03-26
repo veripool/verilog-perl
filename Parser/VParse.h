@@ -69,7 +69,7 @@ public:  // But for internalish use only
     int lexToBison(VParseBisonYYSType* yylvalp);
     bool eofToLex() const { return m_eof && m_buffers.empty(); }
     bool inCellDefine() const;
-    int inputToLex(char* buf, int max_size);
+    size_t inputToLex(char* buf, size_t max_size);
 
     // Symbol table
     VSymStack&	syms() { return m_syms; }
@@ -135,7 +135,7 @@ public:
     string unreadback() const { return (m_useUnreadback ? m_unreadback : "new(...,use_unreadback=>0) was used"); }
     void unreadback(const string& text) { if (m_useUnreadback) m_unreadback = text; }
     void unreadbackCat(const string& text) { if (m_useUnreadback) m_unreadback += text; }
-    void unreadbackCat(const char* textp, int len) { unreadbackCat(string(textp,len)); }
+    void unreadbackCat(const char* textp, size_t len) { unreadbackCat(string(textp,len)); }
 
     // The default behavior is to pass all unknown `defines right through.
     // This lets the user determine how to report the errors.  It also nicely

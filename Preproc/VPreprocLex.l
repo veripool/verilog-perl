@@ -45,7 +45,7 @@ VPreprocLex* VPreprocLex::s_currentLexp = NULL;	// Current lexing point
 bool pedantic() { return LEXP->m_pedantic; }
 bool keepWhitespace() { return LEXP->m_keepWhitespace; }
 void yyerror(char* msg) { LEXP->m_curFilelinep->error(msg); }
-void appendDefValue(const char* t,int l) { LEXP->appendDefValue(t,l); }
+void appendDefValue(const char* t, size_t l) { LEXP->appendDefValue(t,l); }
 
 // Accessors, because flex keeps changing the type of yyleng
 char* yyourtext() { return yytext; }
@@ -281,7 +281,7 @@ void VPreprocLex::scanBytes(const char* strp, size_t len) {
     m_bufferStack.push(currentBuffer());  // yy_scan_bytes makes new buffer
 }
 
-void VPreprocLex::appendDefValue(const char* textp, int len) {
+void VPreprocLex::appendDefValue(const char* textp, size_t len) {
     // Append given text to current definition value being formed
     m_defValue.append(textp,len);
 }
