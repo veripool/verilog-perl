@@ -98,6 +98,7 @@ crnl	[\r]*[\n]
 id	[a-zA-Z_][a-zA-Z0-9_$]*
 	/* escaped identifier */
 escid	\\[^ \t\f\r\n]+
+word	[a-zA-Z0-9_]+
 
 %%
 
@@ -524,6 +525,7 @@ escid	\\[^ \t\f\r\n]+
 <STRING>\\.	 	{ yymore(); }
 <STRING>\" 		{ yy_pop_state();
 			  FL; VALTEXT; CALLBACK(stringCb); return yaSTRING; }
+<STRING>{word}		{ yymore(); }
 <STRING>.		{ yymore(); }
 
   /************************************************************************/
@@ -531,6 +533,7 @@ escid	\\[^ \t\f\r\n]+
 <CMTMODE>"*"+[^*/\n]* 	{ yymore(); }
 <CMTMODE>\n		{ yymore(); NEXTLINE(); }
 <CMTMODE>"*"+"/"	{ FL; VALTEXT; CALLBACK(commentCb); yy_pop_state(); }
+<CMTMODE>{word}		{ yymore(); }
 <CMTMODE>. 		{ yymore(); }
 <CMTMODE><<EOF>>	{ yyerrorf("EOF in '/* ... */' block comment");
 			  yyleng = 0; yy_pop_state(); }
@@ -540,6 +543,7 @@ escid	\\[^ \t\f\r\n]+
 <PROTMODE>\n		{ yymore(); NEXTLINE(); }
 <PROTMODE>"`endprotected"	{ FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); }
 <PROTMODE>. 		{ yymore(); }
+<PROTMODE>{word}	{ yymore(); }
 <PROTMODE><<EOF>>	{ yyerrorf("EOF in `protected");
 			  yyleng = 0; yy_pop_state(); }
 
@@ -548,6 +552,7 @@ escid	\\[^ \t\f\r\n]+
 <ATTRMODE>{crnl}	{ yymore(); NEXTLINE(); }
 <ATTRMODE>"*)"		{ FL; VALTEXT; CALLBACK(attributeCb); yy_pop_state(); }
 <ATTRMODE>. 		{ yymore(); }
+<ATTRMODE>{word}	{ yymore(); }
 <ATTRMODE><<EOF>>	{ yyerrorf("EOF in (*");
 			  yyleng = 0; yy_pop_state(); }
 
