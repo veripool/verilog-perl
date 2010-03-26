@@ -27,6 +27,7 @@
 #ifndef _VPREPROCLEX_H_		// Guard
 #define _VPREPROCLEX_H_ 1
 
+#include <deque>
 #include <stack>
 
 #include "VFileLine.h"
@@ -117,6 +118,7 @@ class VPreprocLex {
 
     // Parse state
     stack<YY_BUFFER_STATE> m_bufferStack;	///< Stack of inserted text above current point
+    deque<string>	m_buffers;	///< Buffer of characters to process
 
     // State to lexer
     static VPreprocLex* s_currentLexp;	///< Current lexing point
@@ -138,10 +140,12 @@ class VPreprocLex {
 	m_formalLevel = 0;
 	m_parenLevel = 0;
 	m_defCmtSlash = false;
+	initFirstBuffer();
     }
     ~VPreprocLex() {
 	while (!m_bufferStack.empty()) { yy_delete_buffer(m_bufferStack.top()); m_bufferStack.pop(); }
     }
+    void initFirstBuffer();
 
     /// Called by VPreprocLex.l from lexer
     void appendDefValue(const char* text, size_t len);
@@ -153,9 +157,12 @@ class VPreprocLex {
     void pushStateDefValue();
     void pushStateIncFilename();
     void scanBytes(const char* strp, size_t len);
+    void scanBytesBack(const string& str);
+    size_t inputToLex(char* buf, size_t max_size);
     /// Called by VPreproc.cpp to get data from lexer
     YY_BUFFER_STATE currentBuffer();
     int	 currentStartState();
+    void dumpSummary();
     void dumpStack();
     void unused();
 };

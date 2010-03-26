@@ -157,7 +157,7 @@ private:
     string defineSubst(VPreDefRef* refp);
     void addLineComment(int enter_exit_level);
     string trimWhitespace(const string& strg, bool trailing);
-    void unputString(const string& strg, bool first=false);
+    void unputString(const string& strg);
 
     void parsingOn() { m_off--; assert(m_off>=0); if (!m_off) addLineComment(0); }
     void parsingOff() { m_off++; }
@@ -272,13 +272,13 @@ const char* VPreprocImp::tokenName(int tok) {
     }
 }
 
-void VPreprocImp::unputString(const string& strg, bool first) {
+void VPreprocImp::unputString(const string& strg) {
     // Note: The preliminary call in ::openFile bypasses this function
     // We used to just m_lexp->unputString(strg.c_str());
     // However this can lead to "flex scanner push-back overflow"
     // so instead we scan from a temporary buffer, then on EOF return.
     // This is also faster than the old scheme, amazingly.
-    if (!first) {  // Else the initial creation
+    if (1) {
 	if (m_lexp->m_bufferStack.empty() || m_lexp->m_bufferStack.top()!=m_lexp->currentBuffer()) {
 	    fatalSrc("bufferStack missing current buffer; will return incorrectly");
 	    // Hard to debug lost text as won't know till much later
@@ -487,6 +487,7 @@ void VPreprocImp::openFile(string filename, VFileLine* filelinep) {
 	m_filelinep = filelinep;
     }
 
+    // Read a list<string> with the whole file.
     StrList wholefile;
     bool ok = readWholefile(filename, wholefile/*ref*/);
     if (!ok) {
@@ -494,40 +495,11 @@ void VPreprocImp::openFile(string filename, VFileLine* filelinep) {
 	return;
     }
 
-    // Build a string with the whole file.  It would be nicer to send in pieces,
-    // but flex only allows breaking on tokens, unless we use YY_INPUT which makes
-    // other problems.
-    // At least use a C string, and precompute the size, so it's decently fast.
-    size_t size=0;
-    for (StrList::iterator it=wholefile.begin(); it!=wholefile.end(); ++it) {
-	size += it->length();
-    }
-    char* wholefilecr = new char[size];
-
-    // Filter all DOS CR's en-mass.  This avoids bugs with lexing CRs in the wrong places.
-    // This will also strip them from strings, but strings aren't supposed to be multi-line without a "\"
-    char* cp = wholefilecr;
-    for (StrList::iterator it=wholefile.begin(); it!=wholefile.end(); ++it) {
-	// We don't test for \0 as we allow and strip mid-string '\0's (for now).
-	const char* sp = it->data();
-	const char* ep = sp + it->length();
-	for (; sp<ep; sp++) {
-	    if (*sp != '\r' && *sp != '\0') {
-		*cp++ = *sp;
-	    }
-	}
-    }
-    size_t wholefilecr_length = (cp - wholefilecr);
-
-    // Reclaim memory before our next allocation
-    wholefile.clear();
-
     if (m_lexp) {
 	// We allow the same include file twice, because occasionally it pops
 	// up, with guards preventing a real recursion.
 	if (m_includeStack.size()>VPreproc::INCLUDE_DEPTH_MAX) {
 	    error("Recursive inclusion of file: "+filename);
-	    delete [] wholefilecr;
 	    return;
 	}
 	// There's already a file active.  Push it to work on the new one.
@@ -543,10 +515,29 @@ void VPreprocImp::openFile(string filename, VFileLine* filelinep) {
     m_filelinep = m_lexp->m_curFilelinep;  // Remember token start location
     addLineComment(1); // Enter
 
-    // unput will copy the string, which is good, as the old one will end after
-    // this function exits
-    m_lexp->scanBytes(wholefilecr, wholefilecr_length);
-    delete [] wholefilecr;
+    // Filter all DOS CR's en-mass.  This avoids bugs with lexing CRs in the wrong places.
+    // This will also strip them from strings, but strings aren't supposed to be multi-line without a "\"
+    for (StrList::iterator it=wholefile.begin(); it!=wholefile.end(); ++it) {
+	// We don't test for \0 as we allow and strip mid-string '\0's (for now).
+	// We also edit in place.  This is nasty to other users of the string, but
+	// there aren't any, and it avoids needing 2x the memory on very large files.
+	const char* sp = it->data();
+	const char* ep = sp + it->length();
+	char* cp = (char*) sp;
+	for (; sp<ep; sp++) {
+	    if (*sp != '\r' && *sp != '\0') {
+		*cp++ = *sp;
+	    }
+	}
+	size_t len = cp - it->data();
+	// Truncate old string
+	it->erase(len);
+
+	// Push the data to an internal buffer.
+	m_lexp->scanBytesBack(*it);
+	// Reclaim memory; the push saved the string contents for us
+	*it = "";
+    }
 }
 
 void VPreprocImp::insertUnreadbackAtBol(const string& text) {
