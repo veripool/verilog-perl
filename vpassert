@@ -861,6 +861,7 @@ sub vpassert_db_write_file {
     my $fh = IO::File->new(">$filename") or die "%Error: $! $filename.\n";
     $fh->print ("switch\t"._switch_line()."\n");
     foreach my $file (sort (keys %Files)) {
+	next if !$Files{$file}{mtime};
 	$fh->print ("unproc\t$file\t$Files{$file}{mtime}\t$Files{$file}{size}\n");
     }
     $fh->close;
