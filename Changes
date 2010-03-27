@@ -9,11 +9,13 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add vpassert --synthcov, --axiom and --vcs switches.
 
+****	Pass pin numbers for functions/tasks to SigParser::port_cb.
+
+****	Improve performance of large file parsing.  [Jeffrey Short]
+
 ****	Fix parsing single files > 2GB.  [Jeffrey Short]
 
 ****	Fix vpassert to insert `lines on every line where needed.
-
-****	Pass pin numbers for functions/tasks to SigParser::port_cb.
 
 ****	Fix "disable iff {property_expr}", bug221.  [Rick Ramus]
 

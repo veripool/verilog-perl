@@ -307,13 +307,15 @@ CODE:
 #// self->getall()
 
 const char *
-VPreprocXs::getall ()
-PROTOTYPE: $
+VPreprocXs::getall (approx_chunk=0)
+size_t approx_chunk
+PROTOTYPE: $;$
 CODE:
 {
     static string holdline;
     if (!THIS || THIS->isEof()) XSRETURN_UNDEF;
-    string lastline = THIS->getall();
+    if (approx_chunk==0) { approx_chunk = 1;  approx_chunk <<= 62; }
+    string lastline = THIS->getall(approx_chunk);
     holdline = lastline;	/* Stash it so c_str() doesn't disappear immediately */
     RETVAL = lastline.c_str();
 }

@@ -59,7 +59,7 @@ public:
     /// Insert given file into this point in input stream
     virtual void openFile(string filename, VFileLine* filelinep=NULL);
     virtual void debug(int level);	///< Set debugging level
-    virtual string getall();		///< Return all lines. (Null if done.)
+    virtual string getall(size_t approx_chunk);	///< Return all lines, or at least approx_chunk bytes. (Null if done.)
     virtual string getline();		///< Return next line/lines. (Null if done.)
     virtual bool isEof();		///< Return true on EOF.
     virtual void insertUnreadback(string text);
