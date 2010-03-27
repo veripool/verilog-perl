@@ -425,3 +425,8 @@ property data_transfer(
        (end_ev or (!end_ev ##1 (!start_ev throughout end_ev[->1])))
               |-> (local_data == end_data);
 endproperty : data_transfer
+
+module bug228;
+   wire net1, net2, net3;
+   nmos #(0:1:10, 0:1:10, 0:1:10) u (net1, net2, net3);
+endmodule

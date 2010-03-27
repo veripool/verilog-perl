@@ -1807,13 +1807,18 @@ cellpinItemE:			// IEEE: named_port_connection + named_parameter_assignment + em
 	|	'.' idSVKwd				{ PINDONE($<fl>1,$2,$2);  PINNUMINC(); }
 	|	'.' idAny				{ PINDONE($<fl>1,$2,$2);  PINNUMINC(); }
 	|	'.' idAny '(' ')'			{ PINDONE($<fl>1,$2,"");  PINNUMINC(); }
+	//			// mintypmax is expanded here, as it might be a UDP or gate primitive
 	|	'.' idAny '(' expr ')'			{ PINDONE($<fl>1,$2,$4);  PINNUMINC(); }
+	|	'.' idAny '(' expr ':' expr ')'		{ PINDONE($<fl>1,$2,$4);  PINNUMINC(); }
+	|	'.' idAny '(' expr ':' expr ':' expr ')' { PINDONE($<fl>1,$2,$4);  PINNUMINC(); }
 	//			// For parameters
 	|	'.' idAny '(' data_type ')'		{ PINDONE($<fl>1,$2,$4);  PINNUMINC(); }
 	//			// For parameters
 	|	data_type				{ PINDONE($<fl>1,"",$1);  PINNUMINC(); }
 	//
 	|	expr					{ PINDONE($<fl>1,"",$1);  PINNUMINC(); }
+	|	expr ':' expr				{ PINDONE($<fl>1,"",$1);  PINNUMINC(); }
+	|	expr ':' expr ':' expr			{ PINDONE($<fl>1,"",$1);  PINNUMINC(); }
 	;
 
 //************************************************
@@ -2647,7 +2652,7 @@ expr<str>:			// IEEE: part of expression/constant_expression/primary
 	//
 	//			// IEEE: '(' mintypmax_expression ')'
 	|	~noPar__IGNORE~'(' expr ')'			{ $<fl>$=$<fl>1; $$ = "("+$2+")"; }
-	|	~noPar__IGNORE~'(' expr ':' expr ':' expr ')'	{ $<fl>$=$<fl>1; $$ = "("+$2+")"; }
+	|	~noPar__IGNORE~'(' expr ':' expr ':' expr ')'	{ $<fl>$=$<fl>1; $$ = "("+$2+":"+$4+":"+$5+")"; }
 	//			// PSL rule
 	|	'_' '(' statePushVlg expr statePop ')'	{ $<fl>$=$<fl>1; $$ = "_("+$4+")"; }	// Arbitrary Verilog inside PSL
 	//

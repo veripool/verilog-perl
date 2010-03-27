@@ -19,6 +19,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix "disable iff {property_expr}", bug221.  [Rick Ramus]
 
+****	Fix UDPs with min:typ:max delays, bug228.  [Pihay Saelieo]
+
 ****	Fix Pod::Usage dependency, rt51024.  [Andreas Koenig]
 
 ****	Fix Mac OS-X compile issues.  [Joshua Wise]
