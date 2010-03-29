@@ -1022,7 +1022,7 @@ string VPreprocImp::getparseline(bool stop_at_eol, size_t approx_chunk) {
 	bool gotEof = false;
 	while ((stop_at_eol
 		? (NULL==(rtnp=strchr(m_lineChars.c_str(),'\n')))
-		: (m_lineChars.length() < approx_chunk))
+		: (approx_chunk==0 || (m_lineChars.length() < approx_chunk)))
 	       && !gotEof) {
 	    int tok = getToken();
 	    if (debug()) {

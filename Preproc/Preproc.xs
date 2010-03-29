@@ -314,7 +314,6 @@ CODE:
 {
     static string holdline;
     if (!THIS || THIS->isEof()) XSRETURN_UNDEF;
-    if (approx_chunk==0) { approx_chunk = 1;  approx_chunk <<= 62; }
     string lastline = THIS->getall(approx_chunk);
     holdline = lastline;	/* Stash it so c_str() doesn't disappear immediately */
     RETVAL = lastline.c_str();
