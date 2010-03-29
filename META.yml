@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:         Verilog-Perl
-version:      3.231
+version:      3.240
 version_from: Language.pm
 abstract:     Verilog language utilities and parsing
 license:      perl
