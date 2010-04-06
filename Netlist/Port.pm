@@ -3,7 +3,6 @@
 ######################################################################
 
 package Verilog::Netlist::Port;
-use Class::Struct;
 
 use Verilog::Netlist;
 use Verilog::Netlist::Subclass;

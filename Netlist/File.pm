@@ -3,7 +3,6 @@
 ######################################################################
 
 package Verilog::Netlist::File;
-use Class::Struct;
 use Carp;
 
 use Verilog::Netlist;

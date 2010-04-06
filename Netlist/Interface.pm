@@ -3,7 +3,6 @@
 ######################################################################
 
 package Verilog::Netlist::Interface;
-use Class::Struct;
 
 use Verilog::Netlist;
 use Verilog::Netlist::ModPort;

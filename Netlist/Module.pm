@@ -3,7 +3,6 @@
 ######################################################################
 
 package Verilog::Netlist::Module;
-use Class::Struct;
 
 use Verilog::Netlist;
 use Verilog::Netlist::ContAssign;

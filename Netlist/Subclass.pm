@@ -3,8 +3,10 @@
 ######################################################################
 
 package Verilog::Netlist::Subclass;
+use Scalar::Util qw(weaken);
+use Carp;
+
 use Verilog::Netlist::Logger;
-use Class::Struct;
 require Exporter;
 use base qw(Exporter);
 use vars qw($VERSION @EXPORT);
@@ -90,34 +92,142 @@ sub unlink_if_error {
 ######################################################################
 ######################################################################
 ######################################################################
-# DANGER WILL ROBINSON!
+#
 # Prior to perl 5.6, Class::Struct's new didn't bless the arguments,
-# or allow parameter initialization!  We'll override it!
+# or allow parameter initialization!  Later versions didn't support weak
+# references.
+# This code is thus from Class::Struct, copyright under the Artistic license
 
 sub structs {
     my $func = shift;
-    Class::Struct::struct (@_);
     my $baseclass = $_[0];
+
+    # Determine parameter list structure, one of:
+    #	struct (class => [ element-list ])
+
+    my ($class, @decls);
+    my $base_type = ref $_[1];
+    if	($base_type eq 'ARRAY')	 {
+	$class = shift;
+	@decls = @{shift()};
+	confess "structs usage error" if @_;
+    }
+    else {
+	confess "structs usage error";
+    }
+    confess "structs usage error" if @decls % 2 == 1;
+
+    # Create constructor.
+    croak "function 'new' already defined in package $class"
+	if do { no strict 'refs'; defined &{$class . "::new"} };
+
+    my @methods = ();
+    my %refs = ();
+    my %arrays = ();
+    my %hashes = ();
+    my %types;
+    my $got_class = 0;
+    my $out = '';
+
+    $out .= "{\n  package $class;\n  use Carp;\n";
+    $out .= "  use Scalar::Util qw(weaken);\n\n";
+    $out .= "  sub new {\n";
+    $out .= "    my (\$class, \%init) = \@_;\n";
+    $out .= "    \$class = __PACKAGE__ unless \@_;\n";
+
+    my $cnt = 0;
+    my ($cmt, $elem);
+
+    if ($base_type eq 'ARRAY') {
+	$out .= "    my(\$r) = [];\n";
+    }
+    for (my $idx=0; $idx < @decls; $idx+=2) {
+	my $name = $decls[$idx];
+	my $type = $decls[$idx+1];
+	$types{$name} = $type;
+	push (@methods, $name);
+	if ($base_type eq 'ARRAY') {
+	    $elem = "[$cnt]";
+	    ++$cnt;
+	    $cmt = " # $name";
+	}
+	if ($type =~ /^\*(.)/) {
+	    $refs{$name}++;
+	    $type = $1;
+	}
+	my $init = "defined(\$init{'$name'}) ? \$init{'$name'} :";
+	if ($type eq '@') {
+	    $out .= "    croak 'Initializer for $name must be array reference'\n";
+	    $out .= "      if defined(\$init{'$name'}) && ref(\$init{'$name'}) ne 'ARRAY';\n";
+	    $out .= "    \$r->$elem = $init [];$cmt\n";
+	    $arrays{$name}++;
+	}
+	elsif ($type eq '%') {
+	    $out .= "    croak 'Initializer for $name must be hash reference'\n";
+	    $out .= "      if defined(\$init{'$name'}) && ref(\$init{'$name'}) ne 'HASH';\n";
+	    $out .= "    \$r->$elem = $init {};$cmt\n";
+	    $hashes{$name}++;
+	}
+	elsif ($type eq '$') {
+	    $out .= "    \$r->$elem = $init undef;$cmt\n";
+	}
+	else{
+	    croak "'$type' is not a valid struct element type";
+	}
+    }
+    $out .= "     bless \$r, \$class;\n	}\n";
+
+    # Create accessor methods.
+
+    my ($pre, $pst, $sel);
+    $cnt = 0;
+    foreach my $name (@methods) {
+	my $type = $types{$name};
+	if  (do { no strict 'refs'; defined &{$class . "::$name"} }) {
+	    warnings::warnif("function '$name' already defined, overrides struct accessor method");
+	}
+	else {
+	    $pre = $pst = $cmt = $sel = '';
+	    if (defined $refs{$name}) {
+		$pre = "\\(";
+		$pst = ")";
+		$cmt = " # returns ref";
+	    }
+	    $out .= "  sub $name {$cmt\n    my \$r = shift;\n";
+	    if ($base_type eq 'ARRAY') {
+		$elem = "[$cnt]";
+		++$cnt;
+	    }
+	    if (defined $arrays{$name}) {
+		$out .= "    my \$i;\n";
+		$out .= "    \@_ ? (\$i = shift) : return \$r->$elem;\n";
+		$out .= "    if (ref(\$i) eq 'ARRAY' && !\@_) { \$r->$elem = \$i; return \$r }\n";
+		$sel = "->[\$i]";
+	    }
+	    elsif (defined $hashes{$name}) {
+		$out .= "    my \$i;\n";
+		$out .= "    \@_ ? (\$i = shift) : return \$r->$elem;\n";
+		$out .= "    if (ref(\$i) eq 'HASH' && !\@_) { \$r->$elem = \$i; return \$r }\n";
+		$sel = "->{\$i}";
+	    }
+	    $out .= "    croak 'Too many args to $name' if \@_ > 1;\n";
+	    $out .= "    \@_ ? ($pre\$r->$elem$sel = shift$pst) : $pre\$r->$elem$sel$pst;\n";
+	    $out .= "  }\n";
+	}
+    }
+
+    #print $out;
+    $out .= "}\n1;\n";
+    my $result = eval $out;
+    carp $@ if $@;
+
+    # Create top class
     (my $overclass = $baseclass) =~ s/::Struct$//;
-    if ($] < 5.006) {
-	# Now override what class::struct created
-	eval "
-            package $overclass;
-            sub ${func} {
-		my \$class = shift;
-		my \$self = new $baseclass;
-		bless \$self, \$class;
-		while (\@_) {
-		    my \$param = shift; my \$value = shift;
-		    eval (\"\\\$self->\$param(\\\$value);\");  # Slow, sorry.
-		}
-		return \$self;
-	    }";
-    } else {
+    {
 	#print \"NEW \",join(' ',\@_),\"\\n\";
 	eval "
-            package $overclass;
-            sub ${func} {
+	    package $overclass;
+	    sub ${func} {
 		my \$class = shift;
 		my \$self = new $baseclass (\@_);
 		bless \$self, \$class;

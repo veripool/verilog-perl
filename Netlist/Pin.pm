@@ -3,7 +3,6 @@
 ######################################################################
 
 package Verilog::Netlist::Pin;
-use Class::Struct;
 
 use Verilog::Netlist;
 use Verilog::Netlist::Port;
