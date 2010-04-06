@@ -428,10 +428,6 @@ See also Verilog::Netlist::Subclass for additional accessors and methods.
 
 =over 4
 
-=item $self->autos
-
-Updates the AUTOs for the module.
-
 =item $self->find_cell(I<name>)
 
 Returns Verilog::Netlist::Cell matching given name.

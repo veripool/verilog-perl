@@ -356,10 +356,6 @@ See also Verilog::Netlist::Subclass for additional accessors and methods.
 
 =over 4
 
-=item $self->autos
-
-Updates the AUTOs for the interface.
-
 =item $self->find_net(I<name>)
 
 Returns Verilog::Netlist::Net matching given name.
