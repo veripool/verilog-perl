@@ -9,13 +9,14 @@ use IO::File;
 use strict;
 use Test;
 
-BEGIN { plan tests => 5 }
+BEGIN { plan tests => 6 }
 BEGIN { require "t/test_utils.pl"; }
 
 print "Checking vpassert...\n";
 
 # Preprocess the files
 mkdir "test_dir/.vpassert", 0777;
+mkdir "test_dir/.vpassertcall", 0777;
 system ("/bin/rm -rf test_dir/verilog");
 symlink ("../verilog", "test_dir/verilog");  # So `line files are found; ok if fails
 run_system ("${PERL} ./vpassert --minimum --nostop --date --axiom --verilator --vcs --synthcov"
@@ -25,6 +26,14 @@ ok(-r 'test_dir/.vpassert/pli.v');
 
 ok(compare('lines', [glob("test_dir/.vpassert/*.v")]));
 ok(compare('diff',  [glob("test_dir/.vpassert/*.v")]));
+
+# Preprocess with custom outputters
+run_system ("${PERL} ./vpassert --date --verilator --vcs"
+	    .q{ --call-error '$callError'}
+	    .q{ --call-info '$callInfo'}
+	    .q{ --call-warn '$callWarn'}
+	    ." -o test_dir/.vpassertcall -y verilog/");
+ok(files_identical("test_dir/.vpassertcall/example.v", "t/60_vpassert.out"));
 
 # Build the model
 unlink "simv";
@@ -85,7 +94,7 @@ sub lines_in {
     my $filename = shift;
     my $fh = IO::File->new($filename) or die "%Error: $! $filename";
     my @lines = $fh->getlines();
-    @lines = grep (!/`line/, @lines);
+    @lines = grep (!/\`line/, @lines);
     return $#lines;
 }
 

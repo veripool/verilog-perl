@@ -98,6 +98,7 @@ t/56_editfiles_a.out
 t/56_editfiles_b.out
 t/56_editfiles_edit.out
 t/58_vsplitmodule.t
+t/60_vpassert.out
 t/60_vpassert.t
 t/80_vppreproc.t
 t/80_vppreproc_cmped.out

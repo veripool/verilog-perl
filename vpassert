@@ -10,6 +10,7 @@ use Pod::Usage;
 use FindBin qw($RealBin);
 use File::Copy;
 use strict "vars";
+use POSIX;
 
 use lib 'blib/arch';
 use lib 'blib/lib';
@@ -53,9 +54,9 @@ $VERSION = '3.240';
        #'$ui' =>		# Used inside ucover_foreach_clk
        '$uinfo' =>		\&ins_uinfo,
        '$uwarn' =>		\&ins_uwarn,
-       #'$uassert_clk' =>	sub {shift; my $clk=shift; my $cond=shift; umessage_clk("%%E", $cond,$clk,@_); }, # May be confusing, try without
-       '$uerror_clk' =>		sub {shift; umessage_clk("%%E", 0, @_); },
-       '$uwarn_clk' =>		sub {shift; umessage_clk("%%W", 0, @_); },
+       #'$uassert_clk' =>	sub {shift; my $clk=shift; my $cond=shift; umessage_clk('%%E', $cond,$clk,@_); }, # May be confusing, try without
+       '$uerror_clk' =>		sub {shift; umessage_clk('%%E', 0, @_); },
+       '$uwarn_clk' =>		sub {shift; umessage_clk('%%W', 0, @_); },
        '$ucover_clk' =>		sub {shift; ucover_clk(@_); },
        '$ucover_foreach_clk' =>	sub {shift; ucover_foreach_clk(@_); },
        );
@@ -68,6 +69,9 @@ my $output_dirname = ".vpassert/";
 my $Opt_Quiet = 0;	# Don't blab about what files are being worked on
 my $Opt_Axiom;		# Athdl
 my $Opt_AllFiles = 0;	# Preprocess all files
+my $Opt_Call_Error;
+my $Opt_Call_Info;
+my $Opt_Call_Warn;
 my $Opt_Date = 0;	# Check dates
 my $Opt_NoPli = 0;	# Delete all pli calls
 $Opt_Vericov = 0;	# Add vericov on/off comments (messes up line # counts)
@@ -96,9 +100,13 @@ $Opt = new Verilog::Getopt();
 @ARGV = $Opt->parameter(@ARGV);	# Strip -y, +incdir+, etc
 
 if (! GetOptions (
+		  # When add flags, update _switch_line also as appropriate
 		  "-o=s"	=> \$output_dirname,
 		  "allfiles!"	=> \$Opt_AllFiles,
 		  "axiom!"	=> \$Opt_Axiom,
+		  "call-error=s" => \$Opt_Call_Error,
+		  "call-info=s" => \$Opt_Call_Info,
+		  "call-warn=s" => \$Opt_Call_Warn,
 		  "date!"	=> \$Opt_Date,
 		  "debug"	=> \&debug,
 		  "exclude=s"	=> sub {shift; push @Opt_Exclude, shift;},
@@ -125,11 +133,17 @@ sub _switch_line {
     # If any of these flags change, we must regenerate output
     my $sw = "";
     $sw .= " --axiom" if $Opt_Axiom;
+    $sw .= " --call-error=$Opt_Call_Error" if $Opt_Call_Error;
+    $sw .= " --call-info=$Opt_Call_Info" if $Opt_Call_Info;
+    $sw .= " --call-warn=$Opt_Call_Warn" if $Opt_Call_Warn;
     $sw .= " --line" if $Opt_Line;
     $sw .= " --minimum=$Opt_Minimum" if defined $Opt_Minimum;
     $sw .= " --nopli" if $Opt_NoPli;
     $sw .= " --realintent" if $Opt_RealIntent;
     $sw .= " --stop" if $Opt_Stop;
+    $sw .= " --synthcov" if $Opt_Synthcov;
+    $sw .= " --timeformat-precision=$Opt_Timeformat_Precision" if $Opt_Timeformat_Precision;
+    $sw .= " --timeformat-units=$Opt_Timeformat_Units" if $Opt_Timeformat_Units;
     $sw .= " --vericov" if $Opt_Vericov;
     $sw .= " --verilator" if $Opt_Verilator;
     $sw .= " --vcs" if $Opt_Vcs;
@@ -196,15 +210,15 @@ sub parameter {
 # Functions that transform the tokens
 
 # Note -I is specially detected below
-sub ins_uinfo   { shift; sendout( message (get_lineinfo(), 1, "-I",  1, "", @_)); }
-sub ins_uwarn   { shift; sendout( message (get_lineinfo(), 1, "%%W", 1, "", @_)); }
-sub ins_uerror  { shift; sendout( message (get_lineinfo(), 1, "%%E", 1, "", @_)); }
+sub ins_uinfo   { shift; sendout( message (get_lineinfo(), 1, '-I',  1, "", @_)); }
+sub ins_uwarn   { shift; sendout( message (get_lineinfo(), 1, '%%W', 1, "", @_)); }
+sub ins_uerror  { shift; sendout( message (get_lineinfo(), 1, '%%E', 1, "", @_)); }
 
 sub ins_uassert {
     shift;
     my $cond = shift;
     my @params = @_;
-    sendout( message (get_lineinfo(), 1, "%%E", $cond, "", 0, @params));
+    sendout( message (get_lineinfo(), 1, '%%E', $cond, "", 0, @params));
 }
 
 sub ins_uassert_info {
@@ -532,7 +546,7 @@ sub message {
     my $out = message_header();
 
     # These long lines without breaks are intentional; I want to preserve line numbers
-    my $is_warn = (($char eq "%%E") || ($char eq "%%W") || ($char eq "-i"));
+    my $is_warn = (($char eq '%%E') || ($char eq '%%W') || ($char eq "-i"));
 
     if ($cond ne "1") {
 	# Conditional code, for $uassert
@@ -554,23 +568,42 @@ sub message {
     }
 
     my $task;
-    if (($char eq "-I") || ($char eq "-i")) {}
-    elsif ($char eq "%%E") {
-	$task = ($Opt_Stop ? '$stop;' : "`pli.errors = `pli.errors+1;");
-    } elsif ($char eq "%%W") {
-	$task = ($Opt_Stop ? '$stop;' : "`pli.warnings = `pli.warnings+1;");
-    } else { die "%Error: Unknown message character class '$char'\n"; }
+    my $call;
+    if (($char eq '-I') || ($char eq '-i')) {
+	if ($Opt_Call_Info) {
+	    $call = $Opt_Call_Info;
+	}
+    }
+    elsif ($char eq '%%E') {
+	if ($Opt_Call_Error) {
+	    $call = $Opt_Call_Error;
+	} else {
+	    $task = ($Opt_Stop ? '$stop;' : "`pli.errors = `pli.errors+1;");
+	}
+    }
+    elsif ($char eq '%%W') {
+	if ($Opt_Call_Error) {
+	    $call = $Opt_Call_Warn;
+	} else {
+	    $task = ($Opt_Stop ? '$stop;' : "`pli.warnings = `pli.warnings+1;");
+	}
+    }
+    else { die "%Error: Unknown message character class '$char'\n"; }
 
     {	# if's body
 	$out .= "begin";
 	$out .= " \$timeformat($Opt_Timeformat_Units, $Opt_Timeformat_Precision,\"\",20);"
 	    if defined $Opt_Timeformat_Units;
-	$out .= " \$write (\"[%0t] ${char}:${lineinfo} ";
+	$out .= " \$write (\"[%0t] ${char}:${lineinfo} "
+	    if !$call;
+	$out .= " ${call} (\"" if $call;
 
 	my $par = $params[1];
 	$par =~ s/^\s*\"//;
 
-	$out .= "$par,\$time$otherargs";
+	$out .= "$par";
+	$out .= ",\$time" if !$call;
+	$out .= $otherargs;
 	for my $parn (2 .. $#params) {
 	    my $p = $params[$parn];
 	    $out .= ", $p";
@@ -977,7 +1010,7 @@ sub vpassert_process_one {
 	    # Didn't need to do processing
 	    $no_output = 1;
 	    print "nooutput: vpassert_process ($srcfile, $destfile,0 )\n" if ($Debug);
-	    copy($srcfile,$destfile);
+	    nochange_copy($srcfile,$destfile);
 	} else {
 	    # Make sure didn't clobber another directory's file
 	    print "madenew:  vpassert_process ($srcfile, $destfile,0 )\n" if ($Debug);
@@ -995,6 +1028,25 @@ sub vpassert_process_one {
 	}
     }
     $file_directory{$destfile} = $srcfile;
+}
+
+sub nochange_copy {
+    my $srcfile = shift;
+    my $dstfile = shift;
+    my $fhw = IO::File->new(">$dstfile");
+    my $fhr = IO::File->new("<$srcfile");
+    if (!$fhr) { warn "%Warning: $! $srcfile\n"; return; }
+    $fhw->print("`line 1 \"$srcfile\" 0\n") if $Opt_Line;
+    # Unfortunately File::Copy::copy overwrites our line statement.
+    my $eof;
+    while (!$eof) {
+	my $data = '';
+	$!=undef;
+	my $rv = $fhr->sysread($data, POSIX::BUFSIZ, 0);
+	#print "RRV=$rv b=$!\n" if $Debug;
+	$eof = 1 if !$rv || (!$fhr || ($! && $! != POSIX::EWOULDBLOCK));
+	$fhw->print($data);
+    }
 }
 
 ######################################################################
@@ -1407,6 +1459,21 @@ search a large number of -v directories to find it.
 =item --axiom
 
 Special Axiom ATHDL enables/disables added around unreachable code.
+
+=item --call-error <function>
+
+When $uerror (or $uassert etc.) wants to display a message, call the
+specified function instead of $display and $stop.
+
+=item --call-info <function>
+
+When $uinfo wants to display a message, call the specified function instead
+of $display.
+
+=item --call-warn <function>
+
+When $uwarn (or $uwarn_clk etc.) wants to display a message, call the
+specified function instead of $display and $stop.
 
 =item --date
 

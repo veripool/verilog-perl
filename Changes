@@ -3,7 +3,9 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.2****
+* Verilog::Language 3.2***
+
+***	Add vpassert --call-* switches to use user's PLI display functions.
 
 ****	Fix preprocessing some DOS carriage returns, broke in 3.240.
 
