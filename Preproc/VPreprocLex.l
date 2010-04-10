@@ -177,7 +177,6 @@ drop		[\032]
 <DEFVAL>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\n",1); } /* Return, but not \ is part of define value */
 <DEFVAL>[^\/\*\n\r\\]+	|
 <DEFVAL>[\\][^\n\r]	|
-<DEFVAL>{word}		{ appendDefValue(yytext,yyleng); }
 <DEFVAL>.		{ appendDefValue(yytext,yyleng); }
 
 	/* Comments inside define values - if embedded get added to define value per spec */
