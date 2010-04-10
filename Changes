@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.2****
+
+****	Fix preprocessing some DOS carriage returns, broke in 3.240.
+
 * Verilog::Language 3.240 2010/03/29
 
 ***	Add vpassert vp_coverage_off/on pragmas.
