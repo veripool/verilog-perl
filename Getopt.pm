@@ -16,7 +16,7 @@ use Cwd;
 ######################################################################
 #### Configuration Section
 
-$VERSION = '3.240';
+$VERSION = '3.241';
 
 # Basenames we should ignore when recursing directories,
 # Because they contain large files of no relevance

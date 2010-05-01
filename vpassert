@@ -34,7 +34,7 @@ use vars qw ($VERSION $Debug $Opt %Vpassert_Conversions
 	     %Files %Files_Read
 	     %File_Dest
 	     );
-$VERSION = '3.240';
+$VERSION = '3.241';
 
 ######################################################################
 # configuration
