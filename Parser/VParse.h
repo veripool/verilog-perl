@@ -133,8 +133,8 @@ public:
     void inLineDirective(const char* text) { m_inFilelinep = inFilelinep()->lineDirective(text); }
 
     string unreadback() const { return (m_useUnreadback ? m_unreadback : "new(...,use_unreadback=>0) was used"); }
-    void unreadback(const string& text) { if (m_useUnreadback) m_unreadback = text; }
-    void unreadbackCat(const string& text) { if (m_useUnreadback) m_unreadback += text; }
+    void unreadback(const string& text) { if (m_useUnreadback && callbackMasterEna()) m_unreadback = text; }
+    void unreadbackCat(const string& text) { if (m_useUnreadback && callbackMasterEna()) m_unreadback += text; }
     void unreadbackCat(const char* textp, size_t len) { unreadbackCat(string(textp,len)); }
 
     // The default behavior is to pass all unknown `defines right through.

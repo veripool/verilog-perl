@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add vpassert --call-* switches to use user's PLI display functions.
 
+****	Disable Parser unreadback() data during std:: parsing. [Mark Nodine]
+
 ****	Fix preprocessing some DOS carriage returns, broke in 3.240.
 
 * Verilog::Language 3.240 2010/03/29
