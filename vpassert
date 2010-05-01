@@ -10,7 +10,7 @@ use Pod::Usage;
 use FindBin qw($RealBin);
 use File::Copy;
 use strict "vars";
-use POSIX;
+use POSIX qw();
 
 use lib 'blib/arch';
 use lib 'blib/lib';
