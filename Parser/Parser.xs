@@ -93,7 +93,6 @@ public:
     // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen
 
     VFileLine* cbFilelinep() const { return m_cbFilelinep; }
-    void cbFileline(const string& filename, int lineno) { m_cbFilelinep = m_cbFilelinep->create(filename, lineno); }
     void cbFileline(VFileLine* filelinep) { m_cbFilelinep = filelinep; }
 
     VParserXs(VFileLine* filelinep, av* symsp, bool sigparser, bool useUnreadback)
@@ -374,7 +373,7 @@ CODE:
     if (!THIS) XSRETURN_UNDEF;
     if (items > 1) {
 	THIS->inFileline(flagp, THIS->inFilelinep()->lineno());
-	THIS->cbFileline(flagp, THIS->inFilelinep()->lineno());
+	THIS->cbFileline(THIS->inFilelinep());
     }
     RETVAL = THIS->cbFilelinep()->filename().c_str();
 }
@@ -405,7 +404,7 @@ CODE:
     if (!THIS) XSRETURN_UNDEF;
     if (items > 1) {
 	THIS->inFileline(THIS->inFilelinep()->filename(), flag);
-	THIS->cbFileline(THIS->inFilelinep()->filename(), flag);
+	THIS->cbFileline(THIS->inFilelinep());
     }
     RETVAL = (THIS->cbFilelinep()->lineno());
 }
