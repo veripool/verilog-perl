@@ -53,9 +53,9 @@ public:
     virtual void init(const string& filename, int lineno);
     virtual ~VFileLine() {}
     // ACCESSORS
-    virtual int lineno () const { return m_lineno; }	///< Return line number
-    virtual const string filename () const { return m_filename; }	///< Return filename
-    virtual const string filebasename () const;	///< Filename with any directory stripped
+    int lineno () const { return m_lineno; }	///< Return line number
+    const string filename () const { return m_filename; }	///< Return filename
+    const string filebasename () const;	///< Filename with any directory stripped
     // METHODS
     virtual void fatal(const string& msg);	///< Report a fatal error at given location
     virtual void error(const string& msg);	///< Report a error at given location
