@@ -9,6 +9,8 @@ module v_hier_sub (/*AUTOARG*/
    output [3:0] qvec	/* Comment for v_hier_sub, qvec */
    );
 
+   parameter FROM_DEFPARAM = 1;
+
    supply1 	a1;
 
    v_hier_subsub #(

@@ -20,6 +20,7 @@ Module:v_hier_sub  Kwd:module  File:verilog/v_hier_sub.v
   Port:avec  Dir:in  DataT:[3:0]  Array:
   Port:clk  Dir:in  DataT:  Array:
   Port:qvec  Dir:out  DataT:[3:0]  Array:
+  Net:FROM_DEFPARAM    DeclT:parameter  NetT:  DataT:  Array:  Value:1
   Net:K    DeclT:genvar  NetT:  DataT:  Array:
   Net:K_UNUSED    DeclT:genvar  NetT:  DataT:  Array:
   Net:a1  I  DeclT:net  NetT:supply1  DataT:  Array:
@@ -67,6 +68,7 @@ Module:v_hier_top  Kwd:module  File:verilog/v_hier_top.v
               Port:clk  Dir:in  DataT:  Array:
     Pin:qvec  Net:qvec[3:0]
               Port:qvec  Dir:out  DataT:[3:0]  Array:
+  Defparam:defparam  lhs:sub.FROM_DEFPARAM  rhs:2
   ContAssign:assign  lhs:asn_clk  rhs:clk
 Module:v_hier_top2  Kwd:module  File:verilog/v_hier_top2.v
   Port:clk  Dir:in  DataT:  Array:

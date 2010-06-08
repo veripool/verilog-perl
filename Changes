@@ -5,6 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.24**
 
+**	Add parsing of "defparam", including SigParser::defparam callback,
+	Netlist::ContAssign object, and accessors. [Pierre-David Pfister]
+
 ****	Fix complex {...} port declarations, bug262.  [Evgeni Stavinov]
 
 * Verilog::Language 3.241 2010/05/01

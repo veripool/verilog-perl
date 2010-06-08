@@ -19,6 +19,7 @@ $VERSION = '3.241';
 our @_Callback_Names = qw(
   attribute
   contassign
+  defparam
   endcell
   endinterface
   endmodport
@@ -95,6 +96,12 @@ sub comment {
 # user copies them from here to their program.
 
 sub contassign {
+    my $self = shift;
+    my $lhs = shift;
+    my $rhs = shift;
+}
+
+sub defparam {
     my $self = shift;
     my $lhs = shift;
     my $rhs = shift;
@@ -287,6 +294,11 @@ This method is called at a continuous "assign" keyword, with the left and
 right hand part of the assignment.  Note that "wire" initializations are
 not considered assignments; those are received via the var callback's value
 parameter.
+
+=item $self->defparam ( $token, $lhs, $rhs )
+
+This method is called at a "defparam" keyword, with the left and right hand
+part of the assignment.
 
 =item $self->endcell ( $token )
 

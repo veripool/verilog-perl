@@ -6,6 +6,7 @@ package Verilog::Netlist::Module;
 
 use Verilog::Netlist;
 use Verilog::Netlist::ContAssign;
+use Verilog::Netlist::Defparam;
 use Verilog::Netlist::Port;
 use Verilog::Netlist::Net;
 use Verilog::Netlist::Cell;
@@ -210,6 +211,21 @@ sub new_contassign {
     }
     # Create a new object; pass the potentially modified options
     my $newref = new Verilog::Netlist::ContAssign(%params, module=>$self,);
+    # Add the new object to the hash of statements in this module
+    $self->_statements($params{name}, $newref);
+    return $newref;
+}
+
+sub new_defparam {
+    my $self = shift;
+    my %params = @_; # name=>, filename=>, lineno=>, keyword=> etc
+    # Create a new statement under this module
+    if (!defined $params{name} || $params{name} eq '') {
+	# Blank instance name; invent a new one; use the next instance number in this module t$
+	$params{name} = '__unnamed_statement_' . ((scalar keys %{$self->_statements}) + 1);
+    }
+    # Create a new object; pass the potentially modified options
+    my $newref = new Verilog::Netlist::Defparam(%params, module=>$self,);
     # Add the new object to the hash of statements in this module
     $self->_statements($params{name}, $newref);
     return $newref;

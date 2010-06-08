@@ -73,6 +73,7 @@ sub new {
 		);
 
     $self->{use_cb_contassign} = $self->{use_vars} if !exists $self->{use_cb_contassign};
+    $self->{use_cb_defparam} = $self->{use_vars} if !exists $self->{use_cb_defparam};
     $self->{use_cb_pin}    = $self->{use_vars} if !exists $self->{use_cb_pin};
     $self->{use_cb_port}   = $self->{use_vars} if !exists $self->{use_cb_port};
     $self->{use_cb_var}    = $self->{use_vars} if !exists $self->{use_cb_var};
@@ -333,9 +334,9 @@ included (no callbacks will be involed) when suspected to be necessary.
 Adding "use_unreadback => 0" will disable later use of the unreadback
 method, which may improve performance.
 
-Adding "use_vars => 0" will disable contassign, pin, var and port callbacks to
-Verilog::SigParser.  This can greatly speed parsing when variable and
-interconnect information is not required.
+Adding "use_vars => 0" will disable contassign, defparam, pin, var and port
+callbacks to Verilog::SigParser.  This can greatly speed parsing when
+variable and interconnect information is not required.
 
 =item $parser->callback_names ()
 

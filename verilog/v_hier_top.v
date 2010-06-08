@@ -9,6 +9,8 @@ module v_hier_top (/*AUTOARG*/
    clk
    );
    input clk;	/* pragma jsc_clk */
+
+   defparam sub.FROM_DEFPARAM = 2;
    `hsub sub (/*AUTOINST*/
 	      // Outputs
 	      .qvec			(qvec[3:0]),

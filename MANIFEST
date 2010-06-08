@@ -11,6 +11,7 @@ META.yml
 Netlist.pm
 Netlist/Cell.pm
 Netlist/ContAssign.pm
+Netlist/Defparam.pm
 Netlist/File.pm
 Netlist/Interface.pm
 Netlist/Logger.pm
