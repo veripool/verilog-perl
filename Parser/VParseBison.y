@@ -736,6 +736,8 @@ portE:				// ==IEEE: [ port ]
 	|	portDirNetE yVAR data_type      portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE($3); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
 	|	portDirNetE yVAR implicit_typeE portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE($3); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
 	|	portDirNetE /*implicit*/        portSig variable_dimensionListE sigAttrListE '=' constExpr	{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, $6); PINNUMINC(); }
+	//
+	|	'{' list_of_portsE '}'			{ }
 	;
 
 portDirNetE:			// IEEE: part of port, optional net type and/or direction

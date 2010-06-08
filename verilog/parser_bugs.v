@@ -430,3 +430,8 @@ module bug228;
    wire net1, net2, net3;
    nmos #(0:1:10, 0:1:10, 0:1:10) u (net1, net2, net3);
 endmodule
+
+module bug262 ( Y, {A1, A2} , B );
+   output  Y;
+   input   A1, A2, B;
+endmodule
