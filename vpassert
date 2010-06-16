@@ -3,18 +3,20 @@
 ######################################################################
 
 require 5.005;
-use Getopt::Long;
-use IO::File;
-use IO::Dir;
-use Pod::Usage;
 use FindBin qw($RealBin);
-use File::Copy;
-use strict "vars";
-use POSIX qw();
+use lib "$RealBin/blib/arch";
+use lib "$RealBin/blib/lib";
+use lib "$RealBin";
 
-use lib 'blib/arch';
-use lib 'blib/lib';
-use lib '.';
+use File::Copy;
+use FindBin qw($RealBin);
+use Getopt::Long;
+use IO::Dir;
+use IO::File;
+use POSIX qw();
+use Pod::Usage;
+use strict "vars";
+
 use Verilog::Parser;
 use Verilog::Getopt;
 

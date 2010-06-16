@@ -3,9 +3,10 @@
 ######################################################################
 
 require 5.005;
-use lib 'blib/arch';
-use lib 'blib/lib';
-use lib '.';
+use FindBin qw($RealBin);
+use lib "$RealBin/blib/arch";
+use lib "$RealBin/blib/lib";
+use lib "$RealBin";
 
 use Getopt::Long;
 use IO::File;

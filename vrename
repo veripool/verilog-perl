@@ -2,15 +2,15 @@
 # See copyright, etc in below POD section.
 ######################################################################
 
-require 5.005;
 package main;
-use lib 'blib/arch';
-use lib 'blib/lib';
-use lib '.';
+use FindBin qw($RealBin);
+use lib "$RealBin/blib/arch";
+use lib "$RealBin/blib/lib";
+use lib "$RealBin";
 
 use Getopt::Long;
-use IO::File;
 use IO::Dir;
+use IO::File;
 use Pod::Usage;
 
 use Verilog::Language;
