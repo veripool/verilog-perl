@@ -103,6 +103,7 @@ t/60_vpassert.out
 t/60_vpassert.t
 t/80_vppreproc.t
 t/80_vppreproc_cmped.out
+t/80_vppreproc_defines.out
 t/80_vppreproc_none.out
 t/80_vppreproc_simple.out
 t/85_vhier.t
