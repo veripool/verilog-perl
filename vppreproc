@@ -24,6 +24,7 @@ $VERSION = '3.250';
 $Debug = 0;
 my $opt_output_filename = undef;
 my $opt_blank=1;
+my $opt_dump_defines;
 my @opt_files;
 my @opt_pp_flags;
 
@@ -40,6 +41,7 @@ if (! GetOptions (
 		  "o=s"		=> \$opt_output_filename,
 		  "blank!"	=> \$opt_blank,
 		  "comment!"	=> sub { push @opt_pp_flags, (keep_comments=>$_[1]); },
+		  "dump-defines!" => \$opt_dump_defines,
 		  "line!"	=> sub { push @opt_pp_flags, (line_directives=>$_[1]); },
 		  "pedantic!"	=> sub { push @opt_pp_flags, (pedantic=>$_[1]); },
 		  "simple!"	=> sub { if ($_[1]) {
@@ -74,7 +76,15 @@ foreach my $file (@opt_files) {
     # Alternatively, use $vp->getall for better performance
     while (defined (my $line = $vp->getline())) {
 	next if !$opt_blank && $line =~ /^\s*[\n]?$/;
-	print $fh $line;
+	print $fh $line unless $opt_dump_defines;
+    }
+}
+
+if ($opt_dump_defines) {
+    foreach my $name ($Opt->define_names_sorted) {
+	my $par = $Opt->defparams($name);  $par="" if !$par;
+	my $value = $Opt->defvalue($name);
+	printf "`define %s%s %s\n", $name,$par,$value;
     }
 }
 
@@ -173,6 +183,11 @@ Displays this message and program version and exits.
 =item --o I<file>
 
 Use the given filename for output instead of stdout.
+
+=item --dump-defines
+
+Suppress normal output, and instead print a list of all defines existing at
+the end of processing the input file.
 
 =item --noblank
 

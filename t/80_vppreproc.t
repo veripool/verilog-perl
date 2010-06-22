@@ -9,7 +9,7 @@ use IO::File;
 use strict;
 use Test;
 
-BEGIN { plan tests => 6 }
+BEGIN { plan tests => 8 }
 BEGIN { require "t/test_utils.pl"; }
 
 print "Checking vppreproc...\n";
@@ -17,6 +17,7 @@ print "Checking vppreproc...\n";
 vppreproc ("t/80_vppreproc_none.out",   "test_dir/vppreproc_none.v",	"");
 vppreproc ("t/80_vppreproc_cmped.out",  "test_dir/vppreproc_cmped.v",	"--nocomment --pedantic");
 vppreproc ("t/80_vppreproc_simple.out", "test_dir/vppreproc_simple.v", "--simple");
+vppreproc ("t/80_vppreproc_defines.out", "test_dir/vppreproc_defines.v", "--dump-defines");
 
 sub vppreproc {
     my $checkname = shift;

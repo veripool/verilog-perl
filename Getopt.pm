@@ -244,7 +244,7 @@ sub get_parameters {
     my %args = (gcc_stlyle => $self->{gcc_style},);
     # Defines
     my @params = ();
-    foreach my $def (sort (keys %{$self->{defines}})) {
+    foreach my $def ($self->define_names_sorted) {
 	my $defvalue = $self->defvalue($def);
 	$defvalue = "=".($defvalue||"") if (defined $defvalue && $defvalue ne "");
 	if ($args{gcc_style}) {
@@ -429,6 +429,11 @@ sub map_directories {
 
 #######################################################################
 # Getopt functions
+
+sub define_names_sorted {
+    my $self = shift;
+    return (sort (keys %{$self->{defines}}));
+}
 
 sub defcmdline {
     my $self = shift;
@@ -627,6 +632,10 @@ also be called outside parsing to predefine values.
 An optional third argument specifies parameters to the define, and a fourth
 argument if true indicates the define was set on the command line and
 should not be removed by `undefineall.
+
+=item $self->define_names_sorted
+
+Return sorted list of all define names that currently exist.
 
 =item $self->defparams ( $token )
 
