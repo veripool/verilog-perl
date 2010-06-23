@@ -272,23 +272,23 @@ verilog/inc1.v:70:
 verilog/inc1.v:71:    initial begin
 COMMENT: //$display(`msg( \`, \`));  // Illegal
 verilog/inc1.v:72:        /*CMT*/ 
-verilog/inc1.v:73:       $display("pre DS<thrupre DS<thrumid> thrupost> post: \"right side\"");
+verilog/inc1.v:73:       $display("pre `thru(thrupre `thru(thrumid) thrupost) post: \"right side\"");
 verilog/inc1.v:74:       $display("left side: \"right side\"");
 verilog/inc1.v:75:       $display("left side : \"right side \"");
-verilog/inc1.v:76:       $display("DS<left_side> : \"DS<right_side> \"");
-verilog/inc1.v:77:       $display("DS<na> : \"DS<right_side> \"");
-verilog/inc1.v:78:       $display("prep ( midp1 DS<left_side> midp2 ( outp ) ) : \"DS<right_side> \"");
-verilog/inc1.v:79:       $display("DS<na>: \"DS<na>DS<na>\"");
+verilog/inc1.v:76:       $display("`ls : \"`rs \"");
+verilog/inc1.v:77:       $display("`noarg : \"`rs \"");
+verilog/inc1.v:78:       $display("prep ( midp1 `ls midp2 ( outp ) ) : \"`rs \"");
+verilog/inc1.v:79:       $display("`noarg: \"`noarg`noarg\"");
 COMMENT: // Results vary between simulators
-verilog/inc1.v:80:       $display("DS<`ls `rs	 /*CMT*/> : \"DS<`ls `rs	 /*CMT*/> \"");    /*CMT*/ 
+verilog/inc1.v:80:       $display("`thruthru : \"`thruthru \"");    /*CMT*/ 
 COMMENT: // Empty
-verilog/inc1.v:81:       $display("DS<>: \"\"");   /*CMT*/ 
-verilog/inc1.v:82:       $display("DS<left side>: \"DS<right side>\"");
-verilog/inc1.v:83:       $display("DS<left side > : \"DS<right side > \"");
+verilog/inc1.v:81:       $display("`thru(): \"\"");   /*CMT*/ 
+verilog/inc1.v:82:       $display("`thru(left side): \"`thru(right side)\"");
+verilog/inc1.v:83:       $display("`thru( left side ) : \"`thru( right side ) \"");
 verilog/inc1.v:84: 
 verilog/inc1.v:85:  
 verilog/inc1.v:85: 
-verilog/inc1.v:87:       $display("twoline: \"DS<first   second>\"");
+verilog/inc1.v:87:       $display("twoline: \"`twoline\"");
 verilog/inc1.v:88: 
 COMMENT: //$display(`msg(left side, \ right side \ ));  // Not sure \{space} is legal.
 verilog/inc1.v:89:        /*CMT*/ 
@@ -428,7 +428,7 @@ verilog/inc1.v:180: DS<begin>DS<end>    /*CMT*/
 COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
 verilog/inc1.v:181: DS<DS<begin>DS<end>>     /*CMT*/ 
 COMMENT: // No space "beginend"
-verilog/inc1.v:182: "DS<begin>DS<end>"   /*CMT*/ 
+verilog/inc1.v:182: "`BEGIN`END"   /*CMT*/ 
 verilog/inc1.v:183: 
 COMMENT: //======================================================================
 verilog/inc1.v:184:  /*CMT*/ 
@@ -564,14 +564,14 @@ verilog/inc1.v:278:
 verilog/inc1.v:279: EXP: clxx_scen
 verilog/inc1.v:280: DS<clxx_scen>
 verilog/inc1.v:281: EXP: clxx_scen
-verilog/inc1.v:282: "DS<clxx_scen>"
+verilog/inc1.v:282: "`msg_scen_(clxx)"
 verilog/inc1.v:283:  
 verilog/inc1.v:284: EXP: do if (start("verilog/inc1.v", 25)) begin  message({"Blah-", "clx_scen", " end"}); end  while(0);
 COMMENT: /* synopsys translate_off */
 verilog/inc1.v:285: DS<DS<do         /*CMT*/           
 verilog/inc1.v:285: `line 285 "verilog/inc1.v" 0
 COMMENT: /* synopsys translate_on */
-verilog/inc1.v:285:         if (start("verilog/inc1.v", 285)) begin    	 message({"Blah-", "DS<clx_scen>", " end"});        end         /*CMT*/      while(0)>;>
+verilog/inc1.v:285:         if (start("verilog/inc1.v", 285)) begin    	 message({"Blah-", "`msg_scen_(clx)", " end"});        end         /*CMT*/      while(0)>;>
 verilog/inc1.v:286: 
 COMMENT: //======================================================================
 verilog/inc1.v:287:  /*CMT*/ 

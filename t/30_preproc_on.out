@@ -235,21 +235,21 @@ verilog/inc1.v:69:  // Doesn't expand
 verilog/inc1.v:70:  
 verilog/inc1.v:71:    initial begin
 verilog/inc1.v:72:       //$display(`msg( \`, \`));  // Illegal
-verilog/inc1.v:73:       $display("pre thrupre thrumid thrupost post: \"right side\"");
+verilog/inc1.v:73:       $display("pre `thru(thrupre `thru(thrumid) thrupost) post: \"right side\"");
 verilog/inc1.v:74:       $display("left side: \"right side\"");
 verilog/inc1.v:75:       $display("left side : \"right side \"");
-verilog/inc1.v:76:       $display("left_side : \"right_side \"");
-verilog/inc1.v:77:       $display("na : \"right_side \"");
-verilog/inc1.v:78:       $display("prep ( midp1 left_side midp2 ( outp ) ) : \"right_side \"");
-verilog/inc1.v:79:       $display("na: \"nana\"");
-verilog/inc1.v:80:       $display("`ls `rs : \"`ls `rs \"");   // Results vary between simulators
-verilog/inc1.v:81:       $display(": \"\"");  // Empty
-verilog/inc1.v:82:       $display("left side: \"right side\"");
-verilog/inc1.v:83:       $display("left side  : \"right side  \"");
+verilog/inc1.v:76:       $display("`ls : \"`rs \"");
+verilog/inc1.v:77:       $display("`noarg : \"`rs \"");
+verilog/inc1.v:78:       $display("prep ( midp1 `ls midp2 ( outp ) ) : \"`rs \"");
+verilog/inc1.v:79:       $display("`noarg: \"`noarg`noarg\"");
+verilog/inc1.v:80:       $display("`thruthru : \"`thruthru \"");   // Results vary between simulators
+verilog/inc1.v:81:       $display("`thru(): \"\"");  // Empty
+verilog/inc1.v:82:       $display("`thru(left side): \"`thru(right side)\"");
+verilog/inc1.v:83:       $display("`thru( left side ) : \"`thru( right side ) \"");
 verilog/inc1.v:84: 
 verilog/inc1.v:85:  
 verilog/inc1.v:85: 
-verilog/inc1.v:87:       $display("twoline: \"first   second\"");
+verilog/inc1.v:87:       $display("twoline: \"`twoline\"");
 verilog/inc1.v:88: 
 verilog/inc1.v:89:       //$display(`msg(left side, \ right side \ ));  // Not sure \{space} is legal.
 verilog/inc1.v:90:       $write("*-* All Finished *-*\n");
@@ -358,7 +358,7 @@ verilog/inc1.v:178:
 verilog/inc1.v:179:  
 verilog/inc1.v:180: beginend   // 2001 spec doesn't require two tokens, so "beginend" ok
 verilog/inc1.v:181: beginend    // 2001 spec doesn't require two tokens, so "beginend" ok
-verilog/inc1.v:182: "beginend"  // No space "beginend"
+verilog/inc1.v:182: "`BEGIN`END"  // No space "beginend"
 verilog/inc1.v:183: 
 verilog/inc1.v:184: //======================================================================
 verilog/inc1.v:185: // bug106
@@ -468,12 +468,12 @@ verilog/inc1.v:278:
 verilog/inc1.v:279: EXP: clxx_scen
 verilog/inc1.v:280: clxx_scen
 verilog/inc1.v:281: EXP: clxx_scen
-verilog/inc1.v:282: "clxx_scen"
+verilog/inc1.v:282: "`msg_scen_(clxx)"
 verilog/inc1.v:283:  
 verilog/inc1.v:284: EXP: do if (start("verilog/inc1.v", 25)) begin  message({"Blah-", "clx_scen", " end"}); end  while(0);
 verilog/inc1.v:285: do        /* synopsys translate_off */          
 verilog/inc1.v:285: `line 285 "verilog/inc1.v" 0
-verilog/inc1.v:285:         if (start("verilog/inc1.v", 285)) begin    	 message({"Blah-", "clx_scen", " end"});        end        /* synopsys translate_on */     while(0);
+verilog/inc1.v:285:         if (start("verilog/inc1.v", 285)) begin    	 message({"Blah-", "`msg_scen_(clx)", " end"});        end        /* synopsys translate_on */     while(0);
 verilog/inc1.v:286: 
 verilog/inc1.v:287: //======================================================================
 verilog/inc1.v:288: 

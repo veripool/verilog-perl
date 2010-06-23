@@ -220,7 +220,7 @@ drop		[\032]
 			  } else {
 			      yy_pop_state(); return (VP_DEFARG);
 			}}
-<ARGMODE>"`"{symb}	{ return (VP_DEFREF); }  /* defref in defref */
+<ARGMODE>"`"{symb}	{ appendDefValue(yytext,yyleng); }  /* defref in defref */
 <ARGMODE>[^\/\*\n\r\\(,){}\[\]\"`]+	|
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }
 
