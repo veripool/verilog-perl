@@ -303,3 +303,13 @@ EXP: This is fooed_2
 `NOPARAM()
 `NOPARAM( )
 //======================================================================
+// It's unclear if the spec allows this; is text_macro_idenitfier before or after substitution?
+`define NODS_DEFINED
+`define NODS_INDIRECT(x) x
+`ifndef `NODS_INDIRECT(NODS_DEFINED)
+   `error "Indirect failed"
+`endif
+`ifdef `NODS_INDIRECT(NODS_UNDEFINED)
+   `error "Indirect2 failed"
+`endif
+//======================================================================

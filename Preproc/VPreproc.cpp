@@ -773,6 +773,10 @@ int VPreprocImp::getToken() {
 		if (!m_off) return tok;
 		else goto next_tok;
 	    }
+	    else if (tok==VP_DEFREF) {
+		// IE, `ifdef `MACRO(x): Substitue and come back here when state pops.
+		break;
+	    }
 	    else {
 		error((string)"Expecting define name. Found: "+tokenName(tok)+"\n");
 		goto next_tok;

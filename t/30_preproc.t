@@ -24,7 +24,8 @@ sub def_substitute {
     my ($self,$out) = @_;
     # Only do this for some tests, as it makes the output look strange
     if ($self->{_test_def_substitute}
-	&& $out !~ /^".*"$/) {  # And don't corrupt `include test
+	&& $out !~ /^".*"$/  # And don't corrupt `include test
+	&& $out !~ /NODS/) {  # Nor special cases
 	return "DS<".$out.">";
     } else {
 	return $out;

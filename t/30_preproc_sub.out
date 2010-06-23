@@ -600,4 +600,20 @@ verilog/inc1.v:305: DS<np>
 verilog/inc1.v:306: DS<np>
 COMMENT: //======================================================================
 verilog/inc1.v:307:  /*CMT*/ 
-verilog/inc1.v:308: `line 308 "verilog/inc1.v" 2
+COMMENT: // It's unclear if the spec allows this; is text_macro_idenitfier before or after substitution?
+verilog/inc1.v:308:  /*CMT*/ 
+verilog/inc1.v:309:  
+verilog/inc1.v:310:  
+verilog/inc1.v:311:  
+verilog/inc1.v:312:     
+verilog/inc1.v:313: 
+verilog/inc1.v:313: `line 313 "verilog/inc1.v" 0
+verilog/inc1.v:313: 
+verilog/inc1.v:314:  
+verilog/inc1.v:315:     
+verilog/inc1.v:316: 
+verilog/inc1.v:316: `line 316 "verilog/inc1.v" 0
+verilog/inc1.v:316: 
+COMMENT: //======================================================================
+verilog/inc1.v:317:  /*CMT*/ 
+verilog/inc1.v:318: `line 318 "verilog/inc1.v" 2

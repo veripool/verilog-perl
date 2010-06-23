@@ -161,4 +161,6 @@ verilog/inc1.v:300: EXP: This is fooed_2
 verilog/inc1.v:301: This is fooed_2
 verilog/inc1.v:305: np
 verilog/inc1.v:306: np
-verilog/inc1.v:308: `line 308 "verilog/inc1.v" 2
+verilog/inc1.v:313: `line 313 "verilog/inc1.v" 0
+verilog/inc1.v:316: `line 316 "verilog/inc1.v" 0
+verilog/inc1.v:318: `line 318 "verilog/inc1.v" 2
