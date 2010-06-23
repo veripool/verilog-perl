@@ -113,7 +113,7 @@ struct VPreprocImp : public VPreprocOpaque {
 	return states[s];
     };
 
-    ProcState	m_state;	///< Current state of parser
+    stack<ProcState>	m_states; ///< Current state of parser
     int		m_off;		///< If non-zero, ifdef level is turned off, don't dump text
     string	m_lastSym;	///< Last symbol name found.
     string	m_formals;	///< Last formals found
@@ -136,7 +136,7 @@ struct VPreprocImp : public VPreprocOpaque {
 	m_filelinep = filelinep;
 	m_debug = 0;
 	m_lexp = NULL;	 // Closed.
-	m_state = ps_TOP;
+	m_states.push(ps_TOP);
 	m_off = 0;
 	m_lineChars = "";
 	m_lastSym = "";
@@ -172,6 +172,21 @@ private:
 
     void parsingOn() { m_off--; assert(m_off>=0); if (!m_off) addLineComment(0); }
     void parsingOff() { m_off++; }
+
+    void statePush(ProcState state) {
+	m_states.push(state);
+    }
+    void statePop() {
+	m_states.pop();
+	if (m_states.empty()) {
+	    error("InternalError: Pop of parser state with nothing on stack");
+	    m_states.push(ps_TOP);
+	}
+    }
+    void stateChange(ProcState state) {
+	statePop(); statePush(state);
+    }
+
 };
 
 //*************************************************************************
@@ -624,7 +639,7 @@ int VPreprocImp::getRawToken() {
 	    yyourtext(rtncmt.c_str(), rtncmt.length());
 	    m_lineCmt = "";
 	    if (yyourleng()) m_rawAtBol = (yyourtext()[yyourleng()-1]=='\n');
-	    if (m_state==ps_DEFVALUE) {
+	    if (m_states.top()==ps_DEFVALUE) {
 		VPreprocLex::s_currentLexp->appendDefValue(yyourtext(),yyourleng());
 		goto next_tok;
 	    } else {
@@ -658,9 +673,9 @@ void VPreprocImp::debugToken(int tok, const char* cmtp) {
 	string::size_type pos;
 	while ((pos=buf.find("\n")) != string::npos) { buf.replace(pos, 1, "\\n"); }
 	while ((pos=buf.find("\r")) != string::npos) { buf.replace(pos, 1, "\\r"); }
-	fprintf (stderr, "%d: %s %s %s dr%d:  <%d>%-10s: %s\n",
+	fprintf (stderr, "%d: %s %s %s(%d) dr%d:  <%d>%-10s: %s\n",
 		 m_filelinep->lineno(), cmtp, m_off?"of":"on",
-		 procStateName(m_state), (int)m_defRefs.size(),
+		 procStateName(m_states.top()), (int)m_states.size(), (int)m_defRefs.size(),
 		 m_lexp->currentStartState(), tokenName(tok), buf.c_str());
     }
 }
@@ -698,7 +713,8 @@ int VPreprocImp::getToken() {
 	    goto next_tok;
 	}
 	// Deal with some special parser states
-	switch (m_state) {
+	ProcState state = m_states.top();
+	switch (state) {
 	case ps_TOP: {
 	    break;
 	}
@@ -709,17 +725,17 @@ int VPreprocImp::getToken() {
 	case ps_DEFNAME_ELSIF: {
 	    if (tok==VP_SYMBOL) {
 		m_lastSym.assign(yyourtext(),yyourleng());
-		if (m_state==ps_DEFNAME_IFDEF
-		    || m_state==ps_DEFNAME_IFNDEF) {
+		if (state==ps_DEFNAME_IFDEF
+		    || state==ps_DEFNAME_IFNDEF) {
 		    bool enable = m_preprocp->defExists(m_lastSym);
 		    if (debug()) cout<<"Ifdef "<<m_lastSym<<(enable?" ON":" OFF")<<endl;
-		    if (m_state==ps_DEFNAME_IFNDEF) enable = !enable;
+		    if (state==ps_DEFNAME_IFNDEF) enable = !enable;
 		    m_ifdefStack.push(VPreIfEntry(enable,false));
 		    if (!enable) parsingOff();
-		    m_state = ps_TOP;
+		    statePop();
 		    goto next_tok;
 		}
-		else if (m_state==ps_DEFNAME_ELSIF) {
+		else if (state==ps_DEFNAME_ELSIF) {
 		    if (m_ifdefStack.empty()) {
 			error("`elsif with no matching `if\n");
 		    } else {
@@ -732,20 +748,20 @@ int VPreprocImp::getToken() {
 			m_ifdefStack.push(VPreIfEntry(enable, lastIf.everOn()));
 			if (!enable) parsingOff();
 		    }
-		    m_state = ps_TOP;
+		    statePop();
 		    goto next_tok;
 		}
-		else if (m_state==ps_DEFNAME_UNDEF) {
+		else if (state==ps_DEFNAME_UNDEF) {
 		    if (!m_off) {
 			if (debug()) cout<<"Undef "<<m_lastSym<<endl;
 			m_preprocp->undef(m_lastSym);
 		    }
-		    m_state = ps_TOP;
+		    statePop();
 		    goto next_tok;
 		}
-		else if (m_state==ps_DEFNAME_DEFINE) {
+		else if (state==ps_DEFNAME_DEFINE) {
 		    // m_lastSym already set.
-		    m_state = ps_DEFFORM;
+		    stateChange(ps_DEFFORM);
 		    m_lexp->pushStateDefForm();
 		    goto next_tok;
 		}
@@ -765,8 +781,8 @@ int VPreprocImp::getToken() {
 	case ps_DEFFORM: {
 	    if (tok==VP_DEFFORM) {
 		m_formals = m_lexp->m_defValue;
-		m_state = ps_DEFVALUE;
 		if (debug()) cout<<"DefFormals='"<<m_formals<<"'\n";
+		stateChange(ps_DEFVALUE);
 		m_lexp->pushStateDefValue();
 		goto next_tok;
 	    } else if (tok==VP_TEXT) {
@@ -814,7 +830,7 @@ int VPreprocImp::getToken() {
 		string msg = string("Bad define text, unexpected ")+tokenName(tok)+"\n";
 		fatalSrc(msg);
 	    }
-	    m_state = ps_TOP;
+	    statePop();
 	    // DEFVALUE is terminated by a return, but lex can't return both tokens.
 	    // Thus, we emit a return here.
 	    yyourtext(newlines.c_str(), newlines.length());
@@ -822,13 +838,13 @@ int VPreprocImp::getToken() {
 	}
 	case ps_DEFPAREN: {
 	    if (tok==VP_TEXT && yyourleng()==1 && yyourtext()[0]=='(') {
-		m_state = ps_DEFARG;
+		stateChange(ps_DEFARG);
 		goto next_tok;
 	    } else {
-		m_state = ps_TOP;
 		if (m_defRefs.empty()) error("InternalError: Shouldn't be in DEFPAREN w/o active defref");
 		VPreDefRef* refp = &(m_defRefs.top());
 		error((string)"Expecting ( to begin argument list for define reference `"+refp->name()+"\n");
+		statePop();
 		goto next_tok;
 	    }
 	}
@@ -839,7 +855,7 @@ int VPreprocImp::getToken() {
 	    if (debug()) cout<<"defarg++ "<<refp->nextarg()<<endl;
 	    if (tok==VP_DEFARG && yyourleng()==1 && yyourtext()[0]==',') {
 		refp->args().push_back(refp->nextarg());
-		m_state = ps_DEFARG;
+		stateChange(ps_DEFARG);
 		m_lexp->pushStateDefArg(1);
 		refp->nextarg("");
 		goto next_tok;
@@ -852,7 +868,7 @@ int VPreprocImp::getToken() {
 		out = m_preprocp->defSubstitute(out);
 		if (m_defRefs.empty()) {
 		    unputString(out);
-		    m_state = ps_TOP;
+		    statePop();
 		    m_lexp->m_parenLevel = 0;
 		}
 		else {  // Finished a defref inside a upper defref
@@ -862,7 +878,7 @@ int VPreprocImp::getToken() {
 		    refp = &(m_defRefs.top());  // We popped, so new top
 		    refp->nextarg(refp->nextarg()+m_lexp->m_defValue+out); m_lexp->m_defValue="";
 		    m_lexp->m_parenLevel = refp->parenLevel();
-		    m_state = ps_DEFARG;
+		    statePop();  // Will go to ps_DEFARG, as we're under another define
 		}
 		goto next_tok;
 	    } else if (tok==VP_DEFREF) {
@@ -876,13 +892,13 @@ int VPreprocImp::getToken() {
 		goto next_tok;
 	    } else {
 		error((string)"Expecting ) or , to end argument list for define reference. Found: "+tokenName(tok));
-		m_state = ps_TOP;
+		statePop();
 		goto next_tok;
 	    }
 	}
 	case ps_INCNAME: {
 	    if (tok==VP_STRING) {
-		m_state = ps_TOP;
+		statePop();
 		m_lastSym.assign(yyourtext(),yyourleng());
 		if (debug()) cout<<"Include "<<m_lastSym<<endl;
 		// Drop leading and trailing quotes.
@@ -893,7 +909,7 @@ int VPreprocImp::getToken() {
 	    }
 	    else if (tok==VP_TEXT && yyourleng()==1 && yyourtext()[0]=='<') {
 		// include <filename>
-		m_state = ps_INCNAME;  // Still
+		stateChange(ps_INCNAME);  // Still
 		m_lexp->pushStateIncFilename();
 		goto next_tok;
 	    }
@@ -902,23 +918,23 @@ int VPreprocImp::getToken() {
 		break;
 	    }
 	    else {
-		m_state = ps_TOP;
+		statePop();
 		error((string)"Expecting include filename. Found: "+tokenName(tok)+"\n");
 		goto next_tok;
 	    }
 	}
 	case ps_ERRORNAME: {
 	    if (tok==VP_STRING) {
-		m_state = ps_TOP;
 		if (!m_off) {
 		    m_lastSym.assign(yyourtext(),yyourleng());
 		    error(m_lastSym);
 		}
+		statePop();
 		goto next_tok;
 	    }
 	    else {
-		m_state = ps_TOP;
 		error((string)"Expecting `error string. Found: "+tokenName(tok)+"\n");
+		statePop();
 		goto next_tok;
 	    }
 	}
@@ -928,23 +944,23 @@ int VPreprocImp::getToken() {
 	switch (tok) {
 	case VP_INCLUDE:
 	    if (!m_off) {
-		m_state = ps_INCNAME;
+		statePush(ps_INCNAME);
 	    }
 	    goto next_tok;
 	case VP_UNDEF:
-	    m_state = ps_DEFNAME_UNDEF;
+	    statePush(ps_DEFNAME_UNDEF);
 	    goto next_tok;
 	case VP_DEFINE:
-	    m_state = ps_DEFNAME_DEFINE;
+	    statePush(ps_DEFNAME_DEFINE);
 	    goto next_tok;
 	case VP_IFDEF:
-	    m_state = ps_DEFNAME_IFDEF;
+	    statePush(ps_DEFNAME_IFDEF);
 	    goto next_tok;
 	case VP_IFNDEF:
-	    m_state = ps_DEFNAME_IFNDEF;
+	    statePush(ps_DEFNAME_IFNDEF);
 	    goto next_tok;
 	case VP_ELSIF:
-	    m_state = ps_DEFNAME_ELSIF;
+	    statePush(ps_DEFNAME_ELSIF);
 	    goto next_tok;
 	case VP_ELSE:
 	    if (m_ifdefStack.empty()) {
@@ -1007,7 +1023,7 @@ int VPreprocImp::getToken() {
 		    // The CURRENT macro needs the paren saved, it's not a property of the child macro
 		    if (!m_defRefs.empty()) m_defRefs.top().parenLevel(m_lexp->m_parenLevel);
 		    m_defRefs.push(VPreDefRef(name, params));
-		    m_state = ps_DEFPAREN;
+		    statePush(ps_DEFPAREN);
 		    m_lexp->pushStateDefArg(0);
 		    goto next_tok;
 		}
@@ -1016,7 +1032,7 @@ int VPreprocImp::getToken() {
 	    else goto next_tok;
 	}
 	case VP_ERROR: {
-	    m_state = ps_ERRORNAME;
+	    statePush(ps_ERRORNAME);
 	    goto next_tok;
 	}
 	case VP_EOF:
@@ -1039,8 +1055,8 @@ int VPreprocImp::getToken() {
 	}
 	case VP_WHITE:		// Handled at top of loop
 	case VP_COMMENT:	// Handled at top of loop
-	case VP_DEFFORM:	// Handled by m_state=ps_DEFFORM;
-	case VP_DEFVALUE:	// Handled by m_state=ps_DEFVALUE;
+	case VP_DEFFORM:	// Handled by state=ps_DEFFORM;
+	case VP_DEFVALUE:	// Handled by state=ps_DEFVALUE;
 	default:
 	    fatalSrc("Internal error: Unexpected token.\n");
 	    break;
