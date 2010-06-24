@@ -551,10 +551,10 @@ void VPreProcImp::insertUnreadbackAtBol(const string& text) {
 
 void VPreProcImp::addLineComment(int enter_exit_level) {
     if (m_preprocp->lineDirectives()) {
-	char numbuf[20]; sprintf(numbuf, "%d", m_lexp->m_curFilelinep->lineno());
+	char numbuf[20]; sprintf(numbuf, "%d", m_lexp->curFilelinep()->lineno());
 	char levelbuf[20]; sprintf(levelbuf, "%d", enter_exit_level);
 	string cmt = ((string)"`line "+numbuf
-		      +" \""+m_lexp->m_curFilelinep->filename()+"\" "
+		      +" \""+m_lexp->curFilelinep()->filename()+"\" "
 		      +levelbuf+"\n");
 	insertUnreadbackAtBol(cmt);
     }
@@ -618,7 +618,7 @@ int VPreProcImp::getRawToken() {
 	if (isEof()) return (VP_EOF);
 
 	// Snarf next token from the file
-	m_filelinep = m_lexp->m_curFilelinep;  // Remember token start location
+	m_filelinep = m_lexp->curFilelinep();  // Remember token start location
 	VPreLex::s_currentLexp = m_lexp;   // Tell parser where to get/put data
 	int tok = yylex();
 

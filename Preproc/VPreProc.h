@@ -51,6 +51,14 @@ public:
     VPreProc(VFileLine* filelinep);
     virtual ~VPreProc();
 
+    // STATE
+private:
+    int		m_keepComments;
+    int		m_keepWhitespace;
+    bool	m_lineDirectives;
+    bool	m_pedantic;
+
+public:
     // CONSTANTS
     static const unsigned DEFINE_RECURSION_LEVEL_MAX = 50;	///< How many `def substitutions before an error
     static const unsigned INCLUDE_DEPTH_MAX = 500;	///< How many `includes deep before an error
@@ -72,10 +80,14 @@ public:
 
     // CONTROL METHODS
     // These options control how the parsing proceeds
-    virtual int keepComments() = 0;		///< Return comments, 0=no, 1=yes, 2=callback
-    virtual int keepWhitespace() = 0;		///< Return extra whitespace, 0=no, 1=yes
-    virtual bool lineDirectives() = 0;		///< Insert `line directives
-    virtual bool pedantic() = 0;		///< Obey standard; Don't substitute `error
+    int  keepComments() { return m_keepComments; }
+    void keepComments(int flag) { m_keepComments=flag; }	// Return comments, 0=no, 1=yes, 2=callback
+    int  keepWhitespace() { return m_keepWhitespace; }
+    void keepWhitespace(int flag) { m_keepWhitespace=flag; }	// Return extra whitespace
+    bool lineDirectives() { return m_lineDirectives; }
+    void lineDirectives(bool flag) { m_lineDirectives=flag; }	// Insert `line directives
+    bool pedantic() { return m_pedantic; }
+    void pedantic(bool flag) { m_pedantic=flag; }	// Obey standard; Don't substitute `error
 
     // CALLBACK METHODS
     // This probably will want to be overridden for given child users of this class.

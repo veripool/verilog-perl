@@ -49,20 +49,10 @@ class VFileLineXs;
 class VPreProcXs : public VPreProc {
 public:
     SV*		m_self;	// Class called from (the hash, not SV pointing to the hash)
-    int		m_keepComments;
-    int		m_keepWhitespace;
-    bool	m_lineDirectives;
-    bool	m_pedantic;
     deque<VFileLineXs*> m_filelineps;
 
     VPreProcXs(VFileLine* filelinep) : VPreProc(filelinep) {}
     virtual ~VPreProcXs();
-
-    // Control methods
-    virtual int  keepComments() { return m_keepComments; }	// Return comments
-    virtual int  keepWhitespace() { return m_keepWhitespace; }	// Return extra whitespace
-    virtual bool lineDirectives() { return m_lineDirectives; }	// Insert `line directives
-    virtual bool pedantic() { return m_pedantic; }		// Obey standard; Don't substitute `error
 
     // Callback methods
     virtual void comment(string filename);	// Comment for keepComments=>sub
@@ -238,10 +228,10 @@ CODE:
     VPreProcXs* preprocp = new VPreProcXs(filelinep);
     filelinep->setPreproc(preprocp);
     preprocp->m_self = SvRV(SELF);
-    preprocp->m_keepComments = keepcmt;
-    preprocp->m_keepWhitespace = keepwhite;
-    preprocp->m_lineDirectives = linedir;
-    preprocp->m_pedantic = pedantic;
+    preprocp->keepComments(keepcmt);
+    preprocp->keepWhitespace(keepwhite);
+    preprocp->lineDirectives(linedir);
+    preprocp->pedantic(pedantic);
     RETVAL = preprocp;
 }
 OUTPUT: RETVAL

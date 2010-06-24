@@ -47,10 +47,10 @@ Preproc/Preproc.xs
 Preproc/typemap
 Preproc/VFileLine.cpp
 Preproc/VFileLine.h
-Preproc/VPreProc.cpp
-Preproc/VPreProc.h
 Preproc/VPreLex.h
 Preproc/VPreLex.l
+Preproc/VPreProc.cpp
+Preproc/VPreProc.h
 Preproc/xsubppfix
 README
 Std.pm
@@ -121,6 +121,7 @@ verilog/inc3.v
 verilog/inc4.v
 verilog/inc_def09.v
 verilog/inc_ifdef.v
+verilog/inc_nonl.v
 verilog/parser_bugs.v
 verilog/parser_sv.v
 verilog/parser_sv09.v

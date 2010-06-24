@@ -42,10 +42,10 @@ VPreLex* VPreLex::s_currentLexp = NULL;	// Current lexing point
 #define LEXP VPreLex::s_currentLexp
 
 #define linenoInc()  { LEXP->linenoInc(); }
-bool pedantic() { return LEXP->m_pedantic; }
-bool keepWhitespace() { return LEXP->m_keepWhitespace; }
-void yyerror(char* msg) { LEXP->m_curFilelinep->error(msg); }
-void appendDefValue(const char* t, size_t l) { LEXP->appendDefValue(t,l); }
+static bool pedantic() { return LEXP->m_pedantic; }
+static bool keepWhitespace() { return LEXP->m_keepWhitespace; }
+static void appendDefValue(const char* t, size_t l) { LEXP->appendDefValue(t,l); }
+void yyerror(char* msg) { LEXP->curFilelinep()->error(msg); }
 
 #define YY_INPUT(buf,result,max_size) \
     result = LEXP->inputToLex(buf,max_size);
@@ -109,11 +109,11 @@ drop		[\032]
 
 	/* Optional directives we recognize */
 <INITIAL>"`__FILE__"	{ static string rtnfile;
-			  rtnfile = '"'; rtnfile += LEXP->m_curFilelinep->filename();
+			  rtnfile = '"'; rtnfile += LEXP->curFilelinep()->filename();
 			  rtnfile += '"'; yytext=(char*)rtnfile.c_str(); yyleng = rtnfile.length();
 			  return (VP_STRING); }
 <INITIAL>"`__LINE__"	{ static char buf[10];
-			  sprintf(buf, "%d",LEXP->m_curFilelinep->lineno());
+			  sprintf(buf, "%d",LEXP->curFilelinep()->lineno());
 	                  yytext = buf; yyleng = strlen(yytext);
 			  return (VP_TEXT); }
 <INITIAL>"`error"	{ if (!pedantic()) return (VP_ERROR); else return(VP_DEFREF); }

@@ -35,6 +35,10 @@ sub MY::postamble {
     $out .= "CCFLAGS  += $ENV{VERILOGPERL_CCFLAGS}\n" if defined $ENV{VERILOGPERL_CCFLAGS};
     $out .= "OPTIMIZE += -Wno-unused\n" if $ENV{VERILATOR_AUTHOR_SITE};  # Makefile has another -Wall
     $out .= "OPTIMIZE += $ENV{VERILOGPERL_CCFLAGS}\n" if defined $ENV{VERILOGPERL_CCFLAGS};
+    $out .= "CCFLAGS += -I\$(PPSRC)\n";
+    my $cmt = $ENV{VERILOGPERL_FLEX_DEBUG} ? "" : "#";
+    $out .= "${cmt}CFLAGS += -DFLEX_DEBUG\n";
+    $out .= "${cmt}LEXFLAGS += -d\n";
     $out .= '
 ifeq ($(OBJCACHE_HOSTS_DETERMINANT),)
 OBJCACHE :=
@@ -48,10 +52,6 @@ YACC = bison
 PPSRC = ../Preproc
 FLEXFIX = $(PPSRC)/flexfix
 XSUBPPFIX = $(PPSRC)/xsubppfix
-
-CCFLAGS += -I$(PPSRC)
-#CFLAGS += -DFLEX_DEBUG
-#LEXFLAGS += -d
 
 VPATH += . $(PPSRC)
 

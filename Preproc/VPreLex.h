@@ -148,9 +148,11 @@ class VPreLex {
     void initFirstBuffer();
 
     /// Called by VPreLex.l from lexer
+    VFileLine* curFilelinep() { return m_curFilelinep; }
+    void curFilelinep(VFileLine* fl) { m_curFilelinep = fl; }
     void appendDefValue(const char* text, size_t len);
-    void lineDirective(const char* text) { m_curFilelinep = m_curFilelinep->lineDirective(text); }
-    void linenoInc() { m_curFilelinep = m_curFilelinep->create(m_curFilelinep->lineno()+1); }
+    void lineDirective(const char* textp) { curFilelinep(curFilelinep()->lineDirective(textp)); }
+    void linenoInc() { curFilelinep(curFilelinep()->create(curFilelinep()->lineno()+1)); }
     /// Called by VPreProc.cpp to inform lexer
     void pushStateDefArg(int level);
     void pushStateDefForm();
