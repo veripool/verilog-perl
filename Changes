@@ -3,7 +3,9 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.25***
+* Verilog::Language 3.3***
+
+**	Support SystemVerilog 2009 standard, including new keywords.
 
 ****	Fix preprocessing ifdef `INDIRECT(DEFINE).
 
