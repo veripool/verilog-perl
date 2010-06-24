@@ -1,7 +1,7 @@
 %option noyywrap align interactive
 %option stack
 %option noc++
-%option prefix="VPreprocLex"
+%option prefix="VPreLex"
 %{
 /******************************************************************************
  * DESCRIPTION: Verilog Preprocessor Lexer
@@ -28,18 +28,18 @@
  * lost characters.
  *****************************************************************************/
 
-#include "VPreprocLex.h"
+#include "VPreLex.h"
 #include <cstdio>
 #include <cstdarg>
 #include <cstring>
 #include <iostream>
 
 // Flex 2.5.35 has compile warning in ECHO, so we'll default our own rule
-#define ECHO yyerrorf("Missing VPreprocLex.l rule: ECHO rule invoked in state %d: %s", YY_START, yytext);
+#define ECHO yyerrorf("Missing VPreLex.l rule: ECHO rule invoked in state %d: %s", YY_START, yytext);
 
-VPreprocLex* VPreprocLex::s_currentLexp = NULL;	// Current lexing point
+VPreLex* VPreLex::s_currentLexp = NULL;	// Current lexing point
 
-#define LEXP VPreprocLex::s_currentLexp
+#define LEXP VPreLex::s_currentLexp
 
 #define linenoInc()  { LEXP->linenoInc(); }
 bool pedantic() { return LEXP->m_pedantic; }
@@ -251,34 +251,34 @@ drop		[\032]
 <*>.|\n			{ yymore(); }	/* Prevent hitting ECHO; */
 %%
 
-void VPreprocLex::pushStateDefArg(int level) {
+void VPreLex::pushStateDefArg(int level) {
     // Enter define substitution argument state
     yy_push_state(ARGMODE);
     m_parenLevel = level;
     m_defValue = "";
 }
 
-void VPreprocLex::pushStateDefForm() {
+void VPreLex::pushStateDefForm() {
     // Enter define formal arguments state
     yy_push_state(DEFFPAR);  // First is an optional ( to begin args
     m_parenLevel = 0;
     m_defValue = "";
 }
 
-void VPreprocLex::pushStateDefValue() {
+void VPreLex::pushStateDefValue() {
     // Enter define value state
     yy_push_state(DEFVAL);
     m_parenLevel = 0;
     m_defValue = "";
 }
 
-void VPreprocLex::pushStateIncFilename() {
+void VPreLex::pushStateIncFilename() {
     // Enter include <> filename state
     yy_push_state(INCMODE);
     yymore();
 }
 
-void VPreprocLex::initFirstBuffer() {
+void VPreLex::initFirstBuffer() {
     // Called from constructor to make first buffer
     // yy_create_buffer also sets yy_fill_buffer=1 so reads from YY_INPUT
     yy_switch_to_buffer(yy_create_buffer(NULL, YY_BUF_SIZE));
@@ -286,7 +286,7 @@ void VPreprocLex::initFirstBuffer() {
     yyrestart(NULL);
 }
 
-size_t VPreprocLex::inputToLex(char* buf, size_t max_size) {
+size_t VPreLex::inputToLex(char* buf, size_t max_size) {
     // We need a custom YY_INPUT because we can't use flex buffers.
     // Flex buffers are limited to 2GB, and we can't chop into 2G pieces
     // because buffers can't end in the middle of tokens.
@@ -314,7 +314,7 @@ size_t VPreprocLex::inputToLex(char* buf, size_t max_size) {
     return got;
 }
 
-void VPreprocLex::scanBytes(const char* strp, size_t len) {
+void VPreLex::scanBytes(const char* strp, size_t len) {
     // Note buffers also appended in ::scanBytesBack
     // Not "m_buffers.push_front(string(strp,len))" as we need a `define
     // to take effect immediately, in the middle of the current buffer
@@ -322,32 +322,32 @@ void VPreprocLex::scanBytes(const char* strp, size_t len) {
     m_bufferStack.push(currentBuffer());  // yy_scan_bytes makes new buffer
 }
 
-void VPreprocLex::scanBytesBack(const string& str) {
+void VPreLex::scanBytesBack(const string& str) {
     // Initial creation, that will pull from YY_INPUT==inputToLex
     // Note buffers also appended in ::scanBytes
     m_buffers.push_back(str);
 }
 
-void VPreprocLex::appendDefValue(const char* textp, size_t len) {
+void VPreLex::appendDefValue(const char* textp, size_t len) {
     // Append given text to current definition value being formed
     m_defValue.append(textp,len);
 }
 
-YY_BUFFER_STATE VPreprocLex::currentBuffer() {
+YY_BUFFER_STATE VPreLex::currentBuffer() {
     return YY_CURRENT_BUFFER;
 }
 
-int VPreprocLex::currentStartState() {
+int VPreLex::currentStartState() {
     return YY_START;
 }
 
-void VPreprocLex::dumpSummary() {
+void VPreLex::dumpSummary() {
     cout<<"-  pp::dumpSummary  curBuf="<<(void*)(currentBuffer())
 	<<" nBuf="<<m_bufferStack.size()
 	<<" yyfill="<<currentBuffer()->yy_fill_buffer<<endl;
 }
 
-void VPreprocLex::dumpStack() {
+void VPreLex::dumpStack() {
     // For debug use
     dumpSummary();
     stack<YY_BUFFER_STATE> tmpstack = m_bufferStack;
@@ -359,7 +359,7 @@ void VPreprocLex::dumpStack() {
     printf("\n");
 }
 
-void VPreprocLex::unused() {
+void VPreLex::unused() {
     if (0) {
 	// Prevent unused warnings
 	yy_top_state();

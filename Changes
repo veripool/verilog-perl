@@ -226,7 +226,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix parallel make rule build error.  [Chitlesh Goorah]
 
-****	Fix const compile warning in VPreproc.cpp. [Chitlesh Goorah]
+****	Fix const compile warning in VPreProc.cpp. [Chitlesh Goorah]
 
 ****	Fix logic MSBs not being reported in 3.200 beta.  [Horia Toma]
 

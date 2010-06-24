@@ -1,7 +1,7 @@
 blib
 Makefile
 pm_to_blib
-VPreprocLex*.cpp
+VPreLex*.cpp
 *.def
 *.dll
 *.exp

@@ -18,8 +18,8 @@
 ///
 /// Code available from: http://www.veripool.org/verilog-perl
 ///
-/// This header provides the interface between the lex proper VPreprocLex.l/.cpp
-/// and the class implementation file VPreproc.cpp
+/// This header provides the interface between the lex proper VPreLex.l/.cpp
+/// and the class implementation file VPreProc.cpp
 /// It is not intended for user applications.
 ///
 //*************************************************************************
@@ -33,7 +33,7 @@
 #include "VFileLine.h"
 
 // Token codes
-// If changing, see VPreproc.cpp's VPreprocImp::tokenName()
+// If changing, see VPreProc.cpp's VPreProcImp::tokenName()
 #define VP_EOF		0
 
 #define VP_INCLUDE	256
@@ -63,27 +63,27 @@
 // Externs created by flex
 // We add a prefix so that other lexers/flexers in the same program won't collide.
 #ifndef yy_create_buffer
-# define yy_create_buffer VPreprocLex_create_buffer
-# define yy_delete_buffer VPreprocLex_delete_buffer
-# define yy_scan_buffer VPreprocLex_scan_buffer
-# define yy_scan_string VPreprocLex_scan_string
-# define yy_scan_bytes VPreprocLex_scan_bytes
-# define yy_flex_debug VPreprocLex_flex_debug
-# define yy_init_buffer VPreprocLex_init_buffer
-# define yy_flush_buffer VPreprocLex_flush_buffer
-# define yy_load_buffer_state VPreprocLex_load_buffer_state
-# define yy_switch_to_buffer VPreprocLex_switch_to_buffer
-# define yyin VPreprocLexin
-# define yyleng VPreprocLexleng
-# define yylex VPreprocLexlex
-# define yyout VPreprocLexout
-# define yyrestart VPreprocLexrestart
-# define yytext VPreprocLextext
+# define yy_create_buffer VPreLex_create_buffer
+# define yy_delete_buffer VPreLex_delete_buffer
+# define yy_scan_buffer VPreLex_scan_buffer
+# define yy_scan_string VPreLex_scan_string
+# define yy_scan_bytes VPreLex_scan_bytes
+# define yy_flex_debug VPreLex_flex_debug
+# define yy_init_buffer VPreLex_init_buffer
+# define yy_flush_buffer VPreLex_flush_buffer
+# define yy_load_buffer_state VPreLex_load_buffer_state
+# define yy_switch_to_buffer VPreLex_switch_to_buffer
+# define yyin VPreLexin
+# define yyleng VPreLexleng
+# define yylex VPreLexlex
+# define yyout VPreLexout
+# define yyrestart VPreLexrestart
+# define yytext VPreLextext
 #endif
 
 #ifndef yyourleng
-# define yyourleng VPreprocLexourleng
-# define yyourtext VPreprocLexourtext
+# define yyourleng VPreLexourleng
+# define yyourtext VPreLexourtext
 #endif
 
 #ifndef YY_BUFFER_STATE
@@ -112,8 +112,8 @@ void yy_delete_buffer( YY_BUFFER_STATE b );
 //======================================================================
 // Class entry for each per-lexer state
 
-class VPreprocLex {
-  public:	// Used only by VPreprocLex.cpp and VPreproc.cpp
+class VPreLex {
+  public:	// Used only by VPreLex.cpp and VPreProc.cpp
     VFileLine*	m_curFilelinep;	///< Current processing point
 
     // Parse state
@@ -121,7 +121,7 @@ class VPreprocLex {
     deque<string>	m_buffers;	///< Buffer of characters to process
 
     // State to lexer
-    static VPreprocLex* s_currentLexp;	///< Current lexing point
+    static VPreLex* s_currentLexp;	///< Current lexing point
     int		m_keepComments;		///< Emit comments in output text
     int		m_keepWhitespace;	///< Emit all whitespace in output text
     bool	m_pedantic;	///< Obey standard; don't Substitute `error
@@ -133,7 +133,7 @@ class VPreprocLex {
     string	m_defValue;	///< Definition value being built.
 
     // CONSTRUCTORS
-    VPreprocLex() {
+    VPreLex() {
 	m_keepComments = 0;
 	m_keepWhitespace = 1;
 	m_pedantic = false;
@@ -142,16 +142,16 @@ class VPreprocLex {
 	m_defCmtSlash = false;
 	initFirstBuffer();
     }
-    ~VPreprocLex() {
+    ~VPreLex() {
 	while (!m_bufferStack.empty()) { yy_delete_buffer(m_bufferStack.top()); m_bufferStack.pop(); }
     }
     void initFirstBuffer();
 
-    /// Called by VPreprocLex.l from lexer
+    /// Called by VPreLex.l from lexer
     void appendDefValue(const char* text, size_t len);
     void lineDirective(const char* text) { m_curFilelinep = m_curFilelinep->lineDirective(text); }
     void linenoInc() { m_curFilelinep = m_curFilelinep->create(m_curFilelinep->lineno()+1); }
-    /// Called by VPreproc.cpp to inform lexer
+    /// Called by VPreProc.cpp to inform lexer
     void pushStateDefArg(int level);
     void pushStateDefForm();
     void pushStateDefValue();
@@ -159,7 +159,7 @@ class VPreprocLex {
     void scanBytes(const char* strp, size_t len);
     void scanBytesBack(const string& str);
     size_t inputToLex(char* buf, size_t max_size);
-    /// Called by VPreproc.cpp to get data from lexer
+    /// Called by VPreProc.cpp to get data from lexer
     YY_BUFFER_STATE currentBuffer();
     int	 currentStartState();
     void dumpSummary();

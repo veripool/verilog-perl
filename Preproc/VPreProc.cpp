@@ -41,8 +41,8 @@
 # include <unistd.h>
 #endif
 
-#include "VPreproc.h"
-#include "VPreprocLex.h"
+#include "VPreProc.h"
+#include "VPreLex.h"
 
 //#undef yyFlexLexer
 //#define yyFlexLexer xxFlexLexer
@@ -89,14 +89,14 @@ public:
 //*************************************************************************
 /// Data for a preprocessor instantiation.
 
-struct VPreprocImp : public VPreprocOpaque {
+struct VPreProcImp : public VPreProcOpaque {
     typedef list<string> StrList;
 
-    VPreproc*	m_preprocp;	///< Object we're holding data for
+    VPreProc*	m_preprocp;	///< Object we're holding data for
     VFileLine*	m_filelinep;	///< Last token's starting point
     int		m_debug;	///< Debugging level
-    VPreprocLex* m_lexp;	///< Current lexer state (NULL = closed)
-    stack<VPreprocLex*> m_includeStack;	///< Stack of includers above current m_lexp
+    VPreLex* m_lexp;	///< Current lexer state (NULL = closed)
+    stack<VPreLex*> m_includeStack;	///< Stack of includers above current m_lexp
 
     enum ProcState { ps_TOP,
 		     ps_DEFNAME_UNDEF, ps_DEFNAME_DEFINE,
@@ -132,7 +132,7 @@ struct VPreprocImp : public VPreprocOpaque {
     // For getline()
     string	m_lineChars;	///< Characters left for next line
 
-    VPreprocImp(VFileLine* filelinep) {
+    VPreProcImp(VFileLine* filelinep) {
 	m_filelinep = filelinep;
 	m_debug = 0;
 	m_lexp = NULL;	 // Closed.
@@ -145,7 +145,7 @@ struct VPreprocImp : public VPreprocOpaque {
 	m_rawAtBol = true;
 	m_defDepth = 0;
     }
-    ~VPreprocImp() {
+    ~VPreProcImp() {
 	if (m_lexp) { delete m_lexp; m_lexp = NULL; }
     }
     const char* tokenName(int tok);
@@ -192,47 +192,47 @@ private:
 //*************************************************************************
 // Creation
 
-VPreproc::VPreproc(VFileLine* filelinep) {
-    VPreprocImp* idatap = new VPreprocImp(filelinep);
+VPreProc::VPreProc(VFileLine* filelinep) {
+    VPreProcImp* idatap = new VPreProcImp(filelinep);
     m_opaquep = idatap;
     idatap->m_preprocp = this;
 }
 
-VPreproc::~VPreproc() {
+VPreProc::~VPreProc() {
     if (m_opaquep) { delete m_opaquep; m_opaquep = NULL; }
 }
 
 //*************************************************************************
-// VPreproc Methods.  Just call the implementation functions.
+// VPreProc Methods.  Just call the implementation functions.
 
-void VPreproc::comment(string cmt) { }
-void VPreproc::openFile(string filename, VFileLine* filelinep) {
-    VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
+void VPreProc::comment(string cmt) { }
+void VPreProc::openFile(string filename, VFileLine* filelinep) {
+    VPreProcImp* idatap = static_cast<VPreProcImp*>(m_opaquep);
     idatap->openFile (filename,filelinep);
 }
-string VPreproc::getline() {
-    VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
+string VPreProc::getline() {
+    VPreProcImp* idatap = static_cast<VPreProcImp*>(m_opaquep);
     return idatap->getparseline(true,0);
 }
-string VPreproc::getall(size_t approx_chunk) {
-    VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
+string VPreProc::getall(size_t approx_chunk) {
+    VPreProcImp* idatap = static_cast<VPreProcImp*>(m_opaquep);
     return idatap->getparseline(false,approx_chunk);
 }
-void VPreproc::debug(int level) {
-    VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
+void VPreProc::debug(int level) {
+    VPreProcImp* idatap = static_cast<VPreProcImp*>(m_opaquep);
     idatap->m_debug = level;
     // To see "accepting rule" debug, Makefile.PL must be changed to enable flex debug
 }
-bool VPreproc::isEof() {
-    VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
+bool VPreProc::isEof() {
+    VPreProcImp* idatap = static_cast<VPreProcImp*>(m_opaquep);
     return idatap->isEof();
 }
-VFileLine* VPreproc::filelinep() {
-    VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
+VFileLine* VPreProc::filelinep() {
+    VPreProcImp* idatap = static_cast<VPreProcImp*>(m_opaquep);
     return idatap->m_filelinep;
 }
-void VPreproc::insertUnreadback(string text) {
-    VPreprocImp* idatap = static_cast<VPreprocImp*>(m_opaquep);
+void VPreProc::insertUnreadback(string text) {
+    VPreProcImp* idatap = static_cast<VPreProcImp*>(m_opaquep);
     return idatap->insertUnreadback(text);
 }
 
@@ -241,29 +241,29 @@ void VPreproc::insertUnreadback(string text) {
 // CALLBACK METHODS
 // This probably will want to be overridden for given child users of this class.
 
-void VPreproc::include(string filename) {
+void VPreProc::include(string filename) {
     openFile(filename, filelinep());
 }
-void VPreproc::undef(string define) {
+void VPreProc::undef(string define) {
     cout<<"UNDEF "<<define<<endl;
 }
-void VPreproc::undefineall() {
+void VPreProc::undefineall() {
     error("Undefineall not implemented\n");
 }
-bool VPreproc::defExists(string define) {
+bool VPreProc::defExists(string define) {
     return defParams(define)!="";
 }
-string VPreproc::defParams(string define) {
+string VPreProc::defParams(string define) {
     return "";
 }
-void VPreproc::define(string define, string value, string params) {
+void VPreProc::define(string define, string value, string params) {
     error("Defines not implemented: "+define+"\n");
 }
-string VPreproc::defValue(string define) {
+string VPreProc::defValue(string define) {
     error("Define not defined: "+define+"\n");
     return define;
 }
-string VPreproc::defSubstitute(string substitute) {
+string VPreProc::defSubstitute(string substitute) {
     error("Defines not implemented: "+substitute+"\n");
     return substitute;
 }
@@ -271,7 +271,7 @@ string VPreproc::defSubstitute(string substitute) {
 //**********************************************************************
 // Parser Utilities
 
-const char* VPreprocImp::tokenName(int tok) {
+const char* VPreProcImp::tokenName(int tok) {
     switch (tok) {
     case VP_EOF		: return("EOF");
     case VP_INCLUDE	: return("INCLUDE");
@@ -298,7 +298,7 @@ const char* VPreprocImp::tokenName(int tok) {
     }
 }
 
-void VPreprocImp::unputString(const string& strg) {
+void VPreProcImp::unputString(const string& strg) {
     // Note: The preliminary call in ::openFile bypasses this function
     // We used to just m_lexp->unputString(strg.c_str());
     // However this can lead to "flex scanner push-back overflow"
@@ -313,7 +313,7 @@ void VPreprocImp::unputString(const string& strg) {
     m_lexp->scanBytes(strg.c_str(), strg.length());
 }
 
-string VPreprocImp::trimWhitespace(const string& strg, bool trailing) {
+string VPreProcImp::trimWhitespace(const string& strg, bool trailing) {
     // Remove leading whitespace
     string out = strg;
     string::size_type leadspace = 0;
@@ -330,7 +330,7 @@ string VPreprocImp::trimWhitespace(const string& strg, bool trailing) {
     return out;
 }
 
-string VPreprocImp::defineSubst(VPreDefRef* refp) {
+string VPreProcImp::defineSubst(VPreDefRef* refp) {
     // Substitute out defines in a define reference.
     // (We also need to call here on non-param defines to handle `")
     // We could push the define text back into the lexer, but that's slow
@@ -480,7 +480,7 @@ string VPreprocImp::defineSubst(VPreDefRef* refp) {
 //**********************************************************************
 // Parser routines
 
-bool VPreprocImp::readWholefile(const string& filename, StrList& outl) {
+bool VPreProcImp::readWholefile(const string& filename, StrList& outl) {
     int fd = open (filename.c_str(), O_RDONLY);
     if (!fd) return false;
 
@@ -507,7 +507,7 @@ bool VPreprocImp::readWholefile(const string& filename, StrList& outl) {
     return true;
 }
 
-void VPreprocImp::openFile(string filename, VFileLine* filelinep) {
+void VPreProcImp::openFile(string filename, VFileLine* filelinep) {
     // Open a new file, possibly overriding the current one which is active.
     if (filelinep) {
 	m_filelinep = filelinep;
@@ -524,7 +524,7 @@ void VPreprocImp::openFile(string filename, VFileLine* filelinep) {
     if (m_lexp) {
 	// We allow the same include file twice, because occasionally it pops
 	// up, with guards preventing a real recursion.
-	if (m_includeStack.size()>VPreproc::INCLUDE_DEPTH_MAX) {
+	if (m_includeStack.size()>VPreProc::INCLUDE_DEPTH_MAX) {
 	    error("Recursive inclusion of file: "+filename);
 	    return;
 	}
@@ -533,7 +533,7 @@ void VPreprocImp::openFile(string filename, VFileLine* filelinep) {
 	addLineComment(0);
     }
 
-    m_lexp = new VPreprocLex ();
+    m_lexp = new VPreLex ();
     m_lexp->m_keepComments = m_preprocp->keepComments();
     m_lexp->m_keepWhitespace = m_preprocp->keepWhitespace();
     m_lexp->m_pedantic = m_preprocp->pedantic();
@@ -571,7 +571,7 @@ void VPreprocImp::openFile(string filename, VFileLine* filelinep) {
     }
 }
 
-void VPreprocImp::insertUnreadbackAtBol(const string& text) {
+void VPreProcImp::insertUnreadbackAtBol(const string& text) {
     // Insert insuring we're at the beginning of line, for `line
     // We don't always add a leading newline, as it may result in extra unreadback(newlines).
     if (m_lineCmt == "") { m_lineCmtNl = true; }
@@ -581,7 +581,7 @@ void VPreprocImp::insertUnreadbackAtBol(const string& text) {
     insertUnreadback(text);
 }
 
-void VPreprocImp::addLineComment(int enter_exit_level) {
+void VPreProcImp::addLineComment(int enter_exit_level) {
     if (m_preprocp->lineDirectives()) {
 	char numbuf[20]; sprintf(numbuf, "%d", m_lexp->m_curFilelinep->lineno());
 	char levelbuf[20]; sprintf(levelbuf, "%d", enter_exit_level);
@@ -592,7 +592,7 @@ void VPreprocImp::addLineComment(int enter_exit_level) {
     }
 }
 
-void VPreprocImp::eof() {
+void VPreProcImp::eof() {
     // Perhaps we're completing unputString
     if (m_lexp->m_bufferStack.size()>1) {
 	if (debug()) cout<<m_filelinep<<"EOS\n";
@@ -617,7 +617,7 @@ void VPreprocImp::eof() {
     }
 }
 
-int VPreprocImp::getRawToken() {
+int VPreProcImp::getRawToken() {
     // Get a token from the file, whatever it may be.
     while (1) {
       next_tok:
@@ -640,7 +640,7 @@ int VPreprocImp::getRawToken() {
 	    m_lineCmt = "";
 	    if (yyourleng()) m_rawAtBol = (yyourtext()[yyourleng()-1]=='\n');
 	    if (m_states.top()==ps_DEFVALUE) {
-		VPreprocLex::s_currentLexp->appendDefValue(yyourtext(),yyourleng());
+		VPreLex::s_currentLexp->appendDefValue(yyourtext(),yyourleng());
 		goto next_tok;
 	    } else {
 		if (debug()) debugToken(VP_TEXT, "LCM");
@@ -651,7 +651,7 @@ int VPreprocImp::getRawToken() {
 
 	// Snarf next token from the file
 	m_filelinep = m_lexp->m_curFilelinep;  // Remember token start location
-	VPreprocLex::s_currentLexp = m_lexp;   // Tell parser where to get/put data
+	VPreLex::s_currentLexp = m_lexp;   // Tell parser where to get/put data
 	int tok = yylex();
 
 	if (debug()) debugToken(tok, "RAW");
@@ -667,7 +667,7 @@ int VPreprocImp::getRawToken() {
     }
 }
 
-void VPreprocImp::debugToken(int tok, const char* cmtp) {
+void VPreProcImp::debugToken(int tok, const char* cmtp) {
     if (debug()) {
 	string buf = string (yyourtext(), yyourleng());
 	string::size_type pos;
@@ -683,7 +683,7 @@ void VPreprocImp::debugToken(int tok, const char* cmtp) {
 // Sorry, we're not using bison/yacc. It doesn't handle returning white space
 // in the middle of parsing other tokens.
 
-int VPreprocImp::getToken() {
+int VPreProcImp::getToken() {
     // Return the next user-visible token in the input stream.
     // Includes and such are handled here, and are never seen by the caller.
     while (1) {
@@ -994,7 +994,7 @@ int VPreprocImp::getToken() {
 	    if (!m_off) {
 		string name; name.append(yyourtext()+1,yyourleng()-1);
 		if (debug()) cout<<"DefRef "<<name<<endl;
-		if (m_defDepth++ > VPreproc::DEFINE_RECURSION_LEVEL_MAX) {
+		if (m_defDepth++ > VPreProc::DEFINE_RECURSION_LEVEL_MAX) {
 		    error("Recursive `define substitution: `"+name);
 		    goto next_tok;
 		}
@@ -1069,7 +1069,7 @@ int VPreprocImp::getToken() {
     }
 }
 
-string VPreprocImp::getparseline(bool stop_at_eol, size_t approx_chunk) {
+string VPreProcImp::getparseline(bool stop_at_eol, size_t approx_chunk) {
     // Get a single line from the parse stream.  Buffer unreturned text until the newline.
     if (isEof()) return "";
     while (1) {

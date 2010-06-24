@@ -19,7 +19,7 @@
 \.vcs.*$
 \.pre\..*$
 _pretmp\..*$
-VPreprocLex\.cpp$
+VPreLex\.cpp$
 simv
 .*\.tar\.gz
 \bblib\b
@@ -34,7 +34,7 @@ Parser/VParseLex.cpp
 Parser/VParseLex_pretmp.cpp
 Parser/.*_callbackgen\..*
 Preproc/Preproc.c
-Preproc/VPreprocLex_pretmp.cpp
+Preproc/VPreLex_pretmp.cpp
 signals.vrename
 test_dir
 \.svn/

@@ -55,23 +55,23 @@ CCFLAGS += -I$(PPSRC)
 
 VPATH += . $(PPSRC)
 
-VPreprocLex.o:	VPreprocLex.h VPreproc.h VFileLine.h
-VPreproc.o:	VPreprocLex.h VPreproc.h VFileLine.h
+VPreLex.o:	VPreLex.h VPreProc.h VFileLine.h
+VPreProc.o:	VPreLex.h VPreProc.h VFileLine.h
 VFileLine.o:	                         VFileLine.h
 
-VPreprocLex_pretmp.cpp: VPreprocLex.l
+VPreLex_pretmp.cpp: VPreLex.l
 	$(LEX) --version
 	$(LEX) $(LEXFLAGS) -o$@ $<
 
-VPreprocLex.cpp: $(FLEXFIX) VPreprocLex_pretmp.cpp
-	$(PERL) $(FLEXFIX) VPreprocLex < VPreprocLex_pretmp.cpp > $@
+VPreLex.cpp: $(FLEXFIX) VPreLex_pretmp.cpp
+	$(PERL) $(FLEXFIX) VPreLex < VPreLex_pretmp.cpp > $@
 
 Preproc_cleaned.c: Preproc.c
 	$(PERL) $(XSUBPPFIX) < Preproc.c > Preproc_cleaned.c
 
 clean::
 	-$(RM_RF) test *.d *.o *.output
-	-$(RM_RF) VPreprocLex*.cpp Preproc_cleaned.c
+	-$(RM_RF) VPreLex*.cpp Preproc_cleaned.c
 ';
     return $out;
 }
@@ -85,6 +85,6 @@ WriteMakefile(
 	      VERSION_FROM  => 'Preproc.pm',
 	      XSOPT => '-C++',
 	      CCFLAGS	=> $ccflags,
-	      OBJECT   => 'VFileLine.o VPreproc.o VPreprocLex.o',
+	      OBJECT   => 'VFileLine.o VPreProc.o VPreLex.o',
 	      MYEXTLIB => 'Preproc_cleaned.o',
 	      );

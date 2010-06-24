@@ -47,10 +47,10 @@ Preproc/Preproc.xs
 Preproc/typemap
 Preproc/VFileLine.cpp
 Preproc/VFileLine.h
-Preproc/VPreproc.cpp
-Preproc/VPreproc.h
-Preproc/VPreprocLex.h
-Preproc/VPreprocLex.l
+Preproc/VPreProc.cpp
+Preproc/VPreProc.h
+Preproc/VPreLex.h
+Preproc/VPreLex.l
 Preproc/xsubppfix
 README
 Std.pm

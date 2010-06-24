@@ -1,6 +1,6 @@
 TYPEMAP
 const char *		T_PV
-VPreprocXs *		O_CTHIS
+VPreProcXs *		O_CTHIS
 
 
 OUTPUT
@@ -24,7 +24,7 @@ O_CTHIS
 	$var = NULL;
 	if (svp) { $var = INT2PTR($type,SvIV( *svp )); }
     }
-    if (!$var || !dynamic_cast<VPreprocXs*>($var)) {
+    if (!$var || !dynamic_cast<VPreProcXs*>($var)) {
         warn( \"${Package}::$func_name() -- $var is not a Verilog::Preproc object\" );
         XSRETURN_UNDEF;
     }

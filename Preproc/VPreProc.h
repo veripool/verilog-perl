@@ -33,23 +33,23 @@ using namespace std;
 # undef open	// Perl 64 bit on solaris has a nasty hack that redefines open
 #endif
 
-/// Generic opaque pointer to VPreprocImp implementation class.
-struct VPreprocOpaque {
-    virtual ~VPreprocOpaque() {}
+/// Generic opaque pointer to VPreProcImp implementation class.
+struct VPreProcOpaque {
+    virtual ~VPreProcOpaque() {}
 };
 class VDefine;
 
 //**********************************************************************
-// VPreproc
+// VPreProc
 /// Verilog Preprocessor.
 ////
 /// This defines a preprocessor.  Functions are virtual so users can override them.
 /// After creating, call openFile(), then getline() in a loop.  The class will to the rest...
 
-class VPreproc {
+class VPreProc {
 public:
-    VPreproc(VFileLine* filelinep);
-    virtual ~VPreproc();
+    VPreProc(VFileLine* filelinep);
+    virtual ~VPreProc();
 
     // CONSTANTS
     static const unsigned DEFINE_RECURSION_LEVEL_MAX = 50;	///< How many `def substitutions before an error
@@ -94,7 +94,7 @@ public:
     void fatal(string msg) { filelinep()->fatal(msg); }	///< Report a fatal error
 
 private:
-    VPreprocOpaque*	m_opaquep;	///< Pointer to parser's implementation data.
+    VPreProcOpaque*	m_opaquep;	///< Pointer to parser's implementation data.
 };
 
 #endif // Guard

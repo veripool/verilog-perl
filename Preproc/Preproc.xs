@@ -27,7 +27,7 @@
 #***********************************************************************/
 
 /* Mine: */
-#include "VPreproc.h"
+#include "VPreProc.h"
 #include <deque>
 
 /* Perl */
@@ -46,7 +46,7 @@ class VFileLineXs;
 #//**********************************************************************
 #// Preprocessor derived classes, so we can override the callbacks to call perl.
 
-class VPreprocXs : public VPreproc {
+class VPreProcXs : public VPreProc {
 public:
     SV*		m_self;	// Class called from (the hash, not SV pointing to the hash)
     int		m_keepComments;
@@ -55,8 +55,8 @@ public:
     bool	m_pedantic;
     deque<VFileLineXs*> m_filelineps;
 
-    VPreprocXs(VFileLine* filelinep) : VPreproc(filelinep) {}
-    virtual ~VPreprocXs();
+    VPreProcXs(VFileLine* filelinep) : VPreProc(filelinep) {}
+    virtual ~VPreProcXs();
 
     // Control methods
     virtual int  keepComments() { return m_keepComments; }	// Return comments
@@ -79,9 +79,9 @@ public:
 };
 
 class VFileLineXs : public VFileLine {
-    VPreprocXs*	m_vPreprocp;		// Parser handling the errors
+    VPreProcXs*	m_vPreprocp;		// Parser handling the errors
 public:
-    VFileLineXs(VPreprocXs* pp) : VFileLine(true), m_vPreprocp(pp) { if (pp) pushFl(); }
+    VFileLineXs(VPreProcXs* pp) : VFileLine(true), m_vPreprocp(pp) { if (pp) pushFl(); }
     virtual ~VFileLineXs() { }
     virtual VFileLine* create(const string& filename, int lineno) {
 	VFileLineXs* filelp = new VFileLineXs(m_vPreprocp);
@@ -89,7 +89,7 @@ public:
 	return filelp;
     }
     virtual void error(const string& msg);	// Report a error at given location
-    void setPreproc(VPreprocXs* pp) {
+    void setPreproc(VPreProcXs* pp) {
 	m_vPreprocp=pp;
 	pushFl(); // The very first construction used pp=NULL, as pp wasn't created yet so make it now
     }
@@ -106,9 +106,9 @@ void VFileLineXs::error(const string& msg) {
 }
 
 #//**********************************************************************
-#// VPreprocXs functions
+#// VPreProcXs functions
 
-VPreprocXs::~VPreprocXs() {
+VPreProcXs::~VPreProcXs() {
     for (deque<VFileLineXs*>::iterator it=m_filelineps.begin(); it!=m_filelineps.end(); ++it) {
 	delete *it;
     }
@@ -117,48 +117,48 @@ VPreprocXs::~VPreprocXs() {
 #//**********************************************************************
 #// Overrides of virtual functions to invoke callbacks
 
-void VPreprocXs::comment(string cmt) {
+void VPreProcXs::comment(string cmt) {
     static string holdcmt; holdcmt = cmt;
     call(NULL, 1,"comment",holdcmt.c_str());
 }
-void VPreprocXs::include(string filename) {
+void VPreProcXs::include(string filename) {
     static string holdfilename; holdfilename = filename;
     call(NULL, 1,"include",holdfilename.c_str());
 }
-void VPreprocXs::undef(string define) {
+void VPreProcXs::undef(string define) {
     static string holddefine; holddefine = define;
     call(NULL, 1,"undef", holddefine.c_str());
 }
-void VPreprocXs::undefineall() {
+void VPreProcXs::undefineall() {
     call(NULL, 0,"undefineall");
 }
-void VPreprocXs::define(string define, string value, string params) {
+void VPreProcXs::define(string define, string value, string params) {
     static string holddefine; holddefine = define;
     static string holdvalue; holdvalue = value;
     static string holdparams; holdparams = params;
     // 4th argument is cmdline; always undef from here
     call(NULL, 3,"define", holddefine.c_str(), holdvalue.c_str(), holdparams.c_str());
 }
-string VPreprocXs::defParams(string define) {
+string VPreProcXs::defParams(string define) {
     static string holddefine; holddefine = define;
     string paramStr;
     call(&paramStr, 1,"def_params", holddefine.c_str());
     return paramStr;
 }
-string VPreprocXs::defValue(string define) {
+string VPreProcXs::defValue(string define) {
     static string holddefine; holddefine = define;
     string valueStr;
     call(&valueStr, 1,"def_value", holddefine.c_str());
     return valueStr;
 }
-string VPreprocXs::defSubstitute(string subs) {
+string VPreProcXs::defSubstitute(string subs) {
     static string holdsubs; holdsubs = subs;
     string outStr;
     call(&outStr, 1, "def_substitute", holdsubs.c_str());
     return outStr;
 }
 
-void VPreprocXs::call (
+void VPreProcXs::call (
     string* rtnStrp,	/* If non-null, load return value here */
     int params,		/* Number of parameters.  Negative frees the parameters */
     const char* method,	/* Name of method to call */
@@ -218,8 +218,8 @@ MODULE = Verilog::Preproc  PACKAGE = Verilog::Preproc
 #//**********************************************************************
 #// self->_new (class, keepcmt, keepwhite, linedir, pedantic)
 
-static VPreprocXs *
-VPreprocXs::_new (SELF, keepcmt, keepwhite, linedir, pedantic)
+static VPreProcXs *
+VPreProcXs::_new (SELF, keepcmt, keepwhite, linedir, pedantic)
 SV *SELF
 int keepcmt
 int keepwhite
@@ -231,7 +231,7 @@ CODE:
     if (CLASS) {}  /* Prevent unused warning */
     if (!SvROK(SELF)) { warn("${Package}::$func_name() -- SELF is not a hash reference"); }
     VFileLineXs* filelinep = new VFileLineXs(NULL/*ok,for initial*/);
-    VPreprocXs* preprocp = new VPreprocXs(filelinep);
+    VPreProcXs* preprocp = new VPreProcXs(filelinep);
     filelinep->setPreproc(preprocp);
     preprocp->m_self = SvRV(SELF);
     preprocp->m_keepComments = keepcmt;
@@ -246,7 +246,7 @@ OUTPUT: RETVAL
 #// self->_DESTROY()
 
 void
-VPreprocXs::_DESTROY()
+VPreProcXs::_DESTROY()
 PROTOTYPE: $
 CODE:
 {
@@ -256,7 +256,7 @@ CODE:
 #// self->debug()
 
 void
-VPreprocXs::_debug (level)
+VPreProcXs::_debug (level)
 int level
 PROTOTYPE: $$
 CODE:
@@ -268,7 +268,7 @@ CODE:
 #// self->lineno()
 
 int
-VPreprocXs::lineno ()
+VPreProcXs::lineno ()
 PROTOTYPE: $
 CODE:
 {
@@ -281,7 +281,7 @@ OUTPUT: RETVAL
 #// self->filename()
 
 const char *
-VPreprocXs::filename ()
+VPreProcXs::filename ()
 PROTOTYPE: $
 CODE:
 {
@@ -294,7 +294,7 @@ OUTPUT: RETVAL
 #// self->unreadback()
 
 void
-VPreprocXs::unreadback (text)
+VPreProcXs::unreadback (text)
 char* text
 PROTOTYPE: $$
 CODE:
@@ -307,7 +307,7 @@ CODE:
 #// self->getall()
 
 const char *
-VPreprocXs::getall (approx_chunk=0)
+VPreProcXs::getall (approx_chunk=0)
 size_t approx_chunk
 PROTOTYPE: $;$
 CODE:
@@ -324,7 +324,7 @@ OUTPUT: RETVAL
 #// self->getline()
 
 const char *
-VPreprocXs::getline ()
+VPreProcXs::getline ()
 PROTOTYPE: $
 CODE:
 {
@@ -340,7 +340,7 @@ OUTPUT: RETVAL
 #// self->eof()
 
 int
-VPreprocXs::eof ()
+VPreProcXs::eof ()
 PROTOTYPE: $
 CODE:
 {
@@ -352,7 +352,7 @@ OUTPUT: RETVAL
 #// self->_open (filename)
 
 int
-VPreprocXs::_open (filename)
+VPreProcXs::_open (filename)
 const char *filename
 PROTOTYPE: $$
 CODE:
