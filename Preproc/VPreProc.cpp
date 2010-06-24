@@ -236,38 +236,6 @@ void VPreProc::insertUnreadback(string text) {
     return idatap->insertUnreadback(text);
 }
 
-//*************************************************************************
-
-// CALLBACK METHODS
-// This probably will want to be overridden for given child users of this class.
-
-void VPreProc::include(string filename) {
-    openFile(filename, filelinep());
-}
-void VPreProc::undef(string define) {
-    cout<<"UNDEF "<<define<<endl;
-}
-void VPreProc::undefineall() {
-    error("Undefineall not implemented\n");
-}
-bool VPreProc::defExists(string define) {
-    return defParams(define)!="";
-}
-string VPreProc::defParams(string define) {
-    return "";
-}
-void VPreProc::define(string define, string value, string params) {
-    error("Defines not implemented: "+define+"\n");
-}
-string VPreProc::defValue(string define) {
-    error("Define not defined: "+define+"\n");
-    return define;
-}
-string VPreProc::defSubstitute(string substitute) {
-    error("Defines not implemented: "+substitute+"\n");
-    return substitute;
-}
-
 //**********************************************************************
 // Parser Utilities
 

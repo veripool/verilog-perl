@@ -57,14 +57,14 @@ public:
 
     // ACCESSORS
     /// Insert given file into this point in input stream
-    virtual void openFile(string filename, VFileLine* filelinep=NULL);
-    virtual void debug(int level);	///< Set debugging level
-    virtual string getall(size_t approx_chunk);	///< Return all lines, or at least approx_chunk bytes. (Null if done.)
-    virtual string getline();		///< Return next line/lines. (Null if done.)
-    virtual bool isEof();		///< Return true on EOF.
-    virtual void insertUnreadback(string text);
+    void openFile(string filename, VFileLine* filelinep=NULL);
+    void debug(int level);	///< Set debugging level
+    string getall(size_t approx_chunk);	///< Return all lines, or at least approx_chunk bytes. (Null if done.)
+    string getline();		///< Return next line/lines. (Null if done.)
+    bool isEof();		///< Return true on EOF.
+    void insertUnreadback(string text);
 
-    virtual VFileLine* filelinep();	///< File/Line number for last getline call
+    VFileLine* filelinep();	///< File/Line number for last getline call
 
     // The default behavior is to pass all unknown `defines right through.
     // This lets the user determine how to report the errors.  It also nicely
@@ -72,22 +72,22 @@ public:
 
     // CONTROL METHODS
     // These options control how the parsing proceeds
-    virtual int keepComments() { return 1; }		///< Return comments, 0=no, 1=yes, 2=callback
-    virtual int keepWhitespace() { return 1; }		///< Return extra whitespace, 0=no, 1=yes
-    virtual bool lineDirectives() { return true; }	///< Insert `line directives
-    virtual bool pedantic() { return false; }		///< Obey standard; Don't substitute `error
+    virtual int keepComments() = 0;		///< Return comments, 0=no, 1=yes, 2=callback
+    virtual int keepWhitespace() = 0;		///< Return extra whitespace, 0=no, 1=yes
+    virtual bool lineDirectives() = 0;		///< Insert `line directives
+    virtual bool pedantic() = 0;		///< Obey standard; Don't substitute `error
 
     // CALLBACK METHODS
     // This probably will want to be overridden for given child users of this class.
-    virtual void comment(string cmt);		///< Comment detected (if keepComments==2)
-    virtual void include(string filename);	///< Request a include file be processed
-    virtual void define(string name, string value, string params); ///< `define without any parameters
-    virtual void undef(string name);		///< Remove a definition
-    virtual void undefineall();			///< Remove all non-command-line definitions
-    virtual bool defExists(string name);	///< Return true if define exists
-    virtual string defParams(string name);	///< Return parameter list if define exists
-    virtual string defValue(string name);	///< Return value of given define (should exist)
-    virtual string defSubstitute(string substitute);	///< Return value to substitute for given post-parameter value
+    virtual void comment(string cmt) = 0;		///< Comment detected (if keepComments==2)
+    virtual void include(string filename) = 0;	///< Request a include file be processed
+    virtual void define(string name, string value, string params) = 0; ///< `define without any parameters
+    virtual void undef(string name) = 0;		///< Remove a definition
+    virtual void undefineall() = 0;			///< Remove all non-command-line definitions
+    virtual bool defExists(string name) = 0;	///< Return true if define exists
+    virtual string defParams(string name) = 0;	///< Return parameter list if define exists
+    virtual string defValue(string name) = 0;	///< Return value of given define (should exist)
+    virtual string defSubstitute(string substitute) = 0;	///< Return value to substitute for given post-parameter value
 
     // UTILITIES
     void error(string msg) { filelinep()->error(msg); }	///< Report a error
