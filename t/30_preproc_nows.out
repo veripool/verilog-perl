@@ -4,6 +4,8 @@ verilog/inc_def09.v:1: `line 1 "verilog/inc2.v" 1
 verilog/inc_def09.v:1: `line 1 "verilog/inc2.v" 0
 verilog/inc_def09.v:1: `line 1 "verilog/inc_ifdef.v" 1
 verilog/inc_def09.v:1: `line 1 "verilog/inc_ifdef.v" 0
+verilog/inc_def09.v:1: `line 1 "verilog/inc_nonl.v" 1
+verilog/inc_def09.v:1: `line 1 "verilog/inc_nonl.v" 0
 verilog/inc_def09.v:1: `line 1 "verilog/inc_def09.v" 1
 verilog/inc_def09.v:6: 'initial $display("start", "msg1" , "msg2" , "end");'
 verilog/inc_def09.v:7: 'initial $display("start", "msg1" , "msg2" , "end");'
@@ -38,7 +40,10 @@ verilog/inc_def09.v:52: '"==)" "((((" () ';
 verilog/inc_def09.v:65: '(6) (eq=al) ZOT'
 verilog/inc_def09.v:66: HERE-Line66
 verilog/inc_def09.v:69: `line 69 "verilog/inc_def09.v" 2
-verilog/inc_def09.v:69: `line 1 "verilog/inc_ifdef.v" 0
+verilog/inc_def09.v:69: `line 1 "verilog/inc_nonl.v" 0
+verilog/inc_nonl.v:2: blah-no-newline-here>
+verilog/inc_nonl.v:2: `line 2 "verilog/inc_nonl.v" 2
+verilog/inc_nonl.v:2: `line 1 "verilog/inc_ifdef.v" 0
 verilog/inc_ifdef.v:8: `line 8 "verilog/inc_ifdef.v" 0
 verilog/inc_ifdef.v:12:  $display("1A");
 verilog/inc_ifdef.v:15: `line 15 "verilog/inc_ifdef.v" 0

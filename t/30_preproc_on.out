@@ -4,6 +4,8 @@ verilog/inc_def09.v:1: `line 1 "verilog/inc2.v" 1
 verilog/inc_def09.v:1: `line 1 "verilog/inc2.v" 0
 verilog/inc_def09.v:1: `line 1 "verilog/inc_ifdef.v" 1
 verilog/inc_def09.v:1: `line 1 "verilog/inc_ifdef.v" 0
+verilog/inc_def09.v:1: `line 1 "verilog/inc_nonl.v" 1
+verilog/inc_def09.v:1: `line 1 "verilog/inc_nonl.v" 0
 verilog/inc_def09.v:1: `line 1 "verilog/inc_def09.v" 1
 verilog/inc_def09.v:1: 
 verilog/inc_def09.v:2: 
@@ -74,7 +76,11 @@ verilog/inc_def09.v:66: HERE-Line66
 verilog/inc_def09.v:67: 
 verilog/inc_def09.v:68: //======================================================================
 verilog/inc_def09.v:69: `line 69 "verilog/inc_def09.v" 2
-verilog/inc_def09.v:69: `line 1 "verilog/inc_ifdef.v" 0
+verilog/inc_def09.v:69: `line 1 "verilog/inc_nonl.v" 0
+verilog/inc_nonl.v:1: // The lack of a newline on the next line is intentional
+verilog/inc_nonl.v:2: blah-no-newline-here>
+verilog/inc_nonl.v:2: `line 2 "verilog/inc_nonl.v" 2
+verilog/inc_nonl.v:2: `line 1 "verilog/inc_ifdef.v" 0
 verilog/inc_ifdef.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc_ifdef.v:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/inc_ifdef.v:3: // without warranty, 2000-2010 by Wilson Snyder.
