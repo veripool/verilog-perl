@@ -551,12 +551,7 @@ void VPreProcImp::insertUnreadbackAtBol(const string& text) {
 
 void VPreProcImp::addLineComment(int enter_exit_level) {
     if (m_preprocp->lineDirectives()) {
-	char numbuf[20]; sprintf(numbuf, "%d", m_lexp->curFilelinep()->lineno());
-	char levelbuf[20]; sprintf(levelbuf, "%d", enter_exit_level);
-	string cmt = ((string)"`line "+numbuf
-		      +" \""+m_lexp->curFilelinep()->filename()+"\" "
-		      +levelbuf+"\n");
-	insertUnreadbackAtBol(cmt);
+	insertUnreadbackAtBol(m_lexp->curFilelinep()->lineDirectiveStrg(enter_exit_level));
     }
 }
 
@@ -677,7 +672,7 @@ int VPreProcImp::getToken() {
 	    goto next_tok;
 	}
 	if (tok==VP_LINE) {
-	    addLineComment(0);
+	    addLineComment(m_lexp->m_enterExit);
 	    goto next_tok;
 	}
 	// Deal with some special parser states

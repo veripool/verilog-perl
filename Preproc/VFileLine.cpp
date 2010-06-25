@@ -63,7 +63,13 @@ const char* VFileLine::itoa(int i) {
     return buf;
 }
 
-VFileLine* VFileLine::lineDirective(const char* textp) {
+string VFileLine::lineDirectiveStrg(int enterExit) const {
+    char numbuf[20]; sprintf(numbuf, "%d", lineno());
+    char levelbuf[20]; sprintf(levelbuf, "%d", enterExit);
+    return ((string)"`line "+numbuf+" \""+filename()+"\" "+levelbuf+"\n");
+}
+
+VFileLine* VFileLine::lineDirective(const char* textp, int& enterExitRef) {
     // Handle `line directive
     // Skip `line
     while (*textp && isspace(*textp)) textp++;
@@ -88,6 +94,12 @@ VFileLine* VFileLine::lineDirective(const char* textp) {
 	strfn = strfn.substr(0, textp-fn);
 	filename = strfn;
     }
+
+    // Grab level
+    while (*textp && (isspace(*textp) || *textp=='"')) textp++;
+    if (isdigit(*textp)) enterExitRef = atoi(textp);
+    else enterExitRef = 0;
+
     return create(filename,lineno);
 }
 

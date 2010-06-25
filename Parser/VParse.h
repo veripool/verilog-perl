@@ -127,7 +127,7 @@ public:
     VFileLine* inFilelinep() const;		///< File/Line number for last callback
     void inFileline(const string& filename, int lineno) { m_inFilelinep = m_inFilelinep->create(filename, lineno); }
     void inFilelineInc() { m_inFilelinep = inFilelinep()->create(inFilelinep()->lineno()+1); }
-    void inLineDirective(const char* text) { m_inFilelinep = inFilelinep()->lineDirective(text); }
+    void inLineDirective(const char* text) { int ign; m_inFilelinep = inFilelinep()->lineDirective(text, ign/*ref*/); }
 
     string unreadback() const { return (m_useUnreadback ? m_unreadback : "new(...,use_unreadback=>0) was used"); }
     void unreadback(const string& text) { if (m_useUnreadback && callbackMasterEna()) m_unreadback = text; }

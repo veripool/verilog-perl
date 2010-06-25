@@ -131,6 +131,7 @@ class VPreLex {
     int		m_parenLevel;	///< Parenthesis counting inside def args
     bool	m_defCmtSlash;	///< /*...*/ comment in define had \ ending
     string	m_defValue;	///< Definition value being built.
+    int		m_enterExit;	///< For VL_LINE, the enter/exit level
 
     // CONSTRUCTORS
     VPreLex() {
@@ -140,6 +141,7 @@ class VPreLex {
 	m_formalLevel = 0;
 	m_parenLevel = 0;
 	m_defCmtSlash = false;
+	m_enterExit = 0;
 	initFirstBuffer();
     }
     ~VPreLex() {
@@ -151,7 +153,7 @@ class VPreLex {
     VFileLine* curFilelinep() { return m_curFilelinep; }
     void curFilelinep(VFileLine* fl) { m_curFilelinep = fl; }
     void appendDefValue(const char* text, size_t len);
-    void lineDirective(const char* textp) { curFilelinep(curFilelinep()->lineDirective(textp)); }
+    void lineDirective(const char* textp) { curFilelinep(curFilelinep()->lineDirective(textp, m_enterExit/*ref*/)); }
     void linenoInc() { curFilelinep(curFilelinep()->create(curFilelinep()->lineno()+1)); }
     /// Called by VPreProc.cpp to inform lexer
     void pushStateDefArg(int level);
