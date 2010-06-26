@@ -310,6 +310,7 @@ CODE:
     if (!THIS || THIS->isEof()) XSRETURN_UNDEF;
     string lastline = THIS->getall(approx_chunk);
     holdline = lastline;	/* Stash it so c_str() doesn't disappear immediately */
+    if (holdline=="" && THIS->isEof()) XSRETURN_UNDEF;
     RETVAL = lastline.c_str();
 }
 OUTPUT: RETVAL
@@ -326,6 +327,7 @@ CODE:
     if (!THIS || THIS->isEof()) XSRETURN_UNDEF;
     string lastline = THIS->getline();
     holdline = lastline;	/* Stash it so c_str() doesn't disappear immediately */
+    if (holdline=="" && THIS->isEof()) XSRETURN_UNDEF;
     RETVAL = lastline.c_str();
 }
 OUTPUT: RETVAL

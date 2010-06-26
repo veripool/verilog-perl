@@ -32,6 +32,9 @@
 
 #include "VFileLine.h"
 
+class VPreProcImp;
+
+//======================================================================
 // Token codes
 // If changing, see VPreProc.cpp's VPreProcImp::tokenName()
 #define VP_EOF		0
