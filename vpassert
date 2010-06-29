@@ -1041,10 +1041,12 @@ sub nochange_copy {
     $fhw->print("`line 1 \"$srcfile\" 0\n") if $Opt_Line;
     # Unfortunately File::Copy::copy overwrites our line statement.
     my $eof;
+    my $chunk = POSIX::BUFSIZ;  # On 5.8.8 this isn't a number but text
+    $chunk = 8*1024 if $chunk !~ /^\d+$/;
     while (!$eof) {
 	my $data = '';
 	$!=undef;
-	my $rv = $fhr->sysread($data, POSIX::BUFSIZ, 0);
+	my $rv = $fhr->sysread($data, $chunk, 0);
 	#print "RRV=$rv b=$!\n" if $Debug;
 	$eof = 1 if !$rv || (!$fhr || ($! && $! != POSIX::EWOULDBLOCK));
 	$fhw->print($data);
