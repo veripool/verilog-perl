@@ -21,6 +21,7 @@ if (!$ENV{VERILATOR_AUTHOR_SITE} || $ENV{HARNESS_NO_CRITIC}) {
 	#-profile => "t/04_critic.rc"
 	Test::Perl::Critic->import( -verbose=>9,
 				    -exclude=>['ProhibitExplicitReturnUndef',
+					       'ProhibitNoStrict',
 					       'ProhibitStringyEval'],
 	    );
 	all_critic_ok();
