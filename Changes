@@ -5,9 +5,11 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.25***
 
-***	Add vppreproc --dump-defines option.
-
 ****	Fix preprocessing ifdef `INDIRECT(DEFINE).
+
+* Verilog::Language 3.251 2010/06/29
+
+***	Add vppreproc --dump-defines option.
 
 ****	Fix vpassert "POSIX::BUFSIZ" error on Perl 5.8.8.  [Chitlesh Goorah]
 
