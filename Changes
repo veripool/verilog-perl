@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix preprocessing ifdef `INDIRECT(DEFINE).
 
+****	Fix vpassert "POSIX::BUFSIZ" error on Perl 5.8.8.  [Chitlesh Goorah]
+
 * Verilog::Language 3.250 2010/06/21
 
 **	Add parsing of "defparam", including SigParser::defparam callback,
