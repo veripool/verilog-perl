@@ -6,13 +6,13 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 5 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Language;
-ok(1);
+ok(1, "use");
 
 array_ck (['none',
 	   ],
@@ -47,19 +47,6 @@ array_ck (['ff[3]  bar [10] end',
 
 sub array_ck {
     my $checkref = shift;
-    my $ok=1;
-
-    if ($#{$checkref} != $#_) {
-	$ok = 0;
-    } else {
-	for (my $i=0;$i<=$#_;$i++) {
-	    $ok = 0 if $_[$i] ne $checkref->[$i];
-	}
-    }
-
-    ok ($ok);
-    if (!$ok) {
-	print "Expec:\t",join("\n\t",@{$checkref}),"\n";
-	print "  Got:\t",join("\n\t",@_),"\n";
-    }
+    my @got = @_;
+    is_deeply(\@got, $checkref);
 }

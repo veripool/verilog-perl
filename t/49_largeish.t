@@ -6,7 +6,7 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 use Time::HiRes qw(gettimeofday tv_interval);
 use Data::Dumper; $Data::Dumper::Indent = 1;
 
@@ -81,19 +81,21 @@ sub per_net_test {
 	 , $size[$i]/1024/1024, $deltatime, $mem[$i]/1024/1024, $deltamem/1024/1024, $mpn, $secPerB[$i];
     }
 
-    ok(1);
+    ok(1, "run complete");
 
     my $slope = $secPerB[3] / ($secPerB[2]||1);
-    if ($slope > 0.5 && $slope < 2) {
-	ok(1);
-    } else {
-	if (!$ENV{VERILATOR_AUTHOR_SITE} || $ENV{HARNESS_FAST}) {
-	    # It's somewhat sensitive unless there's a lot of loops,
-	    # and lots of loops is too slow for users to deal with.
-	    skip("waived, author only test",1);
-	} else {
-	    warn "%Warning: ",$slope," non O(n) based on input file size, slope=$slope\n";
-	    ok(0);
+  SKIP: {
+      if ($slope > 0.5 && $slope < 2) {
+	  ok(1, "complexity");
+      } else {
+	  if (!$ENV{VERILATOR_AUTHOR_SITE} || $ENV{HARNESS_FAST}) {
+	      # It's somewhat sensitive unless there's a lot of loops,
+	      # and lots of loops is too slow for users to deal with.
+	      skip("waived, author only test",1);
+	  } else {
+	      warn "%Warning: ",$slope," non O(n) based on input file size, slope=$slope\n";
+	      ok(0, "complexity");
+	  }
 	}
     }
 }

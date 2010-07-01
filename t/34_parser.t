@@ -6,7 +6,7 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 use Data::Dumper; $Data::Dumper::Indent = 1; #Debug
 
 BEGIN { plan tests => 7 }
@@ -58,19 +58,19 @@ package main;
 
 use Verilog::Parser;
 use Verilog::Preproc;
-ok(1);
+ok(1, "use");
 
 # Use our class and dump to a file
 my $dump_fh = new IO::File(">test_dir/34.dmp") or die "%Error: $! test_dir/34.dmp,";
 
 my $p = new Verilog::Parser;
-ok($p);
+ok($p, "new");
 $p->selftest();
-ok(1);
+ok(1, "selftest");
 
 $p->lineno(100);
 $p->filename("XXX");
-ok($p->lineno == 100);
+is($p->lineno, 100);
 
 read_test("verilog/v_hier_subprim.v", $dump_fh);
 read_test("verilog/v_hier_sub.v", $dump_fh);
@@ -79,7 +79,7 @@ ok(1);
 $dump_fh->close();
 
 # Did we read the right stuff?
-ok(files_identical("test_dir/34.dmp", "t/34_parser.out"));
+ok(files_identical("test_dir/34.dmp", "t/34_parser.out"), "diff");
 
 # Did we cover everything?
 my $err;
@@ -89,7 +89,7 @@ foreach my $cb (Verilog::Parser::callback_names()) {
 	warn "%Warning: No test coverage for callback: $cb\n";
     }
 }
-ok (!$err);
+ok (!$err, "coverage");
 
 ######################################################################
 

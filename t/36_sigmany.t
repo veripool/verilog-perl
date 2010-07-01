@@ -9,7 +9,7 @@
 #  (delete-matching-lines "^#\\|^ok \\|^1\\.\\.\\|^not ok")
 
 use strict;
-use Test;
+use Test;  # Not Test::More due to skip usage
 use Data::Dumper; $Data::Dumper::Indent = 1;
 
 BEGIN { plan tests => 3 }

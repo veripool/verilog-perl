@@ -7,7 +7,7 @@
 
 use IO::File;
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 8 }
 BEGIN { require "t/test_utils.pl"; }
@@ -24,7 +24,8 @@ sub vppreproc {
     my $out = shift;
     my $flags = shift;
 
-    run_system ("${PERL} ./vppreproc ${flags} -y verilog inc2.v > $out");
-    ok(-r $out);
-    ok(files_identical ($out, $checkname));
+    my $cmd = "${PERL} ./vppreproc ${flags} -y verilog inc2.v > $out";
+    run_system ($cmd);
+    ok(-r $out, "vppreproc output from: $cmd");
+    ok(files_identical ($out, $checkname), "diff");
 }

@@ -7,7 +7,7 @@
 
 use IO::File;
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 10 }
 BEGIN { require "t/test_utils.pl"; }
@@ -25,8 +25,9 @@ sub vhier {
     my $flags = shift;
 
     my $out = "test_dir/vhier.v";
-    run_system ("${PERL} ./vhier ${flags} --nomissing -y verilog v_hier_top.v -o $out");
-    ok(-r $out);
+    my $cmd = "${PERL} ./vhier ${flags} --nomissing -y verilog v_hier_top.v -o $out";
+    run_system ($cmd);
+    ok(-r $out, "vhier outputted from: $cmd");
     #run_system ("/bin/cp $out $checkname");
-    ok(files_identical ($checkname, $out));
+    ok(files_identical ($checkname, $out), "vhier file compare");
 }

@@ -6,7 +6,7 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 2 }
 BEGIN { require "t/test_utils.pl"; }
@@ -19,7 +19,7 @@ print "Checking vsplitmodule...\n";
     my $out = "test_dir/a.v";
     unlink $out;
     run_system ("${PERL} ./vsplitmodule");
-    ok(1);
-    ok(-r $out);
+    ok(1, "vsplitmodule");
+    ok(-r $out, "vsplitmodule output");
     unlink $out;
 }

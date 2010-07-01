@@ -6,7 +6,7 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 use File::Copy;
 
 BEGIN { plan tests => 9 }
@@ -17,7 +17,7 @@ ok(1);
 
 {   #Editing
     my $split = Verilog::EditFiles->new();
-    ok(1);
+    ok(1, "new");
 
     my $edfile = "test_dir/56_editfiles.v";
 
@@ -29,8 +29,8 @@ ok(1);
 	     $wholefile =~ s%inside_module%replaced_inside_module%mg;
 	     return $wholefile;
 	 });
-    ok(1);
-    ok(files_identical($edfile, "t/56_editfiles_edit.out"));
+    ok(1, "edit_file");
+    ok(files_identical($edfile, "t/56_editfiles_edit.out"), "diff");
 }
 {
     unlink (glob("test_dir/editout/*.v"));
@@ -42,11 +42,11 @@ ok(1);
 	 celldefine => 1,
 	 );
     $split->read_and_split(glob("t/56_editfiles.v"));
-    ok(1);
+    ok(1, "read_and_split");
     $split->write_files();
-    ok(1);
-    ok(files_identical("test_dir/editout/a.v", "t/56_editfiles_a.out"));
-    ok(files_identical("test_dir/editout/b.v", "t/56_editfiles_b.out"));
+    ok(1, "write_files");
+    ok(files_identical("test_dir/editout/a.v", "t/56_editfiles_a.out"), "diff");
+    ok(files_identical("test_dir/editout/b.v", "t/56_editfiles_b.out"), "diff");
     $split->write_lint();
-    ok(1);
+    ok(1, "write_lint");
 }

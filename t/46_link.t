@@ -6,7 +6,7 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 2 }
 BEGIN { require "t/test_utils.pl"; }
@@ -14,7 +14,7 @@ BEGIN { require "t/test_utils.pl"; }
 #$Verilog::Netlist::Debug = 1;
 use Verilog::Netlist;
 use Verilog::Getopt;
-ok(1);
+ok(1, "use");
 {
     # Setup options so files can be found
     my $opt = new Verilog::Getopt;
@@ -38,4 +38,4 @@ ok(1);
     $nl->dump;
 }
 
-ok(1);
+ok(1, "done");

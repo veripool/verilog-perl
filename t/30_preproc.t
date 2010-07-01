@@ -7,7 +7,7 @@
 
 use IO::File;
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 14 }
 BEGIN { require "t/test_utils.pl"; }
@@ -45,10 +45,10 @@ sub prep {
 }
 
 use Verilog::Getopt;
-ok(1);
+ok(1, "use Verilog::Getopt");
 
 use Verilog::Preproc;
-ok(1);
+ok(1, "use Verilog::Preproc");
 
 {
     my $opt = prep();
@@ -58,7 +58,7 @@ ok(1);
     #$pp->debug(9);
     $pp->open("inc1.v");
     $pp->open("inc2.v");
-    ok(1);
+    ok(1, "open");
 
     my $fhout = IO::File->new(">test_dir/inc.out");
 
@@ -68,10 +68,10 @@ ok(1);
 	print $fhout $pp->filename.":".$pp->lineno.": ".$line;
 	die if ++$ln > 2000;
     }
-    ok(1);
+    ok(1, "parsed");
 
     $fhout->close();
-    ok(files_identical("test_dir/inc.out", "t/30_preproc.out"));
+    ok(files_identical("test_dir/inc.out", "t/30_preproc.out"), "diff");
 }
 
 test ('_sub', keep_comments=>'sub', _test_def_substitute=>1);
@@ -98,9 +98,9 @@ sub test {
 	print $fhout $pp->filename.":".$pp->lineno.": ".$line;
     }
     $fhout->close();
-    ok(1);
+    ok(1, "parsed");
 
-    ok(files_identical("test_dir/inc${id}.out", "t/30_preproc${id}.out"));
+    ok(files_identical("test_dir/inc${id}.out", "t/30_preproc${id}.out"), "diff");
 }
 
 sub test_getall {
@@ -128,7 +128,7 @@ sub test_getall {
 	}
     }
 
-    ok($a eq $b);
+    is($a, $b);
     ok($acalls > $bcalls);
 }
 

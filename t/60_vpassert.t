@@ -7,7 +7,7 @@
 
 use IO::File;
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 6 }
 BEGIN { require "t/test_utils.pl"; }
@@ -21,11 +21,11 @@ system ("/bin/rm -rf test_dir/verilog");
 symlink ("../verilog", "test_dir/verilog");  # So `line files are found; ok if fails
 run_system ("${PERL} ./vpassert --minimum --nostop --date --axiom --verilator --vcs --synthcov"
 	    ." -o test_dir/.vpassert -y verilog/");
-ok(1);
-ok(-r 'test_dir/.vpassert/pli.v');
+ok(1, "vpassert ran");
+ok(-r 'test_dir/.vpassert/pli.v', "pli.v created");
 
-ok(compare('lines', [glob("test_dir/.vpassert/*.v")]));
-ok(compare('diff',  [glob("test_dir/.vpassert/*.v")]));
+ok(compare('lines', [glob("test_dir/.vpassert/*.v")]), "lines output");
+ok(compare('diff',  [glob("test_dir/.vpassert/*.v")]), "diff output");
 
 # Preprocess with custom outputters
 run_system ("${PERL} ./vpassert --date --verilator --vcs"
@@ -33,60 +33,62 @@ run_system ("${PERL} ./vpassert --date --verilator --vcs"
 	    .q{ --call-info '$callInfo'}
 	    .q{ --call-warn '$callWarn'}
 	    ." -o test_dir/.vpassertcall -y verilog/");
-ok(files_identical("test_dir/.vpassertcall/example.v", "t/60_vpassert.out"));
+ok(files_identical("test_dir/.vpassertcall/example.v", "t/60_vpassert.out"), "diff");
 
 # Build the model
 unlink "simv";
 chdir 'test_dir';
-if (!$ENV{VERILATOR_AUTHOR_SITE}) {
-    skip("author only test (harmless)",1);
-}
-elsif ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
-    run_system (# We use VCS, insert your simulator here
-		"$ENV{VCS_HOME}/bin/vcs"
-		# check line coverage
-		." -cm line+assert"
-		# vpassert optionally uses SystemVerilog coverage for $ucover_clk
-		." -sverilog"
-		# vpassert uses `pli to point to the hierarchy of the pli module
-		." +define+pli=pli"
-		# vpassert uses `__message_on to point to the message on variable
-		." +define+__message_on=pli.message_on"
-		# vpassert --minimum uses `__message_minimum to optimize away some messages
-		." +define+__message_minimum=1"
-		# Read files from .vpassert BEFORE reading from other directories
-		." +librescan +libext+.v -y .vpassert"
-		# Finally, read the needed top level file
-		." .vpassert/example.v"
-		);
-    # Execute the model (VCS is a compiled simulator)
-    run_system ("./simv");
-    unlink ("./simv");
-    ok(1);
-}
-elsif ($ENV{NC_ROOT} && -d "$ENV{NC_ROOT}/tools") {
-    run_system ("ncverilog"
-		." -q"
-		# vpassert optionally uses SystemVerilog coverage for $ucover_clk
-		." +sv"
-		# vpassert uses `pli to point to the hierarchy of the pli module
-		." +define+pli=pli"
-		# vpassert uses `__message_on to point to the message on variable
-		." +define+__message_on=pli.message_on"
-		# vpassert --minimum uses `__message_minimum to optimize away some messages
-		." +define+__message_minimum=1"
-		# Read files from .vpassert BEFORE reading from other directories
-		." +librescan +libext+.v -y .vpassert"
-		# Finally, read the needed top level file
-		." .vpassert/example.v"
-		);
-    ok(1);
-}
-else {
-    warn "\n";
-    warn "*** You do not seem to have VCS or NC-Verilog installed, not running rest of test.\n";
-    warn "*** (If you do not own VCS/NC-Verilog, ignore this warning).\n";
-    skip(1,1);
+SKIP: {
+    skip("author only test (harmless)",1)
+	if (!$ENV{VERILATOR_AUTHOR_SITE});
+
+    if ($ENV{VCS_HOME} && -r "$ENV{VCS_HOME}/bin/vcs") {
+	run_system (# We use VCS, insert your simulator here
+		    "$ENV{VCS_HOME}/bin/vcs"
+		    # check line coverage
+		    ." -cm line+assert"
+		    # vpassert optionally uses SystemVerilog coverage for $ucover_clk
+		    ." -sverilog"
+		    # vpassert uses `pli to point to the hierarchy of the pli module
+		    ." +define+pli=pli"
+		    # vpassert uses `__message_on to point to the message on variable
+		    ." +define+__message_on=pli.message_on"
+		    # vpassert --minimum uses `__message_minimum to optimize away some messages
+		    ." +define+__message_minimum=1"
+		    # Read files from .vpassert BEFORE reading from other directories
+		    ." +librescan +libext+.v -y .vpassert"
+		    # Finally, read the needed top level file
+		    ." .vpassert/example.v"
+	    );
+	# Execute the model (VCS is a compiled simulator)
+	run_system ("./simv");
+	unlink ("./simv");
+	ok(1, "vcs sim");
+    }
+    elsif ($ENV{NC_ROOT} && -d "$ENV{NC_ROOT}/tools") {
+	run_system ("ncverilog"
+		    ." -q"
+		    # vpassert optionally uses SystemVerilog coverage for $ucover_clk
+		    ." +sv"
+		    # vpassert uses `pli to point to the hierarchy of the pli module
+		    ." +define+pli=pli"
+		    # vpassert uses `__message_on to point to the message on variable
+		    ." +define+__message_on=pli.message_on"
+		    # vpassert --minimum uses `__message_minimum to optimize away some messages
+		    ." +define+__message_minimum=1"
+		    # Read files from .vpassert BEFORE reading from other directories
+		    ." +librescan +libext+.v -y .vpassert"
+		    # Finally, read the needed top level file
+		    ." .vpassert/example.v"
+	    );
+	ok(1, "ncv sim");
+    }
+    else {
+	warn "\n";
+	warn "*** You do not seem to have VCS or NC-Verilog installed, not running rest of test.\n";
+	warn "*** (If you do not own VCS/NC-Verilog, ignore this warning).\n";
+	skip("No simulator found",1);
+    }
 }
 chdir '..';
 

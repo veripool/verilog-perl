@@ -7,7 +7,7 @@
 
 use IO::File;
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 7 }
 BEGIN { require "t/test_utils.pl"; }
@@ -16,13 +16,13 @@ BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Getopt;
 use Verilog::Preproc;
-ok(1);
+ok(1, "use");
 
 # Check we get error
 eval {
     check();
 };
-ok ($@ =~ /32_noinc.v:\d+: Cannot open notfound/);
+like ($@, qr/32_noinc.v:\d+: Cannot open notfound/);
 check(include_open_nonfatal=>1);
 ok (1);
 
@@ -35,11 +35,11 @@ sub check {
 
     my $pp = new Verilog::Preproc (options=>$opt,
 				   @opts);
-    ok(1);
+    ok(1, "new");
 
     #$pp->debug(9);
     $pp->open("t/32_noinc.v");
-    ok(1);
+    ok(1, "open");
 
     while (defined(my $line = $pp->getline())) {
 	#print "LINE: $line";

@@ -6,14 +6,14 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 2 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::Netlist::Debug = 1;
 use Verilog::Netlist;
-ok(1);
+ok(1, "use");
 {
     print "Checking example in Netlist.pm\n";
 
@@ -66,5 +66,4 @@ ok(1);
     $nl->dump;
 }
 
-
-ok(1);
+ok(1, "done");

@@ -6,7 +6,7 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test;   # Test::More leaks itself!
 use Data::Dumper; $Data::Dumper::Indent = 1;
 BEGIN { eval "use Devel::Leak;"; }  # Optional
 

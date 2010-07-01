@@ -6,14 +6,14 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 12 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::SigParser::Debug = $Verilog::Parser::Debug = 1;
 use Verilog::Netlist;
-ok(1);
+ok(1, "use");
 
 check ('test_dir/42.dmp', ['verilog/v_hier_top.v', 'verilog/v_hier_top2.v', 'verilog/v_comments.v'],
        [link_read_nonfatal=>1, keep_comments => 1,]);

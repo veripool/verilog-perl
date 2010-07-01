@@ -6,14 +6,14 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 25 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::Netlist::Debug = 1;
 use Verilog::Netlist;
-ok(1);
+ok(1, "use");
 
 ##*** See also 41_example.t
 
@@ -41,31 +41,31 @@ $nl->lint();  # Optional, see docs; probably not wanted
 $nl->exit_if_error();
 
 print "Level tests\n";
-ok($nl->find_module("v_hier_top")->level, 3);
-ok($nl->find_module("v_hier_sub")->level, 2);
-ok($nl->find_module("v_hier_subsub")->level, 1);
+is($nl->find_module("v_hier_top")->level, 3);
+is($nl->find_module("v_hier_sub")->level, 2);
+is($nl->find_module("v_hier_subsub")->level, 1);
 
 my @mods = map {$_->name} $nl->modules_sorted_level;
-ok ($mods[0], 'v_hier_noport');
-ok ($mods[1], 'v_hier_subsub');
-ok ($mods[2], 'v_sv_pgm');
-ok ($mods[3], 'v_hier_sub');
-ok ($mods[4], 'v_hier_top2');
-ok ($mods[5], 'v_hier_top');
-ok ($mods[6], 'v_sv_mod');
+is ($mods[0], 'v_hier_noport');
+is ($mods[1], 'v_hier_subsub');
+is ($mods[2], 'v_sv_pgm');
+is ($mods[3], 'v_hier_sub');
+is ($mods[4], 'v_hier_top2');
+is ($mods[5], 'v_hier_top');
+is ($mods[6], 'v_sv_mod');
 
 # Width checks
 {
     my $mod = $nl->find_module("v_hier_top");
-    ok (_width_of($mod,"WC_w1"), 1);
-    ok (_width_of($mod,"WC_w1b"), 1);
-    ok (_width_of($mod,"WC_w3"), 3);
-    ok (_width_of($mod,"WC_w4"), 4);
-    ok (_width_of($mod,"WC_p32"), 32);
-    ok (_width_of($mod,"WC_p1"), 1);
-    ok (_width_of($mod,"WC_p3"), 3);
-    ok (_width_of($mod,"WC_p4"), 4);
-    ok (_width_of($mod,"WC_pint"), 32);
+    is (_width_of($mod,"WC_w1"), 1);
+    is (_width_of($mod,"WC_w1b"), 1);
+    is (_width_of($mod,"WC_w3"), 3);
+    is (_width_of($mod,"WC_w4"), 4);
+    is (_width_of($mod,"WC_p32"), 32);
+    is (_width_of($mod,"WC_p1"), 1);
+    is (_width_of($mod,"WC_p3"), 3);
+    is (_width_of($mod,"WC_p4"), 4);
+    is (_width_of($mod,"WC_pint"), 32);
 }
 
 # Port accessors
@@ -86,7 +86,7 @@ ok ($mods[6], 'v_sv_mod');
     my $net = $mod->find_net("iosig");
     ok($net);
     # Someday ->comment should include stuff before the ; also
-    ok($net->comment eq "/* synthesis aftersemi*/\n// NetListName=F12_IO");
+    is($net->comment, "/* synthesis aftersemi*/\n// NetListName=F12_IO");
 }
 
 ok(1);

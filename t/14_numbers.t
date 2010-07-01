@@ -6,35 +6,32 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 
-BEGIN { plan tests => 22 }
+BEGIN { plan tests => 32 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Language;
-ok(1);
+ok(1, "use");
 
-ok (Verilog::Language::number_value("5'h13")==19);
-ok (Verilog::Language::number_value("5'd13")==13);
-ok (Verilog::Language::number_value("5'o13")==11);
-ok (Verilog::Language::number_value("5'B11")==3);
-ok (Verilog::Language::number_value("5 'B 11")==3);
-ok (Verilog::Language::number_value("'b10")==2);
-ok (Verilog::Language::number_value("2'sb10")==2);
-ok (Verilog::Language::number_bits("8'b10")==8);
-ok (Verilog::Language::number_bits("8 'b 10")==8);
-ok (Verilog::Language::number_signed("8 'sb 1")==1);
+is (Verilog::Language::number_value("5'h13"), 19);
+is (Verilog::Language::number_value("5'd13"), 13);
+is (Verilog::Language::number_value("5'o13"), 11);
+is (Verilog::Language::number_value("5'B11"), 3);
+is (Verilog::Language::number_value("5 'B 11"), 3);
+is (Verilog::Language::number_value("'b10"), 2);
+is (Verilog::Language::number_value("2'sb10"), 2);
+is (Verilog::Language::number_bits("8'b10"), 8);
+is (Verilog::Language::number_bits("8 'b 10"), 8);
+is (Verilog::Language::number_signed("8 'sb 1"), 1);
 ok (!defined Verilog::Language::number_bits("'b10"));
 
 print "  Bit::Vector\n";
 eval "use Bit::Vector";
-if ($@) {
-    skip("Bit::Vector not installed (harmless)",1);
-    skip("Bit::Vector not installed (harmless)",1);
-    skip("Bit::Vector not installed (harmless)",1);
-    skip("Bit::Vector not installed (harmless)",1);
-    skip("Bit::Vector not installed (harmless)",1);
-} else {
+SKIP: {
+    if ($@) {
+	skip("Bit::Vector not installed (harmless)",5);
+    }
     try_bitvector("5823", 32, "000016bf");
     try_bitvector("80'h47cb_40d7_b50f_0147_1a85", 80, "47cb40d7b50f01471a85");
     try_bitvector("83'o227525534413441101057616251", 83, "097aad721721208bf1ca9");
@@ -44,13 +41,10 @@ if ($@) {
 
 print "  Math::BigInt\n";
 eval "use Math::BigInt";
-if ($@) {
-    skip("Math::BigInt not installed (harmless)",1);
-    skip("Math::BigInt not installed (harmless)",1);
-    skip("Math::BigInt not installed (harmless)",1);
-    skip("Math::BigInt not installed (harmless)",1);
-    skip("Math::BigInt not installed (harmless)",1);
-} else {
+SKIP: {
+    if ($@) {
+	skip("Math::BigInt not installed (harmless)",5);
+    }
     try_bigint("5823", 4, "0x16bf");
     try_bigint("80'h47cb_40d7_b50f_0147_1a85", 24, "0x47cb40d7b50f01471a85");
     try_bigint("83'o227525534413441101057616251", 24, "0x97aad721721208bf1ca9");
@@ -68,7 +62,8 @@ sub try_bitvector {
     my $gotbits = $got->Size;
     my $gotvalue = lc $got->to_Hex;
     print "   $text -> got $gotbits $gotvalue =? exp $expbits exp $expvalue\n";
-    ok ($gotbits eq $expbits && $gotvalue eq $expvalue);
+    is ($gotbits, $expbits, "number of bits");
+    is ($gotvalue, $expvalue, "value");
 }
 
 sub try_bigint {
@@ -80,5 +75,6 @@ sub try_bigint {
     my $gotbits = $got->length;
     my $gotvalue = lc $got->as_hex;
     print "   $text -> got $gotbits $gotvalue =? exp $expbits exp $expvalue\n";
-    ok ($gotbits eq $expbits && $gotvalue eq $expvalue);
+    is ($gotbits, $expbits, "number of bits");
+    is ($gotvalue, $expvalue, "value");
 }

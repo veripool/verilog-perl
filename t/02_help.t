@@ -6,7 +6,7 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { require "t/test_utils.pl"; }
 my @execs = glob ("blib/script/[a-z]*");
@@ -14,27 +14,17 @@ plan tests => (3 * ($#execs+1));
 
 foreach my $exe (@execs) {
     print "Doc test of: $exe\n";
-    ok (-e $exe);
-    my $cmd = "$PERL $exe --version 2>&1";
-    my $help = `$cmd`;
-    if ($exe =~ /vsplitmodule/) {
-	skip("vsplitmodule is only example (harmless)",1);
-    } else {
-	if ($help =~ /Version.*[0-9]/) {
-	    ok (1);
-	} else {
-	    ok (0);
-	    # Aid cpan test debug
-	    warn ("Test fail output:"
-		  .join("\n   ",split(/\n/, "\n${cmd}\n${help}__EOT__"))
-		  ."\n");
-	}
-    }
+    ok (-e $exe, "exe exists: $exe");
+  SKIP: {
+      skip("vsplitmodule is only example (harmless)",2)
+	  if ($exe =~ /vsplitmodule/);
 
-    $help = `$PERL $exe --help 2>&1`;
-    if ($exe =~ /vsplitmodule/) {
-	skip("vsplitmodule is only example (harmless)",1);
-    } else {
-	ok ($help =~ /DISTRIBUTION/);
+      my $cmd = "$PERL $exe --help 2>&1";
+      my $help = `$cmd`;
+      like ($help, qr/DISTRIBUTION/, "help result for: $cmd");
+
+      $cmd = "$PERL $exe --version 2>&1";
+      $help = `$cmd`;
+      like ($help, qr/Version.*[0-9]/, "version result for: $cmd");
     }
 }

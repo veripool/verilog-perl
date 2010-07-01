@@ -87,6 +87,7 @@ WriteMakefile(
 	      PREREQ_PM => {'Pod::Usage' => 1.34,
 			    'Data::Dumper' => 1,
 			    'Test' => 1,
+			    'Test::More' => 1,
 			    'Time::HiRes' => 1,
 			    'warnings' => 1,
 			    #'Test::Pod' => 1,  # Required only for author tests

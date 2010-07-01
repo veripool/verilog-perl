@@ -6,22 +6,22 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 use Cwd;
 
 BEGIN { plan tests => 14 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Getopt;
-ok(1);
+ok(1, "use");
 
 $Verilog::Getopt::Debug = 1;
 
 my $opt = new Verilog::Getopt;
-ok(1);
+ok(1, "new");
 
 $ENV{DOT} = ".";
-ok($opt->file_substitute('Fred/$DOT/$NOT_SET_IN_ENV/$DOT'), 'Fred/./$NOT_SET_IN_ENV/.');
+is($opt->file_substitute('Fred/$DOT/$NOT_SET_IN_ENV/$DOT'), 'Fred/./$NOT_SET_IN_ENV/.');
 
 my @param = qw ( +libext+t
 		 +incdir+t
@@ -37,7 +37,7 @@ my @param = qw ( +libext+t
 
 my @left = $opt->parameter(@param);
 print join(" ",@left),"\n";
-ok ($#left == 0);	# passthru
+is ($#left, 0);	# passthru
 
 ok ($opt->defvalue('read_opt_file'));
 
@@ -48,7 +48,7 @@ ok (($fp eq (Cwd::abs_path("t")."/20_getopt.t"))
 
 my @out = $opt->get_parameters();
 print "OUT: ",(join(" ",@out)),"\n";
-ok ($#out == 13);
+is ($#out, 13);
 
 {
     my $opt2 = new Verilog::Getopt ();
@@ -56,21 +56,21 @@ ok ($#out == 13);
     print join(" ",@left2),"\n";
     my @out2 = $opt->get_parameters();
     print join(" ",@out2),"\n";
-    ok ($#out2 == 13);
+    is ($#out2, 13);
 }
 
 {
     my $opt2 = new Verilog::Getopt (gcc_style=>1, vcs_style=>0);
     my @left2 = $opt2->parameter(@param);
     print "LEFT: ",join(" ",@left2),"\n";
-    ok ($#left2 == 8);
+    is ($#left2, 8);
 }
 
 {
     my $opt2 = new Verilog::Getopt (gcc_style=>0, vcs_style=>1);
     my @left2 = $opt2->parameter(@param);
     print "LEFT: ",join(" ",@left2),"\n";
-    ok ($#left2 == 3);
+    is ($#left2, 3);
 }
 
 $opt->map_directories(sub{s![a-z]!x!; $_});

@@ -6,15 +6,15 @@
 # Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
 use strict;
-use Test;
+use Test::More;
 
 BEGIN { plan tests => 3 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Std;
-ok(1);
+ok(1, "use");
 
-ok (Verilog::Std::std() =~ /endpackage/);
+like (Verilog::Std::std(), qr/endpackage/);
 
 # Make sure data sticks around
-ok (Verilog::Std::std() =~ /endpackage/);
+like (Verilog::Std::std(), qr/endpackage/);
