@@ -3,18 +3,44 @@
 // without warranty, 2000-2010 by Wilson Snyder.
    text.
 
+//===========================================================================
+// Includes
+
+//===========================================================================
+// Defines
+
+`define DEF_A3
+`define DEF_A1
+// DEF_A0 set by command line
+   wire [3:0] q = {
+		   `ifdef DEF_A3 1'b1 `else 1'b0 `endif ,
+		   `ifdef DEF_A2 1'b1 `else 1'b0 `endif ,
+		   `ifdef DEF_A1 1'b1 `else 1'b0 `endif ,
+		   `ifdef DEF_A0 1'b1 `else 1'b0 `endif
+		   };
+
+text.
+
 `define FOOBAR  foo /*this */ bar   /* this too */
 `define FOOBAR2  foobar2 // but not
 `FOOBAR
 `FOOBAR2
 
 `define MULTILINE first part \
-		second part
+  		second part \
+  		third part
+
+`define MOREMULTILINE {\
+		       a,\
+		       b,\
+		       c}
 
 /*******COMMENT*****/
 `MULTILINE
+Line_Preproc_Check `__LINE__
 
 //===========================================================================
+
 `define syn_negedge_reset_l or negedge reset_l
 
 `define DEEP deep
@@ -54,13 +80,8 @@ $display(`msg(left side, right side))
 /* Define inside comment: `DEEPER and `WITHTICK */
 // More commentary: `zap(bug1); `zap("bug2");
 
-`define EMPTY_TRUE
-`ifndef EMPTY_TRUE
-  `error "Empty is still true"
-`endif
-
 //======================================================================
-// RT bug 34429
+// display passthru
 
 `define ls left_side
 `define rs right_side
@@ -92,6 +113,9 @@ $display(`msg(left side, right side))
    end
 endmodule
 
+//======================================================================
+// rt.cpan.org bug34429
+
 `define ADD_UP(a,c)          \
 wire  tmp_``a = a; \
 wire  tmp_``c = tmp_``a + 1; \
@@ -103,6 +127,19 @@ endmodule
 module add2 ( input wire d2, output wire o2);
  `ADD_UP( d2 , o2 )  // expansion is bad
 endmodule
+
+ `define check(mod, width, flopname, gate, path) \
+   generate for (i=0; i<(width); i=i+1) begin \
+      psl cover {  path.d[i] & ~path.q[i] & !path.cond & (gate)} report `"fondNoRise: mod.flopname`"; \
+      psl cover { ~path.d[i] &  path.q[i] & !path.cond & (gate)} report `"fondNoFall: mod.flopname`"; \
+   end endgenerate
+
+// parameterized macro with arguments that are macros
+ `define MK		m5k.f
+ `define MF		`MK .ctl
+ `define CK_fr	(`MF.alive & `MF.alive_m1)
+
+   `check(m5kc_fcl, 3, _ctl_mvldx_m1, `CK_fr,	`MF._ctl_mvldx_m1)	// ignorecmt
 
 //======================================================================
 // Quotes are legal in protected blocks.  Grr.
@@ -158,6 +195,15 @@ endmodule
 `default_nettype uwire
 
 //======================================================================
+// Ifdef
+
+`define EMPTY_TRUE
+`ifndef EMPTY_TRUE
+  `error "Empty is still true"
+`endif
+Line_Preproc_Check `__LINE__
+
+//======================================================================
 // bug84
 
 `define ARGPAR(a,  // Hello, comments MIGHT not be legal
@@ -168,7 +214,7 @@ endmodule
 	      x,
   y   //Too
   )
-Line: `__LINE__
+Line_Preproc_Check `__LINE__
 
 //======================================================================
 // defines split arguments
@@ -239,11 +285,11 @@ Not a \`define
 
 //======================================================================
 
-`define CMT1 // NOT IN DEFINE
-`define CMT2 /* PART OF DEFINE */
-`define CMT3 /* NOT PART
+`define CMT1 // verilator NOT IN DEFINE
+`define CMT2 /* verilator PART OF DEFINE */
+`define CMT3 /* verilator NOT PART
 	        OF DEFINE */
-`define CMT4 /* PART \
+`define CMT4 /* verilator PART \
 	        OF DEFINE */
 `define CMT5 // CMT NOT \
   also in  // BUT TEXT IS \

@@ -198,162 +198,214 @@ COMMENT: // without warranty, 2000-2010 by Wilson Snyder.
 verilog/inc1.v:3:  /*CMT*/ 
 verilog/inc1.v:4:    text.
 verilog/inc1.v:5: 
-verilog/inc1.v:6:  
-COMMENT: // but not
-verilog/inc1.v:7:  
-COMMENT: /*this */
-COMMENT: /* this too */
-verilog/inc1.v:8: DS<foo  /*CMT*/  bar    /*CMT*/ >
-COMMENT: /*CMT*/
-verilog/inc1.v:9: DS<foobar2   /*CMT*/ >
-verilog/inc1.v:10: 
-verilog/inc1.v:11:  
-verilog/inc1.v:11: 
-verilog/inc1.v:13: 
-COMMENT: /*******COMMENT*****/
-verilog/inc1.v:14:  /*CMT*/ 
-verilog/inc1.v:15: DS<first part  		second part>
-verilog/inc1.v:16: 
 COMMENT: //===========================================================================
-verilog/inc1.v:17:  /*CMT*/ 
-verilog/inc1.v:18:  
-verilog/inc1.v:19: 
-verilog/inc1.v:20:  
-verilog/inc1.v:21:  
-verilog/inc1.v:22: DS<DS<deep> DS<deep>>
+verilog/inc1.v:6:  /*CMT*/ 
+COMMENT: // Includes
+verilog/inc1.v:7:  /*CMT*/ 
+verilog/inc1.v:8: 
+COMMENT: //===========================================================================
+verilog/inc1.v:9:  /*CMT*/ 
+COMMENT: // Defines
+verilog/inc1.v:10:  /*CMT*/ 
+verilog/inc1.v:11: 
+verilog/inc1.v:12:  
+verilog/inc1.v:13:  
+COMMENT: // DEF_A0 set by command line
+verilog/inc1.v:14:  /*CMT*/ 
+verilog/inc1.v:15:    wire [3:0] q = {
+verilog/inc1.v:16: 		     1'b1   
+verilog/inc1.v:16: `line 16 "verilog/inc1.v" 0
+verilog/inc1.v:16:  ,
+verilog/inc1.v:17: 		      
+verilog/inc1.v:17: `line 17 "verilog/inc1.v" 0
+verilog/inc1.v:17:  1'b0  ,
+verilog/inc1.v:18: 		     1'b1   
+verilog/inc1.v:18: `line 18 "verilog/inc1.v" 0
+verilog/inc1.v:18:  ,
+verilog/inc1.v:19: 		      
+verilog/inc1.v:19: `line 19 "verilog/inc1.v" 0
+verilog/inc1.v:19:  1'b0 
+verilog/inc1.v:20: 		   };
+verilog/inc1.v:21: 
+verilog/inc1.v:22: text.
 verilog/inc1.v:23: 
 verilog/inc1.v:24:  
+COMMENT: // but not
 verilog/inc1.v:25:  
-verilog/inc1.v:26: "Inside: `nosubst"
-verilog/inc1.v:27: "`nosubst"
+COMMENT: /*this */
+COMMENT: /* this too */
+verilog/inc1.v:26: DS<foo  /*CMT*/  bar    /*CMT*/ >
+COMMENT: /*CMT*/
+verilog/inc1.v:27: DS<foobar2   /*CMT*/ >
 verilog/inc1.v:28: 
 verilog/inc1.v:29:  
-verilog/inc1.v:30: DS<x y LLZZ x y>
-verilog/inc1.v:31: DS<DS<p q LLZZ p q> DS<r  s  LLZZ r  s > LLZZ DS<p q LLZZ p q> DS<r  s  LLZZ r  s >>
+verilog/inc1.v:29: 
+verilog/inc1.v:29: 
 verilog/inc1.v:32: 
+verilog/inc1.v:33:  
 verilog/inc1.v:33: 
-verilog/inc1.v:34: 
-verilog/inc1.v:35: DS<firstline	 comma","line LLZZ firstline	 comma","line>
-verilog/inc1.v:36: 
-verilog/inc1.v:37:  
-verilog/inc1.v:38: DS<x  y LLZZ "a" y>
-verilog/inc1.v:39: 
-verilog/inc1.v:40:  
-verilog/inc1.v:41: DS<(a,b)>(a,b)
-verilog/inc1.v:42: 
-verilog/inc1.v:43:  
-verilog/inc1.v:44: $display("left side: \"right side\"")
+verilog/inc1.v:33: 
+verilog/inc1.v:33: 
+verilog/inc1.v:37: 
+COMMENT: /*******COMMENT*****/
+verilog/inc1.v:38:  /*CMT*/ 
+verilog/inc1.v:39: DS<first part    		second part    		third part>
+verilog/inc1.v:40: Line_Preproc_Check 40
+verilog/inc1.v:41: 
+COMMENT: //===========================================================================
+verilog/inc1.v:42:  /*CMT*/ 
+verilog/inc1.v:43: 
+verilog/inc1.v:44:  
 verilog/inc1.v:45: 
 verilog/inc1.v:46:  
-verilog/inc1.v:47: DS<bar_suffix>  more
-verilog/inc1.v:48: 
-verilog/inc1.v:49:  
+verilog/inc1.v:47:  
+verilog/inc1.v:48: DS<DS<deep> DS<deep>>
 verilog/inc1.v:49: 
-verilog/inc1.v:51: DS<$c("Zap(\"",bug1,"\");");>;
-verilog/inc1.v:52: DS<$c("Zap(\"","bug2","\");");>;
-verilog/inc1.v:53: 
-COMMENT: /* Define inside comment: `DEEPER and `WITHTICK */
-verilog/inc1.v:54:  /*CMT*/ 
-COMMENT: // More commentary: `zap(bug1); `zap("bug2");
-verilog/inc1.v:55:  /*CMT*/ 
-verilog/inc1.v:56: 
-verilog/inc1.v:57:  
-verilog/inc1.v:58:  
-verilog/inc1.v:59:    
+verilog/inc1.v:50:  
+verilog/inc1.v:51:  
+verilog/inc1.v:52: "Inside: `nosubst"
+verilog/inc1.v:53: "`nosubst"
+verilog/inc1.v:54: 
+verilog/inc1.v:55:  
+verilog/inc1.v:56: DS<x y LLZZ x y>
+verilog/inc1.v:57: DS<DS<p q LLZZ p q> DS<r  s  LLZZ r  s > LLZZ DS<p q LLZZ p q> DS<r  s  LLZZ r  s >>
+verilog/inc1.v:58: 
+verilog/inc1.v:59: 
 verilog/inc1.v:60: 
-verilog/inc1.v:60: `line 60 "verilog/inc1.v" 0
-verilog/inc1.v:60: 
-verilog/inc1.v:61: 
-COMMENT: //======================================================================
-verilog/inc1.v:62:  /*CMT*/ 
-COMMENT: // RT bug 34429
-verilog/inc1.v:63:  /*CMT*/ 
-verilog/inc1.v:64: 
-verilog/inc1.v:65:  
+verilog/inc1.v:61: DS<firstline	 comma","line LLZZ firstline	 comma","line>
+verilog/inc1.v:62: 
+verilog/inc1.v:63:  
+verilog/inc1.v:64: DS<x  y LLZZ "a" y>
+verilog/inc1.v:65: 
 verilog/inc1.v:66:  
-verilog/inc1.v:67:  
-verilog/inc1.v:68:  
-COMMENT: // Doesn't expand
+verilog/inc1.v:67: DS<(a,b)>(a,b)
+verilog/inc1.v:68: 
 verilog/inc1.v:69:  
-verilog/inc1.v:70:  
-verilog/inc1.v:71:    initial begin
-COMMENT: //$display(`msg( \`, \`));  // Illegal
-verilog/inc1.v:72:        /*CMT*/ 
-verilog/inc1.v:73:       $display("pre `thru(thrupre `thru(thrumid) thrupost) post: \"right side\"");
-verilog/inc1.v:74:       $display("left side: \"right side\"");
-verilog/inc1.v:75:       $display("left side : \"right side \"");
-verilog/inc1.v:76:       $display("`ls : \"`rs \"");
-verilog/inc1.v:77:       $display("`noarg : \"`rs \"");
-verilog/inc1.v:78:       $display("prep ( midp1 `ls midp2 ( outp ) ) : \"`rs \"");
-verilog/inc1.v:79:       $display("`noarg: \"`noarg`noarg\"");
-COMMENT: // Results vary between simulators
-verilog/inc1.v:80:       $display("`thruthru : \"`thruthru \"");    /*CMT*/ 
-COMMENT: // Empty
-verilog/inc1.v:81:       $display("`thru(): \"\"");   /*CMT*/ 
-verilog/inc1.v:82:       $display("`thru(left side): \"`thru(right side)\"");
-verilog/inc1.v:83:       $display("`thru( left side ) : \"`thru( right side ) \"");
-verilog/inc1.v:84: 
-verilog/inc1.v:85:  
+verilog/inc1.v:70: $display("left side: \"right side\"")
+verilog/inc1.v:71: 
+verilog/inc1.v:72:  
+verilog/inc1.v:73: DS<bar_suffix>  more
+verilog/inc1.v:74: 
+verilog/inc1.v:75:  
+verilog/inc1.v:75: 
+verilog/inc1.v:77: DS<$c("Zap(\"",bug1,"\");");>;
+verilog/inc1.v:78: DS<$c("Zap(\"","bug2","\");");>;
+verilog/inc1.v:79: 
+COMMENT: /* Define inside comment: `DEEPER and `WITHTICK */
+verilog/inc1.v:80:  /*CMT*/ 
+COMMENT: // More commentary: `zap(bug1); `zap("bug2");
+verilog/inc1.v:81:  /*CMT*/ 
+verilog/inc1.v:82: 
+COMMENT: //======================================================================
+verilog/inc1.v:83:  /*CMT*/ 
+COMMENT: // display passthru
+verilog/inc1.v:84:  /*CMT*/ 
 verilog/inc1.v:85: 
-verilog/inc1.v:87:       $display("twoline: \"`twoline\"");
-verilog/inc1.v:88: 
-COMMENT: //$display(`msg(left side, \ right side \ ));  // Not sure \{space} is legal.
-verilog/inc1.v:89:        /*CMT*/ 
-verilog/inc1.v:90:       $write("*-* All Finished *-*\n");
-verilog/inc1.v:91:       $finish;
-verilog/inc1.v:92:    end
-verilog/inc1.v:93: endmodule
-verilog/inc1.v:94: 
-verilog/inc1.v:95:  
-verilog/inc1.v:95: 
-verilog/inc1.v:95: 
-verilog/inc1.v:95: 
-verilog/inc1.v:99: 
-verilog/inc1.v:100: module add1 ( input wire d1, output wire o1);
-COMMENT: // expansion is OK
-verilog/inc1.v:101:  DS<wire  tmp_d1 = d1;  wire  tmp_o1 = tmp_d1 + 1;  assign o1 = tmp_o1 ;>    /*CMT*/ 
-verilog/inc1.v:102: endmodule
-verilog/inc1.v:103: module add2 ( input wire d2, output wire o2);
-COMMENT: // expansion is bad
-verilog/inc1.v:104:  DS<wire  tmp_d2  = d2 ;  wire  tmp_o2  = tmp_d2  + 1;  assign o2  = tmp_o2  ;>   /*CMT*/ 
-verilog/inc1.v:105: endmodule
+verilog/inc1.v:86:  
+verilog/inc1.v:87:  
+verilog/inc1.v:88:  
+verilog/inc1.v:89:  
+COMMENT: // Doesn't expand
+verilog/inc1.v:90:  
+verilog/inc1.v:91:  
+verilog/inc1.v:92:    initial begin
+COMMENT: //$display(`msg( \`, \`));  // Illegal
+verilog/inc1.v:93:        /*CMT*/ 
+verilog/inc1.v:94:       $display("pre `thru(thrupre `thru(thrumid) thrupost) post: \"right side\"");
+verilog/inc1.v:95:       $display("left side: \"right side\"");
+verilog/inc1.v:96:       $display("left side : \"right side \"");
+verilog/inc1.v:97:       $display("`ls : \"`rs \"");
+verilog/inc1.v:98:       $display("`noarg : \"`rs \"");
+verilog/inc1.v:99:       $display("prep ( midp1 `ls midp2 ( outp ) ) : \"`rs \"");
+verilog/inc1.v:100:       $display("`noarg: \"`noarg`noarg\"");
+COMMENT: // Results vary between simulators
+verilog/inc1.v:101:       $display("`thruthru : \"`thruthru \"");    /*CMT*/ 
+COMMENT: // Empty
+verilog/inc1.v:102:       $display("`thru(): \"\"");   /*CMT*/ 
+verilog/inc1.v:103:       $display("`thru(left side): \"`thru(right side)\"");
+verilog/inc1.v:104:       $display("`thru( left side ) : \"`thru( right side ) \"");
+verilog/inc1.v:105: 
+verilog/inc1.v:106:  
 verilog/inc1.v:106: 
-COMMENT: //======================================================================
-verilog/inc1.v:107:  /*CMT*/ 
-COMMENT: // Quotes are legal in protected blocks.  Grr.
-verilog/inc1.v:108:  /*CMT*/ 
-verilog/inc1.v:109: module prot();
-verilog/inc1.v:110: `protected
-verilog/inc1.v:110:     I!#r#e6<_Q{{E2+]I3<[3s)1@D|'E''i!O?]jD>Jo_![Cl)
-verilog/inc1.v:110:     #nj1]p,3^1~,="E@QZB\T)eU\pC#C|7=\$J$##A[@-@{Qk]
-verilog/inc1.v:113: `endprotected
+verilog/inc1.v:108:       $display("twoline: \"`twoline\"");
+verilog/inc1.v:109: 
+COMMENT: //$display(`msg(left side, \ right side \ ));  // Not sure \{space} is legal.
+verilog/inc1.v:110:        /*CMT*/ 
+verilog/inc1.v:111:       $write("*-* All Finished *-*\n");
+verilog/inc1.v:112:       $finish;
+verilog/inc1.v:113:    end
 verilog/inc1.v:114: endmodule
-COMMENT: //"
-verilog/inc1.v:115:  /*CMT*/ 
-verilog/inc1.v:116: 
+verilog/inc1.v:115: 
 COMMENT: //======================================================================
+verilog/inc1.v:116:  /*CMT*/ 
+COMMENT: // rt.cpan.org bug34429
 verilog/inc1.v:117:  /*CMT*/ 
-COMMENT: // macro call with define that has comma
-verilog/inc1.v:118:  /*CMT*/ 
+verilog/inc1.v:118: 
 verilog/inc1.v:119:  
-verilog/inc1.v:120:  
-verilog/inc1.v:121:  
-verilog/inc1.v:122:  
-verilog/inc1.v:123:  
-verilog/inc1.v:124:  
-verilog/inc1.v:125:  
-verilog/inc1.v:126: 
-verilog/inc1.v:127: DS<begin addr <= ((DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}> + 1)); rd <= 1; end> and DS<begin addr <= ((DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}>)); wdata <= (rdata); wr <= 1; end>
-verilog/inc1.v:128: DS<begin addr <= (DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}> + 1); rd <= 1; end>
-verilog/inc1.v:129: DS<begin addr <= (DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}>); wdata <= (rdata); wr <= 1; end>  more
+verilog/inc1.v:119: 
+verilog/inc1.v:119: 
+verilog/inc1.v:119: 
+verilog/inc1.v:123: 
+verilog/inc1.v:124: module add1 ( input wire d1, output wire o1);
+COMMENT: // expansion is OK
+verilog/inc1.v:125:  DS<wire  tmp_d1 = d1;  wire  tmp_o1 = tmp_d1 + 1;  assign o1 = tmp_o1 ;>    /*CMT*/ 
+verilog/inc1.v:126: endmodule
+verilog/inc1.v:127: module add2 ( input wire d2, output wire o2);
+COMMENT: // expansion is bad
+verilog/inc1.v:128:  DS<wire  tmp_d2  = d2 ;  wire  tmp_o2  = tmp_d2  + 1;  assign o2  = tmp_o2  ;>   /*CMT*/ 
+verilog/inc1.v:129: endmodule
 verilog/inc1.v:130: 
+verilog/inc1.v:131:   
+verilog/inc1.v:131: 
+verilog/inc1.v:131: 
+verilog/inc1.v:131: 
+verilog/inc1.v:131: 
+verilog/inc1.v:136: 
+COMMENT: // parameterized macro with arguments that are macros
+verilog/inc1.v:137:  /*CMT*/ 
+verilog/inc1.v:138:   
+verilog/inc1.v:139:   
+verilog/inc1.v:140:   
+verilog/inc1.v:141: 
+COMMENT: // ignorecmt
+verilog/inc1.v:142:    DS<generate for (i=0; i<(3); i=i+1) begin        psl cover {  DS<DS<m5k.f> .ctl>._ctl_mvldx_m1.d[i] & ~DS<DS<m5k.f> .ctl>._ctl_mvldx_m1.q[i] & !DS<DS<m5k.f> .ctl>._ctl_mvldx_m1.cond & (DS<(DS<DS<m5k.f> .ctl>.alive & DS<DS<m5k.f> .ctl>.alive_m1)>)} report "fondNoRise: m5kc_fcl._ctl_mvldx_m1";        psl cover { ~DS<DS<m5k.f> .ctl>._ctl_mvldx_m1.d[i] &  DS<DS<m5k.f> .ctl>._ctl_mvldx_m1.q[i] & !DS<DS<m5k.f> .ctl>._ctl_mvldx_m1.cond & (DS<(DS<DS<m5k.f> .ctl>.alive & DS<DS<m5k.f> .ctl>.alive_m1)>)} report "fondNoFall: m5kc_fcl._ctl_mvldx_m1";     end endgenerate>	 /*CMT*/ 
+verilog/inc1.v:143: 
 COMMENT: //======================================================================
-verilog/inc1.v:131:  /*CMT*/ 
+verilog/inc1.v:144:  /*CMT*/ 
+COMMENT: // Quotes are legal in protected blocks.  Grr.
+verilog/inc1.v:145:  /*CMT*/ 
+verilog/inc1.v:146: module prot();
+verilog/inc1.v:147: `protected
+verilog/inc1.v:147:     I!#r#e6<_Q{{E2+]I3<[3s)1@D|'E''i!O?]jD>Jo_![Cl)
+verilog/inc1.v:147:     #nj1]p,3^1~,="E@QZB\T)eU\pC#C|7=\$J$##A[@-@{Qk]
+verilog/inc1.v:150: `endprotected
+verilog/inc1.v:151: endmodule
+COMMENT: //"
+verilog/inc1.v:152:  /*CMT*/ 
+verilog/inc1.v:153: 
+COMMENT: //======================================================================
+verilog/inc1.v:154:  /*CMT*/ 
+COMMENT: // macro call with define that has comma
+verilog/inc1.v:155:  /*CMT*/ 
+verilog/inc1.v:156:  
+verilog/inc1.v:157:  
+verilog/inc1.v:158:  
+verilog/inc1.v:159:  
+verilog/inc1.v:160:  
+verilog/inc1.v:161:  
+verilog/inc1.v:162:  
+verilog/inc1.v:163: 
+verilog/inc1.v:164: DS<begin addr <= ((DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}> + 1)); rd <= 1; end> and DS<begin addr <= ((DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}>)); wdata <= (rdata); wr <= 1; end>
+verilog/inc1.v:165: DS<begin addr <= (DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}> + 1); rd <= 1; end>
+verilog/inc1.v:166: DS<begin addr <= (DS<{DS<regs[DS<6>]>, DS<regs[DS<7>]>}>); wdata <= (rdata); wr <= 1; end>  more
+verilog/inc1.v:167: 
+COMMENT: //======================================================================
+verilog/inc1.v:168:  /*CMT*/ 
 COMMENT: // include of parameterized file
-verilog/inc1.v:132:  /*CMT*/ 
-verilog/inc1.v:133:  
+verilog/inc1.v:169:  /*CMT*/ 
+verilog/inc1.v:170:  
 verilog/inc4.v:1:  
-verilog/inc4.v:1: `line 134 "verilog/inc1.v" 0
+verilog/inc4.v:1: `line 171 "verilog/inc1.v" 0
 verilog/inc4.v:1: `line 1 "verilog/inc4.v" 1
 COMMENT: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc4.v:1:  /*CMT*/ 
@@ -364,263 +416,276 @@ verilog/inc4.v:3:  /*CMT*/
 verilog/inc4.v:4: 
 verilog/inc4.v:5:  
 verilog/inc4.v:6: `line 6 "verilog/inc4.v" 2
-verilog/inc4.v:6: `line 134 "verilog/inc1.v" 0
-verilog/inc1.v:134: 
-verilog/inc1.v:135:  
-verilog/inc1.v:136:   
-verilog/inc1.v:137: 
-verilog/inc1.v:137: `line 137 "verilog/inc1.v" 0
-verilog/inc1.v:137: 
-verilog/inc1.v:138:  
-verilog/inc1.v:139: 
-verilog/inc1.v:140:  
-verilog/inc1.v:141:   
-verilog/inc1.v:142: 
-verilog/inc1.v:142: `line 142 "verilog/inc1.v" 0
-verilog/inc1.v:142: 
-verilog/inc1.v:143: 
+verilog/inc4.v:6: `line 171 "verilog/inc1.v" 0
+verilog/inc1.v:171: 
+verilog/inc1.v:172:  
+verilog/inc1.v:173:   
+verilog/inc1.v:174: 
+verilog/inc1.v:174: `line 174 "verilog/inc1.v" 0
+verilog/inc1.v:174: 
+verilog/inc1.v:175:  
+verilog/inc1.v:176: 
+verilog/inc1.v:177:  
+verilog/inc1.v:178:   
+verilog/inc1.v:179: 
+verilog/inc1.v:179: `line 179 "verilog/inc1.v" 0
+verilog/inc1.v:179: 
+verilog/inc1.v:180: 
 COMMENT: //======================================================================
-verilog/inc1.v:144:  /*CMT*/ 
+verilog/inc1.v:181:  /*CMT*/ 
 COMMENT: // macro call with , in {}
-verilog/inc1.v:145:  /*CMT*/ 
-verilog/inc1.v:146: 
-verilog/inc1.v:147:  
-verilog/inc1.v:148: DS<$blah("ab,cd","e,f")>;
-verilog/inc1.v:149: DS<$blah(this.logfile,vec)>;
-verilog/inc1.v:150: DS<$blah(this.logfile,vec[1,2,3])>;
-verilog/inc1.v:151: DS<$blah(this.logfile,{blah.name(), " is not foo"})>;
-verilog/inc1.v:152: 
+verilog/inc1.v:182:  /*CMT*/ 
+verilog/inc1.v:183: 
+verilog/inc1.v:184:  
+verilog/inc1.v:185: DS<$blah("ab,cd","e,f")>;
+verilog/inc1.v:186: DS<$blah(this.logfile,vec)>;
+verilog/inc1.v:187: DS<$blah(this.logfile,vec[1,2,3])>;
+verilog/inc1.v:188: DS<$blah(this.logfile,{blah.name(), " is not foo"})>;
+verilog/inc1.v:189: 
 COMMENT: //======================================================================
-verilog/inc1.v:153:  /*CMT*/ 
+verilog/inc1.v:190:  /*CMT*/ 
 COMMENT: // pragma/default net type
-verilog/inc1.v:154:  /*CMT*/ 
-verilog/inc1.v:155: 
-verilog/inc1.v:156: `pragma foo = 1
-verilog/inc1.v:157: `default_nettype none
-verilog/inc1.v:158: `default_nettype uwire
-verilog/inc1.v:159: 
+verilog/inc1.v:191:  /*CMT*/ 
+verilog/inc1.v:192: 
+verilog/inc1.v:193: `pragma foo = 1
+verilog/inc1.v:194: `default_nettype none
+verilog/inc1.v:195: `default_nettype uwire
+verilog/inc1.v:196: 
 COMMENT: //======================================================================
-verilog/inc1.v:160:  /*CMT*/ 
+verilog/inc1.v:197:  /*CMT*/ 
+COMMENT: // Ifdef
+verilog/inc1.v:198:  /*CMT*/ 
+verilog/inc1.v:199: 
+verilog/inc1.v:200:  
+verilog/inc1.v:201:  
+verilog/inc1.v:202:    
+verilog/inc1.v:203: 
+verilog/inc1.v:203: `line 203 "verilog/inc1.v" 0
+verilog/inc1.v:203: 
+verilog/inc1.v:204: Line_Preproc_Check 204
+verilog/inc1.v:205: 
+COMMENT: //======================================================================
+verilog/inc1.v:206:  /*CMT*/ 
 COMMENT: // bug84
-verilog/inc1.v:161:  /*CMT*/ 
-verilog/inc1.v:162: 
+verilog/inc1.v:207:  /*CMT*/ 
+verilog/inc1.v:208: 
 COMMENT: // Hello, comments MIGHT not be legal
 COMMENT: /*more,,)cmts*/
 COMMENT: // But newlines ARE legal... who speced THAT?
-verilog/inc1.v:165:   /*CMT*/  /*CMT*/  /*CMT*/ 
-verilog/inc1.v:165: 
-verilog/inc1.v:165: 
-verilog/inc1.v:166: DS<(p,q)>
-COMMENT: //Here
-verilog/inc1.v:167: 
-verilog/inc1.v:168: 
-COMMENT: //Too
-verilog/inc1.v:169: 
-COMMENT: /*CMT*/
-COMMENT: /*CMT*/
-verilog/inc1.v:170: DS<( /*CMT*/  	      x,y     /*CMT*/    )>
-verilog/inc1.v:171: Line: 171
-verilog/inc1.v:172: 
-COMMENT: //======================================================================
-verilog/inc1.v:173:  /*CMT*/ 
-COMMENT: // defines split arguments
-verilog/inc1.v:174:  /*CMT*/ 
-verilog/inc1.v:175: 
-verilog/inc1.v:176:  
-verilog/inc1.v:177:  
-verilog/inc1.v:178:  
-verilog/inc1.v:179:  
-COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
-verilog/inc1.v:180: DS<begin>DS<end>    /*CMT*/ 
-COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
-verilog/inc1.v:181: DS<DS<begin>DS<end>>     /*CMT*/ 
-COMMENT: // No space "beginend"
-verilog/inc1.v:182: "`BEGIN`END"   /*CMT*/ 
-verilog/inc1.v:183: 
-COMMENT: //======================================================================
-verilog/inc1.v:184:  /*CMT*/ 
-COMMENT: // bug106
-verilog/inc1.v:185:  /*CMT*/ 
-verilog/inc1.v:186:  
-verilog/inc1.v:187:  
-verilog/inc1.v:188:   DS<got_escaped>
-verilog/inc1.v:189: 
-verilog/inc1.v:190: Not a \`define
-verilog/inc1.v:191: 
-COMMENT: //======================================================================
-verilog/inc1.v:192:  /*CMT*/ 
-COMMENT: // misparsed comma in submacro
-verilog/inc1.v:193:  /*CMT*/ 
-verilog/inc1.v:194:  
-verilog/inc1.v:195:  
-verilog/inc1.v:196:  
-verilog/inc1.v:197:  
-verilog/inc1.v:198: DS<DS<x,y)>--DS<bee>>  submacro has comma paren
-verilog/inc1.v:199: 
-COMMENT: //======================================================================
-verilog/inc1.v:200:  /*CMT*/ 
-COMMENT: // bug191
-verilog/inc1.v:201:  /*CMT*/ 
-verilog/inc1.v:202:  
-verilog/inc1.v:203: DS<$display("bits %d %d", $bits(foo), `10);>
-verilog/inc1.v:204: 
-COMMENT: //======================================================================
-verilog/inc1.v:205:  /*CMT*/ 
-COMMENT: // 1800-2009
-verilog/inc1.v:206:  /*CMT*/ 
-verilog/inc1.v:207:  
-verilog/inc1.v:208:     
-verilog/inc1.v:208: `line 208 "verilog/inc1.v" 0
-verilog/inc1.v:208: 
-verilog/inc1.v:209: 
-verilog/inc1.v:210:     
-verilog/inc1.v:210: `line 210 "verilog/inc1.v" 0
-verilog/inc1.v:210: 
-verilog/inc1.v:211:     
-verilog/inc1.v:211: `line 211 "verilog/inc1.v" 0
+verilog/inc1.v:211:   /*CMT*/  /*CMT*/  /*CMT*/ 
 verilog/inc1.v:211: 
-verilog/inc1.v:212: 
+verilog/inc1.v:211: 
+verilog/inc1.v:212: DS<(p,q)>
+COMMENT: //Here
+verilog/inc1.v:213: 
+verilog/inc1.v:214: 
+COMMENT: //Too
+verilog/inc1.v:215: 
+COMMENT: /*CMT*/
+COMMENT: /*CMT*/
+verilog/inc1.v:216: DS<( /*CMT*/  	      x,y     /*CMT*/    )>
+verilog/inc1.v:217: Line_Preproc_Check 217
+verilog/inc1.v:218: 
 COMMENT: //======================================================================
-verilog/inc1.v:213:  /*CMT*/ 
-COMMENT: // bug202
-verilog/inc1.v:214:  /*CMT*/ 
-verilog/inc1.v:215:  
-verilog/inc1.v:215: 
-verilog/inc1.v:215: 
-verilog/inc1.v:215: 
-verilog/inc1.v:215: 
-verilog/inc1.v:215: 
-verilog/inc1.v:215: 
-verilog/inc1.v:215: 
-verilog/inc1.v:215: 
-verilog/inc1.v:215: 
-verilog/inc1.v:215: 
-verilog/inc1.v:226: 
-verilog/inc1.v:227: DS< 							          	       					   
-verilog/inc1.v:227: `line 227 "verilog/inc1.v" 0
-verilog/inc1.v:227: 								      					           		     
-verilog/inc1.v:227: `line 227 "verilog/inc1.v" 0
-verilog/inc1.v:227: 							      assign a3 = ~b3 ;						   >
-verilog/inc1.v:228: 
-COMMENT: /* multi	\
-	 line1*/
-verilog/inc1.v:229:  
-verilog/inc1.v:230:  /*CMT*/ 	\
-COMMENT: /*multi	\
-	   line2*/
-verilog/inc1.v:231:  
-verilog/inc1.v:233:  /*CMT*/ 
-verilog/inc1.v:233: 
-verilog/inc1.v:233: 
-verilog/inc1.v:233: 
-verilog/inc1.v:233: 
-verilog/inc1.v:233: 
-COMMENT: /* multi		       line 3*/
-verilog/inc1.v:238: DS< /*CMT*/ 		    def foo>
-verilog/inc1.v:239: 
+verilog/inc1.v:219:  /*CMT*/ 
+COMMENT: // defines split arguments
+verilog/inc1.v:220:  /*CMT*/ 
+verilog/inc1.v:221: 
+verilog/inc1.v:222:  
+verilog/inc1.v:223:  
+verilog/inc1.v:224:  
+verilog/inc1.v:225:  
+COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
+verilog/inc1.v:226: DS<begin>DS<end>    /*CMT*/ 
+COMMENT: // 2001 spec doesn't require two tokens, so "beginend" ok
+verilog/inc1.v:227: DS<DS<begin>DS<end>>     /*CMT*/ 
+COMMENT: // No space "beginend"
+verilog/inc1.v:228: "`BEGIN`END"   /*CMT*/ 
+verilog/inc1.v:229: 
 COMMENT: //======================================================================
-verilog/inc1.v:240:  /*CMT*/ 
-verilog/inc1.v:241: 
-COMMENT: // NOT IN DEFINE
+verilog/inc1.v:230:  /*CMT*/ 
+COMMENT: // bug106
+verilog/inc1.v:231:  /*CMT*/ 
+verilog/inc1.v:232:  
+verilog/inc1.v:233:  
+verilog/inc1.v:234:   DS<got_escaped>
+verilog/inc1.v:235: 
+verilog/inc1.v:236: Not a \`define
+verilog/inc1.v:237: 
+COMMENT: //======================================================================
+verilog/inc1.v:238:  /*CMT*/ 
+COMMENT: // misparsed comma in submacro
+verilog/inc1.v:239:  /*CMT*/ 
+verilog/inc1.v:240:  
+verilog/inc1.v:241:  
 verilog/inc1.v:242:  
 verilog/inc1.v:243:  
-COMMENT: /* NOT PART
-	        OF DEFINE */
-verilog/inc1.v:244:  
+verilog/inc1.v:244: DS<DS<x,y)>--DS<bee>>  submacro has comma paren
 verilog/inc1.v:245: 
-verilog/inc1.v:246:  
-verilog/inc1.v:246: 
-COMMENT: // CMT NOT
-verilog/inc1.v:250:  
+COMMENT: //======================================================================
+verilog/inc1.v:246:  /*CMT*/ 
+COMMENT: // bug191
+verilog/inc1.v:247:  /*CMT*/ 
+verilog/inc1.v:248:  
+verilog/inc1.v:249: DS<$display("bits %d %d", $bits(foo), `10);>
 verilog/inc1.v:250: 
-verilog/inc1.v:250: 
-verilog/inc1.v:251: 
-COMMENT: /*CMT*/
-verilog/inc1.v:252: 1 DS< /*CMT*/ > (nodef)
-COMMENT: /* PART OF DEFINE */
-verilog/inc1.v:253: 2 DS< /*CMT*/ > (hasdef)
-COMMENT: /*CMT*/
-verilog/inc1.v:254: 3 DS< /*CMT*/ > (nodef)
-COMMENT: /* PART  	        OF DEFINE */
-verilog/inc1.v:255: 4 DS< /*CMT*/ > (nodef)
-COMMENT: /*CMT*/
-verilog/inc1.v:256: 5 DS<also in     also3    /*CMT*/ > (nodef)
-verilog/inc1.v:257:  
+COMMENT: //======================================================================
+verilog/inc1.v:251:  /*CMT*/ 
+COMMENT: // 1800-2009
+verilog/inc1.v:252:  /*CMT*/ 
+verilog/inc1.v:253:  
+verilog/inc1.v:254:     
+verilog/inc1.v:254: `line 254 "verilog/inc1.v" 0
+verilog/inc1.v:254: 
+verilog/inc1.v:255: 
+verilog/inc1.v:256:     
+verilog/inc1.v:256: `line 256 "verilog/inc1.v" 0
+verilog/inc1.v:256: 
+verilog/inc1.v:257:     
+verilog/inc1.v:257: `line 257 "verilog/inc1.v" 0
 verilog/inc1.v:257: 
-verilog/inc1.v:259: DS<HAS a NEW  LINE>
-verilog/inc1.v:260: 
+verilog/inc1.v:258: 
 COMMENT: //======================================================================
-verilog/inc1.v:261:  /*CMT*/ 
-verilog/inc1.v:262: 
-verilog/inc1.v:263:  
-verilog/inc1.v:263: 
-verilog/inc1.v:263: 
-verilog/inc1.v:263: 
-verilog/inc1.v:263: 
-verilog/inc1.v:263: 
-verilog/inc1.v:263: 
-verilog/inc1.v:263: 
-verilog/inc1.v:263: 
-verilog/inc1.v:263: 
-verilog/inc1.v:263: 
-verilog/inc1.v:263: 
-verilog/inc1.v:275: 
-verilog/inc1.v:276:  
+verilog/inc1.v:259:  /*CMT*/ 
+COMMENT: // bug202
+verilog/inc1.v:260:  /*CMT*/ 
+verilog/inc1.v:261:  
+verilog/inc1.v:261: 
+verilog/inc1.v:261: 
+verilog/inc1.v:261: 
+verilog/inc1.v:261: 
+verilog/inc1.v:261: 
+verilog/inc1.v:261: 
+verilog/inc1.v:261: 
+verilog/inc1.v:261: 
+verilog/inc1.v:261: 
+verilog/inc1.v:261: 
+verilog/inc1.v:272: 
+verilog/inc1.v:273: DS< 							          	       					   
+verilog/inc1.v:273: `line 273 "verilog/inc1.v" 0
+verilog/inc1.v:273: 								      					           		     
+verilog/inc1.v:273: `line 273 "verilog/inc1.v" 0
+verilog/inc1.v:273: 							      assign a3 = ~b3 ;						   >
+verilog/inc1.v:274: 
+COMMENT: /* multi	\
+	 line1*/
+verilog/inc1.v:275:  
+verilog/inc1.v:276:  /*CMT*/ 	\
+COMMENT: /*multi	\
+	   line2*/
 verilog/inc1.v:277:  
-verilog/inc1.v:278: 
-verilog/inc1.v:279: EXP: clxx_scen
-verilog/inc1.v:280: DS<clxx_scen>
-verilog/inc1.v:281: EXP: clxx_scen
-verilog/inc1.v:282: "`msg_scen_(clxx)"
-verilog/inc1.v:283:  
-verilog/inc1.v:284: EXP: do if (start("verilog/inc1.v", 25)) begin  message({"Blah-", "clx_scen", " end"}); end  while(0);
-COMMENT: /* synopsys translate_off */
-verilog/inc1.v:285: DS<DS<do         /*CMT*/           
-verilog/inc1.v:285: `line 285 "verilog/inc1.v" 0
-COMMENT: /* synopsys translate_on */
-verilog/inc1.v:285:         if (start("verilog/inc1.v", 285)) begin    	 message({"Blah-", "`msg_scen_(clx)", " end"});        end         /*CMT*/      while(0)>;>
-verilog/inc1.v:286: 
+verilog/inc1.v:279:  /*CMT*/ 
+verilog/inc1.v:279: 
+verilog/inc1.v:279: 
+verilog/inc1.v:279: 
+verilog/inc1.v:279: 
+verilog/inc1.v:279: 
+COMMENT: /* multi		       line 3*/
+verilog/inc1.v:284: DS< /*CMT*/ 		    def foo>
+verilog/inc1.v:285: 
 COMMENT: //======================================================================
-verilog/inc1.v:287:  /*CMT*/ 
-verilog/inc1.v:288: 
+verilog/inc1.v:286:  /*CMT*/ 
+verilog/inc1.v:287: 
+COMMENT: // verilator NOT IN DEFINE
+verilog/inc1.v:288:  
 verilog/inc1.v:289:  
-verilog/inc1.v:289: 
-verilog/inc1.v:289: 
-verilog/inc1.v:289: 
-verilog/inc1.v:293: DS< 
-verilog/inc1.v:294: 
-verilog/inc1.v:295:      
-verilog/inc1.v:295: `line 295 "verilog/inc1.v" 0
-verilog/inc1.v:295: 
-COMMENT: //`ifndef def_fooed_2  `error "No def_fooed_2" `endif
-verilog/inc1.v:296:  /*CMT*/ 
-verilog/inc1.v:297: EXP: This is fooed
-verilog/inc1.v:298: DS<This is fooed      
-verilog/inc1.v:299: 
-verilog/inc1.v:300: EXP: This is fooed_2
-verilog/inc1.v:301: DS<This is fooed_2>>>
-verilog/inc1.v:302: 
-COMMENT: //======================================================================
-verilog/inc1.v:303:  /*CMT*/ 
-verilog/inc1.v:304:  
-verilog/inc1.v:305: DS<np>
-verilog/inc1.v:306: DS<np>
+COMMENT: /* verilator NOT PART
+	        OF DEFINE */
+verilog/inc1.v:290:  
+verilog/inc1.v:291: 
+verilog/inc1.v:292:  
+verilog/inc1.v:292: 
+COMMENT: // CMT NOT
+verilog/inc1.v:296:  
+verilog/inc1.v:296: 
+verilog/inc1.v:296: 
+verilog/inc1.v:297: 
+COMMENT: /*CMT*/
+verilog/inc1.v:298: 1 DS< /*CMT*/ > (nodef)
+COMMENT: /* verilator PART OF DEFINE */
+verilog/inc1.v:299: 2 DS< /*CMT*/ > (hasdef)
+COMMENT: /*CMT*/
+verilog/inc1.v:300: 3 DS< /*CMT*/ > (nodef)
+COMMENT: /* verilator PART  	        OF DEFINE */
+verilog/inc1.v:301: 4 DS< /*CMT*/ > (nodef)
+COMMENT: /*CMT*/
+verilog/inc1.v:302: 5 DS<also in     also3    /*CMT*/ > (nodef)
+verilog/inc1.v:303:  
+verilog/inc1.v:303: 
+verilog/inc1.v:305: DS<HAS a NEW  LINE>
+verilog/inc1.v:306: 
 COMMENT: //======================================================================
 verilog/inc1.v:307:  /*CMT*/ 
-COMMENT: // It's unclear if the spec allows this; is text_macro_idenitfier before or after substitution?
-verilog/inc1.v:308:  /*CMT*/ 
+verilog/inc1.v:308: 
 verilog/inc1.v:309:  
-verilog/inc1.v:310:  
-verilog/inc1.v:311:  
-verilog/inc1.v:312:     
-verilog/inc1.v:313: 
-verilog/inc1.v:313: `line 313 "verilog/inc1.v" 0
-verilog/inc1.v:313: 
-verilog/inc1.v:314:  
-verilog/inc1.v:315:     
-verilog/inc1.v:316: 
-verilog/inc1.v:316: `line 316 "verilog/inc1.v" 0
-verilog/inc1.v:316: 
+verilog/inc1.v:309: 
+verilog/inc1.v:309: 
+verilog/inc1.v:309: 
+verilog/inc1.v:309: 
+verilog/inc1.v:309: 
+verilog/inc1.v:309: 
+verilog/inc1.v:309: 
+verilog/inc1.v:309: 
+verilog/inc1.v:309: 
+verilog/inc1.v:309: 
+verilog/inc1.v:309: 
+verilog/inc1.v:321: 
+verilog/inc1.v:322:  
+verilog/inc1.v:323:  
+verilog/inc1.v:324: 
+verilog/inc1.v:325: EXP: clxx_scen
+verilog/inc1.v:326: DS<clxx_scen>
+verilog/inc1.v:327: EXP: clxx_scen
+verilog/inc1.v:328: "`msg_scen_(clxx)"
+verilog/inc1.v:329:  
+verilog/inc1.v:330: EXP: do if (start("verilog/inc1.v", 25)) begin  message({"Blah-", "clx_scen", " end"}); end  while(0);
+COMMENT: /* synopsys translate_off */
+verilog/inc1.v:331: DS<DS<do         /*CMT*/           
+verilog/inc1.v:331: `line 331 "verilog/inc1.v" 0
+COMMENT: /* synopsys translate_on */
+verilog/inc1.v:331:         if (start("verilog/inc1.v", 331)) begin    	 message({"Blah-", "`msg_scen_(clx)", " end"});        end         /*CMT*/      while(0)>;>
+verilog/inc1.v:332: 
 COMMENT: //======================================================================
-verilog/inc1.v:317:  /*CMT*/ 
-verilog/inc1.v:318: `line 318 "verilog/inc1.v" 2
+verilog/inc1.v:333:  /*CMT*/ 
+verilog/inc1.v:334: 
+verilog/inc1.v:335:  
+verilog/inc1.v:335: 
+verilog/inc1.v:335: 
+verilog/inc1.v:335: 
+verilog/inc1.v:339: DS< 
+verilog/inc1.v:340: 
+verilog/inc1.v:341:      
+verilog/inc1.v:341: `line 341 "verilog/inc1.v" 0
+verilog/inc1.v:341: 
+COMMENT: //`ifndef def_fooed_2  `error "No def_fooed_2" `endif
+verilog/inc1.v:342:  /*CMT*/ 
+verilog/inc1.v:343: EXP: This is fooed
+verilog/inc1.v:344: DS<This is fooed      
+verilog/inc1.v:345: 
+verilog/inc1.v:346: EXP: This is fooed_2
+verilog/inc1.v:347: DS<This is fooed_2>>>
+verilog/inc1.v:348: 
+COMMENT: //======================================================================
+verilog/inc1.v:349:  /*CMT*/ 
+verilog/inc1.v:350:  
+verilog/inc1.v:351: DS<np>
+verilog/inc1.v:352: DS<np>
+COMMENT: //======================================================================
+verilog/inc1.v:353:  /*CMT*/ 
+COMMENT: // It's unclear if the spec allows this; is text_macro_idenitfier before or after substitution?
+verilog/inc1.v:354:  /*CMT*/ 
+verilog/inc1.v:355:  
+verilog/inc1.v:356:  
+verilog/inc1.v:357:  
+verilog/inc1.v:358:     
+verilog/inc1.v:359: 
+verilog/inc1.v:359: `line 359 "verilog/inc1.v" 0
+verilog/inc1.v:359: 
+verilog/inc1.v:360:  
+verilog/inc1.v:361:     
+verilog/inc1.v:362: 
+verilog/inc1.v:362: `line 362 "verilog/inc1.v" 0
+verilog/inc1.v:362: 
+COMMENT: //======================================================================
+verilog/inc1.v:363:  /*CMT*/ 
+verilog/inc1.v:364: `line 364 "verilog/inc1.v" 2
