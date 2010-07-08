@@ -2,4 +2,4 @@
 // This file ONLY is placed into the Public Domain, for any use,
 // without warranty, 2000-2010 by Wilson Snyder.
 
-`define INC4
+`define T_PREPROC_INC4

@@ -117,8 +117,6 @@ Verilog-Perl.pod
 verilog/example.v
 verilog/inc1.v
 verilog/inc2.v
-verilog/inc3.v
-verilog/inc4.v
 verilog/inc_def09.v
 verilog/inc_ifdef.v
 verilog/inc_nonl.v
@@ -127,6 +125,8 @@ verilog/parser_sv.v
 verilog/parser_sv09.v
 verilog/pinorder.v
 verilog/pli.v
+verilog/t_preproc_inc3.vh
+verilog/t_preproc_inc4.vh
 verilog/test.v
 verilog/test.vrename
 verilog/v_comments.v

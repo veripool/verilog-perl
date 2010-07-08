@@ -1,3 +1,8 @@
+// DESCRIPTION: Verilog-Perl: Verilog Test module
+//
+// This file ONLY is placed into the Public Domain, for any use,
+// without warranty, 2009 by Wilson Snyder.
+
 `undefineall
 
 // Definitions as speced
@@ -63,6 +68,6 @@
 
 
 	    ZOT)
-HERE-Line66
+HERE-`__LINE__ - Line71
 
 //======================================================================

@@ -9,7 +9,7 @@ use IO::File;
 use strict;
 use Test::More;
 
-BEGIN { plan tests => 14 }
+BEGIN { plan tests => 16 }
 BEGIN { require "t/test_utils.pl"; }
 
 #######################################################################
@@ -25,7 +25,8 @@ sub def_substitute {
     # Only do this for some tests, as it makes the output look strange
     if ($self->{_test_def_substitute}
 	&& $out !~ /^".*"$/  # And don't corrupt `include test
-	&& $out !~ /NODS/) {  # Nor special cases
+	&& $out !~ /\.v/   # Nor things that look like filenames
+	&& $out !~ /NODS/){
 	return "DS<".$out.">";
     } else {
 	return $out;
@@ -50,33 +51,10 @@ ok(1, "use Verilog::Getopt");
 use Verilog::Preproc;
 ok(1, "use Verilog::Preproc");
 
-{
-    my $opt = prep();
-    my $pp = new Verilog::Preproc (options=>$opt);
-    ok(1);
-
-    #$pp->debug(9);
-    $pp->open("inc1.v");
-    $pp->open("inc2.v");
-    ok(1, "open");
-
-    my $fhout = IO::File->new(">test_dir/inc.out");
-
-    my $ln = 1;
-    while (defined(my $line = $pp->getline())) {
-	#print "LINE: $line";
-	print $fhout $pp->filename.":".$pp->lineno.": ".$line;
-	die if ++$ln > 2000;
-    }
-    ok(1, "parsed");
-
-    $fhout->close();
-    ok(files_identical("test_dir/inc.out", "t/30_preproc.out"), "diff");
-}
-
-test ('_sub', keep_comments=>'sub', _test_def_substitute=>1);
+test ('',  keep_comments=>1, line_directives=>0, _no_line_numbering=>1);  # Makes "diff" cleaner
 test ('_on',  keep_comments=>1,);
 test ('_nows', keep_comments=>0, keep_whitespace=>0,);
+test ('_sub', keep_comments=>'sub', _test_def_substitute=>1);
 test_getall ();
 
 sub test {
@@ -85,6 +63,7 @@ sub test {
 
     my $opt = prep();
     my $pp = new MyPreproc (options=>$opt, @args);
+    ok(1, "new${id}");
     #$pp->debug(9);
     $pp->open("inc1.v");
     $pp->open("inc2.v");
@@ -95,12 +74,16 @@ sub test {
     my $fhout = IO::File->new(">test_dir/inc${id}.out");
     $::OUTTO = $fhout;
     while (defined(my $line = $pp->getline())) {
-	print $fhout $pp->filename.":".$pp->lineno.": ".$line;
+	if ($pp->{_no_line_numbering}) {
+	    print $fhout $pp->filename.": ".$line;
+	} else {
+	    print $fhout $pp->filename.":".$pp->lineno.": ".$line;
+	}
     }
     $fhout->close();
-    ok(1, "parsed");
+    ok(1, "parsed${id}");
 
-    ok(files_identical("test_dir/inc${id}.out", "t/30_preproc${id}.out"), "diff");
+    ok(files_identical("test_dir/inc${id}.out", "t/30_preproc${id}.out"), "diff${id}");
 }
 
 sub test_getall {
@@ -129,6 +112,6 @@ sub test_getall {
     }
 
     is($a, $b);
-    ok($acalls > $bcalls);
+    ok($acalls > $bcalls, "getall does same callbacks");
 }
 

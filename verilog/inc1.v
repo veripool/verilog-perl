@@ -37,6 +37,7 @@ text.
 
 /*******COMMENT*****/
 `MULTILINE
+`MOREMULTILINE
 Line_Preproc_Check `__LINE__
 
 //===========================================================================
@@ -102,11 +103,12 @@ $display(`msg(left side, right side))
       $display(`msg(`thru(),));  // Empty
       $display(`msg(`thru(left side),`thru(right side)));
       $display(`msg( `thru( left side ) , `thru( right side ) ));
+      $display(`"standalone`");
 
+      // Unspecified when the stringification has multiple lines
 `define twoline first \
- second
+      second
       $display(`msg(twoline, `twoline));
-
       //$display(`msg(left side, \ right side \ ));  // Not sure \{space} is legal.
       $write("*-* All Finished *-*\n");
       $finish;
@@ -167,12 +169,12 @@ endmodule
 
 //======================================================================
 // include of parameterized file
-`define INCNAME "inc4.v"
+`define INCNAME "t_preproc_inc4.vh"
 `include `INCNAME
-`ifndef INC4
+`ifndef T_PREPROC_INC4
  `error "No Inc4"
 `endif
-`undef INC4
+`undef T_PREPROC_INC4
 
 `ifdef NOT_DEFINED_INC
  `include NOT_DEFINED_INC
