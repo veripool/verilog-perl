@@ -9,6 +9,12 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix preprocessing ifdef `INDIRECT(DEFINE).
 
+****	Fix preprocessor preservation of newlines across macro substitutions.
+
+****	Fix preprocessor stringification of nested macros.
+
+****	Fix preprocessor whitespace on define arguments
+
 * Verilog::Language 3.251 2010/06/29
 
 ***	Add vppreproc --dump-defines option.

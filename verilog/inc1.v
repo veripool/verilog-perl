@@ -361,3 +361,44 @@ EXP: This is fooed_2
    `error "Indirect2 failed"
 `endif
 //======================================================================
+// Metaprogramming
+`define REPEAT_0(d)
+`define REPEAT_1(d) d
+`define REPEAT_2(d) `REPEAT_1(d)d
+`define REPEAT_3(d) `REPEAT_2(d)d
+`define REPEAT_4(d) `REPEAT_3(d)d
+
+`define CONCAT(a, b) a``b
+`define REPEATC(n, d) `CONCAT(`REPEAT_, n)(d)
+`define REPEATT(n, d) `REPEAT_``n(d)
+
+`REPEATC(3, hello3 )
+`REPEATT(4, hello4 )
+//======================================================================
+// Include from stringification
+`undef T_PREPROC_INC4
+`define NODS_CONC_VH(m) `"m.vh`"
+`include `NODS_CONC_VH(t_preproc_inc4)
+`ifndef T_PREPROC_INC4 `error_here `endif
+//======================================================================
+// Defines doing defines
+// Note the newline on the end - required to form the end of a define
+`define DEFINEIT(d) d \
+
+`define _DEFIF_Z_0 1
+`define DEFIF_NZ(d,n) `undef d `ifndef _DEFIF_Z_``n `DEFINEIT(`define d 1) `endif
+`DEFIF_NZ(TEMP,1)
+`ifndef TEMP  `error "bad1" `endif
+`DEFIF_NZ(TEMP,0)
+`ifdef TEMP  `error "bad0" `endif
+Line_Preproc_Check `__LINE__
+//======================================================================
+// Quoted multiline - track line numbers, and insure \\n gets propagated
+`define MULQUOTE "FOO \
+  BAR "
+`define MULQUOTE2(mq) `MULQUOTE mq `MULQUOTE
+Line_Preproc_Check `__LINE__
+`MULQUOTE2("arg_line1 \
+  arg_line2")
+Line_Preproc_Check `__LINE__
+//======================================================================

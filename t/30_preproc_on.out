@@ -1,12 +1,12 @@
-verilog/inc_def09.v:1: `line 1 "verilog/inc1.v" 1
-verilog/inc_def09.v:1: `line 1 "verilog/inc1.v" 0
-verilog/inc_def09.v:1: `line 1 "verilog/inc2.v" 1
-verilog/inc_def09.v:1: `line 1 "verilog/inc2.v" 0
-verilog/inc_def09.v:1: `line 1 "verilog/inc_ifdef.v" 1
-verilog/inc_def09.v:1: `line 1 "verilog/inc_ifdef.v" 0
-verilog/inc_def09.v:1: `line 1 "verilog/inc_nonl.v" 1
-verilog/inc_def09.v:1: `line 1 "verilog/inc_nonl.v" 0
-verilog/inc_def09.v:1: `line 1 "verilog/inc_def09.v" 1
+verilog/inc_nonl.v:1: `line 1 "verilog/inc1.v" 1
+verilog/inc_nonl.v:1: `line 1 "verilog/inc1.v" 0
+verilog/inc_nonl.v:1: `line 1 "verilog/inc2.v" 1
+verilog/inc_nonl.v:1: `line 1 "verilog/inc2.v" 0
+verilog/inc_nonl.v:1: `line 1 "verilog/inc_ifdef.v" 1
+verilog/inc_nonl.v:1: `line 1 "verilog/inc_ifdef.v" 0
+verilog/inc_nonl.v:1: `line 1 "verilog/inc_nonl.v" 1
+verilog/inc_nonl.v:1: `line 1 "verilog/inc_nonl.v" 0
+verilog/inc_nonl.v:1: `line 1 "verilog/inc_def09.v" 1
 verilog/inc_def09.v:1: // DESCRIPTION: Verilog-Perl: Verilog Test module
 verilog/inc_def09.v:2: //
 verilog/inc_def09.v:3: // This file ONLY is placed into the Public Domain, for any use,
@@ -17,7 +17,7 @@ verilog/inc_def09.v:7:
 verilog/inc_def09.v:8: // Definitions as speced
 verilog/inc_def09.v:9: // Note there are trailing spaces, which spec doesn't show properly
 verilog/inc_def09.v:10:  
-verilog/inc_def09.v:11: 'initial $display("start", "msg1"  , "msg2" , "end");'
+verilog/inc_def09.v:11: 'initial $display("start", "msg1" , "msg2", "end");'
 verilog/inc_def09.v:12: 'initial $display("start", "msg1"  , "msg2" , "end");'
 verilog/inc_def09.v:13: 'initial $display("start", " msg1" , , "end");'
 verilog/inc_def09.v:14: 'initial $display("start", " msg1" , , "end");'
@@ -33,9 +33,9 @@ verilog/inc_def09.v:23: //`D(,,)     // ILLEGAL: more actual than formal argumen
 verilog/inc_def09.v:24: 
 verilog/inc_def09.v:25: // Defaults:
 verilog/inc_def09.v:26:  
-verilog/inc_def09.v:27: '$display(5,,2,,3 );'
+verilog/inc_def09.v:27: '$display(5,,2,,3);'
 verilog/inc_def09.v:28: '$display(5,,2,,3);'
-verilog/inc_def09.v:29: '$display(1 ,,"B",,3 );'
+verilog/inc_def09.v:29: '$display(1,,"B",,3);'
 verilog/inc_def09.v:30: '$display(1 ,,"B",,3 );'
 verilog/inc_def09.v:31: '$display(5,,2,,);'
 verilog/inc_def09.v:32: '$display(5,,2,,);'
@@ -50,14 +50,14 @@ verilog/inc_def09.v:40: '$display(5,,2,,"C");'
 verilog/inc_def09.v:41: '$display(5,,2,,"C");'
 verilog/inc_def09.v:42: 
 verilog/inc_def09.v:43:  
-verilog/inc_def09.v:44: '$display(1 ,,0,,"C");'
+verilog/inc_def09.v:44: '$display(1,,0,,"C");'
 verilog/inc_def09.v:45: '$display(1 ,,0,,"C");'
 verilog/inc_def09.v:46: '$display(5,,0,,"C");'
 verilog/inc_def09.v:47: '$display(5,,0,,"C");'
 verilog/inc_def09.v:48: //`MACRO3    // ILLEGAL: parentheses required
 verilog/inc_def09.v:49: 
 verilog/inc_def09.v:50:  
-verilog/inc_def09.v:51: 'b + 1 + 42 + a '
+verilog/inc_def09.v:51: 'b + 1 + 42 + a'
 verilog/inc_def09.v:52: 'b + 1 + 42 + a'
 verilog/inc_def09.v:53: 
 verilog/inc_def09.v:54: // Local tests
@@ -80,12 +80,13 @@ verilog/inc_def09.v:70: '(6) (eq=al) ZOT'
 verilog/inc_def09.v:71: HERE-71 - Line71
 verilog/inc_def09.v:72: 
 verilog/inc_def09.v:73: //======================================================================
-verilog/inc_def09.v:74: `line 74 "verilog/inc_def09.v" 2
-verilog/inc_def09.v:74: `line 1 "verilog/inc_nonl.v" 0
+verilog/inc_def09.v:74: 
+verilog/inc_def09.v:75: `line 75 "verilog/inc_def09.v" 2
+verilog/inc_nonl.v:1: `line 1 "verilog/inc_nonl.v" 0
 verilog/inc_nonl.v:1: // The lack of a newline on the next line is intentional
 verilog/inc_nonl.v:2: blah-no-newline-here>
-verilog/inc_nonl.v:2: `line 2 "verilog/inc_nonl.v" 2
-verilog/inc_nonl.v:2: `line 1 "verilog/inc_ifdef.v" 0
+verilog/inc_nonl.v:3: `line 3 "verilog/inc_nonl.v" 2
+verilog/inc_ifdef.v:1: `line 1 "verilog/inc_ifdef.v" 0
 verilog/inc_ifdef.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc_ifdef.v:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/inc_ifdef.v:3: // without warranty, 2000-2010 by Wilson Snyder.
@@ -94,8 +95,6 @@ verilog/inc_ifdef.v:5:
 verilog/inc_ifdef.v:6:  
 verilog/inc_ifdef.v:7:    
 verilog/inc_ifdef.v:8: 
-verilog/inc_ifdef.v:8: `line 8 "verilog/inc_ifdef.v" 0
-verilog/inc_ifdef.v:8: 
 verilog/inc_ifdef.v:9: 
 verilog/inc_ifdef.v:10:  
 verilog/inc_ifdef.v:11:  
@@ -103,23 +102,17 @@ verilog/inc_ifdef.v:12:   $display("1A");
 verilog/inc_ifdef.v:13:   
 verilog/inc_ifdef.v:14:   
 verilog/inc_ifdef.v:15:   
-verilog/inc_ifdef.v:15: `line 15 "verilog/inc_ifdef.v" 0
-verilog/inc_ifdef.v:15: 
 verilog/inc_ifdef.v:16:   $display("2A");
 verilog/inc_ifdef.v:17:    
 verilog/inc_ifdef.v:18:   
 verilog/inc_ifdef.v:19:    
 verilog/inc_ifdef.v:20:   
 verilog/inc_ifdef.v:21:   
-verilog/inc_ifdef.v:21: `line 21 "verilog/inc_ifdef.v" 0
-verilog/inc_ifdef.v:21: 
 verilog/inc_ifdef.v:22:   $display("3AELSE");
 verilog/inc_ifdef.v:23:   
 verilog/inc_ifdef.v:24:  
 verilog/inc_ifdef.v:25:   
 verilog/inc_ifdef.v:26:  
-verilog/inc_ifdef.v:26: `line 26 "verilog/inc_ifdef.v" 0
-verilog/inc_ifdef.v:26: 
 verilog/inc_ifdef.v:27:  
 verilog/inc_ifdef.v:28:   
 verilog/inc_ifdef.v:29:    
@@ -134,17 +127,16 @@ verilog/inc_ifdef.v:37:
 verilog/inc_ifdef.v:38: 
 verilog/inc_ifdef.v:39:   
 verilog/inc_ifdef.v:40: 
-verilog/inc_ifdef.v:40: `line 40 "verilog/inc_ifdef.v" 0
-verilog/inc_ifdef.v:40: 
-verilog/inc_ifdef.v:41: `line 41 "verilog/inc_ifdef.v" 2
-verilog/inc_ifdef.v:41: `line 1 "verilog/inc2.v" 0
+verilog/inc_ifdef.v:41: 
+verilog/inc_ifdef.v:42: `line 42 "verilog/inc_ifdef.v" 2
+verilog/inc2.v:1: `line 1 "verilog/inc2.v" 0
 verilog/inc2.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc2.v:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/inc2.v:3: // without warranty, 2000-2010 by Wilson Snyder.
 verilog/inc2.v:4: At file "verilog/inc2.v"  line 4
-verilog/t_preproc_inc3.vh:1:  
-verilog/t_preproc_inc3.vh:1: `line 5 "verilog/inc2.v" 0
-verilog/t_preproc_inc3.vh:1: `line 1 "verilog/t_preproc_inc3.vh" 1
+verilog/inc2.v:5:  
+verilog/inc2.v:5: `line 5 "verilog/inc2.v" 0
+verilog/inc2.v:5: `line 1 "verilog/t_preproc_inc3.vh" 1
 verilog/t_preproc_inc3.vh:1: `line 2 "inc3_a_filename_from_line_directive" 0
 inc3_a_filename_from_line_directive:2: // DESCRIPTION: Verilog::Preproc: Example source code
 inc3_a_filename_from_line_directive:3: // This file ONLY is placed into the Public Domain, for any use,
@@ -157,21 +149,18 @@ inc3_a_filename_from_line_directive:9:   // FOO
 inc3_a_filename_from_line_directive:10:   At file "inc3_a_filename_from_line_directive"  line 10
 inc3_a_filename_from_line_directive:11: 
 inc3_a_filename_from_line_directive:12:    
-inc3_a_filename_from_line_directive:13: 
-inc3_a_filename_from_line_directive:13: `line 13 "inc3_a_filename_from_line_directive" 0
 inc3_a_filename_from_line_directive:13:  // guard
 inc3_a_filename_from_line_directive:14: 
 inc3_a_filename_from_line_directive:15:  
 inc3_a_filename_from_line_directive:16:   
 inc3_a_filename_from_line_directive:17: 
-inc3_a_filename_from_line_directive:17: `line 17 "inc3_a_filename_from_line_directive" 0
-inc3_a_filename_from_line_directive:17: 
-inc3_a_filename_from_line_directive:18: `line 18 "inc3_a_filename_from_line_directive" 2
-inc3_a_filename_from_line_directive:18: `line 5 "verilog/inc2.v" 0
+inc3_a_filename_from_line_directive:18: 
+inc3_a_filename_from_line_directive:19: `line 19 "inc3_a_filename_from_line_directive" 2
+verilog/inc2.v:5: `line 5 "verilog/inc2.v" 0
 verilog/inc2.v:5: 
 verilog/inc2.v:6:   
-verilog/inc2.v:6: `line 6 "verilog/inc2.v" 2
-verilog/inc2.v:6: `line 1 "verilog/inc1.v" 0
+verilog/inc2.v:7: `line 7 "verilog/inc2.v" 2
+verilog/inc1.v:1: `line 1 "verilog/inc1.v" 0
 verilog/inc1.v:1: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc1.v:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/inc1.v:3: // without warranty, 2000-2010 by Wilson Snyder.
@@ -187,18 +176,10 @@ verilog/inc1.v:12:
 verilog/inc1.v:13:  
 verilog/inc1.v:14: // DEF_A0 set by command line
 verilog/inc1.v:15:    wire [3:0] q = {
-verilog/inc1.v:16: 		     1'b1   
-verilog/inc1.v:16: `line 16 "verilog/inc1.v" 0
-verilog/inc1.v:16:  ,
-verilog/inc1.v:17: 		      
-verilog/inc1.v:17: `line 17 "verilog/inc1.v" 0
-verilog/inc1.v:17:  1'b0  ,
-verilog/inc1.v:18: 		     1'b1   
-verilog/inc1.v:18: `line 18 "verilog/inc1.v" 0
-verilog/inc1.v:18:  ,
-verilog/inc1.v:19: 		      
-verilog/inc1.v:19: `line 19 "verilog/inc1.v" 0
-verilog/inc1.v:19:  1'b0 
+verilog/inc1.v:16: 		     1'b1    ,
+verilog/inc1.v:17: 		       1'b0  ,
+verilog/inc1.v:18: 		     1'b1    ,
+verilog/inc1.v:19: 		       1'b0 
 verilog/inc1.v:20: 		   };
 verilog/inc1.v:21: 
 verilog/inc1.v:22: text.
@@ -218,8 +199,18 @@ verilog/inc1.v:33:
 verilog/inc1.v:33: 
 verilog/inc1.v:37: 
 verilog/inc1.v:38: /*******COMMENT*****/
-verilog/inc1.v:39: first part    		second part    		third part
-verilog/inc1.v:40: { 		       a, 		       b, 		       c}
+verilog/inc1.v:39: first part 
+verilog/inc1.v:39: `line 39 "verilog/inc1.v" 0
+verilog/inc1.v:39:   		second part 
+verilog/inc1.v:39: `line 39 "verilog/inc1.v" 0
+verilog/inc1.v:39:   		third part
+verilog/inc1.v:40: {
+verilog/inc1.v:40: `line 40 "verilog/inc1.v" 0
+verilog/inc1.v:40: 		       a,
+verilog/inc1.v:40: `line 40 "verilog/inc1.v" 0
+verilog/inc1.v:40: 		       b,
+verilog/inc1.v:40: `line 40 "verilog/inc1.v" 0
+verilog/inc1.v:40: 		       c}
 verilog/inc1.v:41: Line_Preproc_Check 41
 verilog/inc1.v:42: 
 verilog/inc1.v:43: //===========================================================================
@@ -237,14 +228,14 @@ verilog/inc1.v:54: "`nosubst"
 verilog/inc1.v:55: 
 verilog/inc1.v:56:  
 verilog/inc1.v:57: x y LLZZ x y
-verilog/inc1.v:58: p q LLZZ p q r  s  LLZZ r  s  LLZZ p q LLZZ p q r  s  LLZZ r  s 
+verilog/inc1.v:58: p q LLZZ p q r s LLZZ r s LLZZ p q LLZZ p q r s LLZZ r s
 verilog/inc1.v:59: 
 verilog/inc1.v:60: 
 verilog/inc1.v:61: 
-verilog/inc1.v:62: firstline	 comma","line LLZZ firstline	 comma","line
+verilog/inc1.v:62: firstline comma","line LLZZ firstline comma","line
 verilog/inc1.v:63: 
 verilog/inc1.v:64:  
-verilog/inc1.v:65: x  y LLZZ "a" y
+verilog/inc1.v:65: x y LLZZ "a" y
 verilog/inc1.v:66: 
 verilog/inc1.v:67:  
 verilog/inc1.v:68: (a,b)(a,b)
@@ -257,8 +248,12 @@ verilog/inc1.v:74: bar_suffix  more
 verilog/inc1.v:75: 
 verilog/inc1.v:76:  
 verilog/inc1.v:76: 
-verilog/inc1.v:78: $c("Zap(\"",bug1,"\");");;
-verilog/inc1.v:79: $c("Zap(\"","bug2","\");");;
+verilog/inc1.v:78: 
+verilog/inc1.v:78: `line 78 "verilog/inc1.v" 0
+verilog/inc1.v:78: 	$c("Zap(\"",bug1,"\");");;
+verilog/inc1.v:79: 
+verilog/inc1.v:79: `line 79 "verilog/inc1.v" 0
+verilog/inc1.v:79: 	$c("Zap(\"","bug2","\");");;
 verilog/inc1.v:80: 
 verilog/inc1.v:81: /* Define inside comment: `DEEPER and `WITHTICK */
 verilog/inc1.v:82: // More commentary: `zap(bug1); `zap("bug2");
@@ -274,23 +269,23 @@ verilog/inc1.v:91:  // Doesn't expand
 verilog/inc1.v:92:  
 verilog/inc1.v:93:    initial begin
 verilog/inc1.v:94:       //$display(`msg( \`, \`));  // Illegal
-verilog/inc1.v:95:       $display("pre `thru(thrupre `thru(thrumid) thrupost) post: \"right side\"");
+verilog/inc1.v:95:       $display("pre thrupre thrumid thrupost post: \"right side\"");
 verilog/inc1.v:96:       $display("left side: \"right side\"");
-verilog/inc1.v:97:       $display("left side : \"right side \"");
-verilog/inc1.v:98:       $display("`ls : \"`rs \"");
-verilog/inc1.v:99:       $display("`noarg : \"`rs \"");
-verilog/inc1.v:100:       $display("prep ( midp1 `ls midp2 ( outp ) ) : \"`rs \"");
-verilog/inc1.v:101:       $display("`noarg: \"`noarg`noarg\"");
-verilog/inc1.v:102:       $display("`thruthru : \"`thruthru \"");   // Results vary between simulators
-verilog/inc1.v:103:       $display("`thru(): \"\"");  // Empty
-verilog/inc1.v:104:       $display("`thru(left side): \"`thru(right side)\"");
-verilog/inc1.v:105:       $display("`thru( left side ) : \"`thru( right side ) \"");
-verilog/inc1.v:106:       $display(`"standalone`");
+verilog/inc1.v:97:       $display("left side: \"right side\"");
+verilog/inc1.v:98:       $display("left_side: \"right_side\"");
+verilog/inc1.v:99:       $display("na: \"right_side\"");
+verilog/inc1.v:100:       $display("prep ( midp1 left_side midp2 ( outp ) ): \"right_side\"");
+verilog/inc1.v:101:       $display("na: \"nana\"");
+verilog/inc1.v:102:       $display("left_side right_side: \"left_side right_side\"");   // Results vary between simulators
+verilog/inc1.v:103:       $display(": \"\"");  // Empty
+verilog/inc1.v:104:       $display("left side: \"right side\"");
+verilog/inc1.v:105:       $display("left side: \"right side\"");
+verilog/inc1.v:106:       $display("standalone");
 verilog/inc1.v:107: 
 verilog/inc1.v:108:       // Unspecified when the stringification has multiple lines
 verilog/inc1.v:109:  
 verilog/inc1.v:109: 
-verilog/inc1.v:111:       $display("twoline: \"`twoline\"");
+verilog/inc1.v:111:       $display("twoline: \"first        second\"");
 verilog/inc1.v:112:       //$display(`msg(left side, \ right side \ ));  // Not sure \{space} is legal.
 verilog/inc1.v:113:       $write("*-* All Finished *-*\n");
 verilog/inc1.v:114:       $finish;
@@ -306,10 +301,22 @@ verilog/inc1.v:121:
 verilog/inc1.v:121: 
 verilog/inc1.v:125: 
 verilog/inc1.v:126: module add1 ( input wire d1, output wire o1);
-verilog/inc1.v:127:  wire  tmp_d1 = d1;  wire  tmp_o1 = tmp_d1 + 1;  assign o1 = tmp_o1 ;   // expansion is OK
+verilog/inc1.v:127:  
+verilog/inc1.v:127: `line 127 "verilog/inc1.v" 0
+verilog/inc1.v:127: wire  tmp_d1 = d1; 
+verilog/inc1.v:127: `line 127 "verilog/inc1.v" 0
+verilog/inc1.v:127: wire  tmp_o1 = tmp_d1 + 1; 
+verilog/inc1.v:127: `line 127 "verilog/inc1.v" 0
+verilog/inc1.v:127: assign o1 = tmp_o1 ;   // expansion is OK
 verilog/inc1.v:128: endmodule
 verilog/inc1.v:129: module add2 ( input wire d2, output wire o2);
-verilog/inc1.v:130:  wire  tmp_d2  = d2 ;  wire  tmp_o2  = tmp_d2  + 1;  assign o2  = tmp_o2  ;  // expansion is bad
+verilog/inc1.v:130:  
+verilog/inc1.v:130: `line 130 "verilog/inc1.v" 0
+verilog/inc1.v:130: wire  tmp_d2 = d2; 
+verilog/inc1.v:130: `line 130 "verilog/inc1.v" 0
+verilog/inc1.v:130: wire  tmp_o2 = tmp_d2 + 1; 
+verilog/inc1.v:130: `line 130 "verilog/inc1.v" 0
+verilog/inc1.v:130: assign o2 = tmp_o2 ;  // expansion is bad
 verilog/inc1.v:131: endmodule
 verilog/inc1.v:132: 
 verilog/inc1.v:133:   
@@ -323,7 +330,15 @@ verilog/inc1.v:140:
 verilog/inc1.v:141:   
 verilog/inc1.v:142:   
 verilog/inc1.v:143: 
-verilog/inc1.v:144:    generate for (i=0; i<(3); i=i+1) begin        psl cover {  m5k.f .ctl._ctl_mvldx_m1.d[i] & ~m5k.f .ctl._ctl_mvldx_m1.q[i] & !m5k.f .ctl._ctl_mvldx_m1.cond & ((m5k.f .ctl.alive & m5k.f .ctl.alive_m1))} report "fondNoRise: m5kc_fcl._ctl_mvldx_m1";        psl cover { ~m5k.f .ctl._ctl_mvldx_m1.d[i] &  m5k.f .ctl._ctl_mvldx_m1.q[i] & !m5k.f .ctl._ctl_mvldx_m1.cond & ((m5k.f .ctl.alive & m5k.f .ctl.alive_m1))} report "fondNoFall: m5kc_fcl._ctl_mvldx_m1";     end endgenerate	// ignorecmt
+verilog/inc1.v:144:    
+verilog/inc1.v:144: `line 144 "verilog/inc1.v" 0
+verilog/inc1.v:144:    generate for (i=0; i<(3); i=i+1) begin 
+verilog/inc1.v:144: `line 144 "verilog/inc1.v" 0
+verilog/inc1.v:144:       psl cover {  m5k.f .ctl._ctl_mvldx_m1.d[i] & ~m5k.f .ctl._ctl_mvldx_m1.q[i] & !m5k.f .ctl._ctl_mvldx_m1.cond & ((m5k.f .ctl.alive & m5k.f .ctl.alive_m1))} report "fondNoRise: m5kc_fcl._ctl_mvldx_m1"; 
+verilog/inc1.v:144: `line 144 "verilog/inc1.v" 0
+verilog/inc1.v:144:       psl cover { ~m5k.f .ctl._ctl_mvldx_m1.d[i] &  m5k.f .ctl._ctl_mvldx_m1.q[i] & !m5k.f .ctl._ctl_mvldx_m1.cond & ((m5k.f .ctl.alive & m5k.f .ctl.alive_m1))} report "fondNoFall: m5kc_fcl._ctl_mvldx_m1"; 
+verilog/inc1.v:144: `line 144 "verilog/inc1.v" 0
+verilog/inc1.v:144:    end endgenerate	// ignorecmt
 verilog/inc1.v:145: 
 verilog/inc1.v:146: //======================================================================
 verilog/inc1.v:147: // Quotes are legal in protected blocks.  Grr.
@@ -352,28 +367,26 @@ verilog/inc1.v:169:
 verilog/inc1.v:170: //======================================================================
 verilog/inc1.v:171: // include of parameterized file
 verilog/inc1.v:172:  
-verilog/t_preproc_inc4.vh:1:  
-verilog/t_preproc_inc4.vh:1: `line 173 "verilog/inc1.v" 0
-verilog/t_preproc_inc4.vh:1: `line 1 "verilog/t_preproc_inc4.vh" 1
+verilog/inc1.v:173:  
+verilog/inc1.v:173: `line 173 "verilog/inc1.v" 0
+verilog/inc1.v:173: `line 1 "verilog/t_preproc_inc4.vh" 1
 verilog/t_preproc_inc4.vh:1: // DESCRIPTION: Verilog::Preproc: Example source code
+verilog/t_preproc_inc4.vh:2: `line 2 "verilog/inc1.v" 0
 verilog/t_preproc_inc4.vh:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/t_preproc_inc4.vh:3: // without warranty, 2000-2010 by Wilson Snyder.
 verilog/t_preproc_inc4.vh:4: 
 verilog/t_preproc_inc4.vh:5:  
-verilog/t_preproc_inc4.vh:6: `line 6 "verilog/t_preproc_inc4.vh" 2
-verilog/t_preproc_inc4.vh:6: `line 173 "verilog/inc1.v" 0
+verilog/t_preproc_inc4.vh:6: 
+verilog/t_preproc_inc4.vh:7: `line 7 "verilog/t_preproc_inc4.vh" 2
+verilog/inc1.v:173: `line 173 "verilog/inc1.v" 0
 verilog/inc1.v:173: 
 verilog/inc1.v:174:  
 verilog/inc1.v:175:   
-verilog/inc1.v:176: 
-verilog/inc1.v:176: `line 176 "verilog/inc1.v" 0
 verilog/inc1.v:176: 
 verilog/inc1.v:177:  
 verilog/inc1.v:178: 
 verilog/inc1.v:179:  
 verilog/inc1.v:180:   
-verilog/inc1.v:181: 
-verilog/inc1.v:181: `line 181 "verilog/inc1.v" 0
 verilog/inc1.v:181: 
 verilog/inc1.v:182: 
 verilog/inc1.v:183: //======================================================================
@@ -399,8 +412,6 @@ verilog/inc1.v:202:
 verilog/inc1.v:203:  
 verilog/inc1.v:204:    
 verilog/inc1.v:205: 
-verilog/inc1.v:205: `line 205 "verilog/inc1.v" 0
-verilog/inc1.v:205: 
 verilog/inc1.v:206: Line_Preproc_Check 206
 verilog/inc1.v:207: 
 verilog/inc1.v:208: //======================================================================
@@ -413,7 +424,7 @@ verilog/inc1.v:214: (p,q)
 verilog/inc1.v:215: //Here
 verilog/inc1.v:216: 
 verilog/inc1.v:217: //Too
-verilog/inc1.v:218: (x,y     )
+verilog/inc1.v:218: (x,y)
 verilog/inc1.v:219: Line_Preproc_Check 219
 verilog/inc1.v:220: 
 verilog/inc1.v:221: //======================================================================
@@ -425,13 +436,13 @@ verilog/inc1.v:226:
 verilog/inc1.v:227:  
 verilog/inc1.v:228: beginend   // 2001 spec doesn't require two tokens, so "beginend" ok
 verilog/inc1.v:229: beginend    // 2001 spec doesn't require two tokens, so "beginend" ok
-verilog/inc1.v:230: "`BEGIN`END"  // No space "beginend"
+verilog/inc1.v:230: "beginend"  // No space "beginend"
 verilog/inc1.v:231: 
 verilog/inc1.v:232: //======================================================================
 verilog/inc1.v:233: // bug106
 verilog/inc1.v:234:  
 verilog/inc1.v:235:  
-verilog/inc1.v:236:   got_escaped
+verilog/inc1.v:236:   `\esc`def
 verilog/inc1.v:237: 
 verilog/inc1.v:238: Not a \`define
 verilog/inc1.v:239: 
@@ -452,15 +463,9 @@ verilog/inc1.v:253: //==========================================================
 verilog/inc1.v:254: // 1800-2009
 verilog/inc1.v:255:  
 verilog/inc1.v:256:     
-verilog/inc1.v:256: `line 256 "verilog/inc1.v" 0
-verilog/inc1.v:256: 
 verilog/inc1.v:257: 
 verilog/inc1.v:258:     
-verilog/inc1.v:258: `line 258 "verilog/inc1.v" 0
-verilog/inc1.v:258: 
 verilog/inc1.v:259:     
-verilog/inc1.v:259: `line 259 "verilog/inc1.v" 0
-verilog/inc1.v:259: 
 verilog/inc1.v:260: 
 verilog/inc1.v:261: //======================================================================
 verilog/inc1.v:262: // bug202
@@ -476,11 +481,27 @@ verilog/inc1.v:263:
 verilog/inc1.v:263: 
 verilog/inc1.v:263: 
 verilog/inc1.v:274: 
-verilog/inc1.v:275:  							          	       					   
+verilog/inc1.v:275: 
 verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
-verilog/inc1.v:275: 								      					           		     
+verilog/inc1.v:275:    							
 verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
-verilog/inc1.v:275: 							      assign a3 = ~b3 ;						   
+verilog/inc1.v:275:          	
+verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
+verilog/inc1.v:275:       
+verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
+verilog/inc1.v:275: 					
+verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
+verilog/inc1.v:275:   								
+verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
+verilog/inc1.v:275:      					
+verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
+verilog/inc1.v:275:           		
+verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
+verilog/inc1.v:275:     							
+verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
+verilog/inc1.v:275:      assign a3 = ~b3 ;						
+verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
+verilog/inc1.v:275:   
 verilog/inc1.v:276: 
 verilog/inc1.v:277:  /* multi	\
 verilog/inc1.v:278: 	 line1*/	\
@@ -491,7 +512,14 @@ verilog/inc1.v:281:
 verilog/inc1.v:281: 
 verilog/inc1.v:281: 
 verilog/inc1.v:281: 
-verilog/inc1.v:286: /* multi		       line 3*/		    def foo
+verilog/inc1.v:286: 
+verilog/inc1.v:286: `line 286 "verilog/inc1.v" 0
+verilog/inc1.v:286:    /* multi		
+verilog/inc1.v:286:       line 3*/		
+verilog/inc1.v:286: `line 286 "verilog/inc1.v" 0
+verilog/inc1.v:286:    def i		
+verilog/inc1.v:286: `line 286 "verilog/inc1.v" 0
+verilog/inc1.v:286: 
 verilog/inc1.v:287: 
 verilog/inc1.v:288: //======================================================================
 verilog/inc1.v:289: 
@@ -508,11 +536,17 @@ verilog/inc1.v:299:
 verilog/inc1.v:300: 1  (nodef)
 verilog/inc1.v:301: 2 /* verilator PART OF DEFINE */ (hasdef)
 verilog/inc1.v:302: 3  (nodef)
-verilog/inc1.v:303: 4 /* verilator PART  	        OF DEFINE */ (nodef)
-verilog/inc1.v:304: 5 also in     also3 (nodef)
+verilog/inc1.v:303: 4 /* verilator PART 
+verilog/inc1.v:303: 	        OF DEFINE */ (nodef)
+verilog/inc1.v:304: `line 304 "verilog/inc1.v" 0
+verilog/inc1.v:304: 5 also in  
+verilog/inc1.v:304: `line 304 "verilog/inc1.v" 0
+verilog/inc1.v:304:   also3 (nodef)
 verilog/inc1.v:305:  
 verilog/inc1.v:305: 
-verilog/inc1.v:307: HAS a NEW  LINE
+verilog/inc1.v:307: HAS a NEW 
+verilog/inc1.v:307: `line 307 "verilog/inc1.v" 0
+verilog/inc1.v:307: LINE
 verilog/inc1.v:308: 
 verilog/inc1.v:309: //======================================================================
 verilog/inc1.v:310: 
@@ -535,12 +569,32 @@ verilog/inc1.v:326:
 verilog/inc1.v:327: EXP: clxx_scen
 verilog/inc1.v:328: clxx_scen
 verilog/inc1.v:329: EXP: clxx_scen
-verilog/inc1.v:330: "`msg_scen_(clxx)"
+verilog/inc1.v:330: "clxx_scen"
 verilog/inc1.v:331:  
 verilog/inc1.v:332: EXP: do if (start("verilog/inc1.v", 25)) begin  message({"Blah-", "clx_scen", " end"}); end  while(0);
-verilog/inc1.v:333: do        /* synopsys translate_off */          
+verilog/inc1.v:333: 
 verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
-verilog/inc1.v:333:         if (start("verilog/inc1.v", 333)) begin    	 message({"Blah-", "`msg_scen_(clx)", " end"});        end        /* synopsys translate_on */     while(0);
+verilog/inc1.v:333:    do 
+verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
+verilog/inc1.v:333:       /* synopsys translate_off */ 
+verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
+verilog/inc1.v:333:   
+verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
+verilog/inc1.v:333:     
+verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
+verilog/inc1.v:333:  
+verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
+verilog/inc1.v:333:       if (start("verilog/inc1.v", 333)) begin 
+verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
+verilog/inc1.v:333:  
+verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
+verilog/inc1.v:333: 	 message({"Blah-", "clx_scen", " end"}); 
+verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
+verilog/inc1.v:333:       end 
+verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
+verilog/inc1.v:333:       /* synopsys translate_on */ 
+verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
+verilog/inc1.v:333:    while(0);
 verilog/inc1.v:334: 
 verilog/inc1.v:335: //======================================================================
 verilog/inc1.v:336: 
@@ -548,35 +602,93 @@ verilog/inc1.v:337:
 verilog/inc1.v:337: 
 verilog/inc1.v:337: 
 verilog/inc1.v:337: 
-verilog/inc1.v:341:  
-verilog/inc1.v:342: 
-verilog/inc1.v:343:      
-verilog/inc1.v:343: `line 343 "verilog/inc1.v" 0
-verilog/inc1.v:343: 
-verilog/inc1.v:344: //`ifndef def_fooed_2  `error "No def_fooed_2" `endif
-verilog/inc1.v:345: EXP: This is fooed
-verilog/inc1.v:346: This is fooed      
-verilog/inc1.v:347: 
-verilog/inc1.v:348: EXP: This is fooed_2
-verilog/inc1.v:349: This is fooed_2
-verilog/inc1.v:350: 
-verilog/inc1.v:351: //======================================================================
-verilog/inc1.v:352:  
-verilog/inc1.v:353: np
-verilog/inc1.v:354: np
-verilog/inc1.v:355: //======================================================================
-verilog/inc1.v:356: // It's unclear if the spec allows this; is text_macro_idenitfier before or after substitution?
+verilog/inc1.v:341: 
+verilog/inc1.v:341: `line 341 "verilog/inc1.v" 0
+verilog/inc1.v:341:     
+verilog/inc1.v:341: `line 341 "verilog/inc1.v" 0
+verilog/inc1.v:341:     
+verilog/inc1.v:341: `line 341 "verilog/inc1.v" 0
+verilog/inc1.v:341: 
+verilog/inc1.v:342:      
+verilog/inc1.v:343: //`ifndef def_fooed_2  `error "No def_fooed_2" `endif
+verilog/inc1.v:344: EXP: This is fooed
+verilog/inc1.v:345: This is fooed
+verilog/inc1.v:346: EXP: This is fooed_2
+verilog/inc1.v:347: This is fooed_2
+verilog/inc1.v:348: 
+verilog/inc1.v:349: //======================================================================
+verilog/inc1.v:350:  
+verilog/inc1.v:351: np
+verilog/inc1.v:352: np
+verilog/inc1.v:353: //======================================================================
+verilog/inc1.v:354: // It's unclear if the spec allows this; is text_macro_idenitfier before or after substitution?
+verilog/inc1.v:355:  
+verilog/inc1.v:356:  
 verilog/inc1.v:357:  
-verilog/inc1.v:358:  
-verilog/inc1.v:359:  
-verilog/inc1.v:360:     
-verilog/inc1.v:361: 
-verilog/inc1.v:361: `line 361 "verilog/inc1.v" 0
-verilog/inc1.v:361: 
-verilog/inc1.v:362:  
-verilog/inc1.v:363:     
-verilog/inc1.v:364: 
-verilog/inc1.v:364: `line 364 "verilog/inc1.v" 0
-verilog/inc1.v:364: 
-verilog/inc1.v:365: //======================================================================
-verilog/inc1.v:366: `line 366 "verilog/inc1.v" 2
+verilog/inc1.v:358:     
+verilog/inc1.v:359: 
+verilog/inc1.v:360:  
+verilog/inc1.v:361:     
+verilog/inc1.v:362: 
+verilog/inc1.v:363: //======================================================================
+verilog/inc1.v:364: // Metaprogramming
+verilog/inc1.v:365:  
+verilog/inc1.v:366:  
+verilog/inc1.v:367:  
+verilog/inc1.v:368:  
+verilog/inc1.v:369:  
+verilog/inc1.v:370: 
+verilog/inc1.v:371:  
+verilog/inc1.v:372:  
+verilog/inc1.v:373:  
+verilog/inc1.v:374: 
+verilog/inc1.v:375: hello3hello3hello3
+verilog/inc1.v:376: hello4hello4hello4hello4
+verilog/inc1.v:377: //======================================================================
+verilog/inc1.v:378: // Include from stringification
+verilog/inc1.v:379:  
+verilog/inc1.v:380:  
+verilog/inc1.v:381:  
+verilog/inc1.v:381: `line 381 "verilog/inc1.v" 0
+verilog/inc1.v:381: `line 1 "verilog/t_preproc_inc4.vh" 1
+verilog/t_preproc_inc4.vh:1: // DESCRIPTION: Verilog::Preproc: Example source code
+verilog/t_preproc_inc4.vh:2: `line 2 "verilog/inc1.v" 0
+verilog/t_preproc_inc4.vh:2: // This file ONLY is placed into the Public Domain, for any use,
+verilog/t_preproc_inc4.vh:3: // without warranty, 2000-2010 by Wilson Snyder.
+verilog/t_preproc_inc4.vh:4: 
+verilog/t_preproc_inc4.vh:5:  
+verilog/t_preproc_inc4.vh:6: 
+verilog/t_preproc_inc4.vh:7: `line 7 "verilog/t_preproc_inc4.vh" 2
+verilog/inc1.v:381: `line 381 "verilog/inc1.v" 0
+verilog/inc1.v:381: 
+verilog/inc1.v:382:    
+verilog/inc1.v:383: //======================================================================
+verilog/inc1.v:384: // Defines doing defines
+verilog/inc1.v:385: // Note the newline on the end - required to form the end of a define
+verilog/inc1.v:386:  
+verilog/inc1.v:386: 
+verilog/inc1.v:388:  
+verilog/inc1.v:389:  
+verilog/inc1.v:390:      
+verilog/inc1.v:390: `line 390 "verilog/inc1.v" 0
+verilog/inc1.v:390:  
+verilog/inc1.v:391:      
+verilog/inc1.v:392:      
+verilog/inc1.v:393:      
+verilog/inc1.v:394: Line_Preproc_Check 394
+verilog/inc1.v:395: //======================================================================
+verilog/inc1.v:396: // Quoted multiline - track line numbers, and insure \\n gets propagated
+verilog/inc1.v:397:  
+verilog/inc1.v:397: 
+verilog/inc1.v:399:  
+verilog/inc1.v:400: Line_Preproc_Check 400
+verilog/inc1.v:402: 
+verilog/inc1.v:402: "FOO \
+verilog/inc1.v:402:   BAR " "arg_line1 \
+verilog/inc1.v:402:   arg_line2" "FOO \
+verilog/inc1.v:402:   BAR "
+verilog/inc1.v:403: `line 403 "verilog/inc1.v" 0
+verilog/inc1.v:403: Line_Preproc_Check 403
+verilog/inc1.v:404: //======================================================================
+verilog/inc1.v:405: 
+verilog/inc1.v:406: `line 406 "verilog/inc1.v" 2

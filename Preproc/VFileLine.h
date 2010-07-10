@@ -54,6 +54,7 @@ public:
     virtual ~VFileLine() {}
     // ACCESSORS
     int lineno () const { return m_lineno; }	///< Return line number
+    void linenoIncInPlace() { m_lineno++; }	///< Increment line IN PLACE; normally use create() instead
     const string filename () const { return m_filename; }	///< Return filename
     const string filebasename () const;	///< Filename with any directory stripped
     string lineDirectiveStrg(int enter_exit_level) const;

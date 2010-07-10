@@ -60,7 +60,10 @@ class VPreProcImp;
 #define VP_DEFARG	307
 #define VP_ERROR	308
 #define VP_DEFFORM	309
+#define VP_STRIFY	310
+#define VP_BACKQUOTE	311
 
+#define VP_PSL		350
 
 //======================================================================
 // Externs created by flex
@@ -113,15 +116,32 @@ void yy_delete_buffer( YY_BUFFER_STATE b );
 #define KEEPCMT_EXP 3
 
 //======================================================================
+// Entry for each file processed; a stack of entries included
+
+class VPreStream {
+public:
+    VFileLine*		m_curFilelinep;	// Current processing point (see also m_tokFilelinep)
+    deque<string>	m_buffers;	// Buffer of characters to process
+    int			m_ignNewlines;	// Ignore multiline newlines
+    bool		m_eof;		// "EOF" buffer
+    bool		m_file;		// Buffer is start of new file
+    int			m_termState;	// Termination fsm
+    VPreStream(VFileLine* fl)
+	: m_curFilelinep(fl), m_ignNewlines(0),
+	  m_eof(false), m_file(false), m_termState(0) {
+    }
+    ~VPreStream() {}
+};
+
+//======================================================================
 // Class entry for each per-lexer state
 
 class VPreLex {
   public:	// Used only by VPreLex.cpp and VPreProc.cpp
-    VFileLine*	m_curFilelinep;	///< Current processing point
-
-    // Parse state
-    stack<YY_BUFFER_STATE> m_bufferStack;	///< Stack of inserted text above current point
-    deque<string>	m_buffers;	///< Buffer of characters to process
+    VPreProcImp*	m_preimpp;	// Preprocessor lexor belongs to
+    stack<VPreStream*>	m_streampStack;	// Stack of processing files
+    YY_BUFFER_STATE	m_bufferState;	// Flex state
+    VFileLine*		m_tokFilelinep;	// Starting position of current token
 
     // State to lexer
     static VPreLex* s_currentLexp;	///< Current lexing point
@@ -137,41 +157,57 @@ class VPreLex {
     int		m_enterExit;	///< For VL_LINE, the enter/exit level
 
     // CONSTRUCTORS
-    VPreLex() {
+    VPreLex(VPreProcImp* preimpp, VFileLine* filelinep) {
+	m_preimpp = preimpp;
 	m_keepComments = 0;
 	m_keepWhitespace = 1;
 	m_pedantic = false;
 	m_formalLevel = 0;
 	m_parenLevel = 0;
 	m_defCmtSlash = false;
+	m_tokFilelinep = filelinep;
 	m_enterExit = 0;
-	initFirstBuffer();
+	initFirstBuffer(filelinep);
     }
     ~VPreLex() {
-	while (!m_bufferStack.empty()) { yy_delete_buffer(m_bufferStack.top()); m_bufferStack.pop(); }
+	while (!m_streampStack.empty()) { delete m_streampStack.top(); m_streampStack.pop(); }
+	yy_delete_buffer(m_bufferState); m_bufferState=NULL;
     }
-    void initFirstBuffer();
 
     /// Called by VPreLex.l from lexer
-    VFileLine* curFilelinep() { return m_curFilelinep; }
-    void curFilelinep(VFileLine* fl) { m_curFilelinep = fl; }
-    void appendDefValue(const char* text, size_t len);
+    VPreStream* curStreamp() { return m_streampStack.top(); }  // Can't be empty, "EOF" is on top
+    VFileLine* curFilelinep() { return curStreamp()->m_curFilelinep; }
+    void curFilelinep(VFileLine* fl) { curStreamp()->m_curFilelinep = fl; }
+    void appendDefValue(const char* textp, size_t len) { m_defValue.append(textp,len); }
     void lineDirective(const char* textp) { curFilelinep(curFilelinep()->lineDirective(textp, m_enterExit/*ref*/)); }
-    void linenoInc() { curFilelinep(curFilelinep()->create(curFilelinep()->lineno()+1)); }
+    void linenoInc() { if (curStreamp()->m_ignNewlines) curStreamp()->m_ignNewlines--;
+	else curFilelinep(curFilelinep()->create(curFilelinep()->lineno()+1)); }
     /// Called by VPreProc.cpp to inform lexer
     void pushStateDefArg(int level);
     void pushStateDefForm();
     void pushStateDefValue();
     void pushStateIncFilename();
-    void scanBytes(const char* strp, size_t len);
+    void scanNewFile(VFileLine* filelinep);
+    void scanBytes(const string& str);
     void scanBytesBack(const string& str);
     size_t inputToLex(char* buf, size_t max_size);
     /// Called by VPreProc.cpp to get data from lexer
     YY_BUFFER_STATE currentBuffer();
+    int  lex();
     int	 currentStartState();
     void dumpSummary();
     void dumpStack();
     void unused();
+    /// Utility
+    static int debug();
+    static void debug(int level);
+    static string cleanDbgStrg(const string& in);
+
+private:
+    string currentUnreadChars();
+    string endOfStream(bool& againr);
+    void initFirstBuffer(VFileLine* filelinep);
+    void scanSwitchStream(VPreStream* streamp);
 };
 
 #endif // Guard

@@ -51,7 +51,7 @@ public:
     SV*		m_self;	// Class called from (the hash, not SV pointing to the hash)
     deque<VFileLineXs*> m_filelineps;
 
-    VPreProcXs(VFileLine* filelinep) : VPreProc(filelinep) {}
+    VPreProcXs() : VPreProc() {}
     virtual ~VPreProcXs();
 
     // Callback methods
@@ -225,13 +225,14 @@ CODE:
     if (CLASS) {}  /* Prevent unused warning */
     if (!SvROK(SELF)) { warn("${Package}::$func_name() -- SELF is not a hash reference"); }
     VFileLineXs* filelinep = new VFileLineXs(NULL/*ok,for initial*/);
-    VPreProcXs* preprocp = new VPreProcXs(filelinep);
+    VPreProcXs* preprocp = new VPreProcXs();
     filelinep->setPreproc(preprocp);
     preprocp->m_self = SvRV(SELF);
     preprocp->keepComments(keepcmt);
     preprocp->keepWhitespace(keepwhite);
     preprocp->lineDirectives(linedir);
     preprocp->pedantic(pedantic);
+    preprocp->configure(filelinep);
     RETVAL = preprocp;
 }
 OUTPUT: RETVAL
@@ -267,7 +268,7 @@ PROTOTYPE: $
 CODE:
 {
     if (!THIS) XSRETURN_UNDEF;
-    RETVAL = (THIS->filelinep()->lineno());
+    RETVAL = (THIS->fileline()->lineno());
 }
 OUTPUT: RETVAL
 
@@ -280,7 +281,7 @@ PROTOTYPE: $
 CODE:
 {
     if (!THIS) XSRETURN_UNDEF;
-    RETVAL = THIS->filelinep()->filename().c_str();
+    RETVAL = THIS->fileline()->filename().c_str();
 }
 OUTPUT: RETVAL
 

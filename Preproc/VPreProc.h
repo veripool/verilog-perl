@@ -29,10 +29,6 @@
 using namespace std;
 #include "VFileLine.h"
 
-#ifdef open
-# undef open	// Perl 64 bit on solaris has a nasty hack that redefines open
-#endif
-
 /// Generic opaque pointer to VPreProcImp implementation class.
 struct VPreProcOpaque {
     virtual ~VPreProcOpaque() {}
@@ -48,7 +44,8 @@ class VDefine;
 
 class VPreProc {
 public:
-    VPreProc(VFileLine* filelinep);
+    VPreProc();
+    void configure(VFileLine* filelinep);
     virtual ~VPreProc();
 
     // STATE
@@ -62,6 +59,7 @@ public:
     // CONSTANTS
     static const unsigned DEFINE_RECURSION_LEVEL_MAX = 50;	///< How many `def substitutions before an error
     static const unsigned INCLUDE_DEPTH_MAX = 500;	///< How many `includes deep before an error
+    static const unsigned NEWLINES_VS_TICKLINE = 20;	///< Use `line in place of this many newlines
 
     // ACCESSORS
     /// Insert given file into this point in input stream
@@ -72,7 +70,7 @@ public:
     bool isEof();		///< Return true on EOF.
     void insertUnreadback(string text);
 
-    VFileLine* filelinep();	///< File/Line number for last getline call
+    VFileLine* fileline();	///< File/Line number for last getline call
 
     // The default behavior is to pass all unknown `defines right through.
     // This lets the user determine how to report the errors.  It also nicely
@@ -102,8 +100,8 @@ public:
     virtual string defSubstitute(string substitute) = 0;	///< Return value to substitute for given post-parameter value
 
     // UTILITIES
-    void error(string msg) { filelinep()->error(msg); }	///< Report a error
-    void fatal(string msg) { filelinep()->fatal(msg); }	///< Report a fatal error
+    void error(string msg) { fileline()->error(msg); }	///< Report a error
+    void fatal(string msg) { fileline()->fatal(msg); }	///< Report a fatal error
 
 private:
     VPreProcOpaque*	m_opaquep;	///< Pointer to parser's implementation data.
