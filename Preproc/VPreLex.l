@@ -289,8 +289,18 @@ void VPreLex::pushStateIncFilename() {
     yymore();
 }
 
-void VPreLex::debug(int level) { yy_flex_debug=level; }
-int VPreLex::debug() { return yy_flex_debug; }
+void VPreLex::debug(int level) {
+#ifdef FLEX_DEBUG
+    yy_flex_debug=level;
+#endif
+}
+int VPreLex::debug() {
+#ifdef FLEX_DEBUG
+    return yy_flex_debug;
+#else
+    return 0;
+#endif
+}
 
 int VPreLex::lex() {
     VPreLex::s_currentLexp = this;  // Tell parser where to get/put data
@@ -338,7 +348,7 @@ size_t VPreLex::inputToLex(char* buf, size_t max_size) {
 	    }
 	} else {
 	    if (streamp->m_eof) {
-		if (yy_flex_debug) cout<<"-  EOF\n";
+		if (debug()) cout<<"-  EOF\n";
 	    }
 	    got = 0;  // 0=EOF/EOS - although got was already 0.
 	    if (again) goto again;
@@ -351,7 +361,7 @@ size_t VPreLex::inputToLex(char* buf, size_t max_size) {
 string VPreLex::endOfStream(bool& againr) {
     // Switch to file or next unputString
     againr = false;
-    if (yy_flex_debug) cout<<"-EOS state="<<curStreamp()->m_termState<<" at "<<curFilelinep()<<endl;
+    if (debug()) cout<<"-EOS state="<<curStreamp()->m_termState<<" at "<<curFilelinep()<<endl;
     if (curStreamp()->m_eof) return "";   // Don't delete the final "EOF" stream
     bool exited_file = curStreamp()->m_file;
     if (!exited_file) {
