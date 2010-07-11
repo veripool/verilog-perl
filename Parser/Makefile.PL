@@ -80,6 +80,7 @@ VParseBison.h: VParseBison.cpp
 
 VParseBison.cpp:	VParseBison.y bisonpre
 	-$(RM_RF) VParseBison.c VParseBison.cpp
+	-${YACC} --version | head -1
 	@echo "If the next command fails, you probably need to install Bison 1.875 or newer"
 	$(PERL) bisonpre --yacc ${YACC} --debug --verbose --d -p VParseBison -k VParseBison.y -o VParseBison.c
 	mv VParseBison.c VParseBison.cpp
