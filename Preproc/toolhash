@@ -1,0 +1,257 @@
+#!/usr/bin/perl -w
+
+use Digest::SHA1;
+use File::Copy qw(copy);  # Core module
+use IO::File;
+use strict;
+
+our $Debug;
+
+# We don't use getopt, as want multiple in/outs and stop at first command
+my @opt_name;
+my @opt_in;  # We allow empty opt_in and opt_out so we can cache --version checks.
+my @opt_out;
+my @opt_cmd;
+my @opt_vercmd;
+my $in_cmd;
+my $list = \@opt_in;
+while (defined(my $param=shift @ARGV)) {
+    if ($in_cmd) { push @opt_cmd, $param; }
+    elsif ($param =~ /^-?-debug/) { $Debug=1; }
+    elsif ($param =~ /^-?-cmd/) { $in_cmd = 1; }
+    elsif ($param =~ /^-?-in/) { $list = \@opt_in; }
+    elsif ($param =~ /^-?-name/) { $list = \@opt_name; }
+    elsif ($param =~ /^-?-out/) { $list = \@opt_out; }
+    elsif ($param =~ /^-?-vercmd/) { $list = \@opt_vercmd; }
+    elsif ($param =~ /^-/) { die "%Error: Unexpected argument: $param,"; }
+    else {
+	push @$list, $param;
+    }
+}
+$opt_name[0] ||= $opt_cmd[0];
+$opt_vercmd[0] ||= $opt_cmd[0];
+
+mkdir "gen", 0777;
+
+# Hash of command, including this program args
+my $digest = Digest::SHA1->new;
+$digest->add('toolhash_1.0');
+$digest->add('----', join('  ',@opt_in));
+$digest->add('----', join('  ',@opt_out));
+$digest->add('----', join('  ',@opt_cmd));
+foreach my $fn (@opt_in) {
+    my $fh = IO::File->new("<$fn") or die "toolhash: %Error: $! reading $fn\n";
+    $digest->addfile($fh);
+    $fh->close;
+}
+my $arcfn = "gen/".$opt_name[0];
+my $hash = $digest->b64digest;
+
+# Cache hit?  If so, fill as we go
+remove_out();
+my $hit = restore($hash, 1);
+exit (0) if $hit;
+remove_named();
+my $out = run_cmd();
+encache($hash, $out);
+
+remove_out();
+$hit = restore($hash, 0);
+exit (0) if $hit;
+die "toolhash: %Error: encaching failed, didn't hit second time\n";
+
+#######################################################################
+
+sub restore {
+    my $hash = shift;
+    my $pass1 = shift;
+    if ($pass1 && $ENV{TOOLHASH_RECACHE}) {
+	print "toolhash: TOOLHASH_RECACHE set, missing\n" if $Debug;
+	return 0;
+    }
+
+    # Returns hit
+    my $hit = 1;
+    my $fh = IO::File->new("<${arcfn}-0");
+    if (!$fh) {
+	print "toolhash: Cache hash empty $arcfn\n" if $Debug;
+	return 0;
+    }
+    my $line = $fh->getline;
+    chomp $line;
+    print "toolhash: Cache hash test $arcfn $line ".$hash."\n" if $Debug;
+    if ($line ne $hash) {
+	print "toolhash: Cache hash miss\n" if $Debug;
+	return 0;
+    }
+
+    my $n = 1;
+    foreach my $fn (@opt_out) {
+	my $digout = "${arcfn}-${n}";
+	if (-r $digout) {
+	    print "toolhash: Cache hit  $digout for $fn\n" if $Debug;
+	    # Restore, assuming all hits.
+	    copy($digout, $fn) or die "toolhash: %Error: $! on 'cp $digout $fn'\n";
+	} else {
+	    print "toolhash: Cache miss $digout for $fn\n" if $Debug;
+	    $hit = 0; last;
+	}
+	$n++;
+    }
+
+    if ($hit) {
+	print "toolhash: Cache hit\n" if $Debug;
+	if (my $fh = IO::File->new("<${arcfn}-s")) {  # Dump stdout
+	    print join('',$fh->getlines);
+	    $fh->close;
+	}
+    }
+
+    return $hit;
+}
+
+sub run_cmd {
+    remove_out();
+    my $cmd = join(' ',@opt_cmd);
+    # We can't use system() as we need the output and fork() isn't portable
+    # without pulling in yet another package, so punt on spaces
+    foreach (@opt_cmd) {
+	if (/ /) { die "%Error: unsupported: spaces in command: '$cmd',"; }
+    }
+    print "\t$cmd\n" if $Debug||1;
+    my $out = `$cmd`;
+    my $status = $?;
+    print $out;
+    if ($status) {
+	remove_out();
+	# See if bison/gcc/flex --version works
+	my $vcmd = "$opt_vercmd[0] --version";
+	print "\t$vcmd\n" if $Debug;
+	`$vcmd`;
+	if ($?) {
+	    die "\n%Error: '$opt_cmd[0]' must be installed to build\n";
+	}
+	exit $status >> 8;
+    }
+    return $out;
+}
+
+sub encache {
+    my $hash = shift;
+    my $out = shift;
+
+    print "toolhash: Encache ".$hash."\n" if $Debug;
+
+    my $fh = IO::File->new(">${arcfn}-0") or die "toolhash: %Error: $! ${arcfn}-0\n";
+    $fh->print($hash);
+    $fh->close;
+
+    if ($out ne "") {
+	$fh = IO::File->new(">${arcfn}-s") or die "toolhash: %Error: $! ${arcfn}-s\n";
+	$fh->print($out);
+	$fh->close;
+    }
+
+    my $n = 1;
+    foreach my $fn (@opt_out) {
+	my $digout = "${arcfn}-${n}";
+	copy($fn, $digout) or die "toolhash: %Error: $! on 'cp $fn $digout'\n";
+	$n++;
+    }
+}
+
+sub remove_out {
+    unlink for (@opt_out);  # Ok if error
+}
+
+sub remove_named {
+    unlink for (glob "gen/$opt_name[0]-*"); # Ok if error
+}
+
+#######################################################################
+__END__
+
+=pod
+
+=head1 NAME
+
+toolhash - Generate and hash files to avoid installation of build tools
+
+=head1 SYNOPSIS
+
+  toolhash --in foo.c --out foo.o --cmd gcc -c -o foo.o foo.c
+
+=head1 DESCRIPTION
+
+Toolhash is used to install Verilog-Perl and other tools.  It stores a
+hash of generated files (aka the cons make utility) for distribution to
+avoid building those files from scratch.
+
+The hash isn't stored as part of the filename, so that the MANIFEST can
+remain constant.
+
+=head1 ARGUMENTS
+
+=over 4
+
+=item --cmd command args...
+
+Command and arguments to run.  All further arguments are passed to the command.
+
+=item --in filenames...
+
+Input filenames.
+
+=item --name
+
+Prefix for output files, or defaults to first --cmd argument.
+
+=item --out filenames...
+
+Output filenames.
+
+=item --vercmd command
+
+Command to run to get --version.
+
+=back
+
+=head1 ENVIRONMENT
+
+=over 4
+
+=item TOOLHASH_RECACHE
+
+Write the cache, but do not read from it.
+
+=back
+
+=head1 DISTRIBUTION
+
+This is part of the L<http://www.veripool.org/> free Verilog EDA software
+tool suite.  The latest version is available from CPAN and from
+L<http://www.veripool.org/>.
+
+Copyright 2010-2010 by Wilson Snyder.  This package is free software; you
+can redistribute it and/or modify it under the terms of either the GNU
+Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+=head1 AUTHORS
+
+Wilson Snyder <wsnyder@wsnyder.org>
+
+=head1 SEE ALSO
+
+C<make>
+
+=cut
+
+######################################################################
+### Local Variables:
+### compile-command: "echo 'void i() {}' > foo.c; ./toolhash toolhash --debug --in foo.c --out foo.o --cmd gcc -c -o foo.o foo.c ; ls -la foo.* gen/* ; rm foo.*"
+### End:

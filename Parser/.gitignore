@@ -17,5 +17,6 @@ VParseBison.c
 VParseBison.cpp
 VParseBison.h
 blib
+gen
 example
 pm_to_blib

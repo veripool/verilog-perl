@@ -25,7 +25,8 @@ foreach my $filename (keys %{$manifest}) {
 	&& $wholefile !~ /[ \t]+\n/
 	&& $wholefile !~ /^[ \t]*[ ]+\t/) {
 	ok(1);
-    } elsif ($filename =~ m!\.out!) {
+    } elsif ($filename =~ m!\.out!
+	     || $filename =~ m!/gen/!) {
 	skip("File doesn't need check (harmless)",1);
     } elsif (!$ENV{VERILATOR_AUTHOR_SITE}) {
 	skip("author only test (harmless)",1);

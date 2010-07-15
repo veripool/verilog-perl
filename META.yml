@@ -13,10 +13,12 @@ resources:
 requires:
     Pod::Usage:                    1.34
     Data::Dumper:                  1
+    warnings:                      1
+build_requires:
+    Digest::SHA1:                  0
     Test:                          1
     Test::More:                    0
     Time::HiRes:                   1
-    warnings:                      1
 
 meta-spec:
     url:     http://module-build.sourceforge.net/META-spec-v1.4.html

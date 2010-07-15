@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 **	Support SystemVerilog 2009 standard, including new keywords.
 
+***	Bison/flex are no longer required to build, unless sources are changed.
+
 ****	Fix preprocessing ifdef `INDIRECT(DEFINE).
 
 ****	Fix preprocessor preservation of newlines across macro substitutions.

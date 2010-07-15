@@ -51,6 +51,7 @@ LEX = flex
 YACC = bison
 PPSRC = ../Preproc
 FLEXFIX = $(PPSRC)/flexfix
+TOOLHASH = $(PPSRC)/toolhash
 XSUBPPFIX = $(PPSRC)/xsubppfix
 
 VPATH += . $(PPSRC)
@@ -70,8 +71,8 @@ VFileLine.o: $(PPSRC)/VFileLine.cpp
 	$(CCCMD) $(CCCDLFLAGS) "-I$(PERL_INC)" $(PASTHRU_DEFINE) $(DEFINE) $<
 
 VParseLex_pretmp.cpp: VParseLex.l
-	$(LEX) --version
-	$(LEX) $(LEXFLAGS) -o$@ $<
+	-$(LEX) --version
+	$(PERL) $(TOOLHASH) --in $< --out $@ --cmd $(LEX) $(LEXFLAGS) -o$@ $<
 
 VParseLex.cpp: $(FLEXFIX) VParseLex_pretmp.cpp
 	$(PERL) $(FLEXFIX) VParseLex < VParseLex_pretmp.cpp > $@
@@ -82,7 +83,11 @@ VParseBison.cpp:	VParseBison.y bisonpre
 	-$(RM_RF) VParseBison.c VParseBison.cpp
 	-${YACC} --version | head -1
 	@echo "If the next command fails, you probably need to install Bison 1.875 or newer"
-	$(PERL) bisonpre --yacc ${YACC} --debug --verbose --d -p VParseBison -k VParseBison.y -o VParseBison.c
+	# toolhash ignores VParseBison.output
+	$(PERL) $(TOOLHASH) --name bisonpre --vercmd bison \
+		--in VParseBison.y bisonpre \
+		--out VParseBison.c VParseBison.h \
+		--cmd $(PERL) bisonpre --yacc ${YACC} --debug --verbose --d -p VParseBison -k VParseBison.y -o VParseBison.c
 	mv VParseBison.c VParseBison.cpp
 
 Parser_callbackgen.cpp: callbackgen

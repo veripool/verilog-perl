@@ -57,16 +57,23 @@ maintainer-dist: preexist dist tag
 
 maintainer-copy:
 
-maintainer-clean: distclean
-	-$(RM_RF) README Makefile MANIFEST.bak $(MAKEFILE_OLD)
+maintainer-clean:: distclean
+	-$(RM_RF) README Makefile MANIFEST.bak $(MAKEFILE_OLD) */gen
 ';
     return $out;
 }
 
 my $fail;
 local $! = undef;
-`flex --version`; if ($?) { $fail=1; warn "\n%Error: 'flex' must be installed to build\n"; }
-`bison --version`; if ($?) { $fail=1; warn "\n%Error: 'bison' must be installed to build\n"; }
+my $have_gen = -d "Preproc/gen";
+`flex --version`; if ($?) {
+    if ($have_gen) { warn "\n-Note: 'flex' must be installed to build from sources\n"; }
+    else { $fail=1; warn "\n%Error: 'flex' must be installed to build\n\n"; }
+}
+`bison --version`; if ($?) {
+    if ($have_gen) { warn "\n-Note: 'bison' must be installed to build from sources\n"; }
+    else { $fail=1; warn "\n%Error: 'bison' must be installed to build\n\n"; }
+}
 `g++ --version`; if ($?) { $fail=1; warn "\n%Error: 'gcc/g++' must be installed to build\n"; }
 if ($fail) {
     if ($ENV{AUTOMATED_TESTING}) {
@@ -76,6 +83,10 @@ if ($fail) {
     }
 }
 
+if (!-r "README" && !-r "Makefile") {
+    warn "-Note: If building from 'git' sources (not from a CPAN tar file),\n"
+	."-Note: ignore any 'files are missing' below for */gen/ and README:\n";
+}
 WriteMakefile(
 	      DISTNAME  => 'Verilog-Perl',
 	      NAME      => 'Verilog::Language',
@@ -84,15 +95,19 @@ WriteMakefile(
 	      VERSION_FROM  => 'Language.pm',
 	      NO_META	=> 1,
 	      #OPTIMIZE	=> '-ggdb',
-	      PREREQ_PM => {'Pod::Usage' => 1.34,
-			    'Data::Dumper' => 1,
-			    'Test' => 1,
-			    'Test::More' => 0,
-			    'Time::HiRes' => 1,
-			    'warnings' => 1,
-			    #'Test::Pod' => 1,  # Required only for author tests
-			    #'Test::Perl::Critic' => 1,  # Required only for author tests
-			},
+	      PREREQ_PM => {
+		  'Pod::Usage' => 1.34,
+		  'Data::Dumper' => 1,
+		  'warnings' => 1,
+	      },
+	      BUILD_REQUIRES => {
+		  'Digest::SHA1' => 0,
+		  'Test' => 1,
+		  'Test::More' => 0,
+		  'Time::HiRes' => 1,
+		  #'Test::Pod' => 1,  # Required only for author tests
+		  #'Test::Perl::Critic' => 1,  # Required only for author tests
+	      },
 	      PMLIBDIRS => ['lib', 'Parser', 'Preproc', 'Netlist',],
 	      EXE_FILES => [qw( vrename vpassert vppreproc vhier vsplitmodule )],
 	      'clean'	=> {FILES => qw (test_dir signals.vrename .vpassert simv ),},

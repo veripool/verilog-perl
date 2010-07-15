@@ -24,6 +24,12 @@ Netlist/Subclass.pm
 Parser/.gitignore
 Parser/bisonpre
 Parser/callbackgen
+Parser/gen/bisonpre-0
+Parser/gen/bisonpre-1
+Parser/gen/bisonpre-2
+Parser/gen/bisonpre-s
+Parser/gen/flex-0
+Parser/gen/flex-1
 Parser/Makefile.PL
 Parser/Parser.pm
 Parser/Parser.xs
@@ -41,9 +47,12 @@ Parser/VSymTable.cpp
 Parser/VSymTable.h
 Preproc/.gitignore
 Preproc/flexfix
+Preproc/gen/flex-0
+Preproc/gen/flex-1
 Preproc/Makefile.PL
 Preproc/Preproc.pm
 Preproc/Preproc.xs
+Preproc/toolhash
 Preproc/typemap
 Preproc/VFileLine.cpp
 Preproc/VFileLine.h
