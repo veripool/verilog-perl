@@ -74,9 +74,10 @@ sub parameter {
 sub process {
     remove_outputs();
 
-    clean_input($Opt_Input, tmp_prefix().".y");
+    $Self->{bison_version} = bison_version_check();
+    my $supports_report = ($Self->{bison_version} >= 2.3);
 
-    my $supports_report = (bison_version_check() >= 2.3);
+    clean_input($Opt_Input, tmp_prefix().".y");
 
     # Run bison
     my $command = ($Opt_Yacc
@@ -296,6 +297,25 @@ sub clean_input {
 
     #use Data::Dumper; print Dumper(\%rules);
 
+    # Replace BISONPRE_VERSION(ver,,...) with expanded list
+    {
+	my @linesin = @lines;  @lines=();  my $l=0;
+	foreach my $line (@linesin) {
+	    $l++;
+	    if ($line =~ /BISONPRE_VERSION/) {
+		($line =~ /BISONPRE_VERSION\((\S+)\s*,\s*([^\),]+)\)\s*$/)
+		    or die "%Error: $filename:$l: Bad form of BISONPRE_VERSION: $line\n";
+		my $ver=$1;  my $cmd=$2;
+		if ($Self->{bison_version} >= $1) {
+		    $line = $cmd."\n";
+		} else {
+		    $line = "//NOP: $line";
+		}
+	    }
+	    push @lines, $line;
+	}
+    }
+
     # Replace BISONPRE_NOT(type,...) with expanded list
     {
 	my @linesin = @lines;  @lines=();  my $l=0;
@@ -467,6 +487,10 @@ rule, ignore it.
 =item BISONPRE_NOT(token[, token...])
 
 Create a rule that matches every token except for those specified.
+
+=item BISONPRE_VERSION(ver, cmd)
+
+If the bison version is >= the specified version, include the given command.
 
 =back
 
