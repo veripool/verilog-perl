@@ -124,6 +124,7 @@ static void NEED_S09(VFileLine*, const string&) {
 
 %pure_parser
 %token_table
+//%define lr.keep_unreachable_states
 
 // When writing Bison patterns we use yTOKEN instead of "token",
 // so Bison will error out on unknown "token"s.
