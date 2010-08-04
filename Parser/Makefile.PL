@@ -82,9 +82,9 @@ VParseBison.h: VParseBison.cpp
 VParseBison.cpp:	VParseBison.y bisonpre
 	-$(RM_RF) VParseBison.c VParseBison.cpp
 	-${YACC} --version | head -1
-	@echo "If the next command fails, you probably need to install Bison 1.875 or newer"
-	# toolhash ignores VParseBison.output
-	$(PERL) $(TOOLHASH) --name bisonpre --vercmd bison \
+	@echo "Note: toolhash ignores VParseBison.output; remove gen/ if you want to debug the grammar"
+	@echo "Note: If the next command fails, you probably need to install Bison 1.875 or newer"
+	$(PERL) $(TOOLHASH) --name bisonpre --vercmd bison --skip-cmd 1 \
 		--in VParseBison.y bisonpre \
 		--out VParseBison.c VParseBison.h \
 		--cmd $(PERL) bisonpre --yacc ${YACC} --debug --verbose --d -p VParseBison -k VParseBison.y -o VParseBison.c

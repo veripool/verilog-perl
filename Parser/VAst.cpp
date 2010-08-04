@@ -128,6 +128,7 @@ void VAstEnt::replaceInsert(VAstEnt* newentp, const string& name) {
 
     // $svpp = $table{$name}
     SV** svpp = hv_fetch(hvp, name.c_str(), name.length(), 1/*create*/);
+    if (svpp) {} // unused
 
     // $avp = $newentp (premade avp)
     hv_store(hvp, name.c_str(), name.length(), newRV((SV*)newentp), 0);
@@ -139,6 +140,7 @@ VAstEnt* VAstEnt::replaceInsert(VAstType type, const string& name) {
 
     // $svpp = $table{$name}
     SV** svpp = hv_fetch(hvp, name.c_str(), name.length(), 1/*create*/);
+    if (svpp) {} // unused
 
     // $avp = [type, this, {}]
     AV* sub_avp = newAVEnt(type);

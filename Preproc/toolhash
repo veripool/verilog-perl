@@ -13,6 +13,7 @@ my @opt_in;  # We allow empty opt_in and opt_out so we can cache --version check
 my @opt_out;
 my @opt_cmd;
 my @opt_vercmd;
+my $opt_skip_cmd = 0;
 my $in_cmd;
 my $list = \@opt_in;
 while (defined(my $param=shift @ARGV)) {
@@ -21,6 +22,7 @@ while (defined(my $param=shift @ARGV)) {
     elsif ($param =~ /^-?-cmd/) { $in_cmd = 1; }
     elsif ($param =~ /^-?-in/) { $list = \@opt_in; }
     elsif ($param =~ /^-?-name/) { $list = \@opt_name; }
+    elsif ($param =~ /^-?-skip-cmd/) { $opt_skip_cmd = shift @ARGV; }
     elsif ($param =~ /^-?-out/) { $list = \@opt_out; }
     elsif ($param =~ /^-?-vercmd/) { $list = \@opt_vercmd; }
     elsif ($param =~ /^-/) { die "%Error: Unexpected argument: $param,"; }
@@ -35,11 +37,19 @@ mkdir "gen", 0777;
 
 # Hash of command, including this program args
 my $digest = Digest::SHA1->new;
-$digest->add('toolhash_1.0');
-$digest->add('----', join('  ',@opt_in));
-$digest->add('----', join('  ',@opt_out));
-$digest->add('----', join('  ',@opt_cmd));
+{
+    my $str = 'toolhash_1.0';
+    $str .= '----'.join('  ',@opt_in);
+    $str .= '----'.join('  ',@opt_out);
+    $str .= '----';
+    my $i = $opt_skip_cmd;
+    foreach (@opt_cmd) { next if ($i-- > 0); $str.='  '.$_; }
+    $str .= '----';
+    print "toolhash: Hashing $str\n" if $Debug;
+    $digest->add($str);
+}
 foreach my $fn (@opt_in) {
+    print "toolhash: Hashing $fn\n" if $Debug;
     my $fh = IO::File->new("<$fn") or die "toolhash: %Error: $! reading $fn\n";
     $digest->addfile($fh);
     $fh->close;
@@ -205,6 +215,12 @@ Input filenames.
 =item --name
 
 Prefix for output files, or defaults to first --cmd argument.
+
+=item --skip-cmd <num-args>
+
+Disable hashing first num-arg components of the command.  This is used to
+avoid commands like "/usr/bin/perl ...." from hash missing when the Perl
+version and thus the path changes.
 
 =item --out filenames...
 
