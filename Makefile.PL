@@ -101,7 +101,7 @@ WriteMakefile(
 		  'warnings' => 1,
 	      },
 	      BUILD_REQUIRES => {
-		  'Digest::SHA1' => 0,
+		  'Digest::SHA' => 0,
 		  'Test' => 1,
 		  'Test::More' => 0,
 		  'Time::HiRes' => 1,

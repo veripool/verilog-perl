@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-use Digest::SHA1;
+use Digest::SHA;
 use File::Copy qw(copy);  # Core module
 use IO::File;
 use strict;
@@ -36,7 +36,7 @@ $opt_vercmd[0] ||= $opt_cmd[0];
 mkdir "gen", 0777;
 
 # Hash of command, including this program args
-my $digest = Digest::SHA1->new;
+my $digest = Digest::SHA->new(1);
 {
     my $str = 'toolhash_1.0';
     $str .= '----'.join('  ',@opt_in);

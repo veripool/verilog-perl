@@ -15,7 +15,7 @@ requires:
     Data::Dumper:                  1
     warnings:                      1
 build_requires:
-    Digest::SHA1:                  0
+    Digest::SHA:                   0
     Test:                          1
     Test::More:                    0
     Time::HiRes:                   1
