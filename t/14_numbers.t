@@ -30,7 +30,7 @@ print "  Bit::Vector\n";
 eval "use Bit::Vector";
 SKIP: {
     if ($@) {
-	skip("Bit::Vector not installed (harmless)",5);
+	skip("Bit::Vector not installed (harmless)",5*2);
     }
     try_bitvector("5823", 32, "000016bf");
     try_bitvector("80'h47cb_40d7_b50f_0147_1a85", 80, "47cb40d7b50f01471a85");
@@ -40,7 +40,7 @@ SKIP: {
 }
 
 print "  Math::BigInt\n";
-eval "use Math::BigInt";
+eval "use Math::BigInts";
 SKIP: {
     if ($@) {
 	skip("Math::BigInt not installed (harmless)",5);

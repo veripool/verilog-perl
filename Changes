@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Use Digest::SHA instead of SHA1, bug189.  [Ahmed El-Mahmoudy]
 
+****	Fix false test failure if Math::BigInt not installed.
+
 * Verilog::Language 3.301 2010/08/04
 
 ****	Improve Bison/flex skipping to increase CPAN-Testers pass rate.
