@@ -57,7 +57,7 @@ private:
 
 public:
     // CONSTANTS
-    static const unsigned DEFINE_RECURSION_LEVEL_MAX = 50;	///< How many `def substitutions before an error
+    static const unsigned DEFINE_RECURSION_LEVEL_MAX = 1000;	///< How many `def substitutions before an error
     static const unsigned INCLUDE_DEPTH_MAX = 500;	///< How many `includes deep before an error
     static const unsigned NEWLINES_VS_TICKLINE = 20;	///< Use `line in place of this many newlines
 

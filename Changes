@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.30****
 
+****	Increase define recursions before error.  [Paul Liu]
+
 ****	Use Digest::SHA instead of SHA1, bug189.  [Ahmed El-Mahmoudy]
 
 ****	Fix false test failure if Math::BigInt not installed.
