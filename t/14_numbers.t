@@ -43,7 +43,7 @@ print "  Math::BigInt\n";
 eval "use Math::BigInts";
 SKIP: {
     if ($@) {
-	skip("Math::BigInt not installed (harmless)",5);
+	skip("Math::BigInt not installed (harmless)",5*2);
     }
     try_bigint("5823", 4, "0x16bf");
     try_bigint("80'h47cb_40d7_b50f_0147_1a85", 24, "0x47cb40d7b50f01471a85");
