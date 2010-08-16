@@ -42,3 +42,10 @@ module foo (/*AUTOARG*/
    input signed [3:0] noconnect;
    input [31:0] def;
 endmodule
+
+module bug278
+  (
+   output wire ow,
+   inout wire iow,
+   input wire iw);
+endmodule

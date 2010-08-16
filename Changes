@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Increase define recursions before error.  [Paul Liu]
 
+***	Fix documentation on verilog_text and link, bug278. [Mike Z]
+
 ****	Use Digest::SHA instead of SHA1, bug189.  [Ahmed El-Mahmoudy]
 
 ****	Fix false test failure if Math::BigInt not installed.

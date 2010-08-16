@@ -647,7 +647,8 @@ lookup.  Return undef if not found.
 
 =item $self->verilog_text
 
-Returns verilog code which represents the netlist.
+Returns verilog code which represents the netlist.  The netlist must be
+already ->link'ed for this to work correctly.
 
 =back
 

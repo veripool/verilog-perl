@@ -1,3 +1,10 @@
+Module:bug278  Kwd:module  File:verilog/pinorder.v
+  Port:iow  Dir:inout  DataT:  Array:
+  Port:iw  Dir:in  DataT:  Array:
+  Port:ow  Dir:out  DataT:  Array:
+  Net:iow    DeclT:port  NetT:wire  DataT:  Array:
+  Net:iw  O  DeclT:port  NetT:wire  DataT:  Array:
+  Net:ow  I  DeclT:port  NetT:wire  DataT:  Array:
 Module:foo  Kwd:module  File:verilog/pinorder.v
   Port:abcconst  Dir:in  DataT:[2:0]  Array:
   Port:def  Dir:in  DataT:[31:0]  Array:

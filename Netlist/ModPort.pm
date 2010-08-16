@@ -264,7 +264,8 @@ sorted by name.
 =item $self->verilog_text
 
 Returns verilog code which represents this modport.  Returned as an array
-that must be joined together to form the final text string.
+that must be joined together to form the final text string.  The netlist
+must be already ->link'ed for this to work correctly.
 
 =back
 
