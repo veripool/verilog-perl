@@ -68,15 +68,16 @@ if (! GetOptions (
 		  "help"	=> \&usage,
 		  "debug"	=> \&debug,
 		  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
-		  "crypt!"	=> \$Opt_Crypt,
-		  "cryptall!"	=> \$Opt_Crypt_All,
 		  "change!"	=> \$opt_change,
 		  "changefile=s"=> \$change_filename,
+		  "crypt!"	=> \$Opt_Crypt,
+		  "cryptall!"	=> \$Opt_Crypt_All,
+		  "keywords!"	=> \$Opt_Keywords,
+		  "language=s"	=> sub { shift; Verilog::Language::language_standard(shift); },
+		  "list!"	=> \$opt_list,
 		  "o=s"		=> \$output_dir,
 		  "read!"	=> \$opt_read,
 		  "write!"	=> \$Opt_Write,
-		  "keywords!"	=> \$Opt_Keywords,
-		  "list!"	=> \$opt_list,
 		  "xref!"	=> \$Opt_Xref,
 		  "<>"		=> \&parameter,
 		  )) {
@@ -629,6 +630,12 @@ Include keywords in the renaming list.  Default is to ignore keywords, as
 changing a keyword will probably result in unrunnable code, however,
 occasionally it may be necessary to rename signals which happen to match
 the name of keywords recently added to the language (such as 'bit').
+
+=item --language <1364-1995|1364-2001|1364-2005|1800-2005|1800-2009>
+
+Set the language standard for the files.  This determines which tokens are
+signals versus keywords, such as the ever-common "do" (data-out signal,
+versus a do-while loop keyword).
 
 =item --list
 

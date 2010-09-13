@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.30**
 
+***	Add vrename --language option. [Dan Moore]
+
 ****	Fix escaped identifiers that are keywords, bug282. [Dan Moore]
 
 * Verilog::Language 3.302 2010/08/26
