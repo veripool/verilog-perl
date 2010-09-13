@@ -113,10 +113,11 @@ class VParseLex {
 	// Are \ escapes needed to print this symbol?
 	if (leng<1) return false;  // Probably not a valid identifier, but better than a core dump...
 	if (!isalpha(textp[0]) && textp[0] != '_') return false;
-	while (leng) {
-	    if (!isalnum(*textp) && *textp != '_') return false;
-	    leng--; textp++;
+	const char* cp = textp;
+	for (size_t tleng=leng; tleng; tleng--, cp++) {
+	    if (!isalnum(*cp) && *cp != '_') return false;
 	}
+	if (VParse::isKeyword(textp, leng)) return false;
 	return true;
     }
 

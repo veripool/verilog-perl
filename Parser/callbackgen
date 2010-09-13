@@ -9,6 +9,11 @@ use Pod::Usage;
 use strict;
 use vars qw ($Debug $VERSION);
 
+# We need keywords, but haven't completely built yet, so can't use the blib
+# Thus we pull in Language.pm directly
+require "../Language.pm";
+package main;
+
 $VERSION = '3.302';
 
 # xs_manual=>1,   -> The .xs file makes the handler itself
@@ -150,6 +155,11 @@ sub filter {
 		push @out, _xs_use_cb();
 		push @out, "// CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen\n";
 	    }
+	    elsif ($line =~ /CALLBACKGEN_KEYWORDS/) {
+		push @out, "    // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen\n";
+		push @out, _h_keywords();
+		push @out, "    // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen\n";
+	    }
 	    elsif ($line =~ /CALLBACKGEN/) {
 		die "%Error: callbackgen: Unknown pragma: $line";
 	    }
@@ -261,6 +271,31 @@ sub _xs_use_cb {
 	push @out, "    else if (0==strcmp(name,\"${cb}\")) m_useCb_${cb} = flag;\n";
     }
     push @out, "}\n";
+    return @out;
+}
+
+sub _h_keywords {
+    my @out;
+
+    (keys %Verilog::Language::Keyword) or die "%Error: Keyword loading failed,";
+
+    push @out, "    static bool isKeyword(const char* kwd, int leng) {\n";
+    # If this gets slow, we can use a perfect hashing function and a table to compare
+    push @out, "\tstatic set<string> s_map;\n";
+    push @out, "\tif (s_map.empty()) {\n";
+    my $i=0;
+    push @out, "\t    const char* kwds[] = {";
+    foreach my $kwd (sort keys %Verilog::Language::Keyword) {
+	next if $kwd !~ /^[a-zA-Z_]/;
+	push @out, "\n\t\t" if ($i++%7)==0;
+	push @out, "\"$kwd\",";
+    }
+    push @out, "\"\"};\n";
+    push @out, "\t    for (const char** k=kwds; **k; k++) s_map.insert(*k);\n";
+    push @out, "\t}\n";
+    push @out, "\tstring str(kwd,leng);\n";
+    push @out, "\treturn s_map.end() != s_map.find(str);\n";
+    push @out, "    }\n";
     return @out;
 }
 

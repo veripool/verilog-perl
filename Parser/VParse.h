@@ -25,6 +25,7 @@
 
 #include <string>
 #include <map>
+#include <set>
 #include <deque>
 #include <iostream>
 using namespace std;
@@ -182,6 +183,54 @@ public:
     virtual void taskCb(VFileLine* fl, const string& kwd, const string& name) = 0;
     virtual void varCb(VFileLine* fl, const string& kwd, const string& name, const string& objof, const string& net
 	, const string& data_type, const string& array, const string& value) = 0;
+    // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen
+
+    // CALLBACKGEN_KEYWORDS
+    // CALLBACKGEN_GENERATED_BEGIN - GENERATED AUTOMATICALLY by callbackgen
+    static bool isKeyword(const char* kwd, int leng) {
+	static set<string> s_map;
+	if (s_map.empty()) {
+	    const char* kwds[] = {
+		"accept_on","alias","always","always_comb","always_ff","always_latch","and",
+		"assert","assign","assume","automatic","before","begin","bind",
+		"bins","binsof","bit","break","buf","bufif0","bufif1",
+		"byte","case","casex","casez","cell","chandle","checker",
+		"class","clocking","cmos","config","const","constraint","context",
+		"continue","cover","covergroup","coverpoint","cross","deassign","default",
+		"defparam","design","disable","dist","do","edge","else",
+		"end","endcase","endchecker","endclass","endclocking","endconfig","endfunction",
+		"endgenerate","endgroup","endinterface","endmodule","endpackage","endprimitive","endprogram",
+		"endproperty","endsequence","endspecify","endtable","endtask","enum","event",
+		"eventually","expect","export","extends","extern","final","first_match",
+		"for","force","foreach","forever","fork","forkjoin","function",
+		"generate","genvar","global","highz0","highz1","if","iff",
+		"ifnone","ignore_bins","illegal_bins","implies","import","incdir","include",
+		"initial","inout","input","inside","instance","int","integer",
+		"interface","intersect","join","join_any","join_none","large","let",
+		"liblist","library","local","localparam","logic","longint","macromodule",
+		"matches","medium","modport","module","nand","negedge","new",
+		"nexttime","nmos","nor","noshowcancelled","not","notif0","notif1",
+		"null","or","output","package","packed","parameter","pmos",
+		"posedge","primitive","priority","program","property","protected","pull0",
+		"pull1","pulldown","pullup","pulsestyle_ondetect","pulsestyle_onevent","pure","rand",
+		"randc","randcase","randsequence","rcmos","real","realtime","ref",
+		"reg","reject_on","release","repeat","restrict","return","rnmos",
+		"rpmos","rtran","rtranif0","rtranif1","s_always","s_eventually","s_nexttime",
+		"s_until","s_until_with","scalared","sequence","shortint","shortreal","showcancelled",
+		"signed","small","solve","specify","specparam","static","strength",
+		"string","strong","strong0","strong1","struct","super","supply0",
+		"supply1","sync_accept_on","sync_reject_on","table","tagged","task","this",
+		"throughout","time","timeprecision","timeunit","tran","tranif0","tranif1",
+		"tri","tri0","tri1","triand","trior","trireg","type",
+		"typedef","union","unique","unique0","unsigned","until","until_with",
+		"untyped","use","uwire","var","vectored","virtual","void",
+		"wait","wait_order","wand","weak","weak0","weak1","while",
+		"wildcard","wire","with","within","wor","xnor","xor",""};
+	    for (const char** k=kwds; **k; k++) s_map.insert(*k);
+	}
+	string str(kwd,leng);
+	return s_map.end() != s_map.find(str);
+    }
     // CALLBACKGEN_GENERATED_END - GENERATED AUTOMATICALLY by callbackgen
 
     // UTILITIES

@@ -433,6 +433,8 @@ PROTOTYPE: $
 CODE:
 {
     VSymStack::selftest();
+    assert(VParse::isKeyword("wire",strlen("wire")));
+    assert(!VParse::isKeyword("wire99",strlen("wide99")));
 }
 
 #//**********************************************************************
