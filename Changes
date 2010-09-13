@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add vrename --language option. [Dan Moore]
 
+***	Add Verilog::Language::language_maximum and language_keywords.
+
 ****	Fix escaped identifiers that are keywords, bug282. [Dan Moore]
 
 * Verilog::Language 3.302 2010/08/26

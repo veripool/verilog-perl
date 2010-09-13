@@ -8,7 +8,7 @@
 use strict;
 use Test::More;
 
-BEGIN { plan tests => 23 }
+BEGIN { plan tests => 24 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Language;
@@ -31,6 +31,8 @@ ok (!Verilog::Language::is_keyword("uwire"));
 ok (Verilog::Language::is_keyword("generate"));
 is (Verilog::Language::language_standard(1995), '1364-1995');
 ok (!Verilog::Language::is_keyword("generate"));
+
+is (Verilog::Language::language_maximum(), '1800-2009', 'language_maximum');
 
 is (Verilog::Language::strip_comments("he/**/l/**/lo"), "hello");
 is (Verilog::Language::strip_comments("he//xx/*\nllo"), "he\nllo");

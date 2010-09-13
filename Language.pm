@@ -45,12 +45,22 @@ Return true if the given symbol string is a Verilog compiler directive.
 Return true if the given symbol is a built in gate primitive; for example
 "buf", "xor", etc.
 
+=item Verilog::Language::language_keywords ($year)
+
+Returns a hash for keywords for given language standard year, where the
+value of the hash is the standard in which it was defined.
+
 =item Verilog::Language::language_standard ($year)
 
 Sets the language standard to indicate what are keywords.  If undef, all
 standards apply.  The year is indicates the language standard as per the
 `begin_keywords macro, '1364-1995', '1364-2001', '1364-2005', '1800-2005'
 or '1800-2009'.
+
+=item Verilog::Language::language_maximum
+
+Returns the greatest language currently standardized, presently
+'1800-2009'.
 
 =item Verilog::Language::number_bigint ($number_string)
 
@@ -254,7 +264,7 @@ foreach my $kwd (
 		 "`pragma",
 		 ) { $Keywords{$kwd}{'1364-2005'} = $Compdirect{$kwd} = '1364-2005'; }
 
-language_standard ('1800-2009');  # Default standard
+language_standard (language_maximum());  # Default standard
 
 foreach my $kwd (qw(
 		    and buf bufif0 bufif1 cmos nand nmos nor not notif0
@@ -265,38 +275,53 @@ foreach my $kwd (qw(
 ######################################################################
 #### Keyword utilities
 
+sub language_maximum {
+    return "1800-2009";
+}
+
+sub _language_kwd_hash {
+    my $standard = shift;
+    my @subsets;
+    if ($standard eq '1995' || $standard eq '1364-1995') {
+	$Standard = '1364-1995';
+	@subsets = ('1364-1995');
+    } elsif ($standard eq '2001' || $standard eq '1364-2001' || $standard eq '1364-2001-noconfig') {
+	$Standard = '1364-2001';
+	@subsets = ('1364-2001', '1364-1995');
+    } elsif ($standard eq '1364-2005') {
+	$Standard = '1364-2005';
+	@subsets = ('1364-2005', '1364-2001', '1364-1995');
+    } elsif ($standard eq 'sv31' || $standard eq '1800-2005') {
+	$Standard = '1800-2005';
+	@subsets = ('1800-2005', '1364-2005', '1364-2001', '1364-1995');
+    } elsif ($standard eq 'latest' || $standard eq '1800-2009') {
+	$Standard = '1800-2009';
+	@subsets = ('1800-2009', '1800-2005', '1364-2005', '1364-2001', '1364-1995');
+    } else {
+	croak "%Error: Verilog::Language::language_standard passed bad value: $standard,";
+    }
+    # Update keyword list to present language
+    # (We presume the language_standard rarely changes, so it's faster to compute the list.)
+    my %keywords = ();
+    foreach my $ss (@subsets) {
+	foreach my $kwd (%{$Keywords{$ss}}) {
+	    $keywords{$kwd} = $ss;
+	}
+    }
+    return %keywords;
+}
+
 sub language_standard {
     my $standard = shift;
     if (defined $standard) {
-	my @subsets;
-	if ($standard eq '1995' || $standard eq '1364-1995') {
-	    $Standard = '1364-1995';
-	    @subsets = ('1364-1995');
-	} elsif ($standard eq '2001' || $standard eq '1364-2001' || $standard eq '1364-2001-noconfig') {
-	    $Standard = '1364-2001';
-	    @subsets = ('1364-2001', '1364-1995');
-	} elsif ($standard eq '1364-2005') {
-	    $Standard = '1364-2005';
-	    @subsets = ('1364-2005', '1364-2001', '1364-1995');
-	} elsif ($standard eq 'sv31' || $standard eq '1800-2005') {
-	    $Standard = '1800-2005';
-	    @subsets = ('1800-2005', '1364-2005', '1364-2001', '1364-1995');
-	} elsif ($standard eq 'latest' || $standard eq '1800-2009') {
-	    $Standard = '1800-2009';
-	    @subsets = ('1800-2009', '1800-2005', '1364-2005', '1364-2001', '1364-1995');
-	} else {
-	    croak "%Error: Verilog::Language::language_standard passed bad value: $standard,";
-	}
-	# Update keyword list to present language
-	# (We presume the language_standard rarely changes, so it's faster to compute the list.)
-	%Keyword = ();
-	foreach my $ss (@subsets) {
-	    foreach my $kwd (%{$Keywords{$ss}}) {
-		$Keyword{$kwd} = $ss;
-	    }
-	}
+	%Keyword = _language_kwd_hash($standard);
     }
     return $Standard;
+}
+
+sub language_keywords {
+    my $standard = shift || $Standard;
+    return _language_kwd_hash($standard);
 }
 
 sub is_keyword {
