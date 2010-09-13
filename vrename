@@ -60,7 +60,8 @@ $Opt_Crypt_All = 0;   # Global scope, used in sub-package
 $Opt_Write = 1;
 $Opt_Keywords = 0;
 my $opt_read = 0;
-my $change_filename = "signals.vrename";
+my $opt_change_filename = "signals.vrename";
+my $opt_change_lang;
 my $output_dir = "";
 @Files = ();
 
@@ -69,7 +70,8 @@ if (! GetOptions (
 		  "debug"	=> \&debug,
 		  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
 		  "change!"	=> \$opt_change,
-		  "changefile=s"=> \$change_filename,
+		  "changefile=s"=> \$opt_change_filename,
+		  "changelang!"	=> \$opt_change_lang,
 		  "crypt!"	=> \$Opt_Crypt,
 		  "cryptall!"	=> \$Opt_Crypt_All,
 		  "keywords!"	=> \$Opt_Keywords,
@@ -98,7 +100,7 @@ if ($output_dir eq "" && $Opt_Crypt && $opt_change) {
 }
 
 if ($opt_read || $opt_change) {
-    changes_read ($change_filename);
+    changes_read ($opt_change_filename);
 }
 
 if ($opt_change) {
@@ -115,7 +117,10 @@ if ($opt_list) {
 	changes_crypt();
     }
     changes_from_loc ();
-    changes_write ($change_filename);
+    if ($opt_change_lang) {
+	changes_lang();
+    }
+    changes_write ($opt_change_filename);
 }
 
 exit (0);
@@ -295,6 +300,16 @@ sub changes_read {
     $fh->close();
 }
 
+sub changes_lang {
+    # Grab keywords from most recent spec, not current --language
+    my %kwds = Verilog::Language::language_keywords(Verilog::Language::language_maximum());
+    foreach my $kwd (keys %kwds) {
+	next if Verilog::Language::is_keyword($kwd);  # Already a keyword in sources
+	next if !$Signal_Newname{$kwd};  # Not needed for the current file
+	$Signal_Newname{$kwd} = '\\'.$kwd.' ';
+    }
+}
+
 ######################################################################
 
 sub crypt_string {
@@ -431,7 +446,7 @@ sub verilog_change_sig {
 	if ($new ne $sig) {
 	    my $magic = "@@@@@!~${hadrepl}~!@@@@@";
 	    my $sig_quoted = quotemeta $sig;
-	    if ($filestrg =~ s/([^a-zA-Z0-9_\$\%\'\"])$sig_quoted(?=[^a-zA-Z0-9_])/$1$magic/g) {
+	    if ($filestrg =~ s/([^a-zA-Z0-9_\$\%\'\"\\])$sig_quoted(?=[^a-zA-Z0-9_])/$1$magic/g) {
 		print "match s$sig n$new m$magic\n" if $Debug;
 		$hadrepl ++;
 		$signal_magic{$sig} = $magic;
@@ -601,6 +616,15 @@ signals file.  Either --list or --change must be specified.
 =item --changefile {file}
 
 Use the given filename instead of "signals.vrename".
+
+=item --changelang
+
+Include in the signals.vrename file the template needed to change the
+language standard for the file.  For the first run, use "--list
+--changelang" and --language to specify the file's original language, then
+rerun with the "--change" option.  The files will get escaped identifiers
+for the most recent Verilog standard.  For example with --language
+1364-2005, "do" will become "\do ".
 
 =item --crypt
 

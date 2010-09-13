@@ -102,6 +102,10 @@ t/48_leak.t
 t/49_largeish.t
 t/50_vrename.out
 t/50_vrename.t
+t/51_vrename_kwd.t
+t/51_vrename_kwd.v
+t/51_vrename_kwd_chg.out
+t/51_vrename_kwd_list.out
 t/56_editfiles.t
 t/56_editfiles.v
 t/56_editfiles_a.out

@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.30**
 
+***	Add vrename --changelang option, to upgrade keywords. [Dan Moore]
+
 ***	Add vrename --language option. [Dan Moore]
 
 ***	Add Verilog::Language::language_maximum and language_keywords.
