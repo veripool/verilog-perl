@@ -100,14 +100,14 @@ struct VPreProcImp : public VPreProcOpaque {
 		     ps_DEFNAME_UNDEF, ps_DEFNAME_DEFINE,
 		     ps_DEFNAME_IFDEF, ps_DEFNAME_IFNDEF, ps_DEFNAME_ELSIF,
 		     ps_DEFFORM, ps_DEFVALUE, ps_DEFPAREN, ps_DEFARG,
-		     ps_INCNAME, ps_ERRORNAME, ps_STRIFY };
+		     ps_INCNAME, ps_ERRORNAME, ps_JOIN, ps_STRIFY };
     const char* procStateName(ProcState s) {
 	static const char* states[]
 	    = {"ps_TOP",
 	       "ps_DEFNAME_UNDEF", "ps_DEFNAME_DEFINE",
 	       "ps_DEFNAME_IFDEF", "ps_DEFNAME_IFNDEF", "ps_DEFNAME_ELSIF",
 	       "ps_DEFFORM", "ps_DEFVALUE", "ps_DEFPAREN", "ps_DEFARG",
-	       "ps_INCNAME", "ps_ERRORNAME", "ps_STRIFY" };
+	       "ps_INCNAME", "ps_ERRORNAME", "ps_JOIN", "ps_STRIFY" };
 	return states[s];
     };
 
@@ -136,6 +136,10 @@ struct VPreProcImp : public VPreProcOpaque {
     stack<VPreDefRef> m_defRefs; // Pending definine substitution
     stack<VPreIfEntry> m_ifdefStack;	///< Stack of true/false emitting evaluations
     unsigned	m_defDepth;	///< How many `defines deep
+    bool	m_defPutJoin;	///< Insert `` after substitution
+
+    // For `` join
+    stack<string> m_joinStack;	///< Text on lhs of join
 
     // For getline()
     string	m_lineChars;	///< Characters left for next line
@@ -152,6 +156,7 @@ struct VPreProcImp : public VPreProcOpaque {
 	m_finAhead = false;
 	m_finAtBol = true;
 	m_defDepth = 0;
+	m_defPutJoin = false;
     }
     void configure(VFileLine* filelinep, VPreProc* preprocp) {
 	// configure() separate from constructor to avoid calling abstract functions
@@ -279,6 +284,7 @@ const char* VPreProcImp::tokenName(int tok) {
     case VP_DEFFORM	: return("DEFFORM");
     case VP_DEFINE	: return("DEFINE");
     case VP_DEFREF	: return("DEFREF");
+    case VP_DEFREF_JOIN	: return("DEFREF_JOIN");
     case VP_DEFVALUE	: return("DEFVALUE");
     case VP_ELSE	: return("ELSE");
     case VP_ELSIF	: return("ELSIF");
@@ -293,6 +299,7 @@ const char* VPreProcImp::tokenName(int tok) {
     case VP_STRIFY	: return("STRIFY");
     case VP_STRING	: return("STRING");
     case VP_SYMBOL	: return("SYMBOL");
+    case VP_SYMBOL_JOIN	: return("SYMBOL_JOIN");
     case VP_TEXT	: return("TEXT");
     case VP_UNDEF	: return("UNDEF");
     case VP_UNDEFINEALL	: return("UNDEFINEALL");
@@ -462,7 +469,7 @@ string VPreProcImp::defineSubst(VPreDefRef* refp) {
 	    if (!quote) {
 		// Check for `` only after we've detected end-of-argname
 		if (cp[0]=='`' && cp[1]=='`') {
-		    //out += "";   // `` means to suppress the ``
+		    out += "``";   // `` must get removed later, as `FOO```BAR must pre-expand FOO and BAR
 		    cp++;
 		    continue;
 		}
@@ -705,6 +712,40 @@ int VPreProcImp::getStateToken() {
 	    goto next_tok;
 	}
 
+	if (tok==VP_DEFREF_JOIN) {
+	    // Here's something fun and unspecified as yet:
+	    // The existance of non-existance of a base define changes `` expansion
+	    //	`define QA_b zzz
+	    //	`define Q1 `QA``_b
+	    //	 1Q1 -> zzz
+	    //	`define QA a
+	    //	 `Q1 -> a_b
+	    // Note parenthesis make this unambiguous
+	    //	`define Q1 `QA()``_b  // -> a_b
+	    // This may be a side effect of how `UNDEFINED remains as `UNDEFINED,
+	    // but it screws up our method here.  So hardcode it.
+	    string name (yyourtext()+1,yyourleng()-1);
+	    if (m_preprocp->defExists(name)) {   // JOIN(DEFREF)
+		// Put back the `` and process the defref
+		if (debug()>=5) cout<<"```: define "<<name<<" exists, expand first\n";
+		m_defPutJoin = true;  // After define, unputString("``").  Not now as would loose yyourtext()
+		if (debug()>=5) cout<<"TOKEN now DEFREF\n";
+		tok = VP_DEFREF;
+	    } else {  // DEFREF(JOIN)
+		if (debug()>=5) cout<<"```: define "<<name<<" doesn't exist, join first\n";
+		// FALLTHRU, handle as with VP_SYMBOL_JOIN
+	    }
+	}
+	if (tok==VP_SYMBOL_JOIN || tok==VP_DEFREF_JOIN) {  // not else if, can fallthru from above if()
+	    // a`` -> string doesn't include the ``, so can just grab next and continue
+	    string out (yyourtext(),yyourleng());
+	    if (debug()>=5) cout<<"`` LHS:"<<out<<endl;
+	    // a``b``c can have multiple joins, so we need a stack
+	    m_joinStack.push(out);
+	    statePush(ps_JOIN);
+	    goto next_tok;
+	}
+
 	// Deal with some special parser states
 	switch (state) {
 	case ps_TOP: {
@@ -938,6 +979,27 @@ int VPreProcImp::getStateToken() {
 		goto next_tok;
 	    }
 	}
+	case ps_JOIN: {
+	    if (tok==VP_SYMBOL || tok==VP_TEXT) {
+		if (m_joinStack.empty()) fatalSrc("`` join stack empty, but in a ``");
+		string lhs = m_joinStack.top(); m_joinStack.pop();
+		if (debug()>=5) cout<<"`` LHS:"<<lhs<<endl;
+		string rhs (yyourtext(),yyourleng());
+		if (debug()>=5) cout<<"`` RHS:"<<rhs<<endl;
+		string out = lhs+rhs;
+		if (debug()>=5) cout<<"`` Out:"<<out<<endl;
+		unputString(out);
+		statePop();
+		goto next_tok;
+	    } else if (tok==VP_EOF || tok==VP_WHITE || tok == VP_COMMENT || tok==VP_STRING) {
+		error((string)"Expecting symbol to terminate ``; whitespace etc cannot follow ``. Found: "+tokenName(tok)+"\n");
+		statePop();
+		goto next_tok;
+	    } else {
+		// `define, etc, fall through and expand.  Pop back here.
+		break;
+	    }
+	}
 	case ps_STRIFY: {
 	    if (tok==VP_STRIFY) {
 		// Quote what's in the middle of the stringification
@@ -1024,8 +1086,9 @@ int VPreProcImp::getStateToken() {
 
 	case VP_DEFREF: {
 	    // m_off not right here, but inside substitution, to make this work: `ifdef NEVER `DEFUN(`endif)
-	    string name; name.append(yyourtext()+1,yyourleng()-1);
+	    string name (yyourtext()+1,yyourleng()-1);
 	    if (debug()>=5) cout<<"DefRef "<<name<<endl;
+	    if (m_defPutJoin) { m_defPutJoin = false; unputString("``"); }
 	    if (m_defDepth++ > VPreProc::DEFINE_RECURSION_LEVEL_MAX) {
 		error("Recursive `define substitution: `"+name);
 		goto next_tok;

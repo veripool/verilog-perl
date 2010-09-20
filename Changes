@@ -13,6 +13,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix escaped identifiers that are keywords, bug282. [Dan Moore]
 
+****	Fix preprocessor `` of base define, bug283.  [Usha Priyadharshini]
+
 * Verilog::Language 3.302 2010/08/26
 
 ****	Increase define recursions before error.  [Paul Liu]

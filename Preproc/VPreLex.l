@@ -86,6 +86,7 @@ wsn		[ \t\f]
 crnl		[\r]*[\n]
 quote		[\"]
 tickquote	[`][\"]
+/* Where we use symb/symbdef, we must also look for a `` join */
 backslash	[\\]
 symb		([a-zA-Z_][a-zA-Z0-9_$]*|\\[^ \t\f\r\n]+)
 symbdef		([a-zA-Z_][a-zA-Z0-9_$]*|\\[^ \t\f\r\n`]+)
@@ -231,6 +232,7 @@ drop		[\032]
 			      yy_pop_state(); return (VP_DEFARG);
 			}}
 <ARGMODE>"`"{symbdef}	{ appendDefValue(yytext,yyleng); }  /* defref in defref - outer macro expands first */
+<ARGMODE>"`"{symbdef}`` { appendDefValue(yytext,yyleng); }  /* defref in defref - outer macro expands first */
 <ARGMODE>[^\/\*\n\r\\(,){}\[\]\"`]+	|
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }
 
@@ -247,13 +249,15 @@ drop		[\032]
 <CMTMODE><<EOF>>	{ yyerrorf("EOF in '/* ... */' block comment\n"); yyleng=0; yyterminate(); }
 
 	/* Define calls */
-	/* symbdef prevents normal lex rules from makeing `\`"foo a symbol {`"foo} instead of a BACKQUOTE */
+	/* symbdef prevents normal lex rules from making `\`"foo a symbol {`"foo} instead of a BACKQUOTE */
 <INITIAL>"`"{symbdef}	{ return (VP_DEFREF); }
+<INITIAL>"`"{symbdef}``	{ yyleng-=2; return (VP_DEFREF_JOIN); }
 
 	/* Generics */
 <INITIAL><<EOF>> 	{ yyterminate(); }  /* A "normal" EOF */
 <INITIAL>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
 <INITIAL>{symb}		{ return (VP_SYMBOL); }
+<INITIAL>{symb}``	{ yyleng-=2; return (VP_SYMBOL_JOIN); }
 <INITIAL>[\r]		{ }
 <INITIAL>{wsn}+		{ if (!keepWhitespace()) { yytext=(char*)" "; yyleng=1; } return VP_WHITE; }
 <INITIAL>{drop}		{ }

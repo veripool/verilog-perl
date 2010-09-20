@@ -605,4 +605,45 @@ verilog/inc1.v:   arg_line2" "FOO \
 verilog/inc1.v:   BAR "
 verilog/inc1.v: Line_Preproc_Check 403
 verilog/inc1.v: //======================================================================
+verilog/inc1.v: // bug283
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v: // EXP: abc
+verilog/inc1.v:  
+verilog/inc1.v: abc
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v: EXP: sonet_frame
+verilog/inc1.v: sonet_frame
+verilog/inc1.v: //
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v: EXP: sonet_frame
+verilog/inc1.v: sonet_frame
+verilog/inc1.v: // This result varies between simulators
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v: EXP: sonet_frame
+verilog/inc1.v: sonet_frame
+verilog/inc1.v: 
+verilog/inc1.v: // The existance of non-existance of a base define can make a difference
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v: EXP: module zzz ; endmodule
+verilog/inc1.v: module zzz ; endmodule
+verilog/inc1.v: module zzz ; endmodule
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v: EXP: module a_b ; endmodule
+verilog/inc1.v: module a_b ; endmodule
+verilog/inc1.v: module a_b ; endmodule
+verilog/inc1.v: 
+verilog/inc1.v: //======================================================================
 verilog/inc1.v: 
