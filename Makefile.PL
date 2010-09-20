@@ -99,8 +99,7 @@ WriteMakefile(
 		  'Pod::Usage' => 1.34,
 		  'Data::Dumper' => 1,
 		  'warnings' => 1,
-	      },
-	      BUILD_REQUIRES => {
+		  #---- Below are really BUILD_REQUIRES, but only newer perls understand that
 		  'Digest::SHA' => 0,
 		  'Test' => 1,
 		  'Test::More' => 0,
