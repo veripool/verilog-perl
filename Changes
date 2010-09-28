@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.3****
+
+****	Fix wrong filename on include file errors, bug289. [Brad Parker]
+
 * Verilog::Language 3.303 2010/09/20
 
 ***	Add vrename --changelang option, to upgrade keywords. [Dan Moore]

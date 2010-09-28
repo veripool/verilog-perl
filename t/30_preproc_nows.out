@@ -148,7 +148,7 @@ verilog/inc1.v:167: begin addr <= ({regs[6], regs[7]} + 1); rd <= 1; end
 verilog/inc1.v:168: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end more
 verilog/inc1.v:173: `line 173 "verilog/inc1.v" 0
 verilog/inc1.v:173: `line 1 "verilog/t_preproc_inc4.vh" 1
-verilog/t_preproc_inc4.vh:2: `line 2 "verilog/inc1.v" 0
+verilog/t_preproc_inc4.vh:2: `line 2 "verilog/t_preproc_inc4.vh" 0
 verilog/t_preproc_inc4.vh:7: `line 7 "verilog/t_preproc_inc4.vh" 2
 verilog/inc1.v:173: `line 173 "verilog/inc1.v" 0
 verilog/inc1.v:187: $blah("ab,cd","e,f");
@@ -233,7 +233,7 @@ verilog/inc1.v:375: hello3hello3hello3
 verilog/inc1.v:376: hello4hello4hello4hello4
 verilog/inc1.v:381: `line 381 "verilog/inc1.v" 0
 verilog/inc1.v:381: `line 1 "verilog/t_preproc_inc4.vh" 1
-verilog/t_preproc_inc4.vh:2: `line 2 "verilog/inc1.v" 0
+verilog/t_preproc_inc4.vh:2: `line 2 "verilog/t_preproc_inc4.vh" 0
 verilog/t_preproc_inc4.vh:7: `line 7 "verilog/t_preproc_inc4.vh" 2
 verilog/inc1.v:381: `line 381 "verilog/inc1.v" 0
 verilog/inc1.v:390: `line 390 "verilog/inc1.v" 0

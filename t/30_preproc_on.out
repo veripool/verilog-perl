@@ -371,7 +371,7 @@ verilog/inc1.v:173:
 verilog/inc1.v:173: `line 173 "verilog/inc1.v" 0
 verilog/inc1.v:173: `line 1 "verilog/t_preproc_inc4.vh" 1
 verilog/t_preproc_inc4.vh:1: // DESCRIPTION: Verilog::Preproc: Example source code
-verilog/t_preproc_inc4.vh:2: `line 2 "verilog/inc1.v" 0
+verilog/t_preproc_inc4.vh:2: `line 2 "verilog/t_preproc_inc4.vh" 0
 verilog/t_preproc_inc4.vh:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/t_preproc_inc4.vh:3: // without warranty, 2000-2010 by Wilson Snyder.
 verilog/t_preproc_inc4.vh:4: 
@@ -652,7 +652,7 @@ verilog/inc1.v:381:
 verilog/inc1.v:381: `line 381 "verilog/inc1.v" 0
 verilog/inc1.v:381: `line 1 "verilog/t_preproc_inc4.vh" 1
 verilog/t_preproc_inc4.vh:1: // DESCRIPTION: Verilog::Preproc: Example source code
-verilog/t_preproc_inc4.vh:2: `line 2 "verilog/inc1.v" 0
+verilog/t_preproc_inc4.vh:2: `line 2 "verilog/t_preproc_inc4.vh" 0
 verilog/t_preproc_inc4.vh:2: // This file ONLY is placed into the Public Domain, for any use,
 verilog/t_preproc_inc4.vh:3: // without warranty, 2000-2010 by Wilson Snyder.
 verilog/t_preproc_inc4.vh:4: 
