@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.304 2010/10/25
 
+****	Fix file_substitute expanding ~, msg382.  [Neil Hamilton]
+
 ****	Fix wrong filename on include file errors, bug289. [Brad Parker]
 
 * Verilog::Language 3.303 2010/09/20

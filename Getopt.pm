@@ -333,7 +333,7 @@ sub file_substitute {
 	    $out =~ s/\$$var\b/$ENV{$var}/g;
 	}
     }
-    $filename =~ s!^~!$ENV{HOME}/!;
+    $out =~ s!^~!$ENV{HOME}/!;
     return $out;
 }
 
