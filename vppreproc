@@ -107,7 +107,7 @@ sub parameter {
     if ($param =~ /^--?/) {
 	die "%Error: vppreproc: Unknown parameter: $param\n";
     } else {
-	push @opt_files, $param;
+	push @opt_files, "$param"; # Must quote to convert Getopt to string, bug298
     }
 }
 

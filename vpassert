@@ -200,7 +200,7 @@ sub debug {
 sub parameter {
     my $param = shift;
     (-r $param) or die "%Error: Can't open $param";
-    push @files, $param;
+    push @files, "$param"; # Must quote to convert Getopt to string, bug298
 }
 
 ######################################################################

@@ -143,7 +143,7 @@ sub debug {
 
 sub parameter {
     my $param = shift;
-    push @Files, $param;
+    push @Files, "$param"; # Must quote to convert Getopt to string, bug298
     (-r $param) or die "%Error: Can't open $param";
 }
 

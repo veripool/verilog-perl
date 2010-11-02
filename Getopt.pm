@@ -151,7 +151,7 @@ sub _parameter_parse {
 	}
 
 	else { # Unknown
-	    push @{$self->{unparsed}}, $param;
+	    push @{$self->{unparsed}}, "$param"; # Must quote to convert Getopt to string, bug298
 	}
     }
 }
