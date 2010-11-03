@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Fix env var expansion from Getopt, bug298.  [John Dickol]
 
+****	Fix removing defines without ` when non-SystemC, bug300. [John Dickol]
+
 * Verilog::Language 3.304 2010/10/25
 
 ****	Fix file_substitute expanding ~, msg382.  [Neil Hamilton]
