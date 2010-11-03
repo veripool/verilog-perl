@@ -58,11 +58,24 @@ sub new {
 #######################################################################
 # Option parsing
 
+sub _filedir {
+    my $self = shift;
+    my $path = shift;
+    $path =~ s![/\\][^/\\]*$!!   # ~~== my @dirs = File::Spec->splitdir( $path );
+	or $path = ".";
+    return "." if $path eq '';
+    return $path
+}
+
 sub parameter_file {
     my $self = shift;
     my $filename = shift;
+    my $relative = shift;
 
     print "*parameter_file $filename\n" if $Debug;
+    my $optdir = ".";
+    if ($relative) { $optdir = $self->_filedir($filename); }
+
     my $fh = IO::File->new("<$filename") or die "%Error: ".$self->fileline().": $! $filename\n";
     my $hold_fileline = $self->fileline();
     while (my $line = $fh->getline()) {
@@ -71,7 +84,7 @@ sub parameter_file {
 	next if $line =~ /^\s*$/;
 	$self->fileline ("$filename:$.");
 	my @p = (split /\s+/,"$line ");
-	$self->_parameter_parse(@p);
+	$self->_parameter_parse($optdir, @p);
     }
     $fh->close();
     $self->fileline($hold_fileline);
@@ -82,19 +95,21 @@ sub parameter {
     # Parse VCS like parameters, and perform standard setup based on it
     # Return list of leftover parameters
     @{$self->{unparsed}} = ();
-    $self->_parameter_parse(@_);
+    $self->_parameter_parse('.', @_);
     return @{$self->{unparsed}};
 }
 
 sub _parameter_parse {
     my $self = shift;
+    my $optdir = shift;
     # Internal: Parse list of VCS like parameters, and perform standard setup based on it
     foreach my $param (@_) {
 	next if ($param =~ /^\s*$/);
 	print " parameter($param)\n" if $Debug;
 
 	### GCC & VCS style
-	if ($param eq '-f') {
+	if ($param eq '-F'
+	    || $param eq '-f') {
 	    $self->{_parameter_next} = $param;
 	}
 
@@ -110,7 +125,7 @@ sub _parameter_parse {
 	    }
 	}
 	elsif ($param =~ /^\+incdir\+(.*)$/ && $self->{vcs_style}) {
-	    $self->incdir($1);
+	    $self->incdir($self->_parse_file_arg($optdir, $1));
 	}
 	elsif (($param =~ /^\+define\+([^+=]*)[+=](.*)$/
 		|| $param =~ /^\+define\+(.*?)()$/) && $self->{vcs_style}) {
@@ -129,21 +144,24 @@ sub _parameter_parse {
 	    $self->undef($1);
 	}
 	elsif ($param =~ /^-I(.*)$/ && $self->{gcc_style}) {
-	    $self->incdir($1);
+	    $self->incdir($self->_parse_file_arg($optdir, $1));
 	}
 
 	# Second parameters
 	elsif ($self->{_parameter_next}) {
 	    my $pn = $self->{_parameter_next};
 	    $self->{_parameter_next} = undef;
-	    if ($pn eq '-f') {
-		$self->parameter_file ($self->file_substitute($param));
+	    if ($pn eq '-F') {
+		$self->parameter_file ($self->_parse_file_arg($optdir,$param), 1);
+	    }
+	    elsif ($pn eq '-f') {
+		$self->parameter_file ($self->_parse_file_arg($optdir,$param), 0);
 	    }
 	    elsif ($pn eq '-v') {
-		$self->library ($param);
+		$self->library ($self->_parse_file_arg($optdir,$param));
 	    }
 	    elsif ($pn eq '-y') {
-		$self->module_dir ($param);
+		$self->module_dir ($self->_parse_file_arg($optdir,$param));
 	    }
 	    else {
 		die "%Error: ".$self->fileline().": Bad internal next param ".$pn;
@@ -154,6 +172,18 @@ sub _parameter_parse {
 	    push @{$self->{unparsed}}, "$param"; # Must quote to convert Getopt to string, bug298
 	}
     }
+}
+
+sub _parse_file_arg {
+    my $self = shift;
+    my $optdir = shift;
+    my $relfilename = shift;
+    # Parse filename on option line, expanding relative paths in -F's
+    my $filename = $self->file_substitute($relfilename);
+    if ($optdir ne "." && ! File::Spec->file_name_is_absolute($filename)) {
+	$filename = File::Spec->catfile($optdir,$filename);
+    }
+    return $filename;
 }
 
 #######################################################################
@@ -598,6 +628,7 @@ functions that are called:
     +define+I<var>[+=]I<value>	define (I<var>,I<value>)
     +define+I<var>		define (I<var>,undef)
     +librescan		Ignored
+    -F I<file>		Parse parameters in file relatively
     -f I<file>		Parse parameters in file
     -v I<file>		library (I<file>)
     -y I<dir>		module_dir (I<dir>)
@@ -610,6 +641,7 @@ functions that are called:
     -DI<var>		define (I<var>,undef)
     -UI<var>		undefine (I<var>)
     -II<dir>		incdir (I<dir>)
+    -F I<file>		Parse parameters in file relatively
     -f I<file>		Parse parameters in file
     all others		Put in returned list
 

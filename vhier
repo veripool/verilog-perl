@@ -308,10 +308,19 @@ programs.
 
 Defines the given preprocessor symbol.
 
+=item -F I<file>
+
+Read the specified file, and act as if all text inside it was specified as
+command line parameters.  Any relative paths are relative to the directory
+containing the specified file.  Unlike some tools, -y, +incdir, and -v are
+treated as relative, but standalone filenames in the specified file
+("foo.v") are not.  Use use "-y ." to work around this.
+
 =item -f I<file>
 
-Read the specified file, and act as if all text inside it was
-specified as command line parameters.
+Read the specified file, and act as if all text inside it was specified as
+command line parameters.  Any relative paths are relative to the current
+directory.
 
 =item +incdir+I<dir>
 =item -II<dir>

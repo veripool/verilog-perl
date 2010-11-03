@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.3***
 
+***	Add -F option to read relative option files, bug297. [Neil Hamilton]
+
 ***	Fix env var expansion from Getopt, bug298.  [John Dickol]
 
 * Verilog::Language 3.304 2010/10/25

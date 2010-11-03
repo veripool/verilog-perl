@@ -1,3 +1,4 @@
 // DESCRIPTION: Perl ExtUtils: Option file for testing Verilog::Getopt
 
 -Dread_opt_file=1
+-y y_library_path
