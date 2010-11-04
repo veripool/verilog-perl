@@ -155,9 +155,11 @@ sub remove_defines {
     my $xsym = $sym;
     # We only remove defines one level deep, for historical reasons.
     # We optionally don't require a ` as SystemC also uses this function and doesn't use `.
-    $sym =~ s/^\`// if !$self->{remove_defines_without_tick};
-    my $val = $self->defvalue_nowarn($xsym);  #Undef if not found
-    $sym = $val if defined $val;
+    if ($self->{remove_defines_without_tick} || $xsym =~ /^\`/) {
+	$xsym =~ s/^\`//;
+	my $val = $self->defvalue_nowarn($xsym);  #Undef if not found
+	return $val if defined $val;
+    }
     return $sym;
 }
 

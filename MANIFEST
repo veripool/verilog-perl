@@ -125,6 +125,7 @@ t/85_vhier_inpfiles.out
 t/85_vhier_modfiles.out
 t/85_vhier_resolvefiles.out
 t/85_vhier_topmodule.out
+t/86_vhier_tick.t
 t/test_utils.pl
 Verilog-Perl.pod
 verilog/example.v
@@ -138,6 +139,8 @@ verilog/parser_sv.v
 verilog/parser_sv09.v
 verilog/pinorder.v
 verilog/pli.v
+verilog/t_86_vhier_tick.v
+verilog/t_86_vhier_tick_sub.v
 verilog/t_preproc_inc3.vh
 verilog/t_preproc_inc4.vh
 verilog/test.v
