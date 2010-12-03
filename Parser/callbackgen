@@ -14,7 +14,7 @@ use vars qw ($Debug $VERSION);
 require "../Language.pm";
 package main;
 
-$VERSION = '3.304';
+$VERSION = '3.305';
 
 # xs_manual=>1,   -> The .xs file makes the handler itself
 
