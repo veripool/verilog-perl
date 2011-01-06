@@ -3,6 +3,10 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.30****
+
+**** Fix block comment not separating identifiers, bug311. [Gene Sullivan]
+
 * Verilog::Language 3.305 2010/12/03
 
 ***	Add -F option to read relative option files, bug297. [Neil Hamilton]

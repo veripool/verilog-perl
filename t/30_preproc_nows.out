@@ -66,7 +66,7 @@ verilog/inc1.v:18:    1'b1    ,
 verilog/inc1.v:19:      1'b0 
 verilog/inc1.v:20:  };
 verilog/inc1.v:22: text.
-verilog/inc1.v:26: foo  bar 
+verilog/inc1.v:26: foo   bar  
 verilog/inc1.v:27: foobar2
 verilog/inc1.v:39: first part 
 verilog/inc1.v:39: `line 39 "verilog/inc1.v" 0
@@ -103,8 +103,8 @@ verilog/inc1.v:98:  $display("left_side: \"right_side\"");
 verilog/inc1.v:99:  $display("na: \"right_side\"");
 verilog/inc1.v:100:  $display("prep ( midp1 left_side midp2 ( outp ) ): \"right_side\"");
 verilog/inc1.v:101:  $display("na: \"nana\"");
-verilog/inc1.v:102:  $display("left_side right_side: \"left_side right_side\""); 
-verilog/inc1.v:103:  $display(": \"\""); 
+verilog/inc1.v:102:  $display("left_side right_side: \"left_side right_side\"");  
+verilog/inc1.v:103:  $display(": \"\"");  
 verilog/inc1.v:104:  $display("left side: \"right side\"");
 verilog/inc1.v:105:  $display("left side: \"right side\"");
 verilog/inc1.v:106:  $display("standalone");
@@ -119,7 +119,7 @@ verilog/inc1.v:127: wire tmp_d1 = d1;
 verilog/inc1.v:127: `line 127 "verilog/inc1.v" 0
 verilog/inc1.v:127: wire tmp_o1 = tmp_d1 + 1; 
 verilog/inc1.v:127: `line 127 "verilog/inc1.v" 0
-verilog/inc1.v:127: assign o1 = tmp_o1 ; 
+verilog/inc1.v:127: assign o1 = tmp_o1 ;  
 verilog/inc1.v:128: endmodule
 verilog/inc1.v:129: module add2 ( input wire d2, output wire o2);
 verilog/inc1.v:130: `line 130 "verilog/inc1.v" 0
@@ -127,7 +127,7 @@ verilog/inc1.v:130: wire tmp_d2 = d2;
 verilog/inc1.v:130: `line 130 "verilog/inc1.v" 0
 verilog/inc1.v:130: wire tmp_o2 = tmp_d2 + 1; 
 verilog/inc1.v:130: `line 130 "verilog/inc1.v" 0
-verilog/inc1.v:130: assign o2 = tmp_o2 ; 
+verilog/inc1.v:130: assign o2 = tmp_o2 ;  
 verilog/inc1.v:131: endmodule
 verilog/inc1.v:144: `line 144 "verilog/inc1.v" 0
 verilog/inc1.v:144:  generate for (i=0; i<(3); i=i+1) begin 
@@ -136,7 +136,7 @@ verilog/inc1.v:144:  psl cover { m5k.f .ctl._ctl_mvldx_m1.d[i] & ~m5k.f .ctl._ct
 verilog/inc1.v:144: `line 144 "verilog/inc1.v" 0
 verilog/inc1.v:144:  psl cover { ~m5k.f .ctl._ctl_mvldx_m1.d[i] & m5k.f .ctl._ctl_mvldx_m1.q[i] & !m5k.f .ctl._ctl_mvldx_m1.cond & ((m5k.f .ctl.alive & m5k.f .ctl.alive_m1))} report "fondNoFall: m5kc_fcl._ctl_mvldx_m1"; 
 verilog/inc1.v:144: `line 144 "verilog/inc1.v" 0
-verilog/inc1.v:144:  end endgenerate 
+verilog/inc1.v:144:  end endgenerate  
 verilog/inc1.v:148: module prot();
 verilog/inc1.v:149: `protected
 verilog/inc1.v:149:     I!#r#e6<_Q{{E2+]I3<[3s)1@D|'E''i!O?]jD>Jo_![Cl)
@@ -162,9 +162,9 @@ verilog/inc1.v:206: Line_Preproc_Check 206
 verilog/inc1.v:214: (p,q)
 verilog/inc1.v:218: (x,y)
 verilog/inc1.v:219: Line_Preproc_Check 219
-verilog/inc1.v:228: beginend 
-verilog/inc1.v:229: beginend 
-verilog/inc1.v:230: "beginend" 
+verilog/inc1.v:228: beginend  
+verilog/inc1.v:229: beginend  
+verilog/inc1.v:230: "beginend"  
 verilog/inc1.v:236:  `\esc`def
 verilog/inc1.v:238: Not a \`define
 verilog/inc1.v:246: x,y)--bee submacro has comma paren
@@ -180,19 +180,20 @@ verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
 verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
 verilog/inc1.v:275:  assign a3 = ~b3 ; 
 verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
-verilog/inc1.v:278:  \
-verilog/inc1.v:286: `line 286 "verilog/inc1.v" 0
+verilog/inc1.v:277: `line 277 "verilog/inc1.v" 0
+verilog/inc1.v:278:   \
+verilog/inc1.v:279: `line 279 "verilog/inc1.v" 0
 verilog/inc1.v:286: `line 286 "verilog/inc1.v" 0
 verilog/inc1.v:286: `line 286 "verilog/inc1.v" 0
 verilog/inc1.v:286: `line 286 "verilog/inc1.v" 0
 verilog/inc1.v:286:  def i 
 verilog/inc1.v:286: `line 286 "verilog/inc1.v" 0
 verilog/inc1.v:300: 1  (nodef)
-verilog/inc1.v:301: 2  (hasdef)
+verilog/inc1.v:301: 2   (hasdef)
 verilog/inc1.v:302: 3  (nodef)
 verilog/inc1.v:303: 4 
 verilog/inc1.v:303: `line 303 "verilog/inc1.v" 0
-verilog/inc1.v:303:  (nodef)
+verilog/inc1.v:303:   (nodef)
 verilog/inc1.v:304: 5 also in 
 verilog/inc1.v:304: `line 304 "verilog/inc1.v" 0
 verilog/inc1.v:304:  also3 (nodef)
@@ -258,4 +259,5 @@ verilog/inc1.v:438: module zzz ; endmodule
 verilog/inc1.v:441: EXP: module a_b ; endmodule
 verilog/inc1.v:442: module a_b ; endmodule
 verilog/inc1.v:443: module a_b ; endmodule
-verilog/inc1.v:447: `line 447 "verilog/inc1.v" 2
+verilog/inc1.v:447: integer foo;
+verilog/inc1.v:450: `line 450 "verilog/inc1.v" 2

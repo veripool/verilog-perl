@@ -731,5 +731,8 @@ verilog/inc1.v:442: module a_b ; endmodule
 verilog/inc1.v:443: module a_b ; endmodule
 verilog/inc1.v:444: 
 verilog/inc1.v:445: //======================================================================
-verilog/inc1.v:446: 
-verilog/inc1.v:447: `line 447 "verilog/inc1.v" 2
+verilog/inc1.v:446: // bug311
+verilog/inc1.v:447: integer/*NEED_SPACE*/foo;
+verilog/inc1.v:448: //======================================================================
+verilog/inc1.v:449: 
+verilog/inc1.v:450: `line 450 "verilog/inc1.v" 2

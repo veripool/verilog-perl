@@ -286,8 +286,8 @@ With keep_comments set to zero, strip all comments.  When set to one (the
 default), insert comments in output streams.  When set to 'sub', call the
 comment() function so that meta-comments can be processed outside of the
 output stream.  Note that some programs use meta-comments to embed useful
-information (synthesis and lint), so use this with caution if feeding to
-tools other than your own.  Defaults to 1.
+information (synthesis and lint), so strip with caution if feeding to tools
+other than your own.  Defaults to 1.
 
 =item keep_whitespace=>0
 

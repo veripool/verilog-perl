@@ -1,11 +1,11 @@
 verilog/v_hier_subprim.v:001: PREPROC '`line 1 "verilog/v_hier_subprim.v" 1
 '
-verilog/v_hier_subprim.v:008: unreadback '
+verilog/v_hier_subprim.v:008: unreadback ' 
+ 
+ 
+ 
 
-
-
-
-
+ 
 
 '
 verilog/v_hier_subprim.v:008: KEYWORD 'primitive'
@@ -13,13 +13,13 @@ verilog/v_hier_subprim.v:008: unreadback ' '
 verilog/v_hier_subprim.v:008: SYMBOL 'v_hier_prim'
 verilog/v_hier_subprim.v:008: unreadback ' '
 verilog/v_hier_subprim.v:008: OPERATOR '('
-verilog/v_hier_subprim.v:010: unreadback '
-   
+verilog/v_hier_subprim.v:010: unreadback ' 
+    
    '
 verilog/v_hier_subprim.v:010: SYMBOL 'q'
 verilog/v_hier_subprim.v:010: OPERATOR ','
 verilog/v_hier_subprim.v:012: unreadback '
-   
+    
    '
 verilog/v_hier_subprim.v:012: SYMBOL 'a'
 verilog/v_hier_subprim.v:013: unreadback '
@@ -102,10 +102,10 @@ verilog/v_hier_subprim.v:031: PREPROC '`line 31 "verilog/v_hier_subprim.v" 2
 verilog/v_hier_subprim.v:031: ENDPARSE ''
 verilog/v_hier_sub.v:001: PREPROC '`line 1 "verilog/v_hier_sub.v" 1
 '
-verilog/v_hier_sub.v:006: unreadback '
-
-
-
+verilog/v_hier_sub.v:006: unreadback ' 
+ 
+ 
+ 
 
 '
 verilog/v_hier_sub.v:006: KEYWORD 'module'
@@ -113,7 +113,7 @@ verilog/v_hier_sub.v:006: unreadback ' '
 verilog/v_hier_sub.v:006: SYMBOL 'v_hier_sub'
 verilog/v_hier_sub.v:006: unreadback ' '
 verilog/v_hier_sub.v:006: OPERATOR '('
-verilog/v_hier_sub.v:007: unreadback '
+verilog/v_hier_sub.v:007: unreadback ' 
    '
 verilog/v_hier_sub.v:007: KEYWORD 'input'
 verilog/v_hier_sub.v:007: unreadback ' '
@@ -131,7 +131,7 @@ verilog/v_hier_sub.v:008: OPERATOR ']'
 verilog/v_hier_sub.v:008: unreadback ' '
 verilog/v_hier_sub.v:008: SYMBOL 'avec'
 verilog/v_hier_sub.v:008: OPERATOR ','
-verilog/v_hier_sub.v:009: unreadback '	
+verilog/v_hier_sub.v:009: unreadback '	 
    '
 verilog/v_hier_sub.v:009: KEYWORD 'output'
 verilog/v_hier_sub.v:009: unreadback ' '
@@ -142,7 +142,7 @@ verilog/v_hier_sub.v:009: NUMBER '0'
 verilog/v_hier_sub.v:009: OPERATOR ']'
 verilog/v_hier_sub.v:009: unreadback ' '
 verilog/v_hier_sub.v:009: SYMBOL 'qvec'
-verilog/v_hier_sub.v:010: unreadback '	
+verilog/v_hier_sub.v:010: unreadback '	 
    '
 verilog/v_hier_sub.v:010: OPERATOR ')'
 verilog/v_hier_sub.v:010: OPERATOR ';'
@@ -187,7 +187,7 @@ verilog/v_hier_sub.v:019: SYMBOL 'subsub0'
 verilog/v_hier_sub.v:019: unreadback ' '
 verilog/v_hier_sub.v:019: OPERATOR '('
 verilog/v_hier_sub.v:021: unreadback '
-	      
+	       
 	      '
 verilog/v_hier_sub.v:021: OPERATOR '.'
 verilog/v_hier_sub.v:021: SYMBOL 'q'
@@ -200,7 +200,7 @@ verilog/v_hier_sub.v:021: OPERATOR ']'
 verilog/v_hier_sub.v:021: OPERATOR ')'
 verilog/v_hier_sub.v:021: OPERATOR ','
 verilog/v_hier_sub.v:023: unreadback '
-	      
+	       
 	      '
 verilog/v_hier_sub.v:023: OPERATOR '.'
 verilog/v_hier_sub.v:023: SYMBOL 'a'
@@ -210,7 +210,7 @@ verilog/v_hier_sub.v:023: SYMBOL 'a1'
 verilog/v_hier_sub.v:023: OPERATOR ')'
 verilog/v_hier_sub.v:023: OPERATOR ')'
 verilog/v_hier_sub.v:023: OPERATOR ';'
-verilog/v_hier_sub.v:026: unreadback '  
+verilog/v_hier_sub.v:026: unreadback '   
 
 
    '
@@ -252,7 +252,7 @@ verilog/v_hier_sub.v:028: OPERATOR ':'
 verilog/v_hier_sub.v:028: unreadback ' '
 verilog/v_hier_sub.v:028: SYMBOL 'genloop'
 verilog/v_hier_sub.v:030: unreadback '
-	 
+	  
 	 '
 verilog/v_hier_sub.v:030: SYMBOL 'v_hier_subsub'
 verilog/v_hier_sub.v:030: unreadback ' '
@@ -285,7 +285,7 @@ verilog/v_hier_sub.v:035: unreadback '
       '
 verilog/v_hier_sub.v:035: ATTRIBUTE '(* attribute *)'
 verilog/v_hier_sub.v:037: unreadback '
-      
+       
       '
 verilog/v_hier_sub.v:037: KEYWORD 'input'
 verilog/v_hier_sub.v:037: unreadback ' '
@@ -314,9 +314,9 @@ verilog/v_hier_sub.v:043: PREPROC '`line 43 "verilog/v_hier_sub.v" 2
 verilog/v_hier_sub.v:043: ENDPARSE ''
 verilog/example.v:001: PREPROC '`line 1 "verilog/example.v" 1
 '
-verilog/example.v:005: unreadback '
-
-
+verilog/example.v:005: unreadback ' 
+ 
+ 
 
 '
 verilog/example.v:005: PREPROC '`timescale 1ns/1ns'
@@ -337,7 +337,7 @@ verilog/example.v:009: unreadback ' '
 verilog/example.v:009: OPERATOR '('
 verilog/example.v:009: OPERATOR ')'
 verilog/example.v:009: OPERATOR ';'
-verilog/example.v:011: unreadback '	
+verilog/example.v:011: unreadback '	 
 
    '
 verilog/example.v:011: KEYWORD 'integer'
@@ -371,7 +371,7 @@ verilog/example.v:018: STRING '"Welcome to a VPASSERTed file\n"'
 verilog/example.v:018: OPERATOR ')'
 verilog/example.v:018: OPERATOR ';'
 verilog/example.v:020: unreadback '
-      
+       
       '
 verilog/example.v:020: SYMBOL '$uinfo'
 verilog/example.v:020: unreadback ' '
@@ -398,7 +398,7 @@ verilog/example.v:021: NUMBER '9'
 verilog/example.v:021: OPERATOR ')'
 verilog/example.v:021: OPERATOR ';'
 verilog/example.v:023: unreadback '
-      
+       
       '
 verilog/example.v:023: SYMBOL '\escaped[10] '
 verilog/example.v:023: OPERATOR '='
@@ -428,7 +428,7 @@ verilog/example.v:025: STRING '"Escaped not 1\n"'
 verilog/example.v:025: OPERATOR ')'
 verilog/example.v:025: OPERATOR ';'
 verilog/example.v:027: unreadback '
-      
+       
       '
 verilog/example.v:027: SYMBOL 'i'
 verilog/example.v:027: OPERATOR '='
@@ -465,24 +465,32 @@ verilog/example.v:030: unreadback '
 verilog/example.v:030: SYMBOL '$uassert'
 verilog/example.v:030: unreadback ' '
 verilog/example.v:030: OPERATOR '('
-verilog/example.v:031: unreadback '
+verilog/example.v:030: unreadback '
 '
-verilog/example.v:031: NUMBER '1'
-verilog/example.v:031: OPERATOR '=='
-verilog/example.v:031: NUMBER '1'
-verilog/example.v:031: OPERATOR ','
-verilog/example.v:034: unreadback '
-	       
+verilog/example.v:030: PREPROC '`line 30 "verilog/example.v" 0
+'
+verilog/example.v:030: unreadback ' '
+verilog/example.v:030: NUMBER '1'
+verilog/example.v:030: OPERATOR '=='
+verilog/example.v:030: NUMBER '1'
+verilog/example.v:030: OPERATOR ','
+verilog/example.v:033: unreadback '
+
+	        
 	       
 '
-verilog/example.v:034: STRING '"Why doesn't 1==1??\n"'
+verilog/example.v:033: PREPROC '`line 33 "verilog/example.v" 0
+'
+verilog/example.v:033: unreadback ' '
+verilog/example.v:033: STRING '"Why doesn't 1==1??\n"'
 verilog/example.v:036: unreadback '
+ 
 
 	       '
 verilog/example.v:036: OPERATOR ')'
 verilog/example.v:036: OPERATOR ';'
 verilog/example.v:038: unreadback '
-      
+       
       '
 verilog/example.v:038: SYMBOL 'i'
 verilog/example.v:038: OPERATOR '='
@@ -564,9 +572,9 @@ verilog/example.v:041: STRING '"amone ok\n"'
 verilog/example.v:041: OPERATOR ')'
 verilog/example.v:041: OPERATOR ';'
 verilog/example.v:045: unreadback '
-      
-      
-      
+       
+       
+       
       '
 verilog/example.v:045: SYMBOL 'i'
 verilog/example.v:045: OPERATOR '='
@@ -655,13 +663,13 @@ verilog/example.v:048: STRING '"onehot ok\n"'
 verilog/example.v:048: OPERATOR ')'
 verilog/example.v:048: OPERATOR ';'
 verilog/example.v:051: unreadback '
-      
-      
+       
+       
    '
 verilog/example.v:051: KEYWORD 'end'
 verilog/example.v:054: unreadback '
 
-   
+    
    '
 verilog/example.v:054: KEYWORD 'initial'
 verilog/example.v:054: unreadback ' '
@@ -731,7 +739,7 @@ verilog/example.v:063: unreadback '
 verilog/example.v:063: KEYWORD 'end'
 verilog/example.v:066: unreadback '
 
-   
+    
    '
 verilog/example.v:066: KEYWORD 'reg'
 verilog/example.v:066: unreadback '	      '
@@ -743,13 +751,13 @@ verilog/example.v:067: KEYWORD 'reg'
 verilog/example.v:067: unreadback '	      '
 verilog/example.v:067: SYMBOL 'bus_req'
 verilog/example.v:067: OPERATOR ';'
-verilog/example.v:068: unreadback '		
+verilog/example.v:068: unreadback '		 
    '
 verilog/example.v:068: KEYWORD 'reg'
 verilog/example.v:068: unreadback '	      '
 verilog/example.v:068: SYMBOL 'bus_ack'
 verilog/example.v:068: OPERATOR ';'
-verilog/example.v:069: unreadback '		
+verilog/example.v:069: unreadback '		 
    '
 verilog/example.v:069: KEYWORD 'reg'
 verilog/example.v:069: unreadback ' '
@@ -768,7 +776,7 @@ verilog/example.v:071: KEYWORD 'initial'
 verilog/example.v:071: unreadback ' '
 verilog/example.v:071: KEYWORD 'begin'
 verilog/example.v:073: unreadback '
-      
+       
       '
 verilog/example.v:073: SYMBOL 'bus_req'
 verilog/example.v:073: unreadback '  '
@@ -793,7 +801,7 @@ verilog/example.v:075: unreadback ' '
 verilog/example.v:075: NUMBER '1'b0'
 verilog/example.v:075: OPERATOR ';'
 verilog/example.v:077: unreadback '
-      
+       
       '
 verilog/example.v:077: OPERATOR '@'
 verilog/example.v:077: unreadback ' '
@@ -821,7 +829,7 @@ verilog/example.v:079: unreadback ' '
 verilog/example.v:079: NUMBER '32'hfeed'
 verilog/example.v:079: OPERATOR ';'
 verilog/example.v:081: unreadback '
-      
+       
       '
 verilog/example.v:081: OPERATOR '@'
 verilog/example.v:081: unreadback ' '
@@ -841,7 +849,7 @@ verilog/example.v:082: unreadback ' '
 verilog/example.v:082: NUMBER '1'b0'
 verilog/example.v:082: OPERATOR ';'
 verilog/example.v:084: unreadback '
-      
+       
       '
 verilog/example.v:084: OPERATOR '@'
 verilog/example.v:084: unreadback ' '
@@ -861,7 +869,7 @@ verilog/example.v:085: unreadback ' '
 verilog/example.v:085: NUMBER '1'b1'
 verilog/example.v:085: OPERATOR ';'
 verilog/example.v:087: unreadback '
-      
+       
       '
 verilog/example.v:087: OPERATOR '@'
 verilog/example.v:087: unreadback ' '
@@ -906,7 +914,7 @@ verilog/example.v:091: OPERATOR ','
 verilog/example.v:092: unreadback '
 			'
 verilog/example.v:092: SYMBOL 'bus_ack'
-verilog/example.v:092: unreadback ' '
+verilog/example.v:092: unreadback '  '
 verilog/example.v:092: OPERATOR ','
 verilog/example.v:093: unreadback '
 			'
@@ -918,7 +926,7 @@ verilog/example.v:094: unreadback '
 verilog/example.v:094: KEYWORD 'end'
 verilog/example.v:097: unreadback '
 
-   
+    
    '
 verilog/example.v:097: KEYWORD 'initial'
 verilog/example.v:097: unreadback ' '
@@ -1004,7 +1012,7 @@ verilog/example.v:104: unreadback '
 verilog/example.v:104: KEYWORD 'end'
 verilog/example.v:107: unreadback '
 
-   
+    
    '
 verilog/example.v:107: KEYWORD 'always'
 verilog/example.v:107: unreadback ' '
@@ -1074,13 +1082,13 @@ verilog/example.v:111: unreadback '
 verilog/example.v:111: KEYWORD 'end'
 verilog/example.v:114: unreadback '
 
-   
+    
    '
 verilog/example.v:114: KEYWORD 'initial'
 verilog/example.v:114: unreadback ' '
 verilog/example.v:114: KEYWORD 'begin'
 verilog/example.v:116: unreadback '
-      
+       
       '
 verilog/example.v:116: KEYWORD 'if'
 verilog/example.v:116: unreadback ' '
@@ -1091,13 +1099,13 @@ verilog/example.v:116: unreadback ' '
 verilog/example.v:116: KEYWORD 'begin'
 verilog/example.v:116: unreadback ' '
 verilog/example.v:116: KEYWORD 'end'
-verilog/example.v:118: unreadback ' 
-      
+verilog/example.v:118: unreadback '  
+       
    '
 verilog/example.v:118: KEYWORD 'end'
 verilog/example.v:121: unreadback '
 
-   
+    
    '
 verilog/example.v:121: KEYWORD 'initial'
 verilog/example.v:121: unreadback ' '
@@ -1119,7 +1127,7 @@ verilog/example.v:128: unreadback ' '
 verilog/example.v:128: KEYWORD 'begin'
 verilog/example.v:128: unreadback ' '
 verilog/example.v:128: KEYWORD 'end'
-verilog/example.v:131: unreadback '  
+verilog/example.v:131: unreadback '   
  
   
       '
@@ -1132,7 +1140,7 @@ verilog/example.v:131: unreadback ' '
 verilog/example.v:131: KEYWORD 'begin'
 verilog/example.v:131: unreadback ' '
 verilog/example.v:131: KEYWORD 'end'
-verilog/example.v:136: unreadback '  
+verilog/example.v:136: unreadback '   
  
            
  

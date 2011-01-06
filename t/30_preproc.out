@@ -646,4 +646,7 @@ verilog/inc1.v: module a_b ; endmodule
 verilog/inc1.v: module a_b ; endmodule
 verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
+verilog/inc1.v: // bug311
+verilog/inc1.v: integer/*NEED_SPACE*/foo;
+verilog/inc1.v: //======================================================================
 verilog/inc1.v: 
