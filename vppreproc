@@ -131,7 +131,7 @@ vppreproc - Preprocess Verilog code using verilog-perl
 =head1 DESCRIPTION
 
 Vppreproc reads the Verilog files passed on the command line and outputs
-preprocessed output to standard out or the filename passed with B<-p>.
+preprocessed output to standard out or the filename passed with B<-o>.
 
 Note vppreproc was named vppp until release 3.100, so if you're looking for
 vppp, this is the right replacement.  The vppp name conflicted with another
