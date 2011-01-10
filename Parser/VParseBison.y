@@ -1666,7 +1666,7 @@ c_genItemList:			// (for checkers)
 		BISONPRE_COPY(genItemList,{s/~c~/c_/g})		// {copied}
 	;
 
-generate_item:			// IEEE: generate_item
+generate_item:			// IEEE: module_or_interface_or_generate_item
 	//			// Only legal when in a generate under a module (or interface under a module)
 		module_or_generate_item			{ }
 	//			// Only legal when in a generate under an interface

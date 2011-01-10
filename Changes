@@ -5,7 +5,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.30****
 
-**** Fix block comment not separating identifiers, bug311. [Gene Sullivan]
+****	Fix block comment not separating identifiers, bug311. [Gene Sullivan]
 
 * Verilog::Language 3.305 2010/12/03
 
