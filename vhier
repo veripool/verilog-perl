@@ -250,7 +250,7 @@ sub _mod_mark_recurse {
 sub _mod_files_recurse {
     my $mod = shift;
     my $level = shift;
-    if ($mod->attributes("_vhier_level") < $level) {
+    if (($mod->attributes("_vhier_level")||0) < $level) {
 	$mod->attributes("_vhier_level", $level);
     }
     foreach my $cell ($mod->cells_sorted) {
