@@ -1,0 +1,25 @@
+<vhier>
+ <cells>
+  <cell name="v_hier_top" submodname="v_hier_top" hier="v_hier_top">
+    <cell name="sub" submodname="v_hier_sub" hier="v_hier_top.sub">
+      <cell name="subsub0" submodname="v_hier_subsub" hier="v_hier_top.sub.subsub0">
+      </cell>
+      <cell name="subsub2" submodname="v_hier_subsub" hier="v_hier_top.sub.subsub2">
+      </cell>
+    </cell>
+  </cell>
+ </cells>
+ <module_files>
+   <file>verilog/v_hier_top.v</file>
+    <file>verilog/v_hier_sub.v</file>
+     <file>verilog/v_hier_subsub.v</file>
+ </module_files>
+ <input_files>
+  <file>verilog/v_hier_sub.v</file>
+  <file>verilog/v_hier_subsub.v</file>
+  <file>verilog/v_hier_top.v</file>
+ </input_files>
+ <missing_modules>
+  <module name="missing" />
+ </missing_modules>
+</vhier>

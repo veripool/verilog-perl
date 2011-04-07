@@ -38,8 +38,8 @@ my $Opt_InFiles;
 my $Opt_Missing = 1;
 my $Opt_Missing_Modules;
 my $Opt_TopModule;
-my $Opt_Xml;
 my $Opt_ResolveFiles;
+my $Opt_Xml;
 @ARGV = $Opt->parameter(@ARGV);
 Getopt::Long::config ("no_auto_abbrev");
 if (! GetOptions (
@@ -112,13 +112,18 @@ sub vhier {
 				   link_read_nonfatal => !$Opt_Missing,
 				   );
 
+    $fh->print("<vhier>\n") if $Opt_Xml;
+
     if ($Opt_ResolveFiles) {
 	$nl->read_libraries();
+	$fh->print(" <resolve_files>\n") if $Opt_Xml;
 	foreach my $file (@files) {
 	    if (my $resolved = $nl->resolve_filename ($file, "all")) {
-		print $fh $resolved, "\n";
+		$fh->print( "$resolved\n") if !$Opt_Xml;
+		$fh->print( "  <file>$resolved</file>\n") if $Opt_Xml;
 	    }
 	}
+	$fh->print(" </resolve_files>\n") if $Opt_Xml;
 	return;
     }
     foreach my $file (@files) {
@@ -149,11 +154,13 @@ sub vhier {
     }
 
     if ($Opt_Cells) {
+	$fh->print(" <cells>\n") if $Opt_Xml;
 	foreach my $mod ($nl->modules_sorted) {
 	    if ($mod->is_top) {
-		show_hier ($fh, $mod, "  ", "");
+		show_hier ($fh, $mod, undef, "  ", $mod->name);
 	    }
 	}
+	$fh->print(" </cells>\n") if $Opt_Xml;
     }
 
     if ($Opt_Modules) {
@@ -165,22 +172,30 @@ sub vhier {
     }
 
     if ($Opt_InFiles) {
+	$fh->print(" <input_files>\n") if $Opt_Xml;
 	foreach my $filename ($Opt->depend_files) {
-	    printf $fh +("  %s\n",$filename);
+	    $fh->print("  $filename\n") if !$Opt_Xml;
+	    $fh->print("  <file>$filename</file>\n") if $Opt_Xml;
 	}
+	$fh->print(" </input_files>\n") if $Opt_Xml;
     }
 
     if ($Opt_Missing_Modules) {
 	show_missing_module_names($nl,$fh);
     }
+
+    $fh->print("</vhier>\n") if $Opt_Xml;
 }
 
 sub show_module_names {
     my $nl = shift;
     my $fh = shift;
+    $fh->print(" <modules>\n") if $Opt_Xml;
     foreach my $mod ($nl->modules_sorted) {
-	print $fh "  ",$mod->name,"\n";
+	$fh->printf("  %s\n", $mod->name) if !$Opt_Xml;
+	$fh->printf("  <module name=\"%s\" />\n", $mod->name) if $Opt_Xml;
     }
+    $fh->print(" </modules>\n") if $Opt_Xml;
 }
 
 sub show_missing_module_names {
@@ -195,9 +210,13 @@ sub show_missing_module_names {
 	    }
 	}
     }
+
+    $fh->print(" <missing_modules>\n") if $Opt_Xml;
     foreach my $key (sort (keys %miss_names)) {
-	print $fh "  $key\n";
+	$fh->printf("  %s\n",$key) if !$Opt_Xml;
+	$fh->printf("  <module name=\"%s\" />\n",$key) if $Opt_Xml;
     }
+    $fh->print(" </missing_modules>\n") if $Opt_Xml;
 }
 
 sub show_mod_files {
@@ -226,12 +245,15 @@ sub show_mod_files {
 	my $filename = $mod->filename;
 	if (!$files{$filename}) {
 	    $files{$filename} = 1;
-	    push @files, " "x($mod->attributes("_vhier_level")) . $filename;
+	    push @files, [" "x($mod->attributes("_vhier_level")), $filename];
 	}
     }
-    foreach my $filename (reverse @files) {
-	print $fh "  $filename\n";
+    $fh->print(" <module_files>\n") if $Opt_Xml;
+    foreach my $filespace (reverse @files) {
+	$fh->printf("  %s%s\n",$filespace->[0],$filespace->[1]) if !$Opt_Xml;
+	$fh->printf("  %s<file>%s</file>\n",$filespace->[0],$filespace->[1]) if $Opt_Xml;
     }
+    $fh->print(" </module_files>\n") if $Opt_Xml;
 }
 
 sub _mod_mark_recurse {
@@ -263,15 +285,20 @@ sub _mod_files_recurse {
 sub show_hier {
     my $fh = shift;
     my $mod = shift;
+    my $parcell = shift;
     my $indent = shift;
     my $hier = shift;
-    printf $fh ("%-38s %s\n", $indent."Module ".$mod->name,$hier) if $Debug;
-    printf $fh "%s%s\n", $indent, $mod->name;
+    my $submodname = shift;
+    print "%-38s %s\n", $indent."Module ".$mod->name,$hier if $Debug;
+    $fh->printf("%s%s\n", $indent, $mod->name) if !$Opt_Xml;
+    $fh->printf("%s<cell name=\"%s\" submodname=\"%s\" hier=\"%s\">\n",
+		$indent, $parcell ? $parcell->name : $mod->name, $mod->name, $hier) if $Opt_Xml;
     foreach my $cell ($mod->cells_sorted) {
 	if ($cell->submod) {
-	    show_hier ($fh, $cell->submod, $indent."  ", $hier.".".$cell->name);
+	    show_hier ($fh, $cell->submod, $cell, $indent."  ", $hier.".".$cell->name);
 	}
     }
+    $fh->printf("%s</cell>\n", $indent) if $Opt_Xml;
 }
 
 ######################################################################
@@ -414,6 +441,10 @@ are used.
 =item --version
 
 Displays program version and exits.
+
+=item --xml
+
+Create output in XML format.
 
 =back
 

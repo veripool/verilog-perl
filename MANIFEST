@@ -125,6 +125,7 @@ t/85_vhier_inpfiles.out
 t/85_vhier_modfiles.out
 t/85_vhier_resolvefiles.out
 t/85_vhier_topmodule.out
+t/85_vhier_xml.out
 t/86_vhier_tick.t
 t/test_utils.pl
 Verilog-Perl.pod
