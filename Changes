@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Add vhier --xml. [David Asher]
 
+****	Fix net used lint warnings after pin deletes, bug343. [David Chinnery]
+
 * Verilog::Language 3.306 2011/03/07
 
 ****	Fix block comment not separating identifiers, bug311. [Gene Sullivan]
