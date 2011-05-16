@@ -495,11 +495,6 @@ undefined modules through the "options" object.
 Indicates that modules that referenced but not found should be ignored,
 rather than causing an error message.
 
-=item lint_pin_interconnect => $true_or_false
-
-Indicates that lint should Interconnect information is not needed, do not read it, nor report lint
-related pin warnings.  Greatly improves performance.
-
 =item logger => object
 
 Specify a message handler object to be used for error handling, this class
