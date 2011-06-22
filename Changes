@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.30**
+* Verilog::Language 3.307 2011/06/22
 
 ****	Add vhier --xml. [David Asher]
 

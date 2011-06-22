@@ -12,7 +12,7 @@ use base qw(Exporter);
 use vars qw($VERSION @EXPORT);
 use strict;
 
-$VERSION = '3.306';
+$VERSION = '3.307';
 @EXPORT = qw(structs);
 
 # Maybe in the future.  For now all users of this must do it themselves

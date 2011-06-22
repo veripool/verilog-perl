@@ -14,7 +14,7 @@ use base qw(Verilog::Parser);
 ######################################################################
 #### Configuration Section
 
-$VERSION = '3.306';
+$VERSION = '3.307';
 
 our @_Callback_Names = qw(
   attribute
