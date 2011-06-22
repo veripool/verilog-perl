@@ -18,6 +18,8 @@ sub MY::postamble {
 	$out .= "LD = g++\n";
     }
     # Note OPTIMIZE is passed from upper makefile, so this code needed there too.
+    my $optimize = $Config{optimize};  $optimize =~ s/(^| )-O2( |$)/\1-O\2/g;
+    $out .= "OPTIMIZE = $optimize\n";
     if ($Config{osname} =~ /cygwin/i || $Config{archname} =~ /cygwin/i) {
 	# Cygwin ExtUtils::MakeMaker ignores our LIBS declaration and says
 	# "No library found for -lstdc++".  Force it.
