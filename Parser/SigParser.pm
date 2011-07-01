@@ -19,14 +19,16 @@ $VERSION = '3.307';
 our @_Callback_Names = qw(
   attribute
   contassign
+  covergroup
   defparam
   endcell
+  endgroup
   endinterface
   endmodport
-  endtaskfunc
   endmodule
   endpackage
   endprogram
+  endtaskfunc
   function
   import
   instant
@@ -101,6 +103,12 @@ sub contassign {
     my $rhs = shift;
 }
 
+sub covergroup {
+    my $self = shift;
+    my $keyword = shift;
+    my $name = shift;
+}
+
 sub defparam {
     my $self = shift;
     my $lhs = shift;
@@ -108,6 +116,10 @@ sub defparam {
 }
 
 sub endcell {
+    my $self = shift;
+}
+
+sub endgroup {
     my $self = shift;
 }
 
@@ -288,6 +300,10 @@ of each comment line (C<//key rest> to end of line) or comment block
 (C</*key rest */).  It calls C<$self->attribute( meta_text )>
 if the first word has a true value in hash C<$self->metacomment>.
 
+=item $self->covergroup ( $token, $name )
+
+This method is called at a covergroup.
+
 =item $self->contassign ( $token, $lhs, $rhs )
 
 This method is called at a continuous "assign" keyword, with the left and
@@ -303,6 +319,11 @@ part of the assignment.
 =item $self->endcell ( $token )
 
 This method is called at the end of defining a cell. It is useful for
+writing clean up routines.
+
+=item $self->endgroup ( $token )
+
+This method is called at the end of defining a covergroup. It is useful for
 writing clean up routines.
 
 =item $self->endinterface ( $token )

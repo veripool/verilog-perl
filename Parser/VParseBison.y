@@ -3922,14 +3922,18 @@ let_port_listE:			// ==IEEE: let_port_list
 covergroup_declaration:		// ==IEEE: covergroup_declaration
 		covergroup_declarationFront coverage_eventE ';' coverage_spec_or_optionListE
 			yENDGROUP endLabelE
-			{ PARSEP->symPopScope(VAstType::COVERGROUP); }
+			{ PARSEP->endgroupCb($<fl>5,$5);
+			  PARSEP->symPopScope(VAstType::COVERGROUP); }
 	|	covergroup_declarationFront '(' tf_port_listE ')' coverage_eventE ';' coverage_spec_or_optionListE
 			yENDGROUP endLabelE
-			{ PARSEP->symPopScope(VAstType::COVERGROUP); }
+			{ PARSEP->endgroupCb($<fl>8,$8);
+			  PARSEP->symPopScope(VAstType::COVERGROUP); }
 	;
 
 covergroup_declarationFront:	// IEEE: part of covergroup_declaration
-		yCOVERGROUP idAny 			{ PARSEP->symPushNew(VAstType::COVERGROUP,$2); }
+		yCOVERGROUP idAny
+ 			{ PARSEP->symPushNew(VAstType::COVERGROUP,$2);
+			  PARSEP->covergroupCb($<fl>1,$1,$2); }
 	;
 
 coverage_spec_or_optionListE:	// IEEE: [{coverage_spec_or_option}]

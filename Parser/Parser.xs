@@ -61,8 +61,10 @@ public:
         bool m_useCb_attribute:1;
         bool m_useCb_comment:1;
         bool m_useCb_contassign:1;
+        bool m_useCb_covergroup:1;
         bool m_useCb_defparam:1;
         bool m_useCb_endcell:1;
+        bool m_useCb_endgroup:1;
         bool m_useCb_endinterface:1;
         bool m_useCb_endmodport:1;
         bool m_useCb_endmodule:1;
@@ -108,8 +110,10 @@ public:
        m_useCb_attribute = true;
        m_useCb_comment = true;
        m_useCb_contassign = true;
+       m_useCb_covergroup = true;
        m_useCb_defparam = true;
        m_useCb_endcell = true;
+       m_useCb_endgroup = true;
        m_useCb_endinterface = true;
        m_useCb_endmodport = true;
        m_useCb_endmodule = true;
@@ -154,8 +158,10 @@ public:
     virtual void sysfuncCb(VFileLine* fl, const string& text);
     // Verilog::SigParser Callback methods
     virtual void contassignCb(VFileLine* fl, const string& kwd, const string& lhs, const string& rhs);
+    virtual void covergroupCb(VFileLine* fl, const string& kwd, const string& name);
     virtual void defparamCb(VFileLine* fl, const string& kwd, const string& lhs, const string& rhs);
     virtual void endcellCb(VFileLine* fl, const string& kwd);
+    virtual void endgroupCb(VFileLine* fl, const string& kwd);
     virtual void endinterfaceCb(VFileLine* fl, const string& kwd);
     virtual void endmodportCb(VFileLine* fl, const string& kwd);
     virtual void endmoduleCb(VFileLine* fl, const string& kwd);
