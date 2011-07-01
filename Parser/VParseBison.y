@@ -4337,7 +4337,7 @@ ps_type<str>:			// IEEE: ps_parameter_identifier | ps_type_identifier
 	;
 
 ps_covergroup_identifier<str>:	// ==IEEE: ps_covergroup_identifier
-		package_scopeIdFollowsE yaID__aCOVERGROUP	{ $<fl>$=$<fl>1; $$=$1; }
+		package_scopeIdFollowsE yaID__aCOVERGROUP	{ $<fl>$=$<fl>1; $$=$1+$2; }
 	;
 
 class_scope_type<str>:		// class_scope + type

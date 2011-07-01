@@ -388,7 +388,7 @@ module bug192;
 	 bins count[] = {[0:DEPTH]};
       }
    endgroup: cg192
-   cg192 cover_ts = new();
+   cg192 cover_ts = new();   // also bug361
 endmodule
 
 function bit func_implied_in (bit i); g_bit = ~i; endfunction

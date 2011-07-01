@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 **	Add SigParser covergroup and endgroup callbacks. [Jon Nall]
 
+****	Fix covergroup callback giving empty datatype, bug361. [Jon Nall]
+
 * Verilog::Language 3.307 2011/06/22
 
 ****	Add vhier --xml. [David Asher]
