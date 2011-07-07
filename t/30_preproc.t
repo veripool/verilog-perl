@@ -53,7 +53,7 @@ ok(1, "use Verilog::Preproc");
 
 test ('',  keep_comments=>1, line_directives=>0, _no_line_numbering=>1);  # Makes "diff" cleaner
 test ('_on',  keep_comments=>1,);
-test ('_nows', keep_comments=>0, keep_whitespace=>0,);
+test ('_nows', keep_comments=>0, keep_whitespace=>0, synthesis=>1);
 test ('_sub', keep_comments=>'sub', _test_def_substitute=>1);
 test_getall ();
 

@@ -885,5 +885,12 @@ COMMENT: /*NEED_SPACE*/
 verilog/inc1.v:447: integer /*CMT*/  foo;
 COMMENT: //======================================================================
 verilog/inc1.v:448:  /*CMT*/  
-verilog/inc1.v:449: 
-verilog/inc1.v:450: `line 450 "verilog/inc1.v" 2
+verilog/inc1.v:449: synth_test:
+COMMENT: // synopsys translate_off
+verilog/inc1.v:450:  /*CMT*/  
+verilog/inc1.v:451: synthesis_turned_off
+COMMENT: // synthesis translate_on
+verilog/inc1.v:452:  /*CMT*/  
+verilog/inc1.v:453: EXP: on
+verilog/inc1.v:454: 
+verilog/inc1.v:455: `line 455 "verilog/inc1.v" 2

@@ -446,3 +446,8 @@ module `Q1 ; endmodule
 // bug311
 integer/*NEED_SPACE*/foo;
 //======================================================================
+synth_test:
+// synopsys translate_off
+synthesis_turned_off
+// synthesis translate_on
+EXP: on

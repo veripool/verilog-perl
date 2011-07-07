@@ -210,16 +210,17 @@ void VPreProcXs::call (
 MODULE = Verilog::Preproc  PACKAGE = Verilog::Preproc
 
 #//**********************************************************************
-#// self->_new (class, keepcmt, keepwhite, linedir, pedantic)
+#// self->_new (class, keepcmt, keepwhite, linedir, pedantic, synthesis)
 
 static VPreProcXs *
-VPreProcXs::_new (SELF, keepcmt, keepwhite, linedir, pedantic)
+VPreProcXs::_new (SELF, keepcmt, keepwhite, linedir, pedantic, synthesis)
 SV *SELF
 int keepcmt
 int keepwhite
 int linedir
 int pedantic
-PROTOTYPE: $$$$$
+int synthesis
+PROTOTYPE: $$$$$$
 CODE:
 {
     if (CLASS) {}  /* Prevent unused warning */
@@ -232,6 +233,7 @@ CODE:
     preprocp->keepWhitespace(keepwhite);
     preprocp->lineDirectives(linedir);
     preprocp->pedantic(pedantic);
+    preprocp->synthesis(synthesis);
     preprocp->configure(filelinep);
     RETVAL = preprocp;
 }

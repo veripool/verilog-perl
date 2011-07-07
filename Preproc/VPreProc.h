@@ -54,6 +54,7 @@ private:
     int		m_keepWhitespace;
     bool	m_lineDirectives;
     bool	m_pedantic;
+    bool	m_synthesis;
 
 public:
     // CONSTANTS
@@ -86,6 +87,8 @@ public:
     void lineDirectives(bool flag) { m_lineDirectives=flag; }	// Insert `line directives
     bool pedantic() { return m_pedantic; }
     void pedantic(bool flag) { m_pedantic=flag; }	// Obey standard; Don't substitute `error
+    bool synthesis() { return m_synthesis; }
+    void synthesis(bool flag) { m_synthesis=flag; }	// Ignore translate off
 
     // CALLBACK METHODS
     // This probably will want to be overridden for given child users of this class.

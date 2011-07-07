@@ -212,12 +212,9 @@ verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
 verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
 verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
 verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
-verilog/inc1.v:333:  if (start("verilog/inc1.v", 333)) begin 
 verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
 verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
-verilog/inc1.v:333:  message({"Blah-", "clx_scen", " end"}); 
 verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
-verilog/inc1.v:333:  end 
 verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
 verilog/inc1.v:333: `line 333 "verilog/inc1.v" 0
 verilog/inc1.v:333:  while(0);
@@ -260,4 +257,8 @@ verilog/inc1.v:441: EXP: module a_b ; endmodule
 verilog/inc1.v:442: module a_b ; endmodule
 verilog/inc1.v:443: module a_b ; endmodule
 verilog/inc1.v:447: integer foo;
-verilog/inc1.v:450: `line 450 "verilog/inc1.v" 2
+verilog/inc1.v:449: synth_test:
+verilog/inc1.v:450: `line 450 "verilog/inc1.v" 0
+verilog/inc1.v:450: `line 450 "verilog/inc1.v" 0
+verilog/inc1.v:451: EXP: on
+verilog/inc1.v:453: `line 453 "verilog/inc1.v" 2

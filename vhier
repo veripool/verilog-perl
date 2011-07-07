@@ -39,6 +39,7 @@ my $Opt_Missing = 1;
 my $Opt_Missing_Modules;
 my $Opt_TopModule;
 my $Opt_ResolveFiles;
+my $Opt_Synthesis;
 my $Opt_Xml;
 @ARGV = $Opt->parameter(@ARGV);
 Getopt::Long::config ("no_auto_abbrev");
@@ -55,6 +56,7 @@ if (! GetOptions (
 		  "language=s"		=> sub { shift; Verilog::Language::language_standard(shift); },
 		  "missing!"		=> \$Opt_Missing,
 		  "missing-modules!"	=> \$Opt_Missing_Modules,
+		  "synthesis!"		=> \$Opt_Synthesis,
 		  "top-module=s"	=> \$Opt_TopModule,
 		  "version"	=> sub { print "Version $VERSION\n"; exit(0); },
 		  "xml!"	=> \$Opt_Xml,
@@ -110,6 +112,7 @@ sub vhier {
 				   keep_comments => 0,
 				   use_vars => 0,
 				   link_read_nonfatal => !$Opt_Missing,
+				   synthesis => $Opt_Synthesis,
 				   );
 
     $fh->print("<vhier>\n") if $Opt_Xml;
@@ -425,6 +428,14 @@ Do not complain about references to missing modules.
 =item --missing-modules
 
 With --nomissing, show all modules that are not found.
+
+=item --sythesis
+
+Define SYNTHESIS, and ignore text bewteen "ambit", "pragma", "synopsys" or
+"synthesis" translate_off and translate_on meta comments.  Note using
+metacomments is discouraged as they have led to silicon bugs (versus ifdef
+SYNTHESIS); see
+L<http://www.veripool.org/papers/TenIPEdits_SNUGBos07_paper.pdf>.
 
 =item --top-module I<module>
 

@@ -78,6 +78,7 @@ void yyerrorf(const char* format, ...) {
 %x ARGMODE
 %x INCMODE
 %x PRTMODE
+%x OFFMODE
 
 /* drop: Drop Ctrl-Z - can't pass thru or may EOF the output too soon */
 
@@ -92,6 +93,8 @@ symb		([a-zA-Z_][a-zA-Z0-9_$]*|\\[^ \t\f\r\n]+)
 symbdef		([a-zA-Z_][a-zA-Z0-9_$]*|\\[^ \t\f\r\n`]+)
 word		[a-zA-Z0-9_]+
 drop		[\032]
+translate_off	(?i:{ws}*(ambit|pragma|synopsys|synthesis){ws}*(translate_off){ws}*)
+translate_on	(?i:{ws}*(ambit|pragma|synopsys|synthesis){ws}*(translate_on){ws}*)
 
 	/**************************************************************/
 %%
@@ -236,7 +239,19 @@ drop		[\032]
 <ARGMODE>[^\/\*\n\r\\(,){}\[\]\"`]+	|
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }
 
-	/* One line comments. */
+	/* Translate offs.  Note final newline not included */
+<INITIAL>(("//"{translate_off}[^\n\r]*)|("/*"{translate_off}"*/")) {
+			  if (LEXP->m_synthesis) { yy_push_state(OFFMODE); }
+			  return(VP_COMMENT); }
+<OFFMODE>(("//"{translate_on})[^\n\r]*|("/*"{translate_on}"*/")) {
+			  if (LEXP->m_synthesis) { yy_pop_state(); }
+			  return(VP_COMMENT); }
+<CMTMODE>{crnl}		{ linenoInc(); yymore(); }
+<CMTMODE>{word}		{ yymore(); }
+<CMTMODE>.		{ yymore(); }
+<CMTMODE><<EOF>>	{ yyerrorf("EOF in '/*synthesis translate_off*/' region\n"); yyleng=0; yyterminate(); }
+
+	/* One line comments. Note final newline not included */
 <INITIAL>"//"[^\n\r]* 	{ return (VP_COMMENT); }
 
 	/* C-style comments. */

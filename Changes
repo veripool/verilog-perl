@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.3***
 
+**	Add --synthesis to vhier+Preproc to honor translate_offs. [Ozkan Dikmen]
+
 **	Add SigParser covergroup and endgroup callbacks. [Jon Nall]
 
 ****	Fix covergroup callback giving empty datatype, bug361. [Jon Nall]

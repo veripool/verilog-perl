@@ -649,4 +649,9 @@ verilog/inc1.v: //==============================================================
 verilog/inc1.v: // bug311
 verilog/inc1.v: integer/*NEED_SPACE*/foo;
 verilog/inc1.v: //======================================================================
+verilog/inc1.v: synth_test:
+verilog/inc1.v: // synopsys translate_off
+verilog/inc1.v: synthesis_turned_off
+verilog/inc1.v: // synthesis translate_on
+verilog/inc1.v: EXP: on
 verilog/inc1.v: 

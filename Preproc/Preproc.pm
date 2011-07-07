@@ -19,7 +19,7 @@ $VERSION = '3.307';
 bootstrap Verilog::Preproc;
 
 #In Preproc.xs:
-# sub _new (class, keepcmt, linedir, pedantic)
+# sub _new (class, keepcmt, linedir, pedantic, synthesis)
 # sub _open (class)
 # sub getall (class)
 # sub getline (class)
@@ -37,6 +37,7 @@ sub new {
 		keep_whitespace=>1,
 		line_directives=>1,
 		pedantic=>0,
+		synthesis=>0,
 		options=>Verilog::Getopt->new(),	# If the user didn't give one, still work!
 		#include_open_nonfatal=>0,
 		@_};
@@ -49,7 +50,11 @@ sub new {
 		$self->{keep_whitespace},
 		$self->{line_directives},
 		$self->{pedantic},
+		$self->{synthesis},
 		);
+    if ($self->{synthesis}) {
+	$self->define('SYNTHESIS',1);
+    }
     #use Data::Dumper; print Dumper($self);
     return $self;
 }
@@ -313,6 +318,14 @@ disable the `__FILE__ and `__LINE__ features but no longer does as they
 were added to the 1800-2009 standard.  It remains to disable `error and may
 disable other future features that are not specified in the language
 standard. Defaults false.
+
+=item sythesis=>1
+
+With synthesis set, define SYNTHESIS, and ignore text bewteen "ambit",
+"pragma", "synopsys" or "synthesis" translate_off and translate_on meta
+comments.  Note using metacomments is discouraged as they have led to
+silicon bugs (versus ifdef SYNTHESIS); see
+L<http://www.veripool.org/papers/TenIPEdits_SNUGBos07_paper.pdf>.
 
 =back
 
