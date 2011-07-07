@@ -93,8 +93,16 @@ symb		([a-zA-Z_][a-zA-Z0-9_$]*|\\[^ \t\f\r\n]+)
 symbdef		([a-zA-Z_][a-zA-Z0-9_$]*|\\[^ \t\f\r\n`]+)
 word		[a-zA-Z0-9_]+
 drop		[\032]
-translate_off	(?i:{ws}*(ambit|pragma|synopsys|synthesis){ws}*(translate_off){ws}*)
-translate_on	(?i:{ws}*(ambit|pragma|synopsys|synthesis){ws}*(translate_on){ws}*)
+/* Case insensitive; unfortunately ?i: isn't in flex 2.5.4 which is popular */
+ambit		[Aa][Mm][Bb][Ii][Tt]
+pragma		[Pp][Rr][Aa][Gg][Mm][Aa]
+synopsys	[Ss][Yy][Nn][Oo][Pp][Ss][Yy][Ss]
+synthesis	[Ss][Yy][Nn][Tt][Hh][Ee][Ss][Ii][Ss]
+pragma_tools	({ambit}|{pragma}|{synopsys}|{synthesis})
+translate_off	[Tt][Rr][Aa][Nn][Ss][Ll][Aa][Tt][Ee]_[Oo][Ff][Ff]
+translate_on	[Tt][Rr][Aa][Nn][Ss][Ll][Aa][Tt][Ee]_[Oo][Nn]
+prag_trans_off	({ws}*{pragma_tools}{ws}*{translate_off}{ws}*)
+prag_trans_on	({ws}*{pragma_tools}{ws}*{translate_on}{ws}*)
 
 	/**************************************************************/
 %%
@@ -240,10 +248,10 @@ translate_on	(?i:{ws}*(ambit|pragma|synopsys|synthesis){ws}*(translate_on){ws}*)
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }
 
 	/* Translate offs.  Note final newline not included */
-<INITIAL>(("//"{translate_off}[^\n\r]*)|("/*"{translate_off}"*/")) {
+<INITIAL>(("//"{prag_trans_off}[^\n\r]*)|("/*"{prag_trans_off}"*/")) {
 			  if (LEXP->m_synthesis) { yy_push_state(OFFMODE); }
 			  return(VP_COMMENT); }
-<OFFMODE>(("//"{translate_on})[^\n\r]*|("/*"{translate_on}"*/")) {
+<OFFMODE>(("//"{prag_trans_on}[^\n\r]*)|("/*"{prag_trans_on}"*/")) {
 			  if (LEXP->m_synthesis) { yy_pop_state(); }
 			  return(VP_COMMENT); }
 <OFFMODE>{crnl}		{ linenoInc(); yymore(); }
