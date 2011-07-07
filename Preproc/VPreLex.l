@@ -246,10 +246,10 @@ translate_on	(?i:{ws}*(ambit|pragma|synopsys|synthesis){ws}*(translate_on){ws}*)
 <OFFMODE>(("//"{translate_on})[^\n\r]*|("/*"{translate_on}"*/")) {
 			  if (LEXP->m_synthesis) { yy_pop_state(); }
 			  return(VP_COMMENT); }
-<CMTMODE>{crnl}		{ linenoInc(); yymore(); }
-<CMTMODE>{word}		{ yymore(); }
-<CMTMODE>.		{ yymore(); }
-<CMTMODE><<EOF>>	{ yyerrorf("EOF in '/*synthesis translate_off*/' region\n"); yyleng=0; yyterminate(); }
+<OFFMODE>{crnl}		{ linenoInc(); yymore(); }
+<OFFMODE>{word}		{ yymore(); }
+<OFFMODE>.		{ yymore(); }
+<OFFMODE><<EOF>>	{ yyerrorf("EOF in '/*synthesis translate_off*/' region\n"); yyleng=0; yyterminate(); }
 
 	/* One line comments. Note final newline not included */
 <INITIAL>"//"[^\n\r]* 	{ return (VP_COMMENT); }

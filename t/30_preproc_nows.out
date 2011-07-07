@@ -260,5 +260,5 @@ verilog/inc1.v:447: integer foo;
 verilog/inc1.v:449: synth_test:
 verilog/inc1.v:450: `line 450 "verilog/inc1.v" 0
 verilog/inc1.v:450: `line 450 "verilog/inc1.v" 0
-verilog/inc1.v:451: EXP: on
-verilog/inc1.v:453: `line 453 "verilog/inc1.v" 2
+verilog/inc1.v:453: EXP: on
+verilog/inc1.v:455: `line 455 "verilog/inc1.v" 2
