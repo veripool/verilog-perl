@@ -41,6 +41,7 @@ sub new {
 		remove_defines_without_tick => 0,   # Overriden in SystemC::Netlist
 		#include_open_nonfatal => 0,
 		#keep_comments => 0,
+		#synthesis => 0,
 		use_vars => 1,
 		_libraries_done => {},
 		_need_link => [],	# Objects we need to ->link
@@ -510,6 +511,14 @@ files.
 =item preproc => $package_name
 
 The name of the preprocessor class. Defaults to "Verilog::Preproc".
+
+=item synthesis => $true_or_false
+
+With synthesis set, define SYNTHESIS, and ignore text bewteen "ambit",
+"pragma", "synopsys" or "synthesis" translate_off and translate_on meta
+comments.  Note using metacomments is discouraged as they have led to
+silicon bugs (versus ifdef SYNTHESIS); see
+L<http://www.veripool.org/papers/TenIPEdits_SNUGBos07_paper.pdf>.
 
 =item use_vars => $true_or_false
 

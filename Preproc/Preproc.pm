@@ -319,7 +319,7 @@ were added to the 1800-2009 standard.  It remains to disable `error and may
 disable other future features that are not specified in the language
 standard. Defaults false.
 
-=item sythesis=>1
+=item synthesis=>1
 
 With synthesis set, define SYNTHESIS, and ignore text bewteen "ambit",
 "pragma", "synopsys" or "synthesis" translate_off and translate_on meta

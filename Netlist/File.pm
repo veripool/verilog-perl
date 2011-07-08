@@ -73,6 +73,7 @@ sub new {
     }
     push @opt, keep_whitespace=>1;  # So we don't loose newlines
     push @opt, include_open_nonfatal=>1 if $params{netlist}{include_open_nonfatal};
+    push @opt, synthesis=>1 if $params{netlist}{synthesis};
     my $preproc = $preproc_class->new(@opt);
     $preproc->open($params{filename});
     $parser->parse_preproc_file ($preproc);
