@@ -101,8 +101,8 @@ synthesis	[Ss][Yy][Nn][Tt][Hh][Ee][Ss][Ii][Ss]
 pragma_tools	({ambit}|{pragma}|{synopsys}|{synthesis})
 translate_off	[Tt][Rr][Aa][Nn][Ss][Ll][Aa][Tt][Ee]_[Oo][Ff][Ff]
 translate_on	[Tt][Rr][Aa][Nn][Ss][Ll][Aa][Tt][Ee]_[Oo][Nn]
-prag_trans_off	({ws}*{pragma_tools}{ws}*{translate_off}{ws}*)
-prag_trans_on	({ws}*{pragma_tools}{ws}*{translate_on}{ws}*)
+prag_trans_off	({ws}*{pragma_tools}{ws}+{translate_off}{ws}*)
+prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 
 	/**************************************************************/
 %%
@@ -254,9 +254,9 @@ prag_trans_on	({ws}*{pragma_tools}{ws}*{translate_on}{ws}*)
 <OFFMODE>(("//"{prag_trans_on}[^\n\r]*)|("/*"{prag_trans_on}"*/")) {
 			  if (LEXP->m_synthesis) { yy_pop_state(); }
 			  return(VP_COMMENT); }
-<OFFMODE>{crnl}		{ linenoInc(); yymore(); }
-<OFFMODE>{word}		{ yymore(); }
-<OFFMODE>.		{ yymore(); }
+<OFFMODE>{crnl}		{ linenoInc(); yymore(); }  /* Need to end the / / */
+<OFFMODE>{word}		{ }
+<OFFMODE>.		{ }
 <OFFMODE><<EOF>>	{ yyerrorf("EOF in '/*synthesis translate_off*/' region\n"); yyleng=0; yyterminate(); }
 
 	/* One line comments. Note final newline not included */
