@@ -3819,21 +3819,21 @@ sexpr<str>:			// ==IEEE: sequence_expr  (The name sexpr is important as regexps 
 	//			// As sequence_expr includes expression_or_dist, and boolean_abbrev includes sequence_abbrev:
 	//			// '(' sequence_expr {',' sequence_match_item } ')' [ boolean_abbrev ]
 	//			// "'(' sexpr ')' boolean_abbrev" matches "[sexpr:'(' expr ')'] boolean_abbrev" so we can simply drop it
-	|	'(' ~p~sexpr ')'			{ }
+	|	'(' ~p~sexpr ')'			{ $<fl>$=$<fl>1; $$=$1+$2+$3; }
 	|	'(' ~p~sexpr ',' sequence_match_itemList ')'	{ }
 	//
 	//			// AND/OR are between pexprs OR sexprs
-	|	~p~sexpr yAND ~p~sexpr			{ }
-	|	~p~sexpr yOR ~p~sexpr			{ }
+	|	~p~sexpr yAND ~p~sexpr			{ $<fl>$=$<fl>1; $$=$1+$2+$3; }
+	|	~p~sexpr yOR ~p~sexpr			{ $<fl>$=$<fl>1; $$=$1+$2+$3; }
 	//			// Intersect always has an sexpr rhs
-	|	~p~sexpr yINTERSECT sexpr		{ }
+	|	~p~sexpr yINTERSECT sexpr		{ $<fl>$=$<fl>1; $$=$1+$2+$3; }
 	//
 	|	yFIRST_MATCH '(' sexpr ')'		{ }
 	|	yFIRST_MATCH '(' sexpr ',' sequence_match_itemList ')'	{ }
 	|	~p~sexpr/*sexpression_or_dist*/ yTHROUGHOUT sexpr		{ }
 	//			// Below pexpr's are really sequence_expr, but avoid conflict
 	//			// IEEE: sexpr yWITHIN sexpr
-	|	~p~sexpr yWITHIN sexpr			{ }
+	|	~p~sexpr yWITHIN sexpr			{ $<fl>$=$<fl>1; $$=$1+$2+$3; }
 	//			// Note concurrent_assertion had duplicate rule for below
 	|	clocking_event ~p~sexpr %prec prSEQ_CLOCKING	{ }
 	//

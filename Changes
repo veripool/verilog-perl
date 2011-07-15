@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix covergroup callback giving empty datatype, bug361. [Jon Nall]
 
+****	Fix SigParser port callback missing paren expressions. [Sean Vo]
+
 * Verilog::Language 3.307 2011/06/22
 
 ****	Add vhier --xml. [David Asher]
