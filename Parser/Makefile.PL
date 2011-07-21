@@ -74,7 +74,7 @@ VFileLine.o: $(PPSRC)/VFileLine.cpp
 
 VParseLex_pretmp.cpp: VParseLex.l
 	-$(LEX) --version
-	$(PERL) $(TOOLHASH) --in $< --out $@ --cmd $(LEX) $(LEXFLAGS) -o$@ $<
+	$(PERL) $(TOOLHASH) --verbose --in $< --out $@ --cmd $(LEX) $(LEXFLAGS) -o$@ $<
 
 VParseLex.cpp: $(FLEXFIX) VParseLex_pretmp.cpp
 	$(PERL) $(FLEXFIX) VParseLex < VParseLex_pretmp.cpp > $@
@@ -86,7 +86,7 @@ VParseBison.cpp:	VParseBison.y bisonpre
 	-${YACC} --version | head -1
 	@echo "Note: toolhash ignores VParseBison.output; remove gen/ if you want to debug the grammar"
 	@echo "Note: If the next command fails, you probably need to install Bison 1.875 or newer"
-	$(PERL) $(TOOLHASH) --name bisonpre --vercmd bison --skip-cmd 1 \
+	$(PERL) $(TOOLHASH) --verbose --name bisonpre --vercmd bison --skip-cmd 1 \
 		--in VParseBison.y bisonpre \
 		--out VParseBison.c VParseBison.h \
 		--cmd $(PERL) bisonpre --yacc ${YACC} --debug --verbose --d -p VParseBison -k VParseBison.y -o VParseBison.c

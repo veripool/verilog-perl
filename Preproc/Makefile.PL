@@ -64,7 +64,7 @@ VFileLine.o:	                         VFileLine.h
 
 VPreLex_pretmp.cpp: VPreLex.l
 	-$(LEX) --version
-	$(PERL) $(TOOLHASH) --in $< --out $@ --cmd $(LEX) $(LEXFLAGS) -o$@ $<
+	$(PERL) $(TOOLHASH) --verbose --in $< --out $@ --cmd $(LEX) $(LEXFLAGS) -o$@ $<
 
 VPreLex.cpp: $(FLEXFIX) VPreLex_pretmp.cpp
 	$(PERL) $(FLEXFIX) VPreLex < VPreLex_pretmp.cpp > $@
