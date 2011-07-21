@@ -158,9 +158,10 @@ sub clean_output {
     my @lines = $fh->getlines;
     $fh->close;
 
-    (my $basename = tmp_prefix().".y") =~ s!.*/!!;
+    (my $basename = tmp_prefix().".") =~ s!.*/!!;
     $basename = quotemeta($basename);
     (my $newbase = $Opt_Input) =~ s!.*/!!;
+    $newbase =~ s/\.y/./;
 
     if ($is_output) {
 	my %state_line; my $l=0;

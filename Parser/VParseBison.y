@@ -48,7 +48,6 @@
 
 #define NEWSTRING(text) (string((text)))
 #define SPACED(a,b)	((a)+(((a)=="" || (b)=="")?"":" ")+(b))
-#define SPACED3(a,b,c)	(SPACED(SPACED(a,b),c))
 
 #define VARRESET_LIST(decl)    { GRAMMARP->pinNum(1); VARRESET(); VARDECL(decl); }	// Start of pinlist
 #define VARRESET_NONLIST(decl) { GRAMMARP->pinNum(0); VARRESET(); VARDECL(decl); }	// Not in a pinlist
