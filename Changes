@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.3***
+* Verilog::Language 3.310 2011/07/22
 
 **	Add --synthesis to vhier+Preproc to honor translate_offs. [Ozkan Dikmen]
 
