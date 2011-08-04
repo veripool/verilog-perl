@@ -62,6 +62,16 @@ maintainer-copy:
 
 maintainer-clean:: distclean
 	-$(RM_RF) README Makefile MANIFEST.bak $(MAKEFILE_OLD) */gen
+
+## cppcheck
+CPPCHECK = cppcheck
+CPPCHECK_FLAGS = --enable=all --inline-suppr
+CPPCHECK_CPP = $(wildcard */*.cpp)
+CPPCHECK_DEP = $(subst .cpp,.cppcheck,$(CPPCHECK_CPP))
+
+cppcheck: $(CPPCHECK_DEP)
+%.cppcheck: %.cpp
+	$(CPPCHECK) $(CPPCHECK_FLAGS) $<
 ';
     return $out;
 }

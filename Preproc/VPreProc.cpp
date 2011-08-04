@@ -157,6 +157,10 @@ struct VPreProcImp : public VPreProcOpaque {
 	m_finAtBol = true;
 	m_defDepth = 0;
 	m_defPutJoin = false;
+	m_finToken = 0;
+	m_finFilelinep = NULL;
+	m_lexp = NULL;
+	m_preprocp = NULL;
     }
     void configure(VFileLine* filelinep, VPreProc* preprocp) {
 	// configure() separate from constructor to avoid calling abstract functions
@@ -227,6 +231,12 @@ private:
 VPreProc::VPreProc() {
     VPreProcImp* idatap = new VPreProcImp();
     m_opaquep = idatap;
+    // Below overridden by configure()
+    m_keepComments = true;
+    m_keepWhitespace = true;
+    m_lineDirectives = true;
+    m_pedantic = false;
+    m_synthesis = false;
 }
 
 void VPreProc::configure(VFileLine* filelinep) {

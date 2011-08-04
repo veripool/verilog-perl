@@ -90,6 +90,7 @@ public:
     VParseGrammar(VParse* parsep) : m_parsep(parsep) {
 	s_grammarp = this;
 	m_pinNum = 0;
+	m_cellParam = false;
     }
     ~VParseGrammar() {
 	s_grammarp = NULL;
