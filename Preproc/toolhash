@@ -13,6 +13,7 @@ my @opt_in;  # We allow empty opt_in and opt_out so we can cache --version check
 my @opt_out;
 my @opt_cmd;
 my @opt_vercmd;
+my $Opt_Gen = "gen";
 my $Opt_Verbose;
 my $opt_skip_cmd = 0;
 my $in_cmd;
@@ -26,6 +27,7 @@ while (defined(my $param=shift @ARGV)) {
     elsif ($param =~ /^-?-skip-cmd/) { $opt_skip_cmd = shift @ARGV; }
     elsif ($param =~ /^-?-out/) { $list = \@opt_out; }
     elsif ($param =~ /^-?-verbose/) { $Opt_Verbose=1; }
+    elsif ($param =~ /^-?-gen/) { $Opt_Gen = shift @ARGV; }
     elsif ($param =~ /^-?-vercmd/) { $list = \@opt_vercmd; }
     elsif ($param =~ /^-/) { die "%Error: Unexpected argument: $param,"; }
     else {
@@ -36,7 +38,7 @@ $opt_name[0] ||= $opt_cmd[0];
 $opt_vercmd[0] ||= $opt_cmd[0];
 $Opt_Verbose = 1 if $Debug;
 
-mkdir "gen", 0777;
+mkdir $Opt_Gen, 0777;
 
 # Hash of command, including this program args
 my $digest = Digest::SHA->new(1);
@@ -57,7 +59,7 @@ foreach my $fn (@opt_in) {
     $digest->addfile($fh);
     $fh->close;
 }
-my $arcfn = "gen/".$opt_name[0];
+my $arcfn = $Opt_Gen."/".$opt_name[0];
 my $hash = $digest->b64digest;
 
 # Cache hit?  If so, fill as we go
@@ -183,7 +185,7 @@ sub remove_out {
 }
 
 sub remove_named {
-    unlink for (glob "gen/$opt_name[0]-*"); # Ok if error
+    unlink for (glob $Opt_Gen."/$opt_name[0]-*"); # Ok if error
 }
 
 #######################################################################
@@ -215,6 +217,10 @@ remain constant.
 =item --cmd command args...
 
 Command and arguments to run.  All further arguments are passed to the command.
+
+=item --gen ARG
+
+Specify location of generated file cache, defaults to "gen".
 
 =item --in filenames...
 
