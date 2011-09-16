@@ -30,10 +30,12 @@ my %Cbs =
      symbol	=> {which=>'Parser', args => [text=>'string']},
      sysfunc	=> {which=>'Parser', args => [text=>'string']},
      #
+     class      => {which=>'SigParser', args => [kwd=>'string', name=>'string', virt=>'string']},
      contassign => {which=>'SigParser', args => [kwd=>'string', lhs=>'string', rhs=>'string']},
      covergroup => {which=>'SigParser', args => [kwd=>'string', name=>'string']},
      defparam   => {which=>'SigParser', args => [kwd=>'string', lhs=>'string', rhs=>'string']},
      endcell	=> {which=>'SigParser', args => [kwd=>'string']},
+     endclass	=> {which=>'SigParser', args => [kwd=>'string']},
      endgroup	=> {which=>'SigParser', args => [kwd=>'string']},
      endinterface=>{which=>'SigParser', args => [kwd=>'string']},
      endmodport => {which=>'SigParser', args => [kwd=>'string']},

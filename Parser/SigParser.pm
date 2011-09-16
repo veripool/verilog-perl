@@ -18,10 +18,12 @@ $VERSION = '3.310';
 
 our @_Callback_Names = qw(
   attribute
+  class
   contassign
   covergroup
   defparam
   endcell
+  endclass
   endgroup
   endinterface
   endmodport
@@ -103,6 +105,13 @@ sub contassign {
     my $rhs = shift;
 }
 
+sub class {
+    my $self = shift;
+    my $keyword = shift;
+    my $name = shift;
+    my $virtual = shift;
+}
+
 sub covergroup {
     my $self = shift;
     my $keyword = shift;
@@ -113,6 +122,10 @@ sub defparam {
     my $self = shift;
     my $lhs = shift;
     my $rhs = shift;
+}
+
+sub endclass {
+    my $self = shift;
 }
 
 sub endcell {
@@ -300,6 +313,10 @@ of each comment line (C<//key rest> to end of line) or comment block
 (C</*key rest */).  It calls C<$self->attribute( meta_text )>
 if the first word has a true value in hash C<$self->metacomment>.
 
+=item $self->class ( $token, $name, $virtual )
+
+This method is called at a class.
+
 =item $self->covergroup ( $token, $name )
 
 This method is called at a covergroup.
@@ -329,6 +346,11 @@ writing clean up routines.
 =item $self->endinterface ( $token )
 
 This method is called at a endinterface keyword. It is useful for writing
+clean up routines.
+
+=item $self->endclass ( $token )
+
+This method is called at a endclass keyword.  It is useful for writing
 clean up routines.
 
 =item $self->endtaskfunc ( $token )

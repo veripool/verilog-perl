@@ -159,10 +159,12 @@ public:
     virtual void symbolCb(VFileLine* fl, const string& text) = 0;
     virtual void sysfuncCb(VFileLine* fl, const string& text) = 0;
     // Verilog::SigParser Callback methods
+    virtual void classCb(VFileLine* fl, const string& kwd, const string& name, const string& virt) = 0;
     virtual void contassignCb(VFileLine* fl, const string& kwd, const string& lhs, const string& rhs) = 0;
     virtual void covergroupCb(VFileLine* fl, const string& kwd, const string& name) = 0;
     virtual void defparamCb(VFileLine* fl, const string& kwd, const string& lhs, const string& rhs) = 0;
     virtual void endcellCb(VFileLine* fl, const string& kwd) = 0;
+    virtual void endclassCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endgroupCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endinterfaceCb(VFileLine* fl, const string& kwd) = 0;
     virtual void endmodportCb(VFileLine* fl, const string& kwd) = 0;

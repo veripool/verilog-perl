@@ -4301,17 +4301,19 @@ class_declaration:		// ==IEEE: part of class_declaration
 	//			// new class scope correct via classFront
 		classFront parameter_port_listE classExtendsE ';'
 			class_itemListE yENDCLASS endLabelE
-			{ PARSEP->symPopScope(VAstType::CLASS); }
+			{ PARSEP->endclassCb($<fl>6,$6);
+			  PARSEP->symPopScope(VAstType::CLASS); }
 	;
 
 classFront:			// IEEE: part of class_declaration
 		classVirtualE yCLASS lifetimeE idAny/*class_identifier*/
-			{ PARSEP->symPushNew(VAstType::CLASS, $4); }
+			{ PARSEP->symPushNew(VAstType::CLASS, $4);
+			  PARSEP->classCb($<fl>1,$2,$4,$1); }
 	;
 
-classVirtualE:
-		/* empty */				{ }
-	|	yVIRTUAL__CLASS				{ }
+classVirtualE<str>:
+		/* empty */				{ $$=""; }
+	|	yVIRTUAL__CLASS				{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 classExtendsE:			// IEEE: part of class_declaration
