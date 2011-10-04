@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 **	Add SigParser class and endclass callbacks, bug391. [Jon Nall]
 
+***	Fix --help output to go to stderr, not stdout.  [R. Diez]
+
 
 * Verilog::Language 3.310 2011/07/22
 
