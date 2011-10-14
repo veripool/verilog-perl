@@ -9,7 +9,7 @@ a_front_matter;
 `celldefine
 // lint_checking HEADER
 module a;
-   wire inside_module_a;
+   wire inside_module_a;  /* // double cmt */
 endmodule
 `endcelldefine
 

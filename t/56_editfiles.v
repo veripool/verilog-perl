@@ -5,7 +5,7 @@
 a_front_matter;
 
 module a;
-   wire inside_module_a;
+   wire inside_module_a;  /* // double cmt */
 endmodule
 
 b_front_matter;
