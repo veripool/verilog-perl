@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.311 ***
+* Verilog::Language 3.311 2011/10/18
 
 **	Add SigParser class and endclass callbacks, bug391. [Jon Nall]
 
