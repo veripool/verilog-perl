@@ -21,7 +21,7 @@ foreach my $exe (@execs) {
 
       my $cmd = "$PERL $exe --help 2>&1";
       my $help = `$cmd`;
-      like ($help, qr/DISTRIBUTION/, "help result for: $cmd");
+      like ($help, qr/--version/, "help result for: $cmd");
 
       $cmd = "$PERL $exe --version 2>&1";
       $help = `$cmd`;
