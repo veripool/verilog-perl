@@ -3051,6 +3051,8 @@ exprOrDataType<str>:		// expr | data_type: combined to prevent conflicts
 		expr					{ $<fl>$=$<fl>1; $$ = $1; }
 	//			// data_type includes id that overlaps expr, so special flavor
 	|	data_type				{ $<fl>$=$<fl>1; $$ = $1; }
+	//			// not in spec, but needed for $past(sig,1,,@(posedge clk))
+	|	event_control				{ $$ = "event_control"; }
 	;
 
 cateList<str>:

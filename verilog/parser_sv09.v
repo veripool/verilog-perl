@@ -19,3 +19,9 @@ module global_anal;  // Don't be anal about "global" in old code
    global clocking z @(posedge clk);  // But still get it right
    endclocking
 endmodule
+module bug400;
+   assert property
+   ( @(posedge clk)
+     disable iff (rst || $past (rst,1,,@(posedge clk)) || $isunknown(rst))
+     "assert 0");
+endmodule
