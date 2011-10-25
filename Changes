@@ -3,6 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.31***
+
+***	Fix "always @ (* )", bug403, bug404.  [Walter Lavino]
+
+
 * Verilog::Language 3.312 2011/10/20
 
 ***	Fix $past with event_control, bug400. [Jon Nall]

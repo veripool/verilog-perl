@@ -437,3 +437,11 @@ module bug262 ( Y, {A1, A2} , B );
 endmodule
 
 wire \wire = bug282_must_keep_escape;
+
+module bug403_bug404;
+   // Simulators vary as to if "(* /* */ )" is legal or not
+   (* attr *) wire foo;
+   always @ (*) begin end
+   always @ (*
+	     ) begin end
+endmodule

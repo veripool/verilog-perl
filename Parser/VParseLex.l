@@ -590,15 +590,16 @@ word	[a-zA-Z0-9_]+
   /* Attributes */
 <ATTRMODE>{crnl}	{ yymore(); NEXTLINE(); }
 <ATTRMODE>"*)"		{ FL; VALTEXT; CALLBACK(attributeCb); yy_pop_state(); }
-<ATTRMODE>. 		{ yymore(); }
 <ATTRMODE>{word}	{ yymore(); }
+<ATTRMODE>. 		{ yymore(); }
 <ATTRMODE><<EOF>>	{ yyerrorf("EOF in (*");
 			  yyleng = 0; yy_pop_state(); }
 
   /************************************************************************/
   /* Attributes */
+  /* Note simulators vary in support for "(* /_*something*_/ foo*)" where _ doesn't exist */
 <V95,V01,V05,S05,S09>{
-    "(*"/{ws}*[^)]	{ FL; yymore(); yy_push_state(ATTRMODE); }	// Doesn't match (*)
+    "(*"({ws}|{crnl})*({id}|{escid})	{ yymore(); yy_push_state(ATTRMODE); }	// Doesn't match (*), but (* attr_spec
 }
 
   /************************************************************************/
