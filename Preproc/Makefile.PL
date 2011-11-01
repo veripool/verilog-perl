@@ -42,12 +42,6 @@ sub MY::postamble {
     $out .= "${cmt}CFLAGS += -DFLEX_DEBUG\n";
     $out .= "${cmt}LEXFLAGS += -d\n";
     $out .= '
-ifeq ($(OBJCACHE_HOSTS_DETERMINANT),)
-OBJCACHE :=
-else
-OBJCACHE := objcache --read --write
-endif
-
 CC = $(OBJCACHE) g++
 LEX = flex
 YACC = bison
