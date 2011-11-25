@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.31***
 
+***	Add Verilog-AMS keywords to Verilog::Language.
+
 ***	Fix "always @ (* )", bug403, bug404.  [Walter Lavino]
 
 

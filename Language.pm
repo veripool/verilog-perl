@@ -34,7 +34,7 @@ General functions will be added as needed.
 
 Return true if the given symbol string is a Verilog reserved keyword.
 Value indicates the language standard as per the `begin_keywords macro,
-'1364-1995', '1364-2001', '1364-2005', '1800-2005' or '1800-2009'.
+'1364-1995', '1364-2001', '1364-2005', '1800-2005', '1800-2009' or 'AMS'.
 
 =item Verilog::Language::is_compdirect ($symbol_string)
 
@@ -211,6 +211,22 @@ foreach my $kwd (qw(
 		    sync_reject_on unique0 until until_with untyped weak
 		    )) { $Keywords{'1800-2009'}{$kwd} = '1800-2009'; }
 
+foreach my $kwd (qw(
+		    above abs absdelay abstol ac_stim access acos acosh
+		    aliasparam analog analysis asin asinh assert atan atan2
+		    atanh branch ceil connect connectmodule connectrules
+		    continuous cos cosh cross ddt ddt_nature ddx discipline
+		    discrete domain driver_update endconnectrules
+		    enddiscipline endnature endparamset exclude exp
+		    final_step flicker_noise floor flow from ground hypot
+		    idt idt_nature idtmod inf initial_step laplace_nd
+		    laplace_np laplace_zd laplace_zp last_crossing limexp
+		    ln log max merged min nature net_resolution noise_table
+		    paramset potential pow resolveto sin sinh slew split
+		    sqrt string tan tanh timer transition units white_noise
+		    wreal zi_nd zi_np zi_zd zi_zp
+		    )) { $Keywords{'AMS'}{$kwd} = 'AMS'; }
+
 foreach my $kwd (
     # Speced
     "`celldefine",
@@ -264,6 +280,10 @@ foreach my $kwd (
 		 "`pragma",
 		 ) { $Keywords{$kwd}{'1364-2005'} = $Compdirect{$kwd} = '1364-2005'; }
 
+foreach my $kwd (
+		 "`default_discipline", "`default_transition",
+		 ) { $Keywords{$kwd}{'1364-2005'} = $Compdirect{$kwd} = '1364-2005'; }
+
 language_standard (language_maximum());  # Default standard
 
 foreach my $kwd (qw(
@@ -297,6 +317,9 @@ sub _language_kwd_hash {
     } elsif ($standard eq 'latest' || $standard eq '1800-2009') {
 	$Standard = '1800-2009';
 	@subsets = ('1800-2009', '1800-2005', '1364-2005', '1364-2001', '1364-1995');
+    } elsif ($standard =~ /^AMS/) {
+	$Standard = 'AMS';
+	@subsets = ('AMS', '1364-2005', '1364-2001', '1364-1995');
     } else {
 	croak "%Error: Verilog::Language::language_standard passed bad value: $standard,";
     }
