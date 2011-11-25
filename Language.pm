@@ -34,7 +34,7 @@ General functions will be added as needed.
 
 Return true if the given symbol string is a Verilog reserved keyword.
 Value indicates the language standard as per the `begin_keywords macro,
-'1364-1995', '1364-2001', '1364-2005', '1800-2005', '1800-2009' or 'AMS'.
+'1364-1995', '1364-2001', '1364-2005', '1800-2005', '1800-2009' or 'VAMS'.
 
 =item Verilog::Language::is_compdirect ($symbol_string)
 
@@ -225,7 +225,7 @@ foreach my $kwd (qw(
 		    paramset potential pow resolveto sin sinh slew split
 		    sqrt string tan tanh timer transition units white_noise
 		    wreal zi_nd zi_np zi_zd zi_zp
-		    )) { $Keywords{'AMS'}{$kwd} = 'AMS'; }
+		    )) { $Keywords{'VAMS'}{$kwd} = 'VAMS'; }
 
 foreach my $kwd (
     # Speced
@@ -317,9 +317,9 @@ sub _language_kwd_hash {
     } elsif ($standard eq 'latest' || $standard eq '1800-2009') {
 	$Standard = '1800-2009';
 	@subsets = ('1800-2009', '1800-2005', '1364-2005', '1364-2001', '1364-1995');
-    } elsif ($standard =~ /^AMS/) {
-	$Standard = 'AMS';
-	@subsets = ('AMS', '1364-2005', '1364-2001', '1364-1995');
+    } elsif ($standard =~ /^V?AMS/) {
+	$Standard = 'VAMS';
+	@subsets = ('VAMS', '1364-2005', '1364-2001', '1364-1995');
     } else {
 	croak "%Error: Verilog::Language::language_standard passed bad value: $standard,";
     }
