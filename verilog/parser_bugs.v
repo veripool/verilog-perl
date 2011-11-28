@@ -445,3 +445,8 @@ module bug403_bug404;
    always @ (*
 	     ) begin end
 endmodule
+
+module bug422;
+   generate
+   endgenerate
+endmodule

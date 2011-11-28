@@ -1620,7 +1620,9 @@ bind_instantiation:		// ==IEEE: bind_instantiation
 
 generate_region:		// ==IEEE: generate_region
 		yGENERATE ~c~genTopBlock yENDGENERATE	{ }
+	|	yGENERATE yENDGENERATE			{ }
 	;
+
 c_generate_region:		// IEEE: generate_region (for checkers)
 		BISONPRE_COPY(generate_region,{s/~c~/c_/g})	// {copied}
 	;

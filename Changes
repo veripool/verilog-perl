@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Fix "always @ (* )", bug403, bug404.  [Walter Lavino]
 
+***	Fix empty generate region, bug422.  [Walter Lavino]
+
 
 * Verilog::Language 3.312 2011/10/20
 
