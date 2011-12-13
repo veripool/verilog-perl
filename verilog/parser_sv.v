@@ -365,3 +365,8 @@ module bins_bracket;
       }
    endgroup
 endmodule
+
+virtual class ovm_void;
+endclass
+virtual class ovm_port_base #(type IF=ovm_void) extends ovm_void;
+endclass

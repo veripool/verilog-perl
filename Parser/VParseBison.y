@@ -4324,8 +4324,8 @@ classExtendsE:			// IEEE: part of class_declaration
 	//			// The classExtendsE rule relys on classFront having the
 	//			// new class scope correct via classFront
 		/* empty */				{ }
-	|	yEXTENDS class_typeWithoutId		{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
-	|	yEXTENDS class_typeWithoutId '(' list_of_argumentsE ')'	{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
+	|	yEXTENDS class_typeWithoutIdType		{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
+	|	yEXTENDS class_typeWithoutIdType '(' list_of_argumentsE ')'	{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
 	;
 
 //=========
@@ -4360,6 +4360,11 @@ class_typeWithoutId<str_scp>:	// class_type standalone without following id
 		package_scopeIdFollowsE class_typeOneList	{ $<fl>$=$<fl>2; $<scp>$=$<scp>2; $<str>$=$1+$<str>2; }
 	;
 
+class_typeWithoutIdType<str_scp>:	// as with class_typeWithoutIdType but allow yaID__aTYPE
+	//			// and we thus don't need to resolve it in specified package
+		package_scopeIdFollowsE class_typeOneListType	{ $<fl>$=$<fl>2; $<scp>$=$<scp>2; $<str>$=$1+$<str>2; }
+	;
+
 class_scopeWithoutId<str_scp>:	// class_type standalone without following id
 	//			// and we thus don't need to resolve it in specified package
 		class_scopeIdFollows			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; PARSEP->symTableNextId(NULL); }
@@ -4383,9 +4388,21 @@ class_typeOneList<str_scp>:	// IEEE: class_type: "id [ parameter_value_assignmen
 	|	class_typeOneListColonIdFollows class_typeOne	{ $<fl>$=$<fl>1; $<scp>$=$<scp>2; $<str>$=$<str>1+$<str>2; }
 	;
 
+class_typeOneListType<str_scp>:	// As with class_typeOneList but allow yaID__aTYPE
+		class_typeOneType					{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
+	|	class_typeOneListColonIdFollows class_typeOneType	{ $<fl>$=$<fl>1; $<scp>$=$<scp>2; $<str>$=$<str>1+$<str>2; }
+	;
+
 class_typeOne<str_scp>:		// IEEE: class_type: "id [ parameter_value_assignment ]"
 	//			// If you follow the rules down, class_type is really a list via ps_class_identifier
 		yaID__aCLASS parameter_value_assignmentE
+			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
+	;
+
+class_typeOneType<str_scp>:	// As with class_typeOneList but allow yaID__aTYPE
+		yaID__aCLASS parameter_value_assignmentE
+			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
+	|	yaID__aTYPE parameter_value_assignmentE
 			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
 	;
 
