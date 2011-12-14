@@ -4381,6 +4381,10 @@ class_typeOneListColonIdFollows<str_scp>: // IEEE: class_type ::
 		class_typeOneList yP_COLONCOLON 	{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1+$<str>2; PARSEP->symTableNextId($<scp>1); }
 	;
 
+class_typeOneListColonIdFollowsType<str_scp>: // class_typeOneListColonIdFollows but allow yaID__aTYPE
+		class_typeOneListType yP_COLONCOLON 	{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1+$<str>2; PARSEP->symTableNextId($<scp>1); }
+	;
+
 class_typeOneList<str_scp>:	// IEEE: class_type: "id [ parameter_value_assignment ]"
 	//			// If you follow the rules down, class_type is really a list via ps_class_identifier
 	//			// Must propagate scp up for next id
@@ -4390,7 +4394,7 @@ class_typeOneList<str_scp>:	// IEEE: class_type: "id [ parameter_value_assignmen
 
 class_typeOneListType<str_scp>:	// As with class_typeOneList but allow yaID__aTYPE
 		class_typeOneType					{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
-	|	class_typeOneListColonIdFollows class_typeOneType	{ $<fl>$=$<fl>1; $<scp>$=$<scp>2; $<str>$=$<str>1+$<str>2; }
+	|	class_typeOneListColonIdFollowsType class_typeOneType	{ $<fl>$=$<fl>1; $<scp>$=$<scp>2; $<str>$=$<str>1+$<str>2; }
 	;
 
 class_typeOne<str_scp>:		// IEEE: class_type: "id [ parameter_value_assignment ]"
