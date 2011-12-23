@@ -206,7 +206,7 @@ private:
     void parsingOff() { m_off++; }
 
     int getRawToken();
-    int getStateToken();
+    int getStateToken(string& buf);
     int getFinalToken(string& buf);
 
     void statePush(ProcState state) {
@@ -691,16 +691,22 @@ void VPreProcImp::debugToken(int tok, const char* cmtp) {
 // Sorry, we're not using bison/yacc. It doesn't handle returning white space
 // in the middle of parsing other tokens.
 
-int VPreProcImp::getStateToken() {
+int VPreProcImp::getStateToken(string& buf) {
     // Return the next state-determined token
     while (1) {
       next_tok:
-	if (isEof()) return VP_EOF;
+	if (isEof()) {
+	    buf = string (yyourtext(), yyourleng());
+	    return VP_EOF;
+	}
 	int tok = getRawToken();
 	ProcState state = m_states.top();
 
 	// Most states emit white space and comments between tokens. (Unless collecting a string)
-	if (tok==VP_WHITE && state !=ps_STRIFY) return (tok);
+	if (tok==VP_WHITE && state !=ps_STRIFY) {
+	    buf = string (yyourtext(), yyourleng());
+	    return (tok);
+	}
 	if (tok==VP_BACKQUOTE && state !=ps_STRIFY) { tok = VP_TEXT; }
 	if (tok==VP_COMMENT) {
 	    if (!m_off) {
@@ -711,6 +717,7 @@ int VPreProcImp::getStateToken() {
 		    // Need to insure "foo/**/bar" becomes two tokens
 		    insertUnreadback (" ");
 		} else if (m_lexp->m_keepComments) {
+		    buf = string (yyourtext(), yyourleng());
 		    return (tok);
 		} else {
 		    // Need to insure "foo/**/bar" becomes two tokens
@@ -819,7 +826,10 @@ int VPreProcImp::getStateToken() {
 	    }
 	    else if (tok==VP_TEXT) {
 		// IE, something like comment between define and symbol
-		if (!m_off) return tok;
+		if (!m_off) {
+		    buf = string (yyourtext(), yyourleng());
+		    return tok;
+		}
 		else goto next_tok;
 	    }
 	    else if (tok==VP_DEFREF) {
@@ -840,7 +850,10 @@ int VPreProcImp::getStateToken() {
 		goto next_tok;
 	    } else if (tok==VP_TEXT) {
 		// IE, something like comment in formals
-		if (!m_off) return tok;
+		if (!m_off) {
+		    buf = string (yyourtext(), yyourleng());
+		    return tok;
+		}
 		else goto next_tok;
 	    } else {
 		error((string)"Expecting define formal arguments. Found: "+tokenName(tok)+"\n");
@@ -886,7 +899,7 @@ int VPreProcImp::getStateToken() {
 	    statePop();
 	    // DEFVALUE is terminated by a return, but lex can't return both tokens.
 	    // Thus, we emit a return here.
-	    yyourtext(newlines.c_str(), newlines.length());
+	    buf = newlines;
 	    return(VP_WHITE);
 	}
 	case ps_DEFPAREN: {
@@ -1117,6 +1130,7 @@ int VPreProcImp::getStateToken() {
 		if (m_off) {
 		    goto next_tok;
 		} else {
+		    buf = string (yyourtext(), yyourleng());
 		    return (VP_TEXT);
 		}
 	    }
@@ -1161,6 +1175,7 @@ int VPreProcImp::getStateToken() {
 	    if (!m_ifdefStack.empty()) {
 		error("`ifdef not terminated at EOF\n");
 	    }
+	    buf = string (yyourtext(), yyourleng());
 	    return tok;
 	case VP_UNDEFINEALL:
 	    if (!m_off) {
@@ -1179,7 +1194,10 @@ int VPreProcImp::getStateToken() {
 	case VP_PSL:
 	case VP_TEXT: {
 	    m_defDepth = 0;
-	    if (!m_off) return tok;
+	    if (!m_off) {
+		buf = string (yyourtext(), yyourleng());
+		return tok;
+	    }
 	    else goto next_tok;
 	}
 	case VP_WHITE:		// Handled at top of loop
@@ -1190,6 +1208,7 @@ int VPreProcImp::getStateToken() {
 	    fatalSrc((string)"Internal error: Unexpected token "+tokenName(tok)+"\n");
 	    break;
 	}
+	buf = string (yyourtext(), yyourleng());
 	return tok;
     }
 }
@@ -1199,8 +1218,7 @@ int VPreProcImp::getFinalToken(string& buf) {
     // Includes and such are handled here, and are never seen by the caller.
     if (!m_finAhead) {
 	m_finAhead = true;
-	m_finToken = getStateToken();
-	m_finBuf = string (yyourtext(), yyourleng());
+	m_finToken = getStateToken(m_finBuf);
     }
     int tok = m_finToken;
     buf = m_finBuf;
