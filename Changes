@@ -3,6 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.31****
+
+***	Add vhier --forest and --instance.  [by John Busco]
+
+
 * Verilog::Language 3.313 2012/12/14
 
 ***	Add Verilog-AMS keywords to Verilog::Language.

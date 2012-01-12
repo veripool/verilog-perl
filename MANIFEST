@@ -122,6 +122,7 @@ t/80_vppreproc_none.out
 t/80_vppreproc_simple.out
 t/85_vhier.t
 t/85_vhier_cells.out
+t/85_vhier_forest.out
 t/85_vhier_inpfiles.out
 t/85_vhier_modfiles.out
 t/85_vhier_resolvefiles.out
