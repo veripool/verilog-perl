@@ -1,6 +1,6 @@
 // DESCRIPTION: Verilog-Perl: Example Verilog for testing package
 // This file ONLY is placed into the Public Domain, for any use,
-// without warranty, 2010-2011 by Wilson Snyder.
+// without warranty, 2010-2012 by Wilson Snyder.
 
 module 51_vrename_kwd;
    wire do = foo;

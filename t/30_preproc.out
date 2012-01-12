@@ -76,7 +76,7 @@ verilog/inc_nonl.v: // The lack of a newline on the next line is intentional
 verilog/inc_nonl.v: blah-no-newline-here>
 verilog/inc_ifdef.v: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc_ifdef.v: // This file ONLY is placed into the Public Domain, for any use,
-verilog/inc_ifdef.v: // without warranty, 2000-2011 by Wilson Snyder.
+verilog/inc_ifdef.v: // without warranty, 2000-2012 by Wilson Snyder.
 verilog/inc_ifdef.v: 
 verilog/inc_ifdef.v:  
 verilog/inc_ifdef.v:  
@@ -117,11 +117,11 @@ verilog/inc_ifdef.v:
 verilog/inc_ifdef.v: 
 verilog/inc2.v: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc2.v: // This file ONLY is placed into the Public Domain, for any use,
-verilog/inc2.v: // without warranty, 2000-2011 by Wilson Snyder.
+verilog/inc2.v: // without warranty, 2000-2012 by Wilson Snyder.
 verilog/inc2.v: At file "verilog/inc2.v"  line 4
 inc3_a_filename_from_line_directive:  // DESCRIPTION: Verilog::Preproc: Example source code
 inc3_a_filename_from_line_directive: // This file ONLY is placed into the Public Domain, for any use,
-inc3_a_filename_from_line_directive: // without warranty, 2000-2011 by Wilson Snyder.
+inc3_a_filename_from_line_directive: // without warranty, 2000-2012 by Wilson Snyder.
 inc3_a_filename_from_line_directive: 
 inc3_a_filename_from_line_directive:  
 inc3_a_filename_from_line_directive:   
@@ -140,7 +140,7 @@ verilog/inc2.v:
 verilog/inc2.v:   
 verilog/inc1.v: // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/inc1.v: // This file ONLY is placed into the Public Domain, for any use,
-verilog/inc1.v: // without warranty, 2000-2011 by Wilson Snyder.
+verilog/inc1.v: // without warranty, 2000-2012 by Wilson Snyder.
 verilog/inc1.v:    text.
 verilog/inc1.v: 
 verilog/inc1.v: //===========================================================================
@@ -329,7 +329,7 @@ verilog/inc1.v: // include of parameterized file
 verilog/inc1.v:  
 verilog/t_preproc_inc4.vh:  // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/t_preproc_inc4.vh: // This file ONLY is placed into the Public Domain, for any use,
-verilog/t_preproc_inc4.vh: // without warranty, 2000-2011 by Wilson Snyder.
+verilog/t_preproc_inc4.vh: // without warranty, 2000-2012 by Wilson Snyder.
 verilog/t_preproc_inc4.vh: 
 verilog/t_preproc_inc4.vh:  
 verilog/t_preproc_inc4.vh: 
@@ -574,7 +574,7 @@ verilog/inc1.v:
 verilog/inc1.v:  
 verilog/t_preproc_inc4.vh:  // DESCRIPTION: Verilog::Preproc: Example source code
 verilog/t_preproc_inc4.vh: // This file ONLY is placed into the Public Domain, for any use,
-verilog/t_preproc_inc4.vh: // without warranty, 2000-2011 by Wilson Snyder.
+verilog/t_preproc_inc4.vh: // without warranty, 2000-2012 by Wilson Snyder.
 verilog/t_preproc_inc4.vh: 
 verilog/t_preproc_inc4.vh:  
 verilog/t_preproc_inc4.vh: 
