@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add vhier --forest and --instance.  [by John Busco]
 
+****	Fix c style var array declarations. [by Jack Cummings]
+
 
 * Verilog::Language 3.313 2012/12/14
 

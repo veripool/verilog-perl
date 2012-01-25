@@ -1804,7 +1804,7 @@ netSigList:			// IEEE: list_of_port_identifiers
 netSig:				// IEEE: net_decl_assignment -  one element from list_of_port_identifiers
 		netId sigAttrListE			{ VARDONE($<fl>1, $1, "", ""); }
 	|	netId sigAttrListE '=' expr		{ VARDONE($<fl>1, $1, "", $4); }
-	|	netId rangeList sigAttrListE		{ VARDONE($<fl>1, $1, $2, ""); }
+	|	netId variable_dimension sigAttrListE		{ VARDONE($<fl>1, $1, $2, ""); }
 	;
 
 netId<str>:

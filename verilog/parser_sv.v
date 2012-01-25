@@ -10,7 +10,7 @@ endmodule : times
 
 interface itf #(parameter num_of_cli = 0);
    logic blabla;
-   logic [7:0] addr, data;
+   logic [7:0] addr, data[9];
    modport Master(input data, date_delayed, output addr);
 endinterface : itf
 
@@ -25,7 +25,7 @@ module test (
    import mypackage::*;
 
    logic 	d_int;
-   logic [7:0] 	data_;
+   logic [7:0] 	data_, bork[2];
    assign      d_int = d_in + pkg_data;
 
    assign  modported_int.data = data_;
