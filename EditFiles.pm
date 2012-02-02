@@ -73,9 +73,9 @@ sub _read_split_file {
 	if ($self->{translate_synthesis}) {
 	    my $define = $self->{translate_synthesis};
 	    $define = "SYNTHESIS" if $define eq "1";
-	    $line =~ s!^\s*//\s*(ambit|synopsys|synthesis)\s*translate_off\s*$!`ifndef ${define}\n!;
-	    $line =~ s!^\s*//\s*(ambit|synopsys|synthesis)\s*translate_on\s*$!`endif //${define}\n!;
-	    if ($line =~ m!(ambit|synopsys|synthesis)\s*translate!) {
+	    $line =~ s!^\s*//\s*(ambit|synopsys|snps|synthesis)\s*translate_off\s*$!`ifndef ${define}\n!;
+	    $line =~ s!^\s*//\s*(ambit|synopsys|snps|synthesis)\s*translate_on\s*$!`endif //${define}\n!;
+	    if ($line =~ m!(ambit|synopsys|snps|synthesis)\s*translate!) {
 		die "%Error: Unhandled translate comment: $line\n";
 	    }
 	}

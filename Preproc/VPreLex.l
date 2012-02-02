@@ -97,8 +97,9 @@ drop		[\032]
 ambit		[Aa][Mm][Bb][Ii][Tt]
 pragma		[Pp][Rr][Aa][Gg][Mm][Aa]
 synopsys	[Ss][Yy][Nn][Oo][Pp][Ss][Yy][Ss]
+snps		[Ss][Nn][Pp][Ss]
 synthesis	[Ss][Yy][Nn][Tt][Hh][Ee][Ss][Ii][Ss]
-pragma_tools	({ambit}|{pragma}|{synopsys}|{synthesis})
+pragma_tools	({ambit}|{pragma}|{synopsys}|{snps}|{synthesis})
 translate_off	[Tt][Rr][Aa][Nn][Ss][Ll][Aa][Tt][Ee]_[Oo][Ff][Ff]
 translate_on	[Tt][Rr][Aa][Nn][Ss][Ll][Aa][Tt][Ee]_[Oo][Nn]
 prag_trans_off	({ws}*{pragma_tools}{ws}+{translate_off}{ws}*)
