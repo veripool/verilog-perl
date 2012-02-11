@@ -478,10 +478,10 @@ With --nomissing, show all modules that are not found.
 
 =item --synthesis
 
-Define SYNTHESIS, and ignore text bewteen "ambit", "pragma", "synopsys",
-"snps" or "synthesis" translate_off and translate_on meta comments.  Note
-using metacomments is discouraged as they have led to silicon bugs (versus
-ifdef SYNTHESIS); see
+Define SYNTHESIS, and ignore text bewteen "ambit", "pragma", "synopsys" or
+"synthesis" translate_off and translate_on meta comments.  Note using
+metacomments is discouraged as they have led to silicon bugs (versus ifdef
+SYNTHESIS); see
 L<http://www.veripool.org/papers/TenIPEdits_SNUGBos07_paper.pdf>.
 
 =item --top-module I<module>

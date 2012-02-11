@@ -515,8 +515,8 @@ The name of the preprocessor class. Defaults to "Verilog::Preproc".
 =item synthesis => $true_or_false
 
 With synthesis set, define SYNTHESIS, and ignore text bewteen "ambit",
-"pragma", "synopsys", "snps" or "synthesis" translate_off and translate_on
-meta comments.  Note using metacomments is discouraged as they have led to
+"pragma", "synopsys" or "synthesis" translate_off and translate_on meta
+comments.  Note using metacomments is discouraged as they have led to
 silicon bugs (versus ifdef SYNTHESIS); see
 L<http://www.veripool.org/papers/TenIPEdits_SNUGBos07_paper.pdf>.
 
