@@ -348,7 +348,7 @@ Creates XS code for accepting the callback.
 
 Displays this message and program version and exits.
 
-==item --debug
+=item --debug
 
 Enable debug.
 
