@@ -98,9 +98,12 @@ $Prog_Mtime = (stat("$RealBin/vpassert"))[9];
 
 autoflush STDOUT 1;
 
+Getopt::Long::config ("no_auto_abbrev","pass_through");
+GetOptions ("debug" => \&debug);  # Snarf --debug ASAP, before parse -f files
+
 $Opt = new Verilog::Getopt();
 @ARGV = $Opt->parameter(@ARGV);	# Strip -y, +incdir+, etc
-
+Getopt::Long::config ("no_auto_abbrev","no_pass_through");
 if (! GetOptions (
 		  # When add flags, update _switch_line also as appropriate
 		  "-o=s"	=> \$output_dirname,

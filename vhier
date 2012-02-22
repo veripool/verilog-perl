@@ -43,8 +43,12 @@ my $Opt_Synthesis;
 my $Opt_Instance;
 my $Opt_Forest;
 my $Opt_Xml;
+
+Getopt::Long::config ("no_auto_abbrev","pass_through");
+GetOptions ("debug" => \&debug);  # Snarf --debug ASAP, before parse -f files
+
 @ARGV = $Opt->parameter(@ARGV);
-Getopt::Long::config ("no_auto_abbrev");
+Getopt::Long::config ("no_auto_abbrev","no_pass_through");
 if (! GetOptions (
 		  "help"	=> \&usage,
 		  "debug"	=> \&debug,

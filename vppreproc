@@ -32,9 +32,12 @@ autoflush STDOUT 1;
 autoflush STDERR 1;
 
 # Option parsing
+Getopt::Long::config ("no_auto_abbrev","pass_through");
+GetOptions ("debug" => \&debug);  # Snarf --debug ASAP, before parse -f files
+
 my $Opt = new Verilog::Getopt();
 @ARGV = $Opt->parameter(@ARGV);
-Getopt::Long::config ("no_auto_abbrev");
+Getopt::Long::config ("no_auto_abbrev","no_pass_through");
 if (! GetOptions (
 		  "help"	=> \&usage,
 		  "debug"	=> \&debug,
@@ -101,6 +104,7 @@ sub usage {
 
 sub debug {
     $Debug = 1;
+    #$Verilog::Getopt::Debug = 1;
 }
 
 sub parameter {
