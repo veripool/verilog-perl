@@ -157,7 +157,7 @@ each pin connection on a cell.
 A Verilog::Netlist::Port object is created by Verilog::Netlist::Module for
 every port connection in the module.
 
-=item L<Verilog::Netlist::Subclas|Verilog::Netlist::Subclass>
+=item L<Verilog::Netlist::Subclass|Verilog::Netlist::Subclass>
 
 The Verilog::Netlist::Subclass is used as a base class for all
 Verilog::Netlist::* structures.
