@@ -235,7 +235,7 @@ verilog/inc1.v:61:
 verilog/inc1.v:62: firstline comma","line LLZZ firstline comma","line
 verilog/inc1.v:63: 
 verilog/inc1.v:64:  
-verilog/inc1.v:65: x y LLZZ "a" y
+verilog/inc1.v:65: x y LLZZ "x" y  // Simulators disagree here; some substitute "a" others do not
 verilog/inc1.v:66: 
 verilog/inc1.v:67:  
 verilog/inc1.v:68: (a,b)(a,b)
@@ -457,7 +457,7 @@ verilog/inc1.v:247:
 verilog/inc1.v:248: //======================================================================
 verilog/inc1.v:249: // bug191
 verilog/inc1.v:250:  
-verilog/inc1.v:251: $display("bits %d %d", $bits(foo), `10);
+verilog/inc1.v:251: $display("10 %d %d", $bits(foo), 10);
 verilog/inc1.v:252: 
 verilog/inc1.v:253: //======================================================================
 verilog/inc1.v:254: // 1800-2009
@@ -723,5 +723,87 @@ verilog/inc1.v:450: // synopsys translate_off
 verilog/inc1.v:452: // synthesis translate_on
 verilog/inc1.v:453: 
 verilog/inc1.v:453: EXP: on
-verilog/inc1.v:454: 
-verilog/inc1.v:455: `line 455 "verilog/inc1.v" 2
+verilog/inc1.v:454: //======================================================================
+verilog/inc1.v:455: // bug441
+verilog/inc1.v:456: module t;
+verilog/inc1.v:457:    //-----
+verilog/inc1.v:458:    // case provided
+verilog/inc1.v:459:    // note this does NOT escape as suggested in the mail
+verilog/inc1.v:460:  
+verilog/inc1.v:461:  
+verilog/inc1.v:461: 
+verilog/inc1.v:463:    initial begin : \`LEX_CAT(a[0],_assignment)  
+verilog/inc1.v:463: `line 463 "verilog/inc1.v" 0
+verilog/inc1.v:463:    $write("GOT%%m='%m' EXP='%s'\n", "t.\\`LEX_CAT(a[0],_assignment) ");   end
+verilog/inc1.v:464:    //-----
+verilog/inc1.v:465:    // SHOULD(simulator-dependant): Backslash doesn't prevent arguments from
+verilog/inc1.v:466:    // substituting and the \ staying in the expansion
+verilog/inc1.v:467:    // Note space after name is important so when substitute it has ending whitespace
+verilog/inc1.v:468:  
+verilog/inc1.v:468: 
+verilog/inc1.v:470:    initial begin : \a[0]_assignment_a[1] 
+verilog/inc1.v:470: `line 470 "verilog/inc1.v" 0
+verilog/inc1.v:470:    $write("GOT%%m='%m' EXP='%s'\n", "t.\\a[0]_assignment_a[1] ");   end
+verilog/inc1.v:471:  
+verilog/inc1.v:472:    //-----
+verilog/inc1.v:473:  
+verilog/inc1.v:474:  
+verilog/inc1.v:475:    // RULE: Ignoring backslash does NOT allow an additional expansion level
+verilog/inc1.v:476:    // (Because ESC gets expanded then the \ has it's normal escape meaning)
+verilog/inc1.v:477:    initial begin : \`CAT(pp,suffix)   $write("GOT%%m='%m' EXP='%s'\n", "t.\\`CAT(pp,suffix) ");   end
+verilog/inc1.v:478:    
+verilog/inc1.v:479:    //-----
+verilog/inc1.v:480:  
+verilog/inc1.v:481:  
+verilog/inc1.v:481: 
+verilog/inc1.v:483:    // Similar to above; \ does not allow expansion after substitution
+verilog/inc1.v:484:    initial begin : \`CAT(ff,bb) 
+verilog/inc1.v:484: `line 484 "verilog/inc1.v" 0
+verilog/inc1.v:484:    $write("GOT%%m='%m' EXP='%s'\n", "t.\\`CAT(ff,bb) ");   end
+verilog/inc1.v:485:    
+verilog/inc1.v:486:    //-----
+verilog/inc1.v:487:  
+verilog/inc1.v:487: 
+verilog/inc1.v:489:    // MUST: Unknown macro with backslash escape stays as escaped symbol name
+verilog/inc1.v:490:    initial begin : \`zzz 
+verilog/inc1.v:490: `line 490 "verilog/inc1.v" 0
+verilog/inc1.v:490:    $write("GOT%%m='%m' EXP='%s'\n", "t.\\`zzz ");   end
+verilog/inc1.v:491:  
+verilog/inc1.v:492:    //-----
+verilog/inc1.v:493:  
+verilog/inc1.v:494:  
+verilog/inc1.v:494: 
+verilog/inc1.v:496:    // SHOULD(simulator-dependant): Known macro with backslash escape expands
+verilog/inc1.v:497:    initial begin : \`FOO 
+verilog/inc1.v:497: `line 497 "verilog/inc1.v" 0
+verilog/inc1.v:497:     $write("GOT%%m='%m' OTHER_EXP='%s'\n OUR_EXP='%s'", "t.bar ","t.\\`FOO ");  end
+verilog/inc1.v:498:    // SHOULD(simulator-dependant): Prefix breaks the above
+verilog/inc1.v:499:    initial begin : \xx`FOO 
+verilog/inc1.v:499: `line 499 "verilog/inc1.v" 0
+verilog/inc1.v:499:    $write("GOT%%m='%m' EXP='%s'\n", "t.\\xx`FOO ");  end
+verilog/inc1.v:500:    
+verilog/inc1.v:501:    //-----
+verilog/inc1.v:502:    // MUST: Unknown macro not under call with backslash escape doesn't expand
+verilog/inc1.v:503:  
+verilog/inc1.v:504:    initial begin : \`UNKNOWN   $write("GOT%%m='%m' EXP='%s'\n", "t.\\`UNKNOWN ");   end
+verilog/inc1.v:505:    //-----
+verilog/inc1.v:506:    // MUST: Unknown macro not under call doesn't expand
+verilog/inc1.v:507:  
+verilog/inc1.v:508:    initial begin : \`DEF_NO_EXPAND   $write("GOT%%m='%m' EXP='%s'\n", "t.\\`DEF_NO_EXPAND ");   end
+verilog/inc1.v:509:  
+verilog/inc1.v:510:    //-----
+verilog/inc1.v:511:    // bug441 derivative
+verilog/inc1.v:512:    // SHOULD(simulator-dependant): Quotes doesn't prevent arguments from expanding (like backslashes above)
+verilog/inc1.v:513:  
+verilog/inc1.v:514:    initial $write("GOT='%s' EXP='%s'\n", "foo bar baz", "foo bar baz");
+verilog/inc1.v:515:  
+verilog/inc1.v:516:    //-----
+verilog/inc1.v:517:    // RULE: Because there are quotes after substituting STR, the `A does NOT expand
+verilog/inc1.v:518:  
+verilog/inc1.v:519:  
+verilog/inc1.v:520:    initial $write("GOT='%s' EXP='%s'\n", "foo `A(bar) baz", "foo `A(bar) baz");
+verilog/inc1.v:521:     
+verilog/inc1.v:522: endmodule
+verilog/inc1.v:523: //======================================================================
+verilog/inc1.v:524: 
+verilog/inc1.v:525: `line 525 "verilog/inc1.v" 2

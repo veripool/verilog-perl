@@ -87,7 +87,7 @@ verilog/inc1.v:54: "`nosubst"
 verilog/inc1.v:57: x y LLZZ x y
 verilog/inc1.v:58: p q LLZZ p q r s LLZZ r s LLZZ p q LLZZ p q r s LLZZ r s
 verilog/inc1.v:62: firstline comma","line LLZZ firstline comma","line
-verilog/inc1.v:65: x y LLZZ "a" y
+verilog/inc1.v:65: x y LLZZ "x" y  
 verilog/inc1.v:68: (a,b)(a,b)
 verilog/inc1.v:71: $display("left side: \"right side\"")
 verilog/inc1.v:74: bar_suffix more
@@ -168,7 +168,7 @@ verilog/inc1.v:230: "beginend"
 verilog/inc1.v:236:  `\esc`def
 verilog/inc1.v:238: Not a \`define
 verilog/inc1.v:246: x,y)--bee submacro has comma paren
-verilog/inc1.v:251: $display("bits %d %d", $bits(foo), `10);
+verilog/inc1.v:251: $display("10 %d %d", $bits(foo), 10);
 verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
 verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
 verilog/inc1.v:275: `line 275 "verilog/inc1.v" 0
@@ -252,4 +252,29 @@ verilog/inc1.v:447: integer foo;
 verilog/inc1.v:449: synth_test:
 verilog/inc1.v:450: `line 450 "verilog/inc1.v" 0
 verilog/inc1.v:453: EXP: on
-verilog/inc1.v:455: `line 455 "verilog/inc1.v" 2
+verilog/inc1.v:456: module t;
+verilog/inc1.v:463:  initial begin : \`LEX_CAT(a[0],_assignment) 
+verilog/inc1.v:463: `line 463 "verilog/inc1.v" 0
+verilog/inc1.v:463:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\`LEX_CAT(a[0],_assignment) "); end
+verilog/inc1.v:470:  initial begin : \a[0]_assignment_a[1] 
+verilog/inc1.v:470: `line 470 "verilog/inc1.v" 0
+verilog/inc1.v:470:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\a[0]_assignment_a[1] "); end
+verilog/inc1.v:477:  initial begin : \`CAT(pp,suffix) $write("GOT%%m='%m' EXP='%s'\n", "t.\\`CAT(pp,suffix) "); end
+verilog/inc1.v:484:  initial begin : \`CAT(ff,bb) 
+verilog/inc1.v:484: `line 484 "verilog/inc1.v" 0
+verilog/inc1.v:484:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\`CAT(ff,bb) "); end
+verilog/inc1.v:490:  initial begin : \`zzz 
+verilog/inc1.v:490: `line 490 "verilog/inc1.v" 0
+verilog/inc1.v:490:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\`zzz "); end
+verilog/inc1.v:497:  initial begin : \`FOO 
+verilog/inc1.v:497: `line 497 "verilog/inc1.v" 0
+verilog/inc1.v:497:  $write("GOT%%m='%m' OTHER_EXP='%s'\n OUR_EXP='%s'", "t.bar ","t.\\`FOO "); end
+verilog/inc1.v:499:  initial begin : \xx`FOO 
+verilog/inc1.v:499: `line 499 "verilog/inc1.v" 0
+verilog/inc1.v:499:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\xx`FOO "); end
+verilog/inc1.v:504:  initial begin : \`UNKNOWN $write("GOT%%m='%m' EXP='%s'\n", "t.\\`UNKNOWN "); end
+verilog/inc1.v:508:  initial begin : \`DEF_NO_EXPAND $write("GOT%%m='%m' EXP='%s'\n", "t.\\`DEF_NO_EXPAND "); end
+verilog/inc1.v:514:  initial $write("GOT='%s' EXP='%s'\n", "foo bar baz", "foo bar baz");
+verilog/inc1.v:520:  initial $write("GOT='%s' EXP='%s'\n", "foo `A(bar) baz", "foo `A(bar) baz");
+verilog/inc1.v:522: endmodule
+verilog/inc1.v:525: `line 525 "verilog/inc1.v" 2

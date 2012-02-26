@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Add vhier --forest and --instance.  [by John Busco]
 
+***	Fix expansion of back-slashed escaped macros, bug441.  [Alberto Del Rio]
+
 ****	Fix c style var array declarations. [by Jack Cummings]
 
 ****	Fix --debug parsing after -f files, bug442. [Jeremy Bennett]
