@@ -30,7 +30,7 @@ autoflush STDOUT 1;
 autoflush STDERR 1;
 
 # Option parsing
-my $Opt = new Verilog::Getopt();
+my $Opt = new Verilog::Getopt(filename_expansion=>1);
 my $Opt_Cells;
 my $Opt_Modules;
 my $Opt_ModFiles;
@@ -302,7 +302,7 @@ sub show_hier {
     my $submodname = shift;
     # print the design hierarchy starting at mod (recursive)
 
-    print "%-38s %s\n", $indent."Module ".$mod->name,$hier if $Debug;
+    printf "%-38s %s\n", $indent."Module ".$mod->name,$hier if $Debug;
     my $instance = $parcell ? $parcell->name : $mod->name;
 
     # print the mod instance
@@ -385,9 +385,7 @@ Defines the given preprocessor symbol.
 
 Read the specified file, and act as if all text inside it was specified as
 command line parameters.  Any relative paths are relative to the directory
-containing the specified file.  Unlike some tools, -y, +incdir, and -v are
-treated as relative, but standalone filenames in the specified file
-("foo.v") are not.  Use use "-y ." to work around this.
+containing the specified file.
 
 =item -f I<file>
 

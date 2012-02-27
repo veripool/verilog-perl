@@ -119,6 +119,7 @@ t/80_vppreproc.t
 t/80_vppreproc_cmped.out
 t/80_vppreproc_defines.out
 t/80_vppreproc_none.out
+t/80_vppreproc_rel_file.out
 t/80_vppreproc_simple.out
 t/85_vhier.t
 t/85_vhier_cells.out
@@ -142,6 +143,10 @@ verilog/parser_sv.v
 verilog/parser_sv09.v
 verilog/pinorder.v
 verilog/pli.v
+verilog/t_80_bar/bar.f
+verilog/t_80_bar/bar.v
+verilog/t_80_foo.f
+verilog/t_80_foo.v
 verilog/t_86_vhier_tick.v
 verilog/t_86_vhier_tick_sub.v
 verilog/t_preproc_inc3.vh

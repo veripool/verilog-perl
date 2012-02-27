@@ -32,6 +32,14 @@ sub run_system {
     ($status == 0) or die "%Error: Command Failed $command, $status, stopped";
 }
 
+sub run_system_no_die {
+    # Run a system command, check errors
+    my $command = shift;
+    print "\t$command\n";
+    system "$command";
+    return $?;
+}
+
 sub wholefile {
     my $file = shift;
     my $fh = IO::File->new ($file) or die "%Error: $! $file";

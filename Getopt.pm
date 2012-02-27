@@ -45,6 +45,7 @@ sub new {
 		library => [ ],
 		gcc_style => 1,
 		vcs_style => 1,
+		filename_expansion => 0,
 		fileline => 'Command_Line',
 		unparsed => [],
 		define_warnings => 1,
@@ -103,7 +104,8 @@ sub _parameter_parse {
     my $self = shift;
     my $optdir = shift;
     # Internal: Parse list of VCS like parameters, and perform standard setup based on it
-    foreach my $param (@_) {
+    foreach my $oparam (@_) {
+	my $param = "$oparam"; # Must quote to convert Getopt to string, bug298
 	next if ($param =~ /^\s*$/);
 	print " parameter($param)\n" if $Debug;
 
@@ -168,8 +170,22 @@ sub _parameter_parse {
 	    }
 	}
 
-	else { # Unknown
-	    push @{$self->{unparsed}}, "$param"; # Must quote to convert Getopt to string, bug298
+	else { # Unknown.
+	    if ($self->{filename_expansion}
+		&& $param !~ /^-.*$/ # Presume not a file
+		&& $optdir ne '.') {
+		# If it is a filename, we should ensure it is
+		# relative to $optdir. We assume anything without a leading '-'
+		# is a file, bug 444.
+		my $fn = $self->_parse_file_arg($optdir,$param);
+		if (-e $fn) {
+		    push @{$self->{unparsed}}, "$fn";
+		} else {
+		    push @{$self->{unparsed}}, "$param";
+		}
+	    } else {
+		push @{$self->{unparsed}}, "$param";
+	    }
 	}
     }
 }
@@ -594,13 +610,37 @@ Verilog::Getopt - Get Verilog command line options
 Verilog::Getopt provides standardized handling of options similar to
 Verilog/VCS and cc/GCC.
 
+=head1 OPTIONS
+
+The new() constructor accepts the following options:
+
+=over 4
+
+=item filename_expansion=>1
+
+Enable converting filenames to relative filenames when possible.  This
+option is needed when the -F option will be used.  If flags are passed
+through Getopt which should otherwise not be expanded (e.g. "--out
+myfile.v") having this option set may undesirably expand myfile.v to an
+absolute filename.
+
+=item gcc_style=>0
+
+Disable parsing of GCC-like parameters.
+
+=item vcs_style=>0
+
+Disable parsing of VCS-like parameters.
+
+=back
+
+=head1 METHODS
+
 =over 4
 
 =item $opt = Verilog::Getopt->new ( I<opts> )
 
-Create a new Getopt.  If gcc_style=>0 is passed as a parameter, parsing of
-GCC-like parameters is disabled.  If vcs_style=>0 is passed as a parameter,
-parsing of VCS-like parameters is disabled.
+Create a new Getopt.  See OPTIONS above.
 
 =item $self->file_path ( I<filename>, [I<lookup_type>] )
 
