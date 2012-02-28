@@ -17,7 +17,7 @@ package MyPreproc;
 use Verilog::Preproc;
 use base qw(Verilog::Preproc);
 
-sub comment { print $::OUTTO "COMMENT: $_[1]\n";
+sub comment { print $::OUTTO $_[0]->filename,":",$_[0]->lineno,": COMMENT: $_[1]\n";
 	      $_[0]->unreadback(' /*CMT*/ '); }
 
 sub def_substitute {
