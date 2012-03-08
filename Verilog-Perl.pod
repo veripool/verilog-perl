@@ -198,39 +198,47 @@ Appendix A).
 
 =item Verilog::Preproc
 
-Verilog::Preproc is useful when you need only text out, or a list of
-defines, etc.  It can preprocess a file, or be used to provide the Verilog
-macro language on top of synthesis scripts.  It understands the full
-SystemVerilog 2009 preprocessor syntax.
+Verilog::Preproc is useful when you need only post-preprocessed text
+output, or a list of defines, includes, etc.  It can preprocess a file, or
+be used to provide the Verilog macro language on top of synthesis scripts.
+It understands and implements all preprocessor features of SystemVerilog
+2009.
 
 =item Verilog::Parser
 
 Verilog::Parser is useful when you need to tokenize or write source filters
 (where you need everything including whitespace).  It can take raw files,
-or preprocessed input.  It understands all SystemVerilog 2005 keywords.
+or preprocessed input, and generates callbacks.  It understands all
+SystemVerilog 2005 keywords.
 
 =item Abstract Syntax Tree
 
 Verilog::Parser knows enough to make a complete Abstract Syntax Tree (AST)
-of Verilog syntax, however this hasn't been implemented yet.  This would
-allow any arbitrary transformation of Verilog syntax (everthing is known
-excluding whitespace).  If you'd find this useful please contact the
-author.
+of Verilog syntax. This represents all major constructs such as a "module"
+as a data structure, but does not interconnect the AST nodes as would be
+needed to follow signals.  Not all keywords have been implemented; many are
+parsed but otherwise ignored.  A complete Ast tree would allow any
+arbitrary transformation of Verilog syntax (everything is known excluding
+whitespace).  If you'd find this useful please contact the author.
 
 =item Verilog::SigParser
 
 Verilog::SigParser is useful when you need a list of modules, signals,
-ports, functions, etc.  It requires a preprocessed file, and can parse all
-SystemVerilog 2005 files, but only provides callbacks on certain
-interesting things.
+ports, functions, etc.  It requires a preprocessed file (from
+Verilog::Preproc), and can parse all SystemVerilog 2005 files, but only
+provides callbacks on certain interesting things.  The SigParser operates
+only on a file at a time; it does not interconnect signals nor perform any
+elaboration (resolution of parameters).
 
 =item Verilog::Netlist
 
 Verilog::Netlist is useful for when you need the hierarchy, and a list of
 signals per module, pins per cell, etc.  It builds upon the output of
-Verilog::SigParser, so requires preprocessed files.  It parses all
-SystemVerilog 2005 files, but not all SystemVerilog constructs are loaded
-into objects.
+Verilog::SigParser, so requires preprocessed files (from Verilog::Preproc).
+It parses all SystemVerilog 2005 files, but not all SystemVerilog
+constructs are loaded into objects. Verilog::Netlist interconnects modules
+with instantiations but does not perform any elaboration (resolution of
+parameters).
 
 This is probably the most popular choice.
 
@@ -240,15 +248,18 @@ Using the VPI is the best way to access the behavior of the design.  It is
 not part of this package as it requires a compliant simulator and C++ code
 to call the VPI, and understands as much of the language as the simulator
 supports.  This allows writing lint checks and full knowledge of all parts
-of the code, but generally requires the most work (short of writing a
-parser from scratch.)
+of the code.  The VPI can operate ONLY on an elaborated design (where all
+parameters are resolved).  Walking a VPI tree general requires a good deal
+of work compared to simple scripting (though little work compared to
+writing a parser from scratch).
 
 =item Verilator
 
 The Verilator program also contains a very similar front end as
 Verilog-Perl.  It also understands how to elaborate and connect complex
-pins and types.  If you're looking to add some lint like checks against
-netlists, this may be a better starting point.
+pins and types, but supports mostly the synthesis subset.  If you're
+looking to add some lint like checks against netlists, this may be a better
+starting point.
 
 =item Verilog-Mode for Emacs
 
@@ -280,6 +291,15 @@ Verilog::Language::language_standard call to specify "1364-2001", or for
 really old code, "1364-1995".
 
 But, again, you really should fix the Verilog code.
+
+=item With Verilog::Netlist how do I resolve signal widths that include
+parameters down to constants?
+
+Unfortunately parameter resolution is part of elaboration.  Verilog-Perl
+doesn't do elaboration as it requires a good fraction of a complete
+simulator implementation.  Many applications can work around this
+limitation, if yours still requires elaboration you're stuck with using
+Verilator or the VPI, see the sections above.
 
 =back
 
