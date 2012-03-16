@@ -190,7 +190,7 @@ sub usage {
 	print "\tToken $tok\n";
     }
     print "\n";
-    pod2usage(-verbose=>2, -exitval=>2, -output=>\*STDOUT);
+    pod2usage(-verbose=>2, -exitval=>2, -output=>\*STDOUT, -noperldoc=>1);
     exit (1);
 }
 

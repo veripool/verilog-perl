@@ -13,7 +13,6 @@ BEGIN { plan tests => 4 }
 BEGIN { require "t/test_utils.pl"; }
 
 our %_TestCoverage;
-our %_TestCallbacks;
 
 ######################################################################
 
@@ -25,9 +24,7 @@ use base qw(Verilog::SigParser);
 BEGIN {
     # Make functions like this:
     #  sub attribute {	$_[0]->_common('module', @_); }
-    foreach my $cb (Verilog::SigParser::callback_names(),
-		    'comment') {
-	$_TestCallbacks{$cb} = 1;
+    foreach my $cb (Verilog::SigParser::callback_names()) {
 	my $func = ' sub __CB__ { $_[0]->_common("__CB__", @_); } ';
 	$func =~ s/__CB__/$cb/g;
 	eval($func);
@@ -82,7 +79,7 @@ ok(files_identical("test_dir/35.dmp", "t/35_sigparser.out"), "diff");
 
 # Did we cover everything?
 my $err;
-foreach my $cb (sort keys %_TestCallbacks) {
+foreach my $cb (Verilog::SigParser::callback_names()) {
     if (!$_TestCoverage{$cb}) {
 	$err=1;
 	warn "%Warning: No test coverage for callback: $cb\n";
