@@ -446,6 +446,10 @@ module bug403_bug404;
 	     ) begin end
 endmodule
 
+/* multi
+ line
+ msg738*/
+
 module bug422;
    generate
    endgenerate
