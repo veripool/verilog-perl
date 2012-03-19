@@ -571,7 +571,7 @@ word	[a-zA-Z0-9_]+
   /* Multi-line COMMENTS */
 <CMTMODE>"*"+[^*/\n]* 	{ yymore(); }
 <CMTMODE>\n		{ yymore(); NEXTLINE(); }
-<CMTMODE>"*"+"/"	{ FL; VALTEXT; CALLBACK(commentCb); yy_pop_state(); }
+<CMTMODE>"*"+"/"	{ VALTEXT; CALLBACK(commentCb); yy_pop_state(); } // No FL; it's at comment begin
 <CMTMODE>{word}		{ yymore(); }
 <CMTMODE>. 		{ yymore(); }
 <CMTMODE><<EOF>>	{ yyerrorf("EOF in '/* ... */' block comment");
@@ -656,7 +656,7 @@ word	[a-zA-Z0-9_]+
 			  if (LPARSEP->sigParser()) { yyerrorf("Define or directive not defined: %s",yytext); }
 			  else { CALLBACK(preprocCb); } }
   "//"[^\n]*		{ FL; VALTEXT; CALLBACK(commentCb); }  /* throw away single line comments */
-  "/*"		       	{ yy_push_state(CMTMODE); yymore(); }
+  "/*"		       	{ FL; yy_push_state(CMTMODE); yymore(); }  // FL; marks start for COMMENT callback
   .			{ FL; VALTEXT; CALLBACK(operatorCb); return ygenOPERATOR; } /* return single char ops. */
 }
 

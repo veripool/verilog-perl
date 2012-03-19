@@ -5,7 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.31*** devel
 
-***	Fix cpan-testers' tests on systems without perldoc.
+****	Fix comment callback starting line, bug459. [Max Bjurling]
+
+****	Fix cpan-testers' tests on systems without perldoc.
 
 
 * Verilog::Language 3.314 2012/02/27
