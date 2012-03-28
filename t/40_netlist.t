@@ -8,7 +8,7 @@
 use strict;
 use Test::More;
 
-BEGIN { plan tests => 25 }
+BEGIN { plan tests => 19 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::Netlist::Debug = 1;
@@ -46,13 +46,14 @@ is($nl->find_module("v_hier_sub")->level, 2);
 is($nl->find_module("v_hier_subsub")->level, 1);
 
 my @mods = map {$_->name} $nl->modules_sorted_level;
-is ($mods[0], 'v_hier_noport');
-is ($mods[1], 'v_hier_subsub');
-is ($mods[2], 'v_sv_pgm');
-is ($mods[3], 'v_hier_sub');
-is ($mods[4], 'v_hier_top2');
-is ($mods[5], 'v_hier_top');
-is ($mods[6], 'v_sv_mod');
+is_deeply (\@mods, ['$root',
+		    'v_hier_noport',
+		    'v_hier_subsub',
+		    'v_sv_pgm',
+		    'v_hier_sub',
+		    'v_hier_top2',
+		    'v_hier_top',
+		    'v_sv_mod']);
 
 # Width checks
 {

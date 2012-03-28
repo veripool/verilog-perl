@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.31*** devel
 
+***	Put root localparams into $root module, bug471. [Corey Teffetalor]
+
 ****	Fix comment callback starting line, bug459. [Max Bjurling]
 
 ****	Fix genvar and begin under generate, bug461.  [Alex Solomatnikov]

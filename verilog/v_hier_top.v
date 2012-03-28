@@ -37,6 +37,8 @@ module v_hier_top (/*AUTOARG*/
 
 endmodule
 
+localparam  GLOBAL_PARAM = 1;
+
 // Local Variables:
 // eval:(verilog-read-defines)
 // End:

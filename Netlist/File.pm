@@ -249,7 +249,7 @@ sub var {
     my $value = shift;
     print " Sig $name dt=$decl_type nt=$net_type d=$data_type\n" if $Verilog::Netlist::Debug;
 
-    return if !($objof eq 'module' || $objof eq 'interface' || $objof eq 'modport');
+    return if !($objof eq 'module' || $objof eq 'interface' || $objof eq 'modport' || $objof eq 'netlist');
 
     my $msb;
     my $lsb;
@@ -260,6 +260,10 @@ sub var {
     }
 
     my $underref = $self->{_modportref} || $self->{modref};
+    if ($objof eq 'netlist') {
+	$underref = $self->{netlist}->new_root_module
+	    (filename=>$self->filename, lineno=>$self->lineno);
+    }
     if (!$underref) {
 	return $self->error ("Signal declaration outside of module definition", $name);
     }

@@ -139,6 +139,15 @@ sub new_module {
     return $modref;
 }
 
+sub new_root_module {
+    my $self = shift;
+    $self->{_modules}{'$root'} ||=
+	$self->new_module(keyword=>'root_module',
+			  name=>'$root',
+			  @_);
+    return $self->{_modules}{'$root'};
+}
+
 sub defvalue_nowarn {
     my $self = shift;
     my $sym = shift;
@@ -580,6 +589,11 @@ be first, the top most module will be last.
 =item $netlist->new_module
 
 Creates a new Verilog::Netlist::Module.
+
+=item $netlist->new_root_module
+
+Creates a new Verilog::Netlist::Module for $root, if one doesn't already
+exist.
 
 =item $netlist->top_modules_sorted
 

@@ -1,3 +1,5 @@
+Module:$root  Kwd:root_module  File:verilog/v_hier_top.v
+  Net:GLOBAL_PARAM    DeclT:localparam  NetT:  DataT:  Array:  Value:1
 Module:v_comments  Kwd:module  File:verilog/v_comments.v
   Port:a  Dir:in  DataT:  Array:
   Port:b  Dir:inout  DataT:[10:0]  Array:
