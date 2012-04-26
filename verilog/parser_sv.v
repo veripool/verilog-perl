@@ -370,3 +370,5 @@ virtual class ovm_void;
 endclass
 virtual class ovm_port_base #(type IF=ovm_void) extends ovm_void;
 endclass
+virtual class ovm_port_base2 #(type BASE=ovm_void) extends BASE;
+endclass
