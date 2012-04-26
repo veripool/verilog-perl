@@ -370,5 +370,6 @@ virtual class ovm_void;
 endclass
 virtual class ovm_port_base #(type IF=ovm_void) extends ovm_void;
 endclass
-virtual class ovm_port_base2 #(type BASE=ovm_void) extends BASE;
+virtual class uvm_build_phase #(type BASE=ovm_void) extends BASE;
+   static const string type_name = "uvm_build_phase";
 endclass

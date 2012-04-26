@@ -11,6 +11,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix genvar and begin under generate, bug461.  [Alex Solomatnikov]
 
+****	Fix const class member parsing.
+
 ****	Fix cpan-testers' tests on systems without perldoc.
 
 

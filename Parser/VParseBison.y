@@ -1423,7 +1423,6 @@ data_declaration:		// ==IEEE: data_declaration
 
 class_property:			// ==IEEE: class_property, which is {property_qualifier} data_declaration
 		memberQualResetListE data_declarationVarClass		{ }
-	|	yCONST__ETC memberQualResetListE data_declarationVarClass	{ }
 	|	memberQualResetListE type_declaration			{ }
 	|	memberQualResetListE package_import_declaration	{ }
 	//			// IEEE: virtual_interface_declaration
@@ -4503,6 +4502,8 @@ memberQualOne<str>:			// IEEE: property_qualifier + method_qualifier
 	|	random_qualifier			{ $<fl>$=$<fl>1; $$=$1; }
 	//			// Part of lifetime, but here as ySTATIC can be in different positions
 	|	yAUTOMATIC		 		{ $<fl>$=$<fl>1; $$=$1; }
+	//			// Part of data_declaration, but not in data_declarationVarFrontClass
+	|	yCONST__ETC				{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 //**********************************************************************
