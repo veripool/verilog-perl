@@ -43,7 +43,7 @@ public:
     enum en {
 	NOT_FOUND = 0,
 	NETLIST = 1,	// Top of structure, created by Parser.pm:sub new{}
-	ERROR = 2,	// Consistency error in internal tables
+	AN_ERROR = 2,	// Consistency error in internal tables (ERROR alone is a #define on some systems)
 	UNKNOWN = 3,	// Things that need scope, but don't know type yet
 	//
 	BLOCK,

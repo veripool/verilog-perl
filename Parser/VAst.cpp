@@ -55,10 +55,10 @@ int VAstEnt::s_debug = 0;
 VAstType VAstEnt::type() {
     assert(this);
     AV* avp = castAVp();
-    if (!avp || SvTYPE(avp) != SVt_PVAV || av_len(avp)<1) return VAstType::ERROR;
+    if (!avp || SvTYPE(avp) != SVt_PVAV || av_len(avp)<1) return VAstType::AN_ERROR;
     // $type_svpp = $this->[0]
     SV** type_svpp = av_fetch(avp, 0, 0);
-    if (!type_svpp) return VAstType::ERROR;
+    if (!type_svpp) return VAstType::AN_ERROR;
     VAstType type = (VAstType)(SvIV(*type_svpp));
     return type;
 }
@@ -93,7 +93,7 @@ void VAstEnt::initNetlist(VFileLine* fl) {
     assert(this);
     AV* avp = castAVp();
     if (!avp || SvTYPE(avp) != SVt_PVAV) { fl->error("Parser->symbol_table isn't an array reference"); }
-    if (type() == VAstType::ERROR) { // Need init
+    if (type() == VAstType::AN_ERROR) { // Need init
 	initAVEnt(avp, VAstType::NETLIST, NULL);
     } else if (type() == VAstType::NETLIST) { // Already inited
     } else { fl->error("Parser->symbol_table isn't a netlist object (not created by the parser?)"); }
