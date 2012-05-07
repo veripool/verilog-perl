@@ -52,6 +52,7 @@ VParseBisonYYSType* VParseLex::s_yylvalp = NULL;		// LValue for current bison ob
 #define LPARSEP (LEXP->m_parsep)
 
 #define NEXTLINE()  { LPARSEP->inFilelineInc(); }
+#define LINECHECK()  { const char* cp=yytext; for (int n=yyleng; n; --n) if (cp[n]=='\n') NEXTLINE(); }
 
 #define FL { VParseLex::s_yylvalp->fl = LPARSEP->inFilelinep(); }
 
@@ -526,21 +527,21 @@ word	[a-zA-Z0-9_]+
 			}
   \" 			{ yy_push_state(STRING); yymore(); }
 
-  [0-9]*?['']s?[bcodhBCODH][ \t]*[A-Fa-f0-9xXzZ_?]*	{
-			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
+  [0-9]*?['']s?[bcodhBCODH][ \t\n]*[A-Fa-f0-9xXzZ_?]*	{
+			  FL; VALTEXT; LINECHECK(); CALLBACK(numberCb); return yaINTNUM;
 			}
   [0-9]*?['']s?[01xXzZ]	{	/* SystemVerilog */
 			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
 			}
   /* Note below is constructed to not match the ' that begins a '(  or '{ */
-  [0-9][_0-9]*[ \t]*['']s?[bcodhBCODH]?[ \t]*[A-Fa-f0-9xXzZ_?]+	{
-			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
+  [0-9][_0-9]*[ \t\n]*['']s?[bcodhBCODH]?[ \t]*[A-Fa-f0-9xXzZ_?]+	{
+			  FL; VALTEXT; LINECHECK(); CALLBACK(numberCb); return yaINTNUM;
 			}
-  [0-9][_0-9]*[ \t]*['']s?[bcodhBCODH]	{
-			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
+  [0-9][_0-9]*[ \t\n]*['']s?[bcodhBCODH]	{
+			  FL; VALTEXT; LINECHECK(); CALLBACK(numberCb); return yaINTNUM;
 			}
-  [0-9][_0-9]*[ \t]*['']s	{
-			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
+  [0-9][_0-9]*[ \t\n]*['']s	{
+			  FL; VALTEXT; LINECHECK(); CALLBACK(numberCb); return yaINTNUM;
 			}
   [0-9][_0-9]*		{
 			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;

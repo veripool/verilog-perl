@@ -3,6 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.316**** devel
+
+****	Fix newlines in radix values, bug507. [Walter Lavino]
+
+
 * Verilog::Language 3.315 2012/05/04
 
 ***	Put root localparams into $root module, bug471. [Corey Teffetalor]
