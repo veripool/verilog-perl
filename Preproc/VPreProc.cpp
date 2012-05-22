@@ -543,7 +543,7 @@ string VPreProcImp::defineSubst(VPreDefRef* refp) {
 
 bool VPreProcImp::readWholefile(const string& filename, StrList& outl) {
     int fd = open (filename.c_str(), O_RDONLY);
-    if (!fd) return false;
+    if (fd<0) return false;
 
     // If change this code, run a test with the below size set very small
 //#define INFILTER_IPC_BUFSIZ 16
