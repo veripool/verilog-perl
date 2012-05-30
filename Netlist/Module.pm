@@ -456,6 +456,10 @@ Returns Verilog::Netlist::Port matching given name.
 
 Returns Verilog::Netlist::Net matching given name.
 
+=item $self->is_libcell
+
+Returns if module declared inside a `celldefine.
+
 =item $self->level
 
 Returns the reverse depth of this module with respect to other modules.
