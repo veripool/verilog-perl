@@ -1591,8 +1591,8 @@ aliasEqList:			// IEEE: part of net_alias
 bind_directive:			// ==IEEE: bind_directive + bind_target_scope
 	//			// ';' - Note IEEE grammar is wrong, includes extra ';' - it's already in module_instantiation
 	//			// We merged the rules - id may be a bind_target_instance or module_identifier or interface_identifier
-		yBIND id bit_selectE bind_instantiation	{ }
-	|	yBIND id/*module_or_interface*/ ':' bind_target_instance_list bind_instantiation	{ }
+		yBIND bind_target_instance bind_instantiation	{ }
+	|	yBIND bind_target_instance ':' bind_target_instance_list bind_instantiation	{ }
 	;
 
 bind_target_instance_list:	// ==IEEE: bind_target_instance_list

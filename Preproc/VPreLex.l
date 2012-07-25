@@ -505,7 +505,8 @@ void VPreLex::scanBytesBack(const string& str) {
 
 string VPreLex::currentUnreadChars() {
     // WARNING - Peeking at internals
-    ssize_t left = (yy_n_chars - (yy_c_buf_p -currentBuffer()->yy_ch_buf));
+    if (!currentBuffer()) return "";
+    ssize_t left = (yy_n_chars - (yy_c_buf_p - currentBuffer()->yy_ch_buf));
     if (left > 0) {  // left may be -1 at EOS
 	*(yy_c_buf_p) = (yy_hold_char);
 	return string(yy_c_buf_p, left);

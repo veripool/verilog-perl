@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix internal readWholefile error check, bug518. [Wei Song]
 
+****	Fix parsing hierarchical binds.  [Brian Mokrzycki]
+
 
 * Verilog::Language 3.315 2012/05/04
 

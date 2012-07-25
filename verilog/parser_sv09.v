@@ -25,3 +25,4 @@ module bug400;
      disable iff (rst || $past (rst,1,,@(posedge clk)) || $isunknown(rst))
      "assert 0");
 endmodule
+
