@@ -3,6 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.31***
+
+****	Fix multidimensional unpacked wires. [Leif Tore Rusten]
+
+
 * Verilog::Language 3.316 2012/07/27
 
 ****	Fix newlines in radix values, bug507. [Walter Lavino]
