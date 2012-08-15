@@ -5,7 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.31***
 
-****	Fix multidimensional unpacked wires. [Leif Tore Rusten]
+****	Fix multidimensional unpacked wires.  [Leif Tore Rusten]
+
+****	Fix MacOS 10.8 build error.  [Oliver King-Smith]
 
 
 * Verilog::Language 3.316 2012/07/27
