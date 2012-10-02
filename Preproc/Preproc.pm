@@ -259,9 +259,10 @@ that may be passed to new.
 
 =item $self->open(filename=>I<filename>)
 
-Opens the specified file.  If called before a file is completely parsed,
-the new file will be parsed completely before returning to the previously
-open file.  (As if it was an include file.)
+Opens the specified file.  If filename ends in .gz, decompress while
+reading.  If called before a file is completely parsed, the new file will
+be parsed completely before returning to the previously open file.  (As if
+it was an include file.)
 
 Open may also be called without named parameters, in which case the only
 argument is the filename.

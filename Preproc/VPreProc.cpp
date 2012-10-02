@@ -542,14 +542,27 @@ string VPreProcImp::defineSubst(VPreDefRef* refp) {
 // Parser routines
 
 bool VPreProcImp::readWholefile(const string& filename, StrList& outl) {
-    int fd = open (filename.c_str(), O_RDONLY);
-    if (fd<0) return false;
-
-    // If change this code, run a test with the below size set very small
+// If change this code, run a test with the below size set very small
 //#define INFILTER_IPC_BUFSIZ 16
 #define INFILTER_IPC_BUFSIZ 64*1024
     char buf[INFILTER_IPC_BUFSIZ];
+
+    FILE* fp = NULL;
+    int fd;
+    char cmd[100];
     bool eof = false;
+
+    ssize_t position = filename.find_last_of(".");
+    if (filename.length()>3 && 0==filename.compare(filename.length()-3, 3, ".gz")) {
+        sprintf(cmd, "gunzip -c %s", filename.c_str());
+        if ((fp = popen(cmd, "r")) == NULL) {
+            return false;
+        }
+        fd = fileno (fp);
+    } else {
+        fd = open (filename.c_str(), O_RDONLY);
+        if (fd<0) return false;
+    }
     while (!eof) {
 	ssize_t todo = INFILTER_IPC_BUFSIZ;
 	ssize_t got = read (fd, buf, todo);
@@ -564,7 +577,8 @@ bool VPreProcImp::readWholefile(const string& filename, StrList& outl) {
 	} else { eof = true; break; }
     }
 
-    close(fd);
+    if (fp) { pclose(fp); fp=NULL; }
+    else close(fd);
     return true;
 }
 
