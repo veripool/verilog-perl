@@ -789,17 +789,26 @@ portE:				// ==IEEE: [ port ]
 	//
 	//			// Note implicit rules looks just line declaring additional followon port
 	//			// No VARDECL("port") for implicit, as we don't want to declare variables for them
-	|	portDirNetE var_data_type       '.' portSig '(' portAssignExprE ')' sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>4, $4, "", ""); PINNUMINC(); }
-	|	portDirNetE signingE rangeList  '.' portSig '(' portAssignExprE ')' sigAttrListE	{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
-	|	portDirNetE /*implicit*/        '.' portSig '(' portAssignExprE ')' sigAttrListE	{ /*VARDTYPE-same*/ VARDONE($<fl>3, $3, "", ""); PINNUMINC(); }
+	|	portDirNetE var_data_type       '.' portSig '(' portAssignExprE ')' sigAttrListE
+			{ VARDTYPE($2); VARDONE($<fl>4, $4, "", ""); PINNUMINC(); }
+	|	portDirNetE signingE rangeList  '.' portSig '(' portAssignExprE ')' sigAttrListE
+			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
+	|	portDirNetE /*implicit*/        '.' portSig '(' portAssignExprE ')' sigAttrListE
+			{ /*VARDTYPE-same*/ VARDONE($<fl>3, $3, "", ""); PINNUMINC(); }
 	//
-	|	portDirNetE var_data_type       portSig variable_dimensionListE sigAttrListE	{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, ""); PINNUMINC(); }
-	|	portDirNetE signingE rangeList  portSig variable_dimensionListE sigAttrListE	{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
-	|	portDirNetE /*implicit*/        portSig variable_dimensionListE sigAttrListE	{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, ""); PINNUMINC(); }
+	|	portDirNetE var_data_type       portSig variable_dimensionListE sigAttrListE
+			{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, ""); PINNUMINC(); }
+	|	portDirNetE signingE rangeList  portSig variable_dimensionListE sigAttrListE
+			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
+	|	portDirNetE /*implicit*/        portSig variable_dimensionListE sigAttrListE
+			{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, ""); PINNUMINC(); }
 	//
-	|	portDirNetE var_data_type       portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, $7); PINNUMINC(); }
-	|	portDirNetE signingE rangeList  portSig variable_dimensionListE sigAttrListE '=' constExpr	{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
-	|	portDirNetE /*implicit*/        portSig variable_dimensionListE sigAttrListE '=' constExpr	{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, $6); PINNUMINC(); }
+	|	portDirNetE var_data_type       portSig variable_dimensionListE sigAttrListE '=' constExpr
+			{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, $7); PINNUMINC(); }
+	|	portDirNetE signingE rangeList  portSig variable_dimensionListE sigAttrListE '=' constExpr
+			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
+	|	portDirNetE /*implicit*/        portSig variable_dimensionListE sigAttrListE '=' constExpr
+			{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, $6); PINNUMINC(); }
 	//
 	|	'{' list_of_portsE '}'			{ }
 	;
@@ -1369,6 +1378,9 @@ packedSigningE:
 	|	yPACKED signingE			{ }
 	;
 
+//************************************************
+// enum
+
 // IEEE: part of data_type
 enumDecl<str>:
 		yENUM enum_base_typeE '{' enum_nameList '}' rangeListE { $$=$2; }
@@ -1399,13 +1411,17 @@ enum_name_declaration:		// ==IEEE: enum_name_declaration
 
 enumNameRangeE:			// IEEE: second part of enum_name_declaration
 		/* empty */				{ }
-	|	'[' yaINTNUM ']'			{ }
-	|	'[' yaINTNUM ':' yaINTNUM ']'		{ }
+	|	'[' intnumAsConst ']'			{ }
+	|	'[' intnumAsConst ':' intnumAsConst ']'	{ }
 	;
 
 enumNameStartE:			// IEEE: third part of enum_name_declaration
 		/* empty */				{ }
 	|	'=' constExpr				{ }
+	;
+
+intnumAsConst:
+		yaINTNUM				{ }
 	;
 
 //************************************************
@@ -1490,7 +1506,8 @@ assertion_variable_declaration: // IEEE: assertion_variable_declaration
 
 type_declaration:		// ==IEEE: type_declaration
 	//			// Use idAny, as we can redeclare a typedef on an existing typedef
-		yTYPEDEF data_type idAny variable_dimensionListE ';'	{ VARDONETYPEDEF($<fl>1,$3,$2,$4); }
+		yTYPEDEF data_type idAny variable_dimensionListE ';'
+			{ VARDONETYPEDEF($<fl>1,$3,$2,$4); }
 	|	yTYPEDEF id/*interface*/ bit_selectE '.' idAny/*type*/ idAny/*type*/ ';'
 			{ VARDONETYPEDEF($<fl>1,$6,$2+$3+"."+$5,""); }
 	//			// Combines into above "data_type id" rule
@@ -2670,6 +2687,11 @@ tf_port_itemAssignment:		// IEEE: part of tf_port_item, which has assignment
 			{ VARDONE($<fl>1, $1, $2, $5); }
 	;
 
+parenE:
+		/* empty */				{ }
+	|	'(' ')'					{ }
+	;
+
 //	method_call:		// ==IEEE: method_call + method_call_body
 //				// IEEE: method_call_root '.' method_identifier [ '(' list_of_arguments ')' ]
 //				//   "method_call_root '.' method_identifier" looks just like "expr '.' id"
@@ -2677,11 +2699,6 @@ tf_port_itemAssignment:		// IEEE: part of tf_port_item, which has assignment
 //				// IEEE: built_in_method_call
 //				//   method_call_root not needed, part of expr resolution
 //				// What's left is below array_methodNoRoot
-
-parenE:
-		/* empty */				{ }
-	|	'(' ')'					{ }
-	;
 
 array_methodNoRoot<str>:	// ==IEEE: built_in_method_call without root
 	//			//   method_call_root not needed, part of expr resolution
@@ -3210,7 +3227,7 @@ strengthSpec:			// IEEE: drive_strength + pullup_strength + pulldown_strength + 
 //************************************************
 // Tables
 
-combinational_body:		// ==IEEE: combinational_body
+combinational_body:		// IEEE: combinational_body + sequential_body
 		yTABLE tableJunkList yENDTABLE		{ }
 	;
 
