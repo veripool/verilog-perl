@@ -165,7 +165,7 @@ sub changes_crypt {
     # Make random names for signals
 
     my %used_rand = ();
-    foreach my $sig (keys %Signal_Locs) {
+    foreach my $sig (sort keys %Signal_Locs) {
 	if (! defined $Signal_Newname{$sig}
 	    && $sig !~ /\$/
 	    && (! defined $Vrename_Dont_Crypt{$sig})
@@ -303,7 +303,7 @@ sub changes_read {
 sub changes_lang {
     # Grab keywords from most recent spec, not current --language
     my %kwds = Verilog::Language::language_keywords(Verilog::Language::language_maximum());
-    foreach my $kwd (keys %kwds) {
+    foreach my $kwd (sort keys %kwds) {
 	next if Verilog::Language::is_keyword($kwd);  # Already a keyword in sources
 	next if !$Signal_Newname{$kwd};  # Not needed for the current file
 	$Signal_Newname{$kwd} = '\\'.$kwd.' ';
@@ -441,7 +441,7 @@ sub verilog_change_sig {
     my %signal_magic = ();
     # pass1: replace with magic replacement string
     # (two steps so renaming a->b and b->a at the same time doesn't screw up)
-    foreach my $sig (keys %Signal_Newname) {
+    foreach my $sig (sort keys %Signal_Newname) {
 	my $new = $Signal_Newname{$sig};
 	if ($new ne $sig) {
 	    my $magic = "@@@@@!~${hadrepl}~!@@@@@";
@@ -454,7 +454,7 @@ sub verilog_change_sig {
 	}
     }
     # pass2: magic->new
-    foreach my $sig (keys %Signal_Newname) {
+    foreach my $sig (sort keys %Signal_Newname) {
 	if (defined $signal_magic{$sig}) {
 	    my $magic = $signal_magic{$sig};
 	    my $new = $Signal_Newname{$sig};

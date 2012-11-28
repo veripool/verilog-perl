@@ -14,7 +14,7 @@ my $manifest = ExtUtils::Manifest::maniread();
 plan tests => (1 + (keys %{$manifest}));
 ok(1);
 
-foreach my $filename (keys %{$manifest}) {
+foreach my $filename (sort keys %{$manifest}) {
     if ($filename =~ /README/) {  # May not even exist
 	skip("File doesn't need check (harmless)",1);
 	next;

@@ -3,6 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.31***
+
+****	Fix vpassert test failure in bleadperl 5.17.5-518, bug582.  [Andreas Koenig]
+
+
 * Verilog::Language 3.317 2012/10/01
 
 ***	Gunzip Verilog::Preproc filenames ending in .gz, bug564. [Jingzhen Hu]

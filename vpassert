@@ -186,7 +186,7 @@ exit (0);
 sub usage {
     print "Version $VERSION\n";
     print "\nThe following tokens are converted:\n";
-    foreach my $tok (keys %Vpassert_Conversions ) {
+    foreach my $tok (sort keys %Vpassert_Conversions ) {
 	print "\tToken $tok\n";
     }
     print "\n";
@@ -779,10 +779,10 @@ sub vpassert_process {
     $fh->close;
 
     # Hack the output text to add in the messages variable
-    foreach my $mod (keys %Insure_Symbols) {
+    foreach my $mod (sort keys %Insure_Symbols) {
 	my $insert="";
 	my $n=0;  # Some compilers choke if lines get too long;
-	foreach my $sym (keys %{$Insure_Symbols{$mod}}) {
+	foreach my $sym (sort keys %{$Insure_Symbols{$mod}}) {
 	    #if ! $module_symbols{$sym} 	# For now always put it in
 	    my $type = $Insure_Symbols{$mod}{$sym}[0];
 	    my $value = $Insure_Symbols{$mod}{$sym}[1];
@@ -943,7 +943,7 @@ sub vpassert_recursive_postlude {
     # What to do after processing all files
 
     # Check for deletions
-    foreach my $srcfile (keys %Files_Read) {
+    foreach my $srcfile (sort keys %Files_Read) {
 	if ($Files_Read{$srcfile}{mtime}
 	    && !$Files{$srcfile}{mtime}) {
 	    (my $basefile = $srcfile) =~ s/.*\///;
