@@ -475,3 +475,10 @@ endmodule
 
 // bug_msg_887;
 bind path.to.example_mod example_mod_fcov uexample_mod_fcov (.*);
+
+package bug586_pkg;
+   parameter B = 10;
+endpackage
+module non_bug586;  // Verilator only
+   input logic [bug586_pkg::B : 0] bvar;
+endmodule
