@@ -547,6 +547,30 @@ BISONPRE_VERSION(2.4, %define lr.keep_unreachable_states)
 //  Blank lines for type insertion
 //  Blank lines for type insertion
 //  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
+//  Blank lines for type insertion
 
 %start source_text
 
@@ -2926,6 +2950,7 @@ expr<str>:			// IEEE: part of expression/constant_expression/primary
 	//
 	//----------------------
 	//
+	//			// Part of expr that may also be used as lvalue
 	|	~l~exprOkLvalue				{ $<fl>$=$<fl>1; $$ = $1; }
 	//
 	//----------------------
@@ -2981,14 +3006,6 @@ ev_expr<str>:			// IEEE: event_expression
 //sexpr: See elsewhere
 //pexpr: See elsewhere
 
-exprLvalue<str>:		// expression that should be a variable_lvalue
-		~f~exprOkLvalue				{ $<fl>$=$<fl>1; $$ = $1; }
-	;
-
-fexprLvalue<str>:		// For use as first part of statement (disambiguates <=)
-		BISONPRE_COPY(exprLvalue,{s/~f~/f/g})	// {copied}
-	;
-
 exprOkLvalue<str>:		// expression that's also OK to use as a variable_lvalue
 		~l~exprScope				{ $<fl>$=$<fl>1; $$ = $1; }
 	//			// IEEE: concatenation/constant_concatenation
@@ -3026,6 +3043,14 @@ ev_exprOkLvalue<str>:		// exprOkLValue, For use by ev_expr
 
 pev_exprOkLvalue<str>:		// exprOkLValue, For use by ev_expr
 		BISONPRE_COPY(exprOkLvalue,{s/~l~/pev_/g})	// {copied}
+	;
+
+exprLvalue<str>:		// expression that should be a variable_lvalue
+		~f~exprOkLvalue				{ $<fl>$=$<fl>1; $$ = $1; }
+	;
+
+fexprLvalue<str>:		// For use as first part of statement (disambiguates <=)
+		BISONPRE_COPY(exprLvalue,{s/~f~/f/g})	// {copied}
 	;
 
 exprScope<str>:			// scope and variable for use to inside an expression
