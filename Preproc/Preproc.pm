@@ -36,6 +36,7 @@ sub new {
     my $self = {keep_comments=>1,
 		keep_whitespace=>1,
 		line_directives=>1,
+		ieee_predefined=>1,
 		pedantic=>0,
 		synthesis=>0,
 		options=>Verilog::Getopt->new(),	# If the user didn't give one, still work!
@@ -53,7 +54,25 @@ sub new {
 		$self->{synthesis},
 		);
     if ($self->{synthesis}) {
-	$self->define('SYNTHESIS',1);
+	# Fourth argument 1 for cmdline - no `undefineall effect
+	$self->define('SYNTHESIS',1,undef,1);
+    }
+    if ($self->{ieee_predefined}) {
+	$self->define('SV_COV_START', 0,undef,1);
+	$self->define('SV_COV_STOP', 1,undef,1);
+	$self->define('SV_COV_RESET', 2,undef,1);
+	$self->define('SV_COV_CHECK', 3,undef,1);
+	$self->define('SV_COV_MODULE', 10,undef,1);
+	$self->define('SV_COV_HIER', 11,undef,1);
+	$self->define('SV_COV_ASSERTION', 20,undef,1);
+	$self->define('SV_COV_FSM_STATE', 21,undef,1);
+	$self->define('SV_COV_STATEMENT', 22,undef,1);
+	$self->define('SV_COV_TOGGLE', 23,undef,1);
+	$self->define('SV_COV_OVERFLOW', -2,undef,1);
+	$self->define('SV_COV_ERROR', -1,undef,1);
+	$self->define('SV_COV_NOCOV', 0,undef,1);
+	$self->define('SV_COV_OK', 1,undef,1);
+	$self->define('SV_COV_PARTIAL', 2,undef,1);
     }
     #use Data::Dumper; print Dumper($self);
     return $self;
@@ -280,6 +299,11 @@ insert special code into the output stream.
 The following named parameters may be passed to the new constructor.
 
 =over 4
+
+=item ieee_predefines=>0
+
+With ieee_predefines false, disable defining SV_COV_START and other IEEE
+mandated definitions.
 
 =item include_open_nonfatal=>1
 

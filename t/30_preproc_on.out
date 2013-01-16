@@ -821,5 +821,22 @@ verilog/inc1.v:520:    initial $write("GOT='%s' EXP='%s'\n", "foo `A(bar) baz", 
 verilog/inc1.v:521:     
 verilog/inc1.v:522: endmodule
 verilog/inc1.v:523: //======================================================================
-verilog/inc1.v:524: 
-verilog/inc1.v:525: `line 525 "verilog/inc1.v" 2
+verilog/inc1.v:524: // IEEE mandated predefines
+verilog/inc1.v:525:   // undefineall should have no effect on these
+verilog/inc1.v:526: predef 0 0
+verilog/inc1.v:527: predef 1 1
+verilog/inc1.v:528: predef 2 2
+verilog/inc1.v:529: predef 3 3
+verilog/inc1.v:530: predef 10 10
+verilog/inc1.v:531: predef 11 11
+verilog/inc1.v:532: predef 20 20
+verilog/inc1.v:533: predef 21 21
+verilog/inc1.v:534: predef 22 22
+verilog/inc1.v:535: predef 23 23
+verilog/inc1.v:536: predef -2 -2
+verilog/inc1.v:537: predef -1 -1
+verilog/inc1.v:538: predef 0 0
+verilog/inc1.v:539: predef 1 1
+verilog/inc1.v:540: predef 2 2
+verilog/inc1.v:541: 
+verilog/inc1.v:542: `line 542 "verilog/inc1.v" 2

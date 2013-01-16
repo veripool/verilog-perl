@@ -3,6 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.31****
+
+****	Predefine SV_COV_START and other IEEE mandated predefines.
+
+
 * Verilog::Language 3.318 2012/11/28
 
 ****	Fix vpassert test failure in bleadperl 5.17.5-518, bug582.  [Andreas Koenig]
