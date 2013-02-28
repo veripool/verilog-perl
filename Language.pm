@@ -34,7 +34,8 @@ General functions will be added as needed.
 
 Return true if the given symbol string is a Verilog reserved keyword.
 Value indicates the language standard as per the `begin_keywords macro,
-'1364-1995', '1364-2001', '1364-2005', '1800-2005', '1800-2009' or 'VAMS'.
+'1364-1995', '1364-2001', '1364-2005', '1800-2005', '1800-2009',
+'1800-2012' or 'VAMS'.
 
 =item Verilog::Language::is_compdirect ($symbol_string)
 
@@ -55,12 +56,12 @@ value of the hash is the standard in which it was defined.
 Sets the language standard to indicate what are keywords.  If undef, all
 standards apply.  The year is indicates the language standard as per the
 `begin_keywords macro, '1364-1995', '1364-2001', '1364-2005', '1800-2005'
-or '1800-2009'.
+'1800-2009' or '1800-2012'.
 
 =item Verilog::Language::language_maximum
 
 Returns the greatest language currently standardized, presently
-'1800-2009'.
+'1800-2012'.
 
 =item Verilog::Language::number_bigint ($number_string)
 
@@ -212,6 +213,10 @@ foreach my $kwd (qw(
 		    )) { $Keywords{'1800-2009'}{$kwd} = '1800-2009'; }
 
 foreach my $kwd (qw(
+		    implements nettype interconnect soft
+		    )) { $Keywords{'1800-2012'}{$kwd} = '1800-2012'; }
+
+foreach my $kwd (qw(
 		    above abs absdelay abstol ac_stim access acos acosh
 		    aliasparam analog analysis asin asinh assert atan atan2
 		    atanh branch ceil connect connectmodule connectrules
@@ -296,7 +301,7 @@ foreach my $kwd (qw(
 #### Keyword utilities
 
 sub language_maximum {
-    return "1800-2009";
+    return "1800-2012";
 }
 
 sub _language_kwd_hash {
@@ -314,9 +319,12 @@ sub _language_kwd_hash {
     } elsif ($standard eq 'sv31' || $standard eq '1800-2005') {
 	$Standard = '1800-2005';
 	@subsets = ('1800-2005', '1364-2005', '1364-2001', '1364-1995');
-    } elsif ($standard eq 'latest' || $standard eq '1800-2009') {
+    } elsif ($standard eq '1800-2009') {
 	$Standard = '1800-2009';
 	@subsets = ('1800-2009', '1800-2005', '1364-2005', '1364-2001', '1364-1995');
+    } elsif ($standard eq 'latest' || $standard eq '1800-2012') {
+	$Standard = '1800-2012';
+	@subsets = ('1800-2012', '1800-2009', '1800-2005', '1364-2005', '1364-2001', '1364-1995');
     } elsif ($standard =~ /^V?AMS/) {
 	$Standard = 'VAMS';
 	@subsets = ('VAMS', '1364-2005', '1364-2001', '1364-1995');

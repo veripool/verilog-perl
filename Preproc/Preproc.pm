@@ -233,8 +233,7 @@ Verilog::Preproc - Preprocess Verilog files
 =head1 DESCRIPTION
 
 Verilog::Preproc reads Verilog files, and preprocesses them according to
-the SystemVerilog 2009 (1800-2009) specification which is the most recent
-extension of SystemVerilog 2005 (1800-2005).  Programs can be easily
+the SystemVerilog 2009 (1800-2009) specification.  Programs can be easily
 converted from reading a IO::File into reading preprocessed output from
 Verilog::Preproc.
 
@@ -411,10 +410,11 @@ after resolving the filename with the options parameter.
 
 =head1 COMPLIANCE
 
-The preprocessor supports the constructs defined in the SystemVerilog 2009
-standard (IEEE 1800-2009), which is a superset of Verilog 1995 (IEEE
+The preprocessor supports the constructs defined in the SystemVerilog 2012
+standard (IEEE 1800-2012), which is a superset of Verilog 1995 (IEEE
 1364-1995), Verilog 2001 (IEEE 1364-2001), Verilog 2005 (IEEE 1364-2005)
-and SystemVerilog 2005 (IEEE 1800-2005).
+and SystemVerilog 2005 (IEEE 1800-2005), and SystemVerilog 2009 (IEEE
+1800-2009).
 
 Verilog::Preproc adds the `error macro (unless the pedantic parameter is
 set.):

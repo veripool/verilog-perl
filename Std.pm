@@ -43,7 +43,7 @@ __DATA__
 
 `line 1 "Perl_Verilog::Std_module" 0
 // Verilog-Perl Verilog::Std
-// The basis for this package is described in IEEE 1800-2009 Annex G
+// The basis for this package is described in IEEE 1800-2012 Annex G
 package std;
 
 class semaphore;

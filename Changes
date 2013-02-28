@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.31****
 
+***	Support SystemVerilog 1800-2012.
+
 ****	Predefine SV_COV_START and other IEEE mandated predefines.
 
 

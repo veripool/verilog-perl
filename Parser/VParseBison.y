@@ -67,7 +67,7 @@ static void VARDONE(VFileLine* fl, const string& name, const string& array, cons
     if (GRAMMARP->m_varIO!="" && GRAMMARP->m_varDecl=="") GRAMMARP->m_varDecl="port";
     if (GRAMMARP->m_varDecl!="") {
 	PARSEP->varCb(fl, GRAMMARP->m_varDecl, name, PARSEP->symObjofUpward(), GRAMMARP->m_varNet,
-		      GRAMMARP->m_varDType, array, value);
+		       GRAMMARP->m_varDType, array, value);
     }
     if (GRAMMARP->m_varIO!="" || GRAMMARP->pinNum()) {
 	PARSEP->portCb(fl, name, PARSEP->symObjofUpward(),
@@ -282,6 +282,7 @@ BISONPRE_VERSION(2.4, %define lr.keep_unreachable_states)
 %token<str>		yIFF		"iff"
 %token<str>		yIGNORE_BINS	"ignore_bins"
 %token<str>		yILLEGAL_BINS	"illegal_bins"
+%token<str>		yIMPLEMENTS	"implements"
 %token<str>		yIMPLIES	"implies"
 %token<str>		yIMPORT		"import"
 %token<str>		yINITIAL	"initial"
@@ -290,14 +291,15 @@ BISONPRE_VERSION(2.4, %define lr.keep_unreachable_states)
 %token<str>		yINSIDE		"inside"
 %token<str>		yINT		"int"
 %token<str>		yINTEGER	"integer"
+%token<str>		yINTERCONNECT	"interconnect"
 %token<str>		yINTERFACE	"interface"
 %token<str>		yINTERSECT	"intersect"
 %token<str>		yJOIN		"join"
 %token<str>		yLET		"let"
+%token<str>		yLOCALPARAM	"localparam"
 %token<str>		yLOCAL__COLONCOLON "local-then-::"
 %token<str>		yLOCAL__ETC	"local"
 %token<str>		yLOCAL__LEX	"local-in-lex"
-%token<str>		yLOCALPARAM	"localparam"
 %token<str>		yLOGIC		"logic"
 %token<str>		yLONGINT	"longint"
 %token<str>		yMATCHES	"matches"
@@ -305,6 +307,7 @@ BISONPRE_VERSION(2.4, %define lr.keep_unreachable_states)
 %token<str>		yMODULE		"module"
 %token<str>		yNAND		"nand"
 %token<str>		yNEGEDGE	"negedge"
+%token<str>		yNETTYPE	"nettype"
 %token<str>		yNEW__ETC	"new"
 %token<str>		yNEW__LEX	"new-in-lex"
 %token<str>		yNEW__PAREN	"new-then-paren"
@@ -341,6 +344,7 @@ BISONPRE_VERSION(2.4, %define lr.keep_unreachable_states)
 %token<str>		ySHORTINT	"shortint"
 %token<str>		ySHORTREAL	"shortreal"
 %token<str>		ySIGNED		"signed"
+%token<str>		ySOFT		"soft"
 %token<str>		ySOLVE		"solve"
 %token<str>		ySPECIFY	"specify"
 %token<str>		ySPECPARAM	"specparam"
@@ -809,6 +813,9 @@ portE:				// ==IEEE: [ port ]
 	//			//     net_port_type | [ port_direction ] var_data_type '.' port_identifier '(' [ expr ] ')'
 	//			// Expand implicit_type
 	//
+	//			// IEEE-2012: Since a net_type_identifier is a data_type, it falls into
+	//			// the rules here without change.
+	//
 	//			// variable_dimensionListE instead of rangeListE to avoid conflicts
 	//
 	//			// Note implicit rules looks just line declaring additional followon port
@@ -817,6 +824,8 @@ portE:				// ==IEEE: [ port ]
 			{ VARDTYPE($2); VARDONE($<fl>4, $4, "", ""); PINNUMINC(); }
 	|	portDirNetE signingE rangeList  '.' portSig '(' portAssignExprE ')' sigAttrListE
 			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
+	|	portDirNetE yINTERCONNECT signingE rangeListE '.' portSig '(' portAssignExprE ')' sigAttrListE
+			{ VARDTYPE(SPACED(SPACED($2,$3),$4)); VARDONE($<fl>6, $6, "", ""); PINNUMINC(); }
 	|	portDirNetE /*implicit*/        '.' portSig '(' portAssignExprE ')' sigAttrListE
 			{ /*VARDTYPE-same*/ VARDONE($<fl>3, $3, "", ""); PINNUMINC(); }
 	//
@@ -824,6 +833,8 @@ portE:				// ==IEEE: [ port ]
 			{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, ""); PINNUMINC(); }
 	|	portDirNetE signingE rangeList  portSig variable_dimensionListE sigAttrListE
 			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
+	|	portDirNetE yINTERCONNECT signingE rangeList  portSig variable_dimensionListE sigAttrListE
+			{ VARDTYPE(SPACED(SPACED($2,$3),$4)); VARDONE($<fl>5, $5, $6, ""); PINNUMINC(); }
 	|	portDirNetE /*implicit*/        portSig variable_dimensionListE sigAttrListE
 			{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, ""); PINNUMINC(); }
 	//
@@ -831,6 +842,8 @@ portE:				// ==IEEE: [ port ]
 			{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, $7); PINNUMINC(); }
 	|	portDirNetE signingE rangeList  portSig variable_dimensionListE sigAttrListE '=' constExpr
 			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
+	|	portDirNetE yINTERCONNECT signingE rangeList  portSig variable_dimensionListE sigAttrListE '=' constExpr
+			{ VARDTYPE(SPACED(SPACED($2,$3),$4)); VARDONE($<fl>5, $5, $6, $9); PINNUMINC(); }
 	|	portDirNetE /*implicit*/        portSig variable_dimensionListE sigAttrListE '=' constExpr
 			{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, $6); PINNUMINC(); }
 	//
@@ -1101,6 +1114,7 @@ net_declaration:		// IEEE: net_declaration - excluding implict
 
 net_declarationFront:		// IEEE: beginning of net_declaration
 		net_declRESET net_type strengthSpecE net_scalaredE net_dataType { VARDTYPE(SPACED($4,$5)); }
+	|	net_declRESET yINTERCONNECT signingE rangeListE { VARNET($2); VARDTYPE(SPACED($3,$4)); }
 	;
 
 net_declRESET:
@@ -1245,7 +1259,8 @@ simple_type<str>:		// ==IEEE: simple_type
 
 data_typeVar<str>:		// IEEE: data_type + virtual_interface_declaration
 		data_type				{ $<fl>$=$<fl>1; $$=$1; }
-	//			// IEEE: virtual_interface_declaration
+	//			// IEEE-2009: virtual_interface_declaration
+	//			// IEEE-2012: part of data_type
 	|	yVIRTUAL__INTERFACE yINTERFACE id/*interface*/ parameter_value_assignmentE '.' id/*modport*/
 			{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
 	;
@@ -1456,9 +1471,12 @@ data_declaration:		// ==IEEE: data_declaration
 		data_declarationVar			{ }
 	|	type_declaration			{ }
 	|	package_import_declaration		{ }
-	//			// IEEE: virtual_interface_declaration
+	//			// IEEE 2005: virtual_interface_declaration
+	//			// IEEE 2009 removed this
 	//			// "yVIRTUAL yID yID" looks just like a data_declaration
 	//			// Therefore the virtual_interface_declaration term isn't used
+	//			// 1800-2009:
+	|	net_type_declaration			{ }
 	;
 
 class_property:			// ==IEEE: class_property, which is {property_qualifier} data_declaration
@@ -1511,6 +1529,13 @@ data_declarationVarFrontClass:	// IEEE: part of data_declaration (for class_prop
 	//			// = class_new is in variable_decl_assignment
 	;
 
+net_type_declaration:		// IEEE: net_type_declaration
+		yNETTYPE data_type idAny/*net_type_identifier*/ ';' { }
+	//			// package_scope part of data_type
+	|	yNETTYPE data_type idAny yWITH__ETC package_scopeIdFollows id/*tf_identifier*/ ';' { }
+	|	yNETTYPE package_scopeIdFollows id/*net_type_identifier*/ idAny/*net_type_identifier*/ ';' { }
+	;
+
 constE<str>:			// IEEE: part of data_declaration
 		/* empty */				{ $$ = ""; }
 	|	yCONST__ETC				{ $$ = $1; }
@@ -1540,6 +1565,7 @@ type_declaration:		// ==IEEE: type_declaration
 	|	yTYPEDEF ySTRUCT idAny ';'		{ PARSEP->syms().replaceInsert(VAstType::STRUCT, $3); }
 	|	yTYPEDEF yUNION idAny ';'		{ PARSEP->syms().replaceInsert(VAstType::UNION, $3); }
 	|	yTYPEDEF yCLASS idAny ';'		{ PARSEP->syms().replaceInsert(VAstType::CLASS, $3); }
+	|	yTYPEDEF yINTERFACE yCLASS idAny ';'	{ PARSEP->syms().replaceInsert(VAstType::CLASS, $3); }
 	;
 
 //************************************************
@@ -1906,7 +1932,7 @@ packed_dimension<str>:		// ==IEEE: packed_dimension
 
 param_assignment:		// ==IEEE: param_assignment
 	//			// IEEE: constant_param_expression
-	//			// constant_param_expression: '$' is in expr
+	//			// param_expression: '$' is in expr
 		id/*new-parameter*/ variable_dimensionListE sigAttrListE '=' exprOrDataType
 			{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2, $5); }
 	//			// only legal in port list; throws error if not set
@@ -2335,6 +2361,11 @@ value_range:			// ==IEEE: value_range
 	|	'[' expr ':' expr ']'			{ }
 	;
 
+covergroup_value_range:		// ==IEEE-2012: covergroup_value_range
+		cgexpr					{ }
+	|	'[' cgexpr ':' cgexpr ']'		{ }
+	;
+
 caseCondList:			// IEEE: part of case_item
 		expr 					{ }
 	|	caseCondList ',' expr			{ }
@@ -2407,6 +2438,8 @@ for_initializationItemList:	// IEEE: [for_variable_declaration...]
 for_initializationItem:		// IEEE: variable_assignment + for_variable_declaration
 	//			// IEEE: for_variable_declaration
 		data_type idAny/*new*/ '=' expr		{ VARDTYPE($1); }
+	//			// IEEE-2012:
+	|	yVAR data_type idAny/*new*/ '=' expr		{ VARDTYPE($1); }
 	//			// IEEE: variable_assignment
 	|	variable_lvalue '=' expr		{ }
 	;
@@ -3568,10 +3601,16 @@ simple_immediate_assertion_statement:	// ==IEEE: simple_immediate_assertion_stat
 deferred_immediate_assertion_statement:	// ==IEEE: deferred_immediate_assertion_statement
 	//			// IEEE: deferred_immediate_assert_statement
 		yASSERT '#' yaINTNUM '(' expr ')' action_block	{ }	// yaINTNUM is always a '0'
+	//			// 1800-2012:
+	|	yASSERT yFINAL '(' expr ')' action_block	{ }
 	//			// IEEE: deferred_immediate_assume_statement
 	|	yASSUME '#' yaINTNUM '(' expr ')' action_block	{ }	// yaINTNUM is always a '0'
+	//			// 1800-2012:
+	|	yASSUME yFINAL '(' expr ')' action_block	{ }
 	//			// IEEE: deferred_immediate_cover_statement
-	|	yCOVER '#' yaINTNUM '(' expr ')' stmt	{ }	// yaINTNUM is always a '0'
+	|	yCOVER '#' yaINTNUM '(' expr ')' stmt		{ }	// yaINTNUM is always a '0'
+	//			// 1800-2012:
+	|	yCOVER yFINAL '(' expr ')' action_block		{ }
 	;
 
 expect_property_statement:	// ==IEEE: expect_property_statement
@@ -3645,7 +3684,7 @@ property_port_itemFront:	// IEEE: part of property_port_item/sequence_port_item
 	|	property_port_itemDirE /*implicit*/        	{ /*VARDTYPE-same*/ }
 	;
 
-property_port_itemAssignment:	// IEEE: part of property_port_item/sequence_port_item
+property_port_itemAssignment:	// IEEE: part of property_port_item/sequence_port_item/checker_port_direction
 		portSig variable_dimensionListE		{ VARDONE($<fl>1, $1, $2, ""); PINNUMINC(); }
 	|	portSig variable_dimensionListE '=' property_actual_arg
 			{ VARDONE($<fl>1, $1, $2, $4); PINNUMINC(); }
@@ -3659,6 +3698,8 @@ property_port_itemDirE:
 
 property_declarationBody:	// IEEE: part of property_declaration
 		assertion_variable_declarationList property_statement_spec	{ }
+	//UNSUP			// IEEE-2012: Has yCOVER ySEQUENCE then property_spec here.
+	//			// Must really be optional.  Get clarification.
 	|	property_statement_spec			{ }
 	;
 
@@ -3697,13 +3738,16 @@ sequence_formal_typeNoDt<str>:	// ==IEEE: sequence_formal_type (w/o data_type_or
 	//			// IEEE: data_type_or_implicit
 	//			// implicit expanded where used
 		ySEQUENCE				{ $$ = "sequence"; }
-	//			// IEEE: yEVENT
-	//			// already part of data_type
+	//			// IEEE-2009: yEVENT
+	//			// already part of data_type.  Removed in 1800-2012.
 	|	yUNTYPED				{ $$ = "untyped"; }
 	;
 
 sequence_declarationBody:	// IEEE: part of sequence_declaration
-		assertion_variable_declarationList sexpr ';'	{ }
+	//			// 1800-2012 makes ';' optional
+		assertion_variable_declarationList sexpr	{ }
+	|	assertion_variable_declarationList sexpr ';'	{ }
+	|	sexpr					{ }
 	|	sexpr ';'				{ }
 	;
 
@@ -3748,9 +3792,11 @@ property_case_itemList:		// IEEE: {property_case_item}
 
 property_case_item:		// ==IEEE: property_case_item
 	//			// IEEE: expression_or_dist { ',' expression_or_dist } ':' property_statement
-		caseCondList ':' property_statement	{ }
-	|	yDEFAULT property_statement		{ }
-	|	yDEFAULT ':' property_statement		{ }
+	//			// 1800-2012 changed from property_statement to property_expr
+		caseCondList ':' pexpr			{ }
+	|	caseCondList ':' pexpr ';'		{ }
+	|	yDEFAULT pexpr				{ }
+	|	yDEFAULT ':' pexpr ';'			{ }
 	;
 
 pev_expr<str>:			// IEEE: property_actual_arg | expr
@@ -3799,7 +3845,8 @@ pexpr<str>:			// IEEE: property_expr  (The name pexpr is important as regexps ju
 	|	~o~pexpr yP_ORMINUSGT pexpr		{ }
 	|	~o~pexpr yP_OREQGT pexpr		{ }
 	//
-	//			// IEEE: property_statement
+	//			// IEEE-2009: property_statement
+	//			// IEEE-2012: yIF and yCASE
 	|	property_statementCaseIf		{ }
 	//
 	|	~o~pexpr/*sexpr*/ yP_POUNDMINUSPD pexpr	{ }
@@ -3983,6 +4030,10 @@ covergroup_declarationFront:	// IEEE: part of covergroup_declaration
 			  PARSEP->covergroupCb($<fl>1,$1,$2); }
 	;
 
+cgexpr<str>:			// IEEE-2012: covergroup_expression, before that just expression
+		expr					{ $<fl>$=$<fl>1; $$ = $1; }
+	;
+
 coverage_spec_or_optionListE:	// IEEE: [{coverage_spec_or_option}]
 		/* empty */				{ }
 	|	coverage_spec_or_optionList		{ }
@@ -4007,8 +4058,15 @@ coverage_option:		// ==IEEE: coverage_option
 	;
 
 cover_point:			// ==IEEE: cover_point
-		id ':' yCOVERPOINT expr iffE bins_or_empty	{ }
-	|	/**/   yCOVERPOINT expr iffE bins_or_empty	{ }
+		/**/               yCOVERPOINT expr iffE bins_or_empty	{ }
+	//			// IEEE-2012: class_scope before an ID
+	|	/**/           /**/ /**/    id  ':' yCOVERPOINT expr iffE bins_or_empty	{ }
+	|	class_scope_id ':' yCOVERPOINT expr iffE bins_or_empty	{ }
+	|	class_scope_id id data_type id ':' yCOVERPOINT expr iffE bins_or_empty	{ }
+	|	class_scope_id id /**/      id ':' yCOVERPOINT expr iffE bins_or_empty	{ }
+	|	/**/           id /**/      id ':' yCOVERPOINT expr iffE bins_or_empty	{ }
+	//			// IEEE-2012:
+	|	bins_or_empty				{ }
 	;
 
 iffE:				// IEEE: part of cover_point, others
@@ -4028,25 +4086,28 @@ bins_or_optionsList:		// IEEE: { bins_or_options ';' }
 	;
 
 bins_or_options:		// ==IEEE: bins_or_options
+	//			// Superset of IEEE - we allow []'s in more places
 		coverage_option				{ }
 	//			// Can't use wildcardE as results in conflicts
-	|	/**/      bins_keyword id/*bin_identifier*/ '[' expr ']' '=' '{' open_range_list '}' iffE	{ }
-	|	/**/      bins_keyword id/*bin_identifier*/ '[' ']'      '=' '{' open_range_list '}' iffE	{ }
-	|	/**/      bins_keyword id/*bin_identifier*/              '=' '{' open_range_list '}' iffE	{ }
-	|	yWILDCARD bins_keyword id/*bin_identifier*/ '[' expr ']' '=' '{' open_range_list '}' iffE	{ }
-	|	yWILDCARD bins_keyword id/*bin_identifier*/ '[' ']'      '=' '{' open_range_list '}' iffE	{ }
-	|	yWILDCARD bins_keyword id/*bin_identifier*/              '=' '{' open_range_list '}' iffE	{ }
+	|	/**/      bins_keyword id/*bin_identifier*/ bins_orBraE '=' '{' open_range_list '}' iffE	{ }
+	|	yWILDCARD bins_keyword id/*bin_identifier*/ bins_orBraE '=' '{' open_range_list '}' iffE	{ }
+	|	/**/      bins_keyword id/*bin_identifier*/ bins_orBraE '=' '{' open_range_list '}' yWITH__CUR '{' cgexpr ')' iffE	{ }
+	|	yWILDCARD bins_keyword id/*bin_identifier*/ bins_orBraE '=' '{' open_range_list '}' yWITH__CUR '{' cgexpr ')' iffE	{ }
 	//
-	|	/**/      bins_keyword id/*bin_identifier*/         '=' trans_list iffE	{ }
-	|	/**/      bins_keyword id/*bin_identifier*/ '[' ']' '=' trans_list iffE	{ }
-	|	yWILDCARD bins_keyword id/*bin_identifier*/         '=' trans_list iffE	{ }
-	|	yWILDCARD bins_keyword id/*bin_identifier*/ '[' ']' '=' trans_list iffE	{ }
+	//			// cgexpr part of trans_list
 	//
-	|	bins_keyword id/*bin_identifier*/ '[' expr ']' '=' yDEFAULT iffE	{ }
-	|	bins_keyword id/*bin_identifier*/ '[' ']'      '=' yDEFAULT iffE	{ }
-	|	bins_keyword id/*bin_identifier*/              '=' yDEFAULT iffE	{ }
+	|	/**/      bins_keyword id/*bin_identifier*/ bins_orBraE '=' trans_list iffE	{ }
+	|	yWILDCARD bins_keyword id/*bin_identifier*/ bins_orBraE '=' trans_list iffE	{ }
 	//
-	|	bins_keyword id/*bin_identifier*/              '=' yDEFAULT ySEQUENCE iffE { }
+	|	bins_keyword id/*bin_identifier*/ bins_orBraE '=' yDEFAULT iffE	{ }
+	//
+	|	bins_keyword id/*bin_identifier*/ bins_orBraE '=' yDEFAULT ySEQUENCE iffE { }
+	;
+
+bins_orBraE:			// IEEE: part of bins_or_options:
+		/* empty */				{ }
+	|	'[' ']'					{ }
+	|	'[' cgexpr ']'				{ }
 	;
 
 bins_keyword:			// ==IEEE: bins_keyword
@@ -4055,9 +4116,9 @@ bins_keyword:			// ==IEEE: bins_keyword
 	|	yIGNORE_BINS				{ }
 	;
 
-range_list:			// ==IEEE: range_list
-	 	value_range				{ }
-	|	range_list ',' value_range		{ }
+covergroup_range_list:		// ==IEEE: covergroup_range_list
+	 	covergroup_value_range			{ }
+	|	covergroup_range_list ',' covergroup_value_range	{ }
 	;
 
 trans_list:			// ==IEEE: trans_list
@@ -4079,26 +4140,25 @@ trans_range_list:		// ==IEEE: trans_range_list
 	;
 
 trans_item:			// ==IEEE: range_list
-		 range_list				{ }
+		covergroup_range_list			{ }
 	;
 
 repeat_range:			// ==IEEE: repeat_range
-		expr					{ }
-	|	expr ':' expr				{ }
+		cgexpr					{ }
+	|	cgexpr ':' cgexpr			{ }
 	;
 
 cover_cross:			// ==IEEE: cover_cross
-	 	id/*cover_point_identifier*/ ':' yCROSS list_of_coverpoints iffE	{ }
-	|	/**/				 yCROSS list_of_coverpoints iffE	{ }
-	|	select_bins_or_empty			{ }
+	 	id/*cover_point_identifier*/ ':' yCROSS list_of_cross_items iffE cross_body	{ }
+	|	/**/				 yCROSS list_of_cross_items iffE cross_body	{ }
 	;
 
-list_of_coverpoints:		// ==IEEE: list_of_coverpoints
+list_of_cross_items:		// ==IEEE: list_of_cross_items
 		cross_item ',' cross_item		{ }
 	|	cross_item ',' cross_item ',' cross_itemList	{ }
 	;
 
-cross_itemList:			// IEEE: part of list_of_coverpoints
+cross_itemList:			// IEEE: part of list_of_cross_items
 		cross_item
 	|	cross_itemList ',' cross_item		{ }
 	;
@@ -4107,15 +4167,22 @@ cross_item:			// ==IEEE: cross_item
 		idAny/*cover_point_identifier or variable_identifier*/		{ }
 	;
 
-select_bins_or_empty:		// ==IEEE: select_bins_or_empty
+cross_body:			// ==IEEE: cross_body
 		'{' '}'					{ }
-	|	'{' bins_selection_or_optionSemiList '}'	{ }
+	//			// IEEE-2012: No semicolon here, mistake in spec
+	|	'{' cross_body_itemSemiList '}'		{ }
 	|	';'					{ }
 	;
 
-bins_selection_or_optionSemiList: // IEEE: part of select_bins_or_empty
-		bins_selection_or_option ';'		{ }
-	|	bins_selection_or_optionSemiList bins_selection_or_option ';' { }
+cross_body_itemSemiList: 	// IEEE: part of cross_body
+		cross_body_item ';'		{ }
+	|	cross_body_itemSemiList cross_body_item ';' { }
+	;
+
+cross_body_item:		// ==IEEE: cross_body_item
+	//			// IEEE: our semicolon is in the list
+		bins_selection_or_option		{ }
+	|	function_declaration			{ }
 	;
 
 bins_selection_or_option:	// ==IEEE: bins_selection_or_option
@@ -4128,16 +4195,24 @@ bins_selection:			// ==IEEE: bins_selection
 	;
 
 select_expression:		// ==IEEE: select_expression
-		select_condition			{ }
-	|	'!' select_condition			{ }
+	//			// IEEE: select_condition expanded here
+		yBINSOF '(' bins_expression ')'		{ }
+	|	yBINSOF '(' bins_expression ')' yINTERSECT '{' covergroup_range_list '}'	{ }
+	|	yWITH__PAREN '(' cgexpr ')'		{ }
+	//			// IEEE-2012: Need clarification as to precedence
+	//UNSUP	yWITH__PAREN '(' cgexpr ')' yMATCHES cgexpr	{ }
+	|	'!' yBINSOF '(' bins_expression ')'		{ }
+	|	'!' yBINSOF '(' bins_expression ')' yINTERSECT '{' covergroup_range_list '}'	{ }
+	|	'!' yWITH__PAREN '(' cgexpr ')'		{ }
+	//			// IEEE-2012: Need clarification as to precedence
+	//UNSUP	'!' yWITH__PAREN '(' cgexpr ')' yMATCHES cgexpr	{ }
 	|	select_expression yP_ANDAND select_expression	{ }
 	|	select_expression yP_OROR   select_expression	{ }
 	|	'(' select_expression ')'		{ }
-	;
-
-select_condition:		// ==IEEE: select_condition
-		yBINSOF '(' bins_expression ')'		{ }
-	|	yBINSOF '(' bins_expression ')' yINTERSECT '{' open_range_list '}'	{ }
+	//			// IEEE-2012: cross_identifier
+	//			// Part of covergroup_expression - generic identifier
+	//			// IEEE-2012: Need clarification as to precedence
+	//UNSUP	covergroup_expression [ yMATCHES covergroup_expression ]
 	;
 
 bins_expression:		// ==IEEE: bins_expression
@@ -4304,10 +4379,11 @@ checker_or_generate_itemList:	// IEEE: { checker_or_generate_itemList }
 checker_or_generate_item:	// ==IEEE: checker_or_generate_item
 		checker_or_generate_item_declaration	{ }
 	|	initial_construct			{ }
-	//			// IEEE: checker_always_construct
-	|	yALWAYS stmt				{ }
+	//			// IEEE: checker_construct
+	|	yALWAYS stmtBlock			{ }
 	|	final_construct				{ }
 	|	assertion_item				{ }
+	|	continuous_assign			{ }
 	|	checker_generate_item			{ }
 	;
 
@@ -4315,6 +4391,7 @@ checker_or_generate_item_declaration:	// ==IEEE: checker_or_generate_item_declar
 		data_declaration			{ }
 	|	yRAND data_declaration			{ }
 	|	function_declaration			{ }
+	|	checker_declaration			{ }
 	|	assertion_item_declaration		{ }
 	|	covergroup_declaration			{ }
 	|	overload_declaration			{ }
@@ -4345,16 +4422,21 @@ checker_instantiation:
 // Class
 
 class_declaration:		// ==IEEE: part of class_declaration
+	//			// IEEE-2012: using this also for interface_class_declaration
 	//			// The classExtendsE rule relys on classFront having the
 	//			// new class scope correct via classFront
-		classFront parameter_port_listE classExtendsE ';'
+		classFront parameter_port_listE classExtendsE classImplementsE ';'
 			class_itemListE yENDCLASS endLabelE
-			{ PARSEP->endclassCb($<fl>6,$6);
+			{ PARSEP->endclassCb($<fl>7,$7);
 			  PARSEP->symPopScope(VAstType::CLASS); }
 	;
 
 classFront:			// IEEE: part of class_declaration
 		classVirtualE yCLASS lifetimeE idAny/*class_identifier*/
+			{ PARSEP->symPushNew(VAstType::CLASS, $4);
+			  PARSEP->classCb($<fl>1,$2,$4,$1); }
+	//			// IEEE: part of interface_class_declaration
+	|	yINTERFACE yCLASS lifetimeE idAny/*class_identifier*/
 			{ PARSEP->symPushNew(VAstType::CLASS, $4);
 			  PARSEP->classCb($<fl>1,$2,$4,$1); }
 	;
@@ -4370,6 +4452,18 @@ classExtendsE:			// IEEE: part of class_declaration
 		/* empty */				{ }
 	|	yEXTENDS class_typeWithoutIdType		{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
 	|	yEXTENDS class_typeWithoutIdType '(' list_of_argumentsE ')'	{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
+	;
+
+classImplementsE:		// IEEE: part of class_declaration
+	//			// All 1800-2012
+		/* empty */				{ }
+	|	yIMPLEMENTS classImplementsList		{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
+	;
+
+classImplementsList:		// IEEE: part of class_declaration
+	//			// All 1800-2012
+		class_typeWithoutIdType			{ }
+	|	classImplementsList ',' class_typeWithoutIdType	{ }
 	;
 
 //=========
@@ -4505,6 +4599,7 @@ class_item:			// ==IEEE: class_item
 class_method:			// ==IEEE: class_method
 		memberQualResetListE task_declaration			{ }
 	|	memberQualResetListE function_declaration		{ }
+	//			// 1800-2009 adds yPURE yVIRTUAL, already in memberQualResetListE
 	|	yEXTERN memberQualResetListE method_prototype ';'	{ }
 	//			// IEEE: "method_qualifierE class_constructor_declaration"
 	//			// part of function_declaration
@@ -4575,11 +4670,11 @@ constraint_block_item:		// ==IEEE: constraint_block_item
 	;
 
 solve_before_list:		// ==IEEE: solve_before_list
-		solve_before_primary			{ }
-	|	solve_before_list ',' solve_before_primary	{ }
+		constraint_primary			{ }
+	|	solve_before_list ',' constraint_primary	{ }
 	;
 
-solve_before_primary:		// ==IEEE: solve_before_primary
+constraint_primary:		// ==IEEE: constraint_primary
 	//			// exprScope more general than: [ implicit_class_handle '.' | class_scope ] hierarchical_identifier select
 		exprScope				{ }
 	;
@@ -4591,6 +4686,11 @@ constraint_expressionList<str>:	// ==IEEE: { constraint_expression }
 
 constraint_expression<str>:	// ==IEEE: constraint_expression
 		expr/*expression_or_dist*/ ';'		{ $$=$1; }
+	//			// 1800-2012:
+	|	ySOFT expr/*expression_or_dist*/ ';'	{ $$="soft "+$1; }
+	//			// 1800-2012:
+	//			// IEEE: uniqueness_constraint ';'
+	|	yUNIQUE '{' open_range_list '}'		{ $$="unique {...}"; }
 	//			// IEEE: expr yP_MINUSGT constraint_set
 	//			// Conflicts with expr:"expr yP_MINUSGT expr"; rule moved there
 	//
@@ -4598,6 +4698,8 @@ constraint_expression<str>:	// ==IEEE: constraint_expression
 	|	yIF '(' expr ')' constraint_set	yELSE constraint_set	{ $$=$1;}
 	//			// IEEE says array_identifier here, but dotted accepted in VMM + 1800-2009
 	|	yFOREACH '(' idClassForeach/*array_id[loop_variables]*/ ')' constraint_set	{ $$=$1; }
+	//			// soft is 1800-2012
+	|	yDISABLE ySOFT expr/*constraint_primary*/ ';'	{ $$="disable soft "+$1; }
 	;
 
 constraint_set<str>:		// ==IEEE: constraint_set
