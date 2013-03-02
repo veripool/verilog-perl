@@ -1252,7 +1252,7 @@ simple_type<str>:		// ==IEEE: simple_type
 	|	non_integer_type			{ $<fl>$=$<fl>1; $$=$1; }
 	//			// IEEE: ps_type_identifier
 	//			// IEEE: ps_parameter_identifier (presumably a PARAMETER TYPE)
-	|	ps_type					{ $<fl>$=$<fl>1; $$=$1; }
+	|	package_scopeIdFollowsE yaID__aTYPE	{ $<fl>$=$<fl>1; $$=$1+$2; }
 	//			// { generate_block_identifer ... } '.'
 	//			// Need to determine if generate_block_identifier can be lex-detected
 	;
@@ -1296,12 +1296,10 @@ data_type<str>:			// ==IEEE: data_type, excluding class_type etc references
 	//			// REFERENCES
 	//
 	//			// IEEE: [ class_scope | package_scope ] type_identifier { packed_dimension }
-	|	ps_type  packed_dimensionListE		{ $<fl>$=$<fl>1; $$=$1+$2; }
-	|	class_scope_type packed_dimensionListE	{ $<fl>$=$<fl>1; $$=$1+$2; }
 	//			// IEEE: class_type
-	|	class_typeWithoutId			{ $<fl>$=$<fl>1; $$=$<str>1; }
 	//			// IEEE: ps_covergroup_identifier
-	//			// we put covergroups under ps_type, so can ignore this
+	//			// Don't distinguish between types and classes so all these combined
+	|	package_scopeIdFollowsE class_typeOneList packed_dimensionListE	{ $<fl>$=$<fl>1; $$=$<str>1+$<str>2+$3; }
 	;
 
 // IEEE: struct_union - not needed, expanded in data_type
@@ -3341,8 +3339,7 @@ id<str>:
 	;
 
 idAny<str>:			// Any kind of identifier
-		yaID__aCLASS				{ $<fl>$=$<fl>1; $$=$1; }
-	|	yaID__aPACKAGE				{ $<fl>$=$<fl>1; $$=$1; }
+		yaID__aPACKAGE				{ $<fl>$=$<fl>1; $$=$1; }
 	|	yaID__aTYPE				{ $<fl>$=$<fl>1; $$=$1; }
 	|	yaID__ETC				{ $<fl>$=$<fl>1; $$=$1; }
 	;
@@ -4449,8 +4446,8 @@ classExtendsE:			// IEEE: part of class_declaration
 	//			// The classExtendsE rule relys on classFront having the
 	//			// new class scope correct via classFront
 		/* empty */				{ }
-	|	yEXTENDS class_typeWithoutIdType		{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
-	|	yEXTENDS class_typeWithoutIdType '(' list_of_argumentsE ')'	{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
+	|	yEXTENDS class_typeWithoutId		{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
+	|	yEXTENDS class_typeWithoutId '(' list_of_argumentsE ')'	{ PARSEP->syms().import($<fl>1,$<str>2,$<scp>2,"*"); }
 	;
 
 classImplementsE:		// IEEE: part of class_declaration
@@ -4461,8 +4458,8 @@ classImplementsE:		// IEEE: part of class_declaration
 
 classImplementsList:		// IEEE: part of class_declaration
 	//			// All 1800-2012
-		class_typeWithoutIdType			{ }
-	|	classImplementsList ',' class_typeWithoutIdType	{ }
+		class_typeWithoutId			{ }
+	|	classImplementsList ',' class_typeWithoutId	{ }
 	;
 
 //=========
@@ -4474,28 +4471,15 @@ ps_id_etc<str>:			// package_scope + general id
 		package_scopeIdFollowsE id		{ $<fl>$=$<fl>1; $$=$1+$2; }
 	;
 
-ps_type<str>:			// IEEE: ps_parameter_identifier | ps_type_identifier
-		package_scopeIdFollowsE yaID__aTYPE	{ $<fl>$=$<fl>1; $$=$1+$2; }
-	;
-
-class_scope_type<str>:		// class_scope + type
-		class_scopeIdFollows yaID__aTYPE	{ $<fl>$=$<fl>1; $$=$<str>1+$2; }
-	;
-
 class_scope_id<str_scp>:	// class_scope + id etc
 		class_scopeIdFollows id			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1+$<str>2; }
 	;
 
 //=== Below rules assume special scoping per above
 
-class_typeWithoutId<str_scp>:	// class_type standalone without following id
+class_typeWithoutId<str_scp>:	// as with class_typeWithoutId but allow yaID__aTYPE
 	//			// and we thus don't need to resolve it in specified package
 		package_scopeIdFollowsE class_typeOneList	{ $<fl>$=$<fl>2; $<scp>$=$<scp>2; $<str>$=$1+$<str>2; }
-	;
-
-class_typeWithoutIdType<str_scp>:	// as with class_typeWithoutIdType but allow yaID__aTYPE
-	//			// and we thus don't need to resolve it in specified package
-		package_scopeIdFollowsE class_typeOneListType	{ $<fl>$=$<fl>2; $<scp>$=$<scp>2; $<str>$=$1+$<str>2; }
 	;
 
 class_scopeWithoutId<str_scp>:	// class_type standalone without following id
@@ -4503,44 +4487,28 @@ class_scopeWithoutId<str_scp>:	// class_type standalone without following id
 		class_scopeIdFollows			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; PARSEP->symTableNextId(NULL); }
 	;
 
-class_scopeIdFollows<str_scp>:	// IEEE: class_scope
+class_scopeIdFollows<str_scp>:	// IEEE: class_scope + type
 	//			// IEEE: "class_type yP_COLONCOLON"
 	//			// IMPORTANT: The lexer will parse the following ID to be in the found package
 	//			// But class_type:'::' conflicts with class_scope:'::' so expand here
 		package_scopeIdFollowsE class_typeOneListColonIdFollows	{ $<fl>$=$<fl>2; $<scp>$=$<scp>2; $<str>$=$1+$<str>2; }
 	;
 
-class_typeOneListColonIdFollows<str_scp>: // IEEE: class_type ::
+class_typeOneListColonIdFollows<str_scp>: // IEEE: class_type :: but allow yaID__aTYPE
 		class_typeOneList yP_COLONCOLON 	{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1+$<str>2; PARSEP->symTableNextId($<scp>1); }
 	;
 
-class_typeOneListColonIdFollowsType<str_scp>: // class_typeOneListColonIdFollows but allow yaID__aTYPE
-		class_typeOneListType yP_COLONCOLON 	{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1+$<str>2; PARSEP->symTableNextId($<scp>1); }
-	;
-
-class_typeOneList<str_scp>:	// IEEE: class_type: "id [ parameter_value_assignment ]"
+class_typeOneList<str_scp>:	// IEEE: class_type: "id [ parameter_value_assignment ]" but allow yaID__aTYPE
 	//			// If you follow the rules down, class_type is really a list via ps_class_identifier
 	//			// Must propagate scp up for next id
 		class_typeOne					{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
 	|	class_typeOneListColonIdFollows class_typeOne	{ $<fl>$=$<fl>1; $<scp>$=$<scp>2; $<str>$=$<str>1+$<str>2; }
 	;
 
-class_typeOneListType<str_scp>:	// As with class_typeOneList but allow yaID__aTYPE
-		class_typeOneType					{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
-	|	class_typeOneListColonIdFollowsType class_typeOneType	{ $<fl>$=$<fl>1; $<scp>$=$<scp>2; $<str>$=$<str>1+$<str>2; }
-	;
-
-class_typeOne<str_scp>:		// IEEE: class_type: "id [ parameter_value_assignment ]"
+class_typeOne<str_scp>:		// IEEE: class_type: "id [ parameter_value_assignment ]" but allow yaID__aTYPE
 	//			// If you follow the rules down, class_type is really a list via ps_class_identifier
-		yaID__aCLASS parameter_value_assignmentE
-			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
-	;
-
-class_typeOneType<str_scp>:	// As with class_typeOneList but allow yaID__aTYPE
 	//			// Not listed in IEEE, but see bug627 any parameter type maybe a class
-		yaID__aCLASS parameter_value_assignmentE
-			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
-	|	yaID__aTYPE parameter_value_assignmentE
+		yaID__aTYPE parameter_value_assignmentE
 			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
 	;
 

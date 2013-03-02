@@ -3,6 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.401**** devel
+
+***	Fix recognizing type parameters as classes, bug627. [Jon Nall]
+
+
 * Verilog::Language 3.400 2013-02-27
 
 ***	Support SystemVerilog 1800-2012.

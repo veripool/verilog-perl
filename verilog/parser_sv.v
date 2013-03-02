@@ -373,3 +373,13 @@ endclass
 virtual class uvm_build_phase #(type BASE=ovm_void) extends BASE;
    static const string type_name = "uvm_build_phase";
 endclass
+
+class bug627sub;
+endclass
+class bug627 #(type TYPE=bug627sub);
+  typedef TYPE types_t[$];
+  static function types_t f();
+      $display("%s", { TYPE::type_name });
+      return types;
+  endfunction
+endclass
