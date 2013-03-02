@@ -139,9 +139,9 @@ BISONPRE_VERSION(2.4, %define lr.keep_unreachable_states)
 %token<str>		yaID__ETC	"IDENTIFIER"
 %token<str>		yaID__LEX	"IDENTIFIER-in-lex"
 %token<str>		yaID__aCLASS	"CLASS-IDENTIFIER"
-%token<str>		yaID__aCOVERGROUP "COVERGROUP-IDENTIFIER"
 %token<str>		yaID__aPACKAGE	"PACKAGE-IDENTIFIER"
 %token<str>		yaID__aTYPE	"TYPE-IDENTIFIER"
+//			aCOVERGROUP is same as aTYPE
 //			Can't predecode aFUNCTION, can declare after use
 //			Can't predecode aINTERFACE, can declare after use
 //			Can't predecode aTASK, can declare after use
@@ -3342,7 +3342,6 @@ id<str>:
 
 idAny<str>:			// Any kind of identifier
 		yaID__aCLASS				{ $<fl>$=$<fl>1; $$=$1; }
-	|	yaID__aCOVERGROUP			{ $<fl>$=$<fl>1; $$=$1; }
 	|	yaID__aPACKAGE				{ $<fl>$=$<fl>1; $$=$1; }
 	|	yaID__aTYPE				{ $<fl>$=$<fl>1; $$=$1; }
 	|	yaID__ETC				{ $<fl>$=$<fl>1; $$=$1; }
@@ -4477,14 +4476,10 @@ ps_id_etc<str>:			// package_scope + general id
 
 ps_type<str>:			// IEEE: ps_parameter_identifier | ps_type_identifier
 		package_scopeIdFollowsE yaID__aTYPE	{ $<fl>$=$<fl>1; $$=$1+$2; }
-	//			// Simplify typing - from ps_covergroup_identifier
-	|	package_scopeIdFollowsE yaID__aCOVERGROUP	{ $<fl>$=$<fl>1; $$=$1+$2; }
 	;
 
 class_scope_type<str>:		// class_scope + type
 		class_scopeIdFollows yaID__aTYPE	{ $<fl>$=$<fl>1; $$=$<str>1+$2; }
-	//			// Spec expansion: combined covergroups here to simplify typing
-	|	class_scopeIdFollows yaID__aCOVERGROUP	{ $<fl>$=$<fl>1; $$=$<str>1+$2; }
 	;
 
 class_scope_id<str_scp>:	// class_scope + id etc
@@ -4542,12 +4537,10 @@ class_typeOne<str_scp>:		// IEEE: class_type: "id [ parameter_value_assignment ]
 	;
 
 class_typeOneType<str_scp>:	// As with class_typeOneList but allow yaID__aTYPE
+	//			// Not listed in IEEE, but see bug627 any parameter type maybe a class
 		yaID__aCLASS parameter_value_assignmentE
 			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
 	|	yaID__aTYPE parameter_value_assignmentE
-			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
-	//			// Spec expansion: combined covergroups here to simplify typing
-	|	yaID__aCOVERGROUP parameter_value_assignmentE
 			{ $<fl>$=$<fl>1; $<scp>$=$<scp>1; $<str>$=$<str>1; }
 	;
 

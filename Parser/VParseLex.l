@@ -814,7 +814,7 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	    switch (scp->type()) {
 	    case VAstType::CLASS:	token = yaID__aCLASS;	    break;
 	    case VAstType::PACKAGE:	token = yaID__aPACKAGE;	    break;
-	    case VAstType::COVERGROUP:	token = yaID__aCOVERGROUP;  break;
+	    case VAstType::COVERGROUP:	token = yaID__aTYPE;	    break;
 	    case VAstType::TYPE:	token = yaID__aTYPE;	    break;
 	    default:			token = yaID__ETC;	    break;
 	    }
