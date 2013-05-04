@@ -2569,8 +2569,8 @@ task_declaration:		// IEEE: task_declaration
 task_prototype:			// ==IEEE: task_prototype
 	//			// IEEE: has '(' tf_port_list ')'
 	//			// However the () should be optional for OVA
-		task taskId '(' tf_port_listE ')'	{ PARSEP->symPopScope(VAstType::TASK); }
-	|	task taskId				{ PARSEP->symPopScope(VAstType::TASK); }
+		task taskId '(' tf_port_listE ')'	{ PARSEP->symPopScope(VAstType::TASK); PARSEP->endtaskfuncCb($<fl>1,"endtask"); }
+	|	task taskId				{ PARSEP->symPopScope(VAstType::TASK); PARSEP->endtaskfuncCb($<fl>1,"endtask"); }
 	;
 
 function<fl>:
@@ -2596,13 +2596,13 @@ function_declaration:		// IEEE: function_declaration + function_body_declaration
 function_prototype:		// IEEE: function_prototype
 	//			// IEEE: has '(' tf_port_list ')'
 	//			// However the () should be optional for OVA
-		function funcId '(' tf_port_listE ')'	{ PARSEP->symPopScope(VAstType::FUNCTION); }
-	|	function funcId 			{ PARSEP->symPopScope(VAstType::FUNCTION); }
+		function funcId '(' tf_port_listE ')'	{ PARSEP->symPopScope(VAstType::FUNCTION); PARSEP->endtaskfuncCb($<fl>1,"endfunction"); }
+	|	function funcId 			{ PARSEP->symPopScope(VAstType::FUNCTION); PARSEP->endtaskfuncCb($<fl>1,"endfunction"); }
 	;
 
 class_constructor_prototype:	// ==IEEE: class_constructor_prototype
-		function funcIdNew '(' tf_port_listE ')' ';'	{ PARSEP->symPopScope(VAstType::FUNCTION); }
-	|	function funcIdNew ';'				{ PARSEP->symPopScope(VAstType::FUNCTION); }
+		function funcIdNew '(' tf_port_listE ')' ';'	{ PARSEP->symPopScope(VAstType::FUNCTION); PARSEP->endtaskfuncCb($<fl>1,"endfunction"); }
+	|	function funcIdNew ';'				{ PARSEP->symPopScope(VAstType::FUNCTION); PARSEP->endtaskfuncCb($<fl>1,"endfunction"); }
 	;
 
 method_prototype:

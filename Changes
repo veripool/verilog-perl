@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Fix recognizing type parameters as classes, bug627. [Jon Nall]
 
+****	Fix missing endtask callbacks in DPI and methods, bug641. [Jon Nall]
+
 
 * Verilog::Language 3.400 2013-02-27
 

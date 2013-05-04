@@ -482,3 +482,6 @@ endpackage
 module non_bug586;  // Verilator only
    input logic [bug586_pkg::B : 0] bvar;
 endmodule
+
+// bug_641
+import "DPI-C" function bit mydpi_bug641(input a_dpi_input);
