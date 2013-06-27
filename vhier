@@ -444,7 +444,7 @@ those files needed to represent the entire design.
 
 =item --instance
 
-Show module instance names.
+With --cells or --forest, show module instance names.
 
 =item --language <1364-1995|1364-2001|1364-2005|1800-2005|1800-2009|1800-2012>
 
