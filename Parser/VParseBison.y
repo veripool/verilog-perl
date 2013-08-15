@@ -3194,11 +3194,13 @@ pev_argsDottedList<str>:	// IEEE: part of list_of_arguments - pev_expr at bottom
 	;
 
 argsDotted<str>:		// IEEE: part of list_of_arguments
-		'.' idAny '(' expr ')'			{ $<fl>$=$<fl>1; $$=$1+$2+$3+$4+$5; }
+		'.' idAny '(' ')'			{ $<fl>$=$<fl>1; $$=$1+$2+$3+$4; }
+	|	'.' idAny '(' expr ')'			{ $<fl>$=$<fl>1; $$=$1+$2+$3+$4+$5; }
 	;
 
 pev_argsDotted<str>:		// IEEE: part of list_of_arguments - pev_expr at bottom
-		'.' idAny '(' pev_expr ')'		{ $<fl>$=$<fl>1; $$=$1+$2+$3+$4+$5; }
+		'.' idAny '(' ')'			{ $<fl>$=$<fl>1; $$=$1+$2+$3+$4; }
+	|	'.' idAny '(' pev_expr ')'		{ $<fl>$=$<fl>1; $$=$1+$2+$3+$4+$5; }
 	;
 
 streaming_concatenation<str>:	// ==IEEE: streaming_concatenation

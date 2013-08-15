@@ -485,3 +485,12 @@ endmodule
 
 // bug_641
 import "DPI-C" function bit mydpi_bug641(input a_dpi_input);
+
+// .f() in function call
+module fbug;
+   initial a = f(, 1);
+   initial a = f(.s(1), .j(2));
+   initial a = f(.s(), .j());
+   initial a = f(2);
+   initial a = f();
+endmodule
