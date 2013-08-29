@@ -1931,7 +1931,7 @@ packed_dimension<str>:		// ==IEEE: packed_dimension
 param_assignment:		// ==IEEE: param_assignment
 	//			// IEEE: constant_param_expression
 	//			// param_expression: '$' is in expr
-		id/*new-parameter*/ variable_dimensionListE sigAttrListE '=' exprOrDataType
+		id/*new-parameter*/ variable_dimensionListE sigAttrListE '=' exprOrDataTypeOrMinTypMax
 			{ $<fl>$=$<fl>1; VARDONE($<fl>1, $1, $2, $5); }
 	//			// only legal in port list; throws error if not set
 	|	id/*new-parameter*/ variable_dimensionListE sigAttrListE
@@ -3131,6 +3131,16 @@ exprOrDataType<str>:		// expr | data_type: combined to prevent conflicts
 	//			// not in spec, but needed for $past(sig,1,,@(posedge clk))
 	|	event_control				{ $$ = "event_control"; }
 	;
+
+exprOrDataTypeOrMinTypMax<str>:	// exprOrDataType or mintypmax_expression
+		expr					{ $<fl>$=$<fl>1; $$ = $1; }
+	|	expr ':' expr ':' expr			{ $<fl>$=$<fl>1; $$ = $1+$2+$3+$4+$5; }
+	//			// data_type includes id that overlaps expr, so special flavor
+	|	data_type				{ $<fl>$=$<fl>1; $$ = $1; }
+	//			// not in spec, but needed for $past(sig,1,,@(posedge clk))
+	|	event_control				{ $$ = "event_control"; }
+	;
+
 
 cateList<str>:
 	//			// Not just 'expr' to prevent conflict via stream_concOrExprOrType

@@ -494,3 +494,5 @@ module fbug;
    initial a = f(2);
    initial a = f();
 endmodule
+
+parameter bug671 = 5 : 10 : 20 ;
