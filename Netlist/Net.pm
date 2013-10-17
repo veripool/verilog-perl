@@ -11,7 +11,7 @@ use strict;
 @ISA = qw(Verilog::Netlist::Net::Struct
 	Verilog::Netlist::Subclass);
 
-$VERSION = '3.401';
+$VERSION = '3.402';
 
 my %_Type_Widths = (
     'bit'	=> 1,
