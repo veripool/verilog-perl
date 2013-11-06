@@ -26,3 +26,13 @@ module bug400;
      "assert 0");
 endmodule
 
+// dobbie
+package pkga;
+endpackage
+package pkgb;
+endpackage
+module impbegin
+  import pkga::*;
+   import pkgb::*;
+   (input foobar);
+endmodule

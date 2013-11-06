@@ -675,7 +675,7 @@ package_or_generate_item_declaration:	// ==IEEE: package_or_generate_item_declar
 
 package_import_declarationList:
 		package_import_declaration		{ }
-	|	package_import_declarationList ',' package_import_declaration { }
+	|	package_import_declarationList package_import_declaration { }
 	;
 
 package_import_declaration:	// ==IEEE: package_import_declaration

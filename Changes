@@ -3,6 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.403 devel
+
+****    Fix multiple pre-ANSI package imports on same line. [Brad Dobbie]
+
+
 * Verilog::Language 3.402 2013-10-17
 
 ****	Fix function/task named parameter calls with empty parenthesis.
