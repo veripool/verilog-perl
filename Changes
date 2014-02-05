@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.403 devel
 
+****	Fix build on MacOS 5.12.4. [Robert Bell]
+
 ****    Fix multiple pre-ANSI package imports on same line. [Brad Dobbie]
 
 
