@@ -76,6 +76,7 @@ class VParseLex {
     VParse* 	m_parsep;	///< Current parser
     bool	m_inCellDefine;	///< In a `celldefine
 
+    int		m_prevLexToken;		///< previous parsed token (for lexer)
     bool	m_ahead;		///< aheadToken is valid
     int		m_aheadToken;		///< Token we read ahead
     VParseBisonYYSType m_aheadVal;	///< aheadToken's value
@@ -88,11 +89,13 @@ class VParseLex {
     // State to lexer
     static VParseLex* s_currentLexp;	///< Current lexing point
     static VParseBisonYYSType* s_yylvalp;
+    int	prevLexToken() { return m_prevLexToken; } // Parser -> lexer communication
 
     // CONSTRUCTORS
     VParseLex(VParse* parsep) {
 	m_parsep = parsep;
 	m_inCellDefine = false;
+	m_prevLexToken = 0;
 	m_ahead = false;
 	m_pvstate = 0;
 
@@ -123,6 +126,7 @@ class VParseLex {
 
     /// Called by VParse.cpp to inform lexer
     void unputString(const char* textp);
+    void unputString(const char* textp, size_t length);
 
     void debug(int level);
     void language(const char* value);
@@ -130,6 +134,7 @@ class VParseLex {
     int lexToBison(VParseBisonYYSType* yylvalp);
 private:
     void unused();
+    int yylexReadTok();
     int lexToken(VParseBisonYYSType* yylvalp);
 };
 

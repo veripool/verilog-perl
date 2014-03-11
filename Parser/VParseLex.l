@@ -52,7 +52,8 @@ VParseBisonYYSType* VParseLex::s_yylvalp = NULL;		// LValue for current bison ob
 #define LPARSEP (LEXP->m_parsep)
 
 #define NEXTLINE()  { LPARSEP->inFilelineInc(); }
-#define LINECHECK()  { const char* cp=yytext; for (int n=yyleng; n; --n) if (cp[n]=='\n') NEXTLINE(); }
+#define LINECHECKS(textp,len)  { const char* cp=textp; for (int n=len; n; --n) if (cp[n]=='\n') NEXTLINE(); }
+#define LINECHECK()  LINECHECKS(yytext,yyleng)
 
 #define FL { VParseLex::s_yylvalp->fl = LPARSEP->inFilelinep(); }
 
@@ -100,6 +101,13 @@ id	[a-zA-Z_][a-zA-Z0-9_$]*
 	/* escaped identifier */
 escid	\\[^ \t\f\r\n]+
 word	[a-zA-Z0-9_]+
+	/* verilog numbers, constructed to not match the ' that begins a '(  or '{ */
+vnum1	[0-9]*?['']s?[bcodhBCODH][ \t\n]*[A-Fa-f0-9xXzZ_?]*
+vnum2	[0-9]*?['']s?[01xXzZ]
+vnum3	[0-9][_0-9]*[ \t\n]*['']s?[bcodhBCODH]?[ \t]*[A-Fa-f0-9xXzZ_?]+
+vnum4	[0-9][_0-9]*[ \t\n]*['']s?[bcodhBCODH]
+vnum5	[0-9][_0-9]*[ \t\n]*['']s
+vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 
 %%
 
@@ -536,20 +544,19 @@ word	[a-zA-Z0-9_]+
 			}
   \" 			{ yy_push_state(STRING); yymore(); }
 
-  [0-9]*?['']s?[bcodhBCODH][ \t\n]*[A-Fa-f0-9xXzZ_?]*	{
-			  FL; VALTEXT; LINECHECK(); CALLBACK(numberCb); return yaINTNUM;
-			}
-  [0-9]*?['']s?[01xXzZ]	{	/* SystemVerilog */
-			  FL; VALTEXT; CALLBACK(numberCb); return yaINTNUM;
-			}
-  /* Note below is constructed to not match the ' that begins a '(  or '{ */
-  [0-9][_0-9]*[ \t\n]*['']s?[bcodhBCODH]?[ \t]*[A-Fa-f0-9xXzZ_?]+	{
-			  FL; VALTEXT; LINECHECK(); CALLBACK(numberCb); return yaINTNUM;
-			}
-  [0-9][_0-9]*[ \t\n]*['']s?[bcodhBCODH]	{
-			  FL; VALTEXT; LINECHECK(); CALLBACK(numberCb); return yaINTNUM;
-			}
-  [0-9][_0-9]*[ \t\n]*['']s	{
+  {vnum} {
+			  /* "# 1'b0" is a delay value so must lex as "#" "1" "'b0" */
+			  if (LEXP->prevLexToken()=='#') {
+			      int shortlen = 0;
+			      while (isdigit(yytext[shortlen])) shortlen++;
+			      if (shortlen) {
+				  // Return is stuff before '
+				  VALTEXTS(string(yytext,shortlen));
+				  // Push rest for later parse
+				  LEXP->unputString(yytext+shortlen, yyleng-shortlen);
+				  FL; LINECHECKS(yytext,shortlen); CALLBACK(numberCb); return yaINTNUM;
+			      }
+			  }
 			  FL; VALTEXT; LINECHECK(); CALLBACK(numberCb); return yaINTNUM;
 			}
   [0-9][_0-9]*		{
@@ -685,11 +692,27 @@ void VParseLex::unputString(const char* textp) {
     }
 }
 
+void VParseLex::unputString(const char* textp, size_t length) {
+    s_currentLexp = this;
+    // Add characters to input stream in back-to-front order
+    const char* cp = textp;
+    for (cp += length - 1; length--; cp--) {
+	unput(*cp);
+    }
+}
+
 void VParseLex::unused() {
     if (0) {
 	// Prevent unused warnings
 	yy_top_state();
     }
+}
+
+int VParseLex::yylexReadTok() {
+    // Call yylex() remembering last non-whitespace token
+    int token = yylex();
+    m_prevLexToken = token;  // Save so can find '#' to parse following number
+    return token;
 }
 
 int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
@@ -704,7 +727,7 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
     } else {
 	// Parse new token
 	s_yylvalp = yylvalp;  // Read by yylex()
-	token = yylex();
+	token = yylexReadTok();
     }
     // If a paren, read another
     if (token == '('
@@ -721,7 +744,7 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	if (yy_flex_debug) { cout<<"   lexToken: reading ahead to find possible strength"<<endl; }
 #endif
 	VParseBisonYYSType curValue = *s_yylvalp;  // Remember value, as about to read ahead
-	int nexttok = yylex();
+	int nexttok = yylexReadTok();
 	m_ahead = true;
 	m_aheadToken = nexttok;
 	m_aheadVal = *s_yylvalp;
