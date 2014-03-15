@@ -121,9 +121,12 @@ static void NEED_S09(VFileLine*, const string&) {
 
 %}
 
-%pure_parser
-%token_table
-BISONPRE_VERSION(2.4, %define lr.keep_unreachable_states)
+BISONPRE_VERSION(0.0, 2.999, %pure_parser)
+BISONPRE_VERSION(3.0,        %pure-parser)
+BISONPRE_VERSION(0.0, 2.999, %token_table)
+BISONPRE_VERSION(3.0,        %token-table)
+BISONPRE_VERSION(2.4, 2.999, %define lr.keep_unreachable_states)
+BISONPRE_VERSION(3.0,        %define lr.keep-unreachable-state)
 
 // When writing Bison patterns we use yTOKEN instead of "token",
 // so Bison will error out on unknown "token"s.
