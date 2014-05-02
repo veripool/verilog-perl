@@ -86,7 +86,7 @@ SKIP: {
     else {
 	warn "\n";
 	warn "*** You do not seem to have VCS or NC-Verilog installed, not running rest of test.\n";
-	warn "*** (If you do not own VCS/NC-Verilog, ignore this warning).\n";
+	warn "*** (If you do not license VCS/NC-Verilog, ignore this warning).\n";
 	skip("No simulator found",1);
     }
 }

@@ -38,6 +38,7 @@ sub new {
 		options => undef,	# Usually pointer to Verilog::Getopt
 		symbol_table => [],	# Symbol table for Verilog::Parser
  		preproc => 'Verilog::Preproc',
+		parser => 'Verilog::Netlist::File::Parser',
 		remove_defines_without_tick => 0,   # Overriden in SystemC::Netlist
 		#include_open_nonfatal => 0,
 		#keep_comments => 0,
@@ -516,6 +517,10 @@ used.
 
 An optional pointer to a Verilog::Getopt object, to be used for locating
 files.
+
+=item parser => $package_name
+
+The name of the parser class. Defaults to "Verilog::Netlist::File::Parser".
 
 =item preproc => $package_name
 

@@ -438,7 +438,9 @@ sub read {
 				      );
 
     my $keep_cmt = ($params{keep_comments} || $netlist->{keep_comments});
-    my $parser = Verilog::Netlist::File::Parser->new
+    my $parser_class = ($params{parser} || $netlist->{parser});
+
+    my $parser = $parser_class->new
 	( fileref=>$fileref,
 	  filename=>$filepath,	# for ->read
 	  metacomment=>($params{metacomment} || $netlist->{metacomment}),
