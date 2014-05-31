@@ -383,3 +383,12 @@ class bug627 #(type TYPE=bug627sub);
       return types;
   endfunction
 endclass
+
+interface if_bug777;
+    wire a;
+    modport master (input a);
+    modport slave (output a);
+endinterface
+module bug778 ();
+   virtual if_bug777.master bar;
+endmodule

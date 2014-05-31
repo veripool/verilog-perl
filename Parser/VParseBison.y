@@ -1266,6 +1266,8 @@ data_typeVar<str>:		// IEEE: data_type + virtual_interface_declaration
 	//			// IEEE-2012: part of data_type
 	|	yVIRTUAL__INTERFACE yINTERFACE id/*interface*/ parameter_value_assignmentE '.' id/*modport*/
 			{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
+	|	yVIRTUAL__anyID id/*interface*/ parameter_value_assignmentE '.' id/*modport*/
+			{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	;
 
 data_type<str>:			// ==IEEE: data_type, excluding class_type etc references
@@ -1283,8 +1285,11 @@ data_type<str>:			// ==IEEE: data_type, excluding class_type etc references
 	|	yCHANDLE				{ $<fl>$=$<fl>1; $$=$1; }
 	//			// Rules overlap virtual_interface_declaration
 	//			// Parameters here are SV2009
+	//			// IEEE has ['.' modport] but that will conflict with port
+	//			// declarations which decode '.' modport themselves, so
+	//			// instead see data_typeVar
 	|	yVIRTUAL__INTERFACE yINTERFACE id/*interface*/ parameter_value_assignmentE
-			{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
+ 			{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
 	|	yVIRTUAL__anyID                id/*interface*/ parameter_value_assignmentE
 			{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	//
