@@ -1192,6 +1192,8 @@ port_declaration:		// ==IEEE: port_declaration
 	|	port_directionReset port_declNetE signingE rangeList  { VARDTYPE(SPACED($3,$4)); } list_of_variable_decl_assignments	{ }
 	|	port_directionReset port_declNetE signing	      { VARDTYPE($3); } list_of_variable_decl_assignments	{ }
 	|	port_directionReset port_declNetE /*implicit*/        { VARDTYPE("");/*default_nettype*/} list_of_variable_decl_assignments	{ }
+	//			// IEEE: interface_declaration
+	//			// Looks just like variable declaration unless has a period
 	;
 
 tf_port_declaration:		// ==IEEE: tf_port_declaration
@@ -1981,6 +1983,7 @@ instName<str>:
 	//			//       or udp_identifier
 	//			//       or module_identifier
 	|	id					{ $<fl>$=$<fl>1; $$=$1; }
+	|	id '.' id/*modport*/			{ $<fl>$=$<fl>1; $$=$1; }
 	;
 
 instnameList:

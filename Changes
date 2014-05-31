@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ***	Added Verilog::Netlist/Verilog::Parser parser option.
 
+****	Fix modport outside ANSI header, bug777. [Joe Dudas]
+
 ****	Fix virtual modport without interface, bug778. [Jon Nall]
 
 ****	Fix Bison 4.0 warnings.
