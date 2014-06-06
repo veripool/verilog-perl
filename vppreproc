@@ -46,6 +46,7 @@ if (! GetOptions (
 		  "comment!"	=> sub { push @opt_pp_flags, (keep_comments=>$_[1]); },
 		  "dump-defines!" => \$opt_dump_defines,
 		  "line!"	=> sub { push @opt_pp_flags, (line_directives=>$_[1]); },
+		  "P!"		=> sub { $opt_blank=0; push @opt_pp_flags, (line_directives=>$_[1]); },
 		  "pedantic!"	=> sub { push @opt_pp_flags, (pedantic=>$_[1]); },
 		  "simple!"	=> sub { if ($_[1]) {
 		      push @opt_pp_flags, (keep_comments=>0,
@@ -213,6 +214,10 @@ Remove comments.
 =item --noline
 
 Remove `line directives.
+
+=item -P
+
+Same as --noline --noblank, similar to "GCC -P" behavior.
 
 =item --pedantic
 
