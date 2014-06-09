@@ -277,13 +277,14 @@ OUTPUT: RETVAL
 #//**********************************************************************
 #// self->filename()
 
-const char *
+SV*
 VPreProcXs::filename ()
 PROTOTYPE: $
 CODE:
 {
     if (!THIS) XSRETURN_UNDEF;
-    RETVAL = THIS->fileline()->filename().c_str();
+    string ret = THIS->fileline()->filename();
+    RETVAL = newSVpv(ret.c_str(), ret.length());
 }
 OUTPUT: RETVAL
 
@@ -303,7 +304,7 @@ CODE:
 #//**********************************************************************
 #// self->getall()
 
-const char *
+SV*
 VPreProcXs::getall (approx_chunk=0)
 size_t approx_chunk
 PROTOTYPE: $;$
@@ -314,14 +315,14 @@ CODE:
     string lastline = THIS->getall(approx_chunk);
     holdline = lastline;	/* Stash it so c_str() doesn't disappear immediately */
     if (holdline=="" && THIS->isEof()) XSRETURN_UNDEF;
-    RETVAL = lastline.c_str();
+    RETVAL = newSVpv(lastline.c_str(), lastline.length());
 }
 OUTPUT: RETVAL
 
 #//**********************************************************************
 #// self->getline()
 
-const char *
+SV*
 VPreProcXs::getline ()
 PROTOTYPE: $
 CODE:
@@ -331,7 +332,7 @@ CODE:
     string lastline = THIS->getline();
     holdline = lastline;	/* Stash it so c_str() doesn't disappear immediately */
     if (holdline=="" && THIS->isEof()) XSRETURN_UNDEF;
-    RETVAL = lastline.c_str();
+    RETVAL = newSVpv(lastline.c_str(), lastline.length());
 }
 OUTPUT: RETVAL
 

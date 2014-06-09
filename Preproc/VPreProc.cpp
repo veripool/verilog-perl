@@ -391,7 +391,8 @@ string VPreProcImp::defineSubst(VPreDefRef* refp) {
 	bool quote = false;
 	bool haveDefault = false;
 	// Note there's a leading ( and trailing ), so parens==1 is the base parsing level
-	const char* cp=refp->params().c_str();
+	string params = refp->params();  // Must keep str in scope to get pointer
+	const char* cp=params.c_str();
 	if (*cp == '(') cp++;
 	for (; *cp; cp++) {
 	    //if (debug()>=5) cout <<"   Parse  Paren="<<paren<<"  Arg="<<numArgs<<"  token='"<<token<<"'  Parse="<<cp<<endl;
@@ -549,13 +550,12 @@ bool VPreProcImp::readWholefile(const string& filename, StrList& outl) {
 
     FILE* fp = NULL;
     int fd;
-    char cmd[100];
     bool eof = false;
 
     ssize_t position = filename.find_last_of(".");
     if (filename.length()>3 && 0==filename.compare(filename.length()-3, 3, ".gz")) {
-        sprintf(cmd, "gunzip -c %s", filename.c_str());
-        if ((fp = popen(cmd, "r")) == NULL) {
+	string cmd = "gunzip -c "+filename;
+        if ((fp = popen(cmd.c_str(), "r")) == NULL) {
             return false;
         }
         fd = fileno (fp);
@@ -1248,9 +1248,11 @@ int VPreProcImp::getFinalToken(string& buf) {
     }
     int tok = m_finToken;
     buf = m_finBuf;
-    if (0 && debug()>=5) fprintf (stderr,"%d: FIN:      %-10s: %s\n",
-				  m_lexp->m_tokFilelinep->lineno(),
-				  tokenName(tok), VPreLex::cleanDbgStrg(buf).c_str());
+    if (0 && debug()>=5) {
+	string bufcln = VPreLex::cleanDbgStrg(buf);
+	fprintf (stderr,"%d: FIN:      %-10s: %s\n",
+		 m_lexp->m_tokFilelinep->lineno(), tokenName(tok), bufcln.c_str());
+    }
     // Track `line
     const char* bufp = buf.c_str();
     while (*bufp == '\n') bufp++;
@@ -1281,7 +1283,7 @@ int VPreProcImp::getFinalToken(string& buf) {
 	    }
 	}
 	// Track newlines in prep for next token
-	for (const char* cp = buf.c_str(); *cp; cp++) {
+	for (string::iterator cp=buf.begin(); cp!=buf.end(); ++cp) {
 	    if (*cp == '\n') {
 		m_finAtBol = true;
 		m_finFilelinep->linenoIncInPlace();  // Increment in place to avoid new/delete calls.  It's private data.
@@ -1307,8 +1309,9 @@ string VPreProcImp::getparseline(bool stop_at_eol, size_t approx_chunk) {
 	    string buf;
 	    int tok = getFinalToken(buf/*ref*/);
 	    if (debug()>=5) {
+		string bufcln = VPreLex::cleanDbgStrg(buf);
 		fprintf (stderr,"%d: GETFETC:  %-10s: %s\n",
-			 m_lexp->m_tokFilelinep->lineno(), tokenName(tok), VPreLex::cleanDbgStrg(buf).c_str());
+			 m_lexp->m_tokFilelinep->lineno(), tokenName(tok), bufcln.c_str());
 	    }
 	    if (tok==VP_EOF) {
 		// Add a final newline, if the user forgot the final \n.
@@ -1336,9 +1339,11 @@ string VPreProcImp::getparseline(bool stop_at_eol, size_t approx_chunk) {
 	    if (!*cp) continue;
 	}
 
-	if (debug()>=4) fprintf (stderr,"%d: GETLINE:  %s\n",
-				 m_lexp->m_tokFilelinep->lineno(),
-				 VPreLex::cleanDbgStrg(theLine).c_str());
+	if (debug()>=4) {
+	    string lncln = VPreLex::cleanDbgStrg(theLine);
+	    fprintf (stderr,"%d: GETLINE:  %s\n",
+		     m_lexp->m_tokFilelinep->lineno(), lncln.c_str());
+	}
 	return theLine;
     }
 }

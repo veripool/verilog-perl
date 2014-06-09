@@ -825,8 +825,8 @@ int VParseLex::lexToken(VParseBisonYYSType* yylvalp) {
 	VAstEnt* scp;
 	if (VAstEnt* look_underp = LPARSEP->symTableNextId()) {
 	    if (yy_flex_debug) { cout<<"   lexToken: next id lookup forced under "<<look_underp
-				     <<" for \""<<s_yylvalp->str.c_str()<<"\""<<endl; }
-	    scp = look_underp->findSym(s_yylvalp->str.c_str());
+				     <<" for \""<<s_yylvalp->str<<"\""<<endl; }
+	    scp = look_underp->findSym(s_yylvalp->str);
 	    // "consume" it.  Must set again if want another token under temp scope
 	    LPARSEP->symTableNextId(NULL);
 	} else {

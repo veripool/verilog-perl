@@ -380,7 +380,7 @@ CODE:
 #//**********************************************************************
 #// self->filename([setit])
 
-const char *
+SV*
 VParserXs::filename (const char* flagp="")
 PROTOTYPE: $;$
 CODE:
@@ -390,7 +390,8 @@ CODE:
 	THIS->inFileline(flagp, THIS->inFilelinep()->lineno());
 	THIS->cbFileline(THIS->inFilelinep());
     }
-    RETVAL = THIS->cbFilelinep()->filename().c_str();
+    string ret = THIS->cbFilelinep()->filename();
+    RETVAL = newSVpv(ret.c_str(), ret.length());
 }
 OUTPUT: RETVAL
 
@@ -459,7 +460,8 @@ CODE:
 {
     if (!THIS) XSRETURN_UNDEF;
     // Set RETVAL to a SV before we replace with the new value, and c_str may change
-    RETVAL = newSVpv(THIS->unreadback().c_str(), THIS->unreadback().length());
+    string ret = THIS->unreadback();
+    RETVAL = newSVpv(ret.c_str(), ret.length());
     if (items > 1) {
 	THIS->unreadback(flagp);
     }
