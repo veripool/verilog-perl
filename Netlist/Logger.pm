@@ -7,7 +7,7 @@ require Exporter;
 use vars qw($VERSION);
 use strict;
 
-$VERSION = '3.403';
+$VERSION = '3.404';
 
 # We don't use Verilog::Netlist::Subclass, as this is called from it!
 
