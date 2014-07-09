@@ -19,6 +19,8 @@ sub MY::postamble {
     }
     # Note OPTIMIZE is passed from upper makefile, so this code needed there too.
     my $optimize = $Config{optimize};  $optimize =~ s/(^| )-O2( |$)/\1-O\2/g;
+    # pass hardening flags
+    $optimize .= " $ENV{CFLAGS} $ENV{CPPFLAGS}";
     $out .= "OPTIMIZE = $optimize\n";
     if ($Config{osname} =~ /cygwin/i || $Config{archname} =~ /cygwin/i) {
 	# Cygwin ExtUtils::MakeMaker ignores our LIBS declaration and says

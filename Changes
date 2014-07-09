@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.405 devel
 
+****	Pass CFLAGS/CPPFLAGS for easier packaging, bug786. [Florian Schlichting]
+
 
 * Verilog::Language 3.404 2014-06-08
 
