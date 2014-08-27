@@ -400,3 +400,6 @@ endmodule
 module bug778 ();
    virtual if_bug777.master bar;
 endmodule
+module bug810 #(
+		/*parameter*/ int unsigned DW = 32);
+endmodule
