@@ -7,6 +7,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Pass CFLAGS/CPPFLAGS for easier packaging, bug786. [Florian Schlichting]
 
+****	Fix width of byte, bug812. [Ed Carstens]
+
+
 
 * Verilog::Language 3.404 2014-06-08
 
