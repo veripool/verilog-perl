@@ -5,6 +5,10 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.405 devel
 
+***     Add Verilog::Preproc->parent() method, bug813. [Ed Carstens]
+
+***     Add Verilog::Netlist::File->preproc() method, bug813. [Ed Carstens]
+
 ****	Pass CFLAGS/CPPFLAGS for easier packaging, bug786. [Florian Schlichting]
 
 ****	Fix width of byte, bug812. [Ed Carstens]

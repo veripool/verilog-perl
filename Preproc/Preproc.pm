@@ -40,6 +40,7 @@ sub new {
 		pedantic=>0,
 		synthesis=>0,
 		options=>Verilog::Getopt->new(),	# If the user didn't give one, still work!
+		parent => undef,
 		#include_open_nonfatal=>0,
 		@_};
     bless $self, $class;
@@ -116,6 +117,11 @@ sub debug {
     my $level = shift;
     $self->{debug} = $level;
     $self->_debug($level);
+}
+
+sub parent {
+    my $self = shift;
+    return $self->{parent};
 }
 
 ######################################################################
@@ -269,6 +275,11 @@ IO::File->getline().)
 Returns the line number of the last getline().  Note that the line number
 may change several times between getline(), for example when traversing
 multiple include files.
+
+=item $self->parent()
+
+Returns a reference to the Verilog::Netlist::File which created this
+object, if any.
 
 =item $self->new(I<parameters>)
 
