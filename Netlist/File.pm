@@ -66,7 +66,7 @@ sub new {
 	die "%Error: 'metacomment' arg of Netlist or read_file() must be a hash,"
 	    unless (ref($meta) eq 'HASH');
 	push @opt, metacomments=>[ grep({ $meta->{$_} } keys %$meta) ];
-	push @opt, keep_comments=>1;
+	push @opt, keep_comments=>($params{netlist}{keep_comments} || 1);
     } elsif ($params{netlist}{keep_comments}) {
 	push @opt, keep_comments=>$params{netlist}{keep_comments};
     } else {
