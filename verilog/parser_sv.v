@@ -403,3 +403,9 @@ endmodule
 module bug810 #(
 		/*parameter*/ int unsigned DW = 32);
 endmodule
+interface test_if (input clk);
+endinterface
+
+module bug815 (
+	       test_if bad[2]);
+endmodule

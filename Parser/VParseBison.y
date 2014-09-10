@@ -785,15 +785,15 @@ portE:				// ==IEEE: [ port ]
 	//			// Expanded interface_port_header
 	//			// We use instantCb here because the non-port form looks just like a module instantiation
 		/* empty */				{ }
-	|	portDirNetE id/*interface*/                      idAny/*port*/ rangeListE sigAttrListE
+	|	portDirNetE id/*interface*/                      idAny/*port*/ variable_dimensionListE sigAttrListE
 			{ VARDTYPE($2); VARIO("interface"); VARDONE($<fl>2, $3, $4, ""); PINNUMINC();
 			  PARSEP->instantCb($<fl>2, $2, $3, $4); PARSEP->endcellCb($<fl>2,""); }
-	|	portDirNetE yINTERFACE                           idAny/*port*/ rangeListE sigAttrListE
+	|	portDirNetE yINTERFACE                           idAny/*port*/ variable_dimensionListE sigAttrListE
 			{ VARDTYPE($2); VARIO("interface"); VARDONE($<fl>2, $3, $4, ""); PINNUMINC(); }
-	|	portDirNetE id/*interface*/ '.' idAny/*modport*/ idAny/*port*/ rangeListE sigAttrListE
+	|	portDirNetE id/*interface*/ '.' idAny/*modport*/ idAny/*port*/ variable_dimensionListE sigAttrListE
 			{ VARDTYPE($2+"."+$4); VARIO("interface"); VARDONE($<fl>2, $5, $6, ""); PINNUMINC();
 			  PARSEP->instantCb($<fl>2, $2, $5, $6); PARSEP->endcellCb($<fl>2,""); }
-	|	portDirNetE yINTERFACE      '.' idAny/*modport*/ idAny/*port*/ rangeListE sigAttrListE
+	|	portDirNetE yINTERFACE      '.' idAny/*modport*/ idAny/*port*/ variable_dimensionListE sigAttrListE
 			{ VARDTYPE($2+"."+$4); VARIO("interface"); VARDONE($<fl>2, $5, $6, ""); PINNUMINC(); }
 	//
 	//			// IEEE: ansi_port_declaration, with [port_direction] removed
@@ -825,27 +825,27 @@ portE:				// ==IEEE: [ port ]
 	//			// No VARDECL("port") for implicit, as we don't want to declare variables for them
 	|	portDirNetE var_data_type       '.' portSig '(' portAssignExprE ')' sigAttrListE
 			{ VARDTYPE($2); VARDONE($<fl>4, $4, "", ""); PINNUMINC(); }
-	|	portDirNetE signingE rangeList  '.' portSig '(' portAssignExprE ')' sigAttrListE
+	|	portDirNetE signingE variable_dimensionList  '.' portSig '(' portAssignExprE ')' sigAttrListE
 			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
-	|	portDirNetE yINTERCONNECT signingE rangeListE '.' portSig '(' portAssignExprE ')' sigAttrListE
+	|	portDirNetE yINTERCONNECT signingE variable_dimensionListE '.' portSig '(' portAssignExprE ')' sigAttrListE
 			{ VARDTYPE(SPACED(SPACED($2,$3),$4)); VARDONE($<fl>6, $6, "", ""); PINNUMINC(); }
 	|	portDirNetE /*implicit*/        '.' portSig '(' portAssignExprE ')' sigAttrListE
 			{ /*VARDTYPE-same*/ VARDONE($<fl>3, $3, "", ""); PINNUMINC(); }
 	//
 	|	portDirNetE var_data_type       portSig variable_dimensionListE sigAttrListE
 			{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, ""); PINNUMINC(); }
-	|	portDirNetE signingE rangeList  portSig variable_dimensionListE sigAttrListE
+	|	portDirNetE signingE variable_dimensionList  portSig variable_dimensionListE sigAttrListE
 			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
-	|	portDirNetE yINTERCONNECT signingE rangeList  portSig variable_dimensionListE sigAttrListE
+	|	portDirNetE yINTERCONNECT signingE variable_dimensionList  portSig variable_dimensionListE sigAttrListE
 			{ VARDTYPE(SPACED(SPACED($2,$3),$4)); VARDONE($<fl>5, $5, $6, ""); PINNUMINC(); }
 	|	portDirNetE /*implicit*/        portSig variable_dimensionListE sigAttrListE
 			{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, ""); PINNUMINC(); }
 	//
 	|	portDirNetE var_data_type       portSig variable_dimensionListE sigAttrListE '=' constExpr
 			{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, $7); PINNUMINC(); }
-	|	portDirNetE signingE rangeList  portSig variable_dimensionListE sigAttrListE '=' constExpr
+	|	portDirNetE signingE variable_dimensionList  portSig variable_dimensionListE sigAttrListE '=' constExpr
 			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }
-	|	portDirNetE yINTERCONNECT signingE rangeList  portSig variable_dimensionListE sigAttrListE '=' constExpr
+	|	portDirNetE yINTERCONNECT signingE variable_dimensionList  portSig variable_dimensionListE sigAttrListE '=' constExpr
 			{ VARDTYPE(SPACED(SPACED($2,$3),$4)); VARDONE($<fl>5, $5, $6, $9); PINNUMINC(); }
 	|	portDirNetE /*implicit*/        portSig variable_dimensionListE sigAttrListE '=' constExpr
 			{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, $6); PINNUMINC(); }

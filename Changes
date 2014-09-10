@@ -13,6 +13,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix width of byte, bug812. [Ed Carstens]
 
+****    Fix interfaces with variable dimension, bug818. [Glen Gibb]
 
 
 * Verilog::Language 3.404 2014-06-08
