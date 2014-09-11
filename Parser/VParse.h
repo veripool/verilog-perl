@@ -34,7 +34,7 @@ using namespace std;
 
 class VParseLex;  // Be sure not to include it, or the Bison class will get upset
 class VParseGrammar;  // Be sure not to include it, or the Lex class will get upset
-class VParseBisonYYSType;
+struct VParseBisonYYSType;
 
 struct av;
 

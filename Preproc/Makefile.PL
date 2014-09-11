@@ -69,12 +69,12 @@ VPreLex_pretmp.cpp: VPreLex.l
 VPreLex.cpp: $(FLEXFIX) VPreLex_pretmp.cpp
 	$(PERL) $(FLEXFIX) VPreLex < VPreLex_pretmp.cpp > $@
 
-Preproc_cleaned.c: Preproc.c
-	$(PERL) $(XSUBPPFIX) < Preproc.c > Preproc_cleaned.c
+Preproc_cleaned.cpp: Preproc.c
+	$(PERL) $(XSUBPPFIX) < Preproc.c > Preproc_cleaned.cpp
 
 clean::
 	-$(RM_RF) test *.d *.o *.output
-	-$(RM_RF) VPreLex*.cpp Preproc_cleaned.c
+	-$(RM_RF) VPreLex*.cpp Preproc_cleaned.*
 	-$(RM_RF) VPreprocLex*
 ';
     return $out;

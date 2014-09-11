@@ -89,7 +89,8 @@ public:
 //*************************************************************************
 /// Data for a preprocessor instantiation.
 
-struct VPreProcImp : public VPreProcOpaque {
+class VPreProcImp : public VPreProcOpaque {
+public:
     typedef list<string> StrList;
 
     VPreProc*	m_preprocp;	///< Object we're holding data for

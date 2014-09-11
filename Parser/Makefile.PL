@@ -95,12 +95,12 @@ VParseBison.cpp:	VParseBison.y bisonpre
 Parser_callbackgen.cpp: callbackgen
 	$(PERL) callbackgen
 
-Parser_cleaned.c: Parser.c $(VHEADERS)
-	$(PERL) $(XSUBPPFIX) < Parser.c > Parser_cleaned.c
+Parser_cleaned.cpp: Parser.c $(VHEADERS)
+	$(PERL) $(XSUBPPFIX) < Parser.c > Parser_cleaned.cpp
 
 clean::
 	-$(RM_RF) test *.d *.o *.output *.pre.* *_pretmp.*
-	-$(RM_RF) VParseLex*.cpp VParseBison.h VParseBison.cpp Parser_cleaned.c
+	-$(RM_RF) VParseLex*.cpp VParseBison.h VParseBison.cpp Parser_cleaned.*
 	-$(RM_RF) Parser_callbackgen.cpp
 ';
     return $out;
