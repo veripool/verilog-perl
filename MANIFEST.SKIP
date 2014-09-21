@@ -33,8 +33,10 @@ Parser/VParseBison.*\.output
 Parser/VParseLex.cpp
 Parser/VParseLex_pretmp.cpp
 Parser/.*_callbackgen\..*
+Parser/.*_cleaned\..*
 Preproc/Preproc.c
 Preproc/VPreLex_pretmp.cpp
+Preproc/.*_cleaned\..*
 signals.vrename
 test_dir
 \.svn/

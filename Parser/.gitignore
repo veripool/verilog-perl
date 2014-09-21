@@ -11,6 +11,7 @@
 *.pre.*
 *_pretmp.*
 *_callbackgen.*
+*_cleaned.*
 Makefile
 VParseLex*.cpp
 VParseBison.c
