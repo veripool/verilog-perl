@@ -47,7 +47,7 @@ Module:v_hier_subsub  Kwd:module  File:verilog/v_hier_subsub.v
   Port:q  Dir:out  DataT:  Array:
   Net:IGNORED    DeclT:parameter  NetT:  DataT:  Array:  Value:0
   Net:a  O  DeclT:port  NetT:  DataT:signed  Array:
-  Net:q  I  DeclT:port  NetT:  DataT:  Array:
+  Net:q  I  DeclT:port  NetT:wire  DataT:  Array:
 Module:v_hier_top  Kwd:module  File:verilog/v_hier_top.v
   Port:clk  Dir:in  DataT:  Array:
   Net:WC_p1    DeclT:localparam  NetT:  DataT:[0:0]  Array:  0:0  Value:0

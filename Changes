@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.407 devel
 
+****	Fix loss of trireg on output signals, msg1491. [Matt Lanahan]
+
 
 * Verilog::Language 3.406 2014-09-21
 

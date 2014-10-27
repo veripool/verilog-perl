@@ -505,3 +505,9 @@ module bug256;
       myreg1 <= 100'b0;
    end
 endmodule
+
+module msg1491(A,B);
+   output A;
+   trireg (small) A;
+   output trireg B;
+endmodule
