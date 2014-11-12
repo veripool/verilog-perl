@@ -728,6 +728,10 @@ verilog/inc1.v:
 verilog/inc1.v:  
 verilog/inc1.v:    initial $write("GOT='%s' EXP='%s'\n", "foo `A(bar) baz", "foo `A(bar) baz");
 verilog/inc1.v:     
+verilog/inc1.v:    //----
+verilog/inc1.v:    // bug845
+verilog/inc1.v:  
+verilog/inc1.v:    initial $write("Slashed=`%s'\n", "1//2.3");
 verilog/inc1.v: endmodule
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // IEEE mandated predefines

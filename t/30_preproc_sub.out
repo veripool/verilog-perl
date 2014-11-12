@@ -1001,27 +1001,33 @@ verilog/inc1.v:518:
 verilog/inc1.v:519:  
 verilog/inc1.v:520:    initial $write("GOT='%s' EXP='%s'\n", "foo `A(bar) baz", "foo `A(bar) baz");
 verilog/inc1.v:521:     
-verilog/inc1.v:522: endmodule
-verilog/inc1.v:523: COMMENT: //======================================================================
-verilog/inc1.v:523:  /*CMT*/  
-verilog/inc1.v:524: COMMENT: // IEEE mandated predefines
-verilog/inc1.v:524:  /*CMT*/  
-verilog/inc1.v:525: COMMENT: // undefineall should have no effect on these
-verilog/inc1.v:525:    /*CMT*/  
-verilog/inc1.v:526: predef DS<0> 0
-verilog/inc1.v:527: predef DS<1> 1
-verilog/inc1.v:528: predef DS<2> 2
-verilog/inc1.v:529: predef DS<3> 3
-verilog/inc1.v:530: predef DS<10> 10
-verilog/inc1.v:531: predef DS<11> 11
-verilog/inc1.v:532: predef DS<20> 20
-verilog/inc1.v:533: predef DS<21> 21
-verilog/inc1.v:534: predef DS<22> 22
-verilog/inc1.v:535: predef DS<23> 23
-verilog/inc1.v:536: predef DS<-2> -2
-verilog/inc1.v:537: predef DS<-1> -1
-verilog/inc1.v:538: predef DS<0> 0
-verilog/inc1.v:539: predef DS<1> 1
-verilog/inc1.v:540: predef DS<2> 2
-verilog/inc1.v:541: 
-verilog/inc1.v:542: `line 542 "verilog/inc1.v" 2
+verilog/inc1.v:522: COMMENT: //----
+verilog/inc1.v:522:     /*CMT*/  
+verilog/inc1.v:523: COMMENT: // bug845
+verilog/inc1.v:523:     /*CMT*/  
+verilog/inc1.v:524:  
+verilog/inc1.v:525:    initial $write("Slashed=`%s'\n", "1//2.3");
+verilog/inc1.v:526: endmodule
+verilog/inc1.v:527: COMMENT: //======================================================================
+verilog/inc1.v:527:  /*CMT*/  
+verilog/inc1.v:528: COMMENT: // IEEE mandated predefines
+verilog/inc1.v:528:  /*CMT*/  
+verilog/inc1.v:529: COMMENT: // undefineall should have no effect on these
+verilog/inc1.v:529:    /*CMT*/  
+verilog/inc1.v:530: predef DS<0> 0
+verilog/inc1.v:531: predef DS<1> 1
+verilog/inc1.v:532: predef DS<2> 2
+verilog/inc1.v:533: predef DS<3> 3
+verilog/inc1.v:534: predef DS<10> 10
+verilog/inc1.v:535: predef DS<11> 11
+verilog/inc1.v:536: predef DS<20> 20
+verilog/inc1.v:537: predef DS<21> 21
+verilog/inc1.v:538: predef DS<22> 22
+verilog/inc1.v:539: predef DS<23> 23
+verilog/inc1.v:540: predef DS<-2> -2
+verilog/inc1.v:541: predef DS<-1> -1
+verilog/inc1.v:542: predef DS<0> 0
+verilog/inc1.v:543: predef DS<1> 1
+verilog/inc1.v:544: predef DS<2> 2
+verilog/inc1.v:545: 
+verilog/inc1.v:546: `line 546 "verilog/inc1.v" 2

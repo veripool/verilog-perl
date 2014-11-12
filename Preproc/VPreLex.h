@@ -165,6 +165,7 @@ class VPreLex {
     int		m_formalLevel;	///< Parenthesis counting inside def formals
     int		m_parenLevel;	///< Parenthesis counting inside def args
     bool	m_defCmtSlash;	///< /*...*/ comment in define had \ ending
+    bool	m_defQuote;	///< Definition value inside quote
     string	m_defValue;	///< Definition value being built.
     int		m_enterExit;	///< For VL_LINE, the enter/exit level
 
@@ -178,6 +179,7 @@ class VPreLex {
 	m_synthesis = false;
 	m_formalLevel = 0;
 	m_parenLevel = 0;
+	m_defQuote = false;
 	m_defCmtSlash = false;
 	m_tokFilelinep = filelinep;
 	m_enterExit = 0;

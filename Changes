@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix loss of trireg on output signals, msg1491. [Matt Lanahan]
 
+****	Fix quoted comment slashes in defines, bug845. [Adam Krolnik]
+
 
 * Verilog::Language 3.406 2014-09-21
 

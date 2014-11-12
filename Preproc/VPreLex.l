@@ -143,7 +143,7 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 <STRMODE>{backslash}{crnl}	{ linenoInc(); yymore(); }
 <STRMODE>{backslash}.	{ yymore(); }
 <STRMODE>{quote} 	{ yy_pop_state();
-			  if (LEXP->m_parenLevel || LEXP->m_formalLevel) { appendDefValue(yytext,yyleng); yyleng=0; }
+			  if (LEXP->m_parenLevel || LEXP->m_defQuote) { LEXP->m_defQuote=false; appendDefValue(yytext,yyleng); yyleng=0; }
 			  else return (VP_STRING); }
 
 	/* Stringification */
@@ -180,7 +180,7 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 <DEFFORM><<EOF>>	{ linenoInc(); yy_pop_state(); yyerrorf("Unterminated ( in define formal arguments."); yyleng=0; return VP_DEFFORM; }
 <DEFFORM>{crnl}		{ linenoInc(); appendDefValue((char*)"\n",1); } /* Include return so can maintain output line count */
 <DEFFORM>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\\\n",2); } /* Include return so can maintain output line count */
-<DEFFORM>{quote}	{ yy_push_state(STRMODE); yymore(); }  /* Legal only in default values */
+<DEFFORM>{quote}	{ LEXP->m_defQuote=true; yy_push_state(STRMODE); yymore(); }  /* Legal only in default values */
 <DEFFORM>"`\\`\""	{ appendDefValue(yytext,yyleng); }  /* Maybe illegal, otherwise in default value */
 <DEFFORM>{tickquote}	{ appendDefValue(yytext,yyleng); }  /* Maybe illegal, otherwise in default value */
 <DEFFORM>[{\[]		{ LEXP->m_formalLevel++; appendDefValue(yytext,yyleng); }
@@ -197,7 +197,8 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 <DEFVAL><<EOF>>		{ linenoInc(); yy_pop_state(); yytext=(char*)"\n"; yyleng=1; return (VP_DEFVALUE); } /* Technically illegal, but people complained */
 <DEFVAL>{crnl}		{ linenoInc(); yy_pop_state(); yytext=(char*)"\n"; yyleng=1; return (VP_DEFVALUE); }
 <DEFVAL>[\\]{crnl}	{ linenoInc(); appendDefValue((char*)"\\\n",2); } /* Return, AND \ is part of define value */
-<DEFVAL>[^\/\*\n\r\\]+	|
+<DEFVAL>{quote}		{ LEXP->m_defQuote=true; yy_push_state(STRMODE); yymore(); }
+<DEFVAL>[^\/\*\n\r\\\"]+	|
 <DEFVAL>[\\][^\n\r]	|
 <DEFVAL>.		{ appendDefValue(yytext,yyleng); }
 
