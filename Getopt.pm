@@ -129,9 +129,11 @@ sub _parameter_parse {
 	elsif ($param =~ /^\+incdir\+(.*)$/ && $self->{vcs_style}) {
 	    $self->incdir($self->_parse_file_arg($optdir, $1));
 	}
-	elsif (($param =~ /^\+define\+([^+=]*)[+=](.*)$/
-		|| $param =~ /^\+define\+(.*?)()$/) && $self->{vcs_style}) {
-	    $self->define($1,$2,undef,1);
+	elsif ($param =~ /^\+define\+(.*)$/ && $self->{vcs_style}) {
+	    foreach my $tok (split("\\+", $1)) {
+		my ($a, $b) = $tok =~ m/^([^=]*)=?(.*)$/;
+		$self->define($a,$b,undef,1);
+	    }
 	}
 	# Ignored
 	elsif ($param =~ /^\+librescan$/ && $self->{vcs_style}) {
@@ -665,7 +667,7 @@ functions that are called:
 
     +libext+I<ext>+I<ext>...	libext (I<ext>)
     +incdir+I<dir>		incdir (I<dir>)
-    +define+I<var>[+=]I<value>	define (I<var>,I<value>)
+    +define+I<var>=I<value>	define (I<var>,I<value>)
     +define+I<var>		define (I<var>,undef)
     +librescan		Ignored
     -F I<file>		Parse parameters in file relatively

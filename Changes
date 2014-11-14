@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.407 devel
 
+***	Fix +define+A+B to define A and B to match other simulators, bug847. [Adam Krolnik]
+
 ****	Fix loss of trireg on output signals, msg1491. [Matt Lanahan]
 
 ****	Fix quoted comment slashes in defines, bug845. [Adam Krolnik]

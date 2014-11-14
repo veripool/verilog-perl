@@ -27,6 +27,7 @@ my @param = qw ( +libext+t
 		 +incdir+t
 		 +define+foo=bar
 		 +define+foo2
+		 +define+foo3=3+foo4
 		 -v libdir
 		 -y moddir
 		 -Dbaz=bar
@@ -49,7 +50,7 @@ ok (($fp eq (Cwd::abs_path("t")."/20_getopt.t"))
 
 my @out = $opt->get_parameters();
 print "OUT: ",(join(" ",@out)),"\n";
-is ($#out, 17);
+is ($#out, 19);
 
 {
     my $opt2 = new Verilog::Getopt ();
@@ -57,7 +58,9 @@ is ($#out, 17);
     print "LEFT: ",join(" ",@left2),"\n";
     my @out2 = $opt->get_parameters();
     print "LEFT: ",join(" ",@out2),"\n";
-    is_deeply(\@out2, [qw(+define+baz=bar +define+foo=bar +define+foo2 +define+read_opt_file=1
+    is_deeply(\@out2, [qw(+define+baz=bar +define+foo=bar +define+foo2
+                          +define+foo3=3  +define+foo4
+                          +define+read_opt_file=1
  			  +libext+.v+t +incdir+. +incdir+t +incdir+incdir2
  			  -y . -y moddir -y y_library_path -y t/y_library_path -v libdir)]);
 }
@@ -66,7 +69,9 @@ is ($#out, 17);
     my $opt2 = new Verilog::Getopt (gcc_style=>1, vcs_style=>0);
     my @left2 = $opt2->parameter(@param);
     print "LEFT: ",join(" ",@left2),"\n";
-    is_deeply(\@left2, [qw(+libext+t +incdir+t +define+foo=bar +define+foo2 -v libdir -y moddir -y y_library_path -y y_library_path passthru)]);
+    is_deeply(\@left2, [qw(+libext+t +incdir+t +define+foo=bar +define+foo2
+                           +define+foo3=3+foo4
+                           -v libdir -y moddir -y y_library_path -y y_library_path passthru)]);
 }
 
 {
