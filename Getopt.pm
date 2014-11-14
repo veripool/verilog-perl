@@ -544,7 +544,11 @@ sub define {
 	    && (($oldval ne $value)
 		|| (($oldparams||'') ne ($params||'')))
 	    && $self->{define_warnings}) {
-	    warn "%Warning: ".$self->fileline().": Redefining `$token\n";
+	    warn "%Warning: ".$self->fileline().": Redefining `$token"
+		# Don't make errors too long or have strange chars
+		.((len($oldval)<40 && $oldval =~ /^[^\n\r\f]$/
+		   && len($value)<40 && $value =~ /^[^\n\r\f]$/)
+		  ? "to '$value', was '$oldval'\n" : "\n");
 	}
 	if ($params || $cmdline) {
 	    $self->{defines}{$token} = [$value, $params, $cmdline];
