@@ -5,6 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.409 devel
 
+****	Fix non-ANSI modport instantiations, bug868. [Kevin Thompson]
+
+
 
 * Verilog::Language 3.408 2014-11-15
 

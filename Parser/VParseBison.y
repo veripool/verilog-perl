@@ -1194,6 +1194,7 @@ port_declaration:		// ==IEEE: port_declaration
 	|	port_directionReset port_declNetE /*implicit*/        { VARDTYPE("");/*default_nettype*/} list_of_variable_decl_assignments	{ }
 	//			// IEEE: interface_declaration
 	//			// Looks just like variable declaration unless has a period
+	//			// See etcInst
 	;
 
 tf_port_declaration:		// ==IEEE: tf_port_declaration
@@ -1974,6 +1975,8 @@ defparam_assignment:		// ==IEEE: defparam_assignment
 etcInst:			// IEEE: module_instantiation + gate_instantiation + udp_instantiation
 		instName {INSTPREP($1,1);} strengthSpecE parameter_value_assignmentE {INSTPREP($1,0);} instnameList ';'
 		 	{ }
+	//			// IEEE: interface_identifier' .' modport_identifier list_of_interface_identifiers
+	|	instName {INSTPREP($1,1);} '.' id {INSTPREP($1,0);} mpInstnameList ';' 	{ }
 	;
 
 instName<str>:
@@ -1983,7 +1986,20 @@ instName<str>:
 	//			//       or udp_identifier
 	//			//       or module_identifier
 	|	id					{ $<fl>$=$<fl>1; $$=$1; }
-	|	id '.' id/*modport*/			{ $<fl>$=$<fl>1; $$=$1; }
+	;
+
+mpInstnameList:			// Similar to instnameList, but for modport instantiations which have no parenthesis
+		mpInstnameParen				{ }
+	|	mpInstnameList ',' mpInstnameParen	{ }
+	;
+
+mpInstnameParen:		// Similar to instnameParen, but for modport instantiations which have no parenthesis
+		mpInstname				{ PARSEP->endcellCb($<fl>1,""); }
+	;
+
+mpInstname:			// Similar to instname, but for modport instantiations which have no parenthesis
+	//			// id is-a: interface_port_identifier   (interface.modport)
+		id instRangeE	 			{ PARSEP->instantCb($<fl>1, GRAMMARP->m_cellMod, $1, $2); PINPARAMS(); }
 	;
 
 instnameList:
