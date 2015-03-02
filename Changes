@@ -7,6 +7,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix non-ANSI modport instantiations, bug868. [Kevin Thompson]
 
+****    Fix extra text in delay-number callback, bug893. [Greg Waters]
 
 
 * Verilog::Language 3.408 2014-11-15

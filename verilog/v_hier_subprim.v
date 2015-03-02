@@ -27,3 +27,10 @@ module bug27070();
   parameter TAP = `W'b1001;
 endmodule
 `endcelldefine
+
+`celldefine
+module bug893();
+   reg r;
+   initial r <=#1 '0;
+endmodule
+`endcelldefine

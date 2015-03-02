@@ -554,7 +554,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 				  VALTEXTS(string(yytext,shortlen));
 				  // Push rest for later parse
 				  LEXP->unputString(yytext+shortlen, yyleng-shortlen);
-				  FL; LINECHECKS(yytext,shortlen); CALLBACK(numberCb); return yaINTNUM;
+				  FL; LINECHECKS(yytext,shortlen); CALLBACKS(numberCb,string(yytext,shortlen)); return yaINTNUM;
 			      }
 			  }
 			  FL; VALTEXT; LINECHECK(); CALLBACK(numberCb); return yaINTNUM;
