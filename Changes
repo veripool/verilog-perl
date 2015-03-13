@@ -9,6 +9,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****    Fix extra text in delay-number callback, bug893. [Greg Waters]
 
+****	Fix virtual modport without interface in classes, bug778. [Jon Nall]
+
 
 * Verilog::Language 3.408 2014-11-15
 

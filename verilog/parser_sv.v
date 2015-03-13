@@ -400,6 +400,10 @@ endmodule
 module bug778 ();
    virtual if_bug777.master bar;
 endmodule
+class cls778;
+   virtual if_bug777.master bar;
+endclass : cls778;
+
 module bug810 #(
 		/*parameter*/ int unsigned DW = 32);
 endmodule

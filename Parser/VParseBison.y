@@ -1532,7 +1532,7 @@ data_declarationVarFrontClass:	// IEEE: part of data_declaration (for class_prop
 	|	yVAR lifetimeE signingE rangeList { VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_varDType,SPACED($3,$4))); }
 	//
 	//			// Expanded: "constE lifetimeE data_type"
-	|	/**/		      data_type	{ VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_varDType,$1)); }
+	|	/**/		      data_typeVar	{ VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_varDType,$1)); }
 	//			// lifetime is removed, added to memberQual rules to avoid conflict
 	//			// yCONST is removed, added to memberQual rules to avoid conflict
 	//			// = class_new is in variable_decl_assignment
