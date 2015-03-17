@@ -546,8 +546,8 @@ sub define {
 	    && $self->{define_warnings}) {
 	    warn "%Warning: ".$self->fileline().": Redefining `$token"
 		# Don't make errors too long or have strange chars
-		.((len($oldval)<40 && $oldval =~ /^[^\n\r\f]$/
-		   && len($value)<40 && $value =~ /^[^\n\r\f]$/)
+		.((length($oldval)<40 && $oldval =~ /^[^\n\r\f]$/
+		   && length($value)<40 && $value =~ /^[^\n\r\f]$/)
 		  ? "to '$value', was '$oldval'\n" : "\n");
 	}
 	if ($params || $cmdline) {

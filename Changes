@@ -4,7 +4,9 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
-* Verilog::Language 3.411 devel
+* Verilog::Language 3.412 2015-03-16
+
+****    Fix len error in 3.410, bug896. [Jon Nall]
 
 
 * Verilog::Language 3.410 2015-03-14

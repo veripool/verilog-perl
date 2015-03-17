@@ -9,7 +9,7 @@ use strict;
 use Test::More;
 use Cwd;
 
-BEGIN { plan tests => 14 }
+BEGIN { plan tests => 15 }
 BEGIN { require "t/test_utils.pl"; }
 
 use Verilog::Getopt;
@@ -79,6 +79,16 @@ is ($#out, 19);
     my @left2 = $opt2->parameter(@param);
     print "LEFT: ",join(" ",@left2),"\n";
     is_deeply(\@left2, [qw(-Dbaz=bar -Iincdir2 -Dread_opt_file=1 -Dread_opt_file=1 passthru)]);
+}
+
+{
+    my $opt2 = new Verilog::Getopt (gcc_style=>0, vcs_style=>1);
+    {
+	local $SIG{__WARN__} = sub {},
+	my @left2 = $opt2->parameter("+define+foo=bar", "+define+foo=baz");
+    }
+    my @out2 = $opt2->get_parameters();
+    is_deeply($out2[0], qw(+define+foo=baz));
 }
 
 $opt->map_directories(sub{s![a-z]!x!; $_});
