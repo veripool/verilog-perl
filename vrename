@@ -23,7 +23,7 @@ use vars qw ($VERSION %Vrename_Dont_Crypt %Vrename_Left_Edge_Define
 	     $Debug $Opt_Xref $Opt_Crypt $Opt_Crypt_All $Opt_Write $Opt_Keywords
 	     @Files);
 
-$VERSION = '3.411';
+$VERSION = '3.412';
 
 ######################################################################
 
