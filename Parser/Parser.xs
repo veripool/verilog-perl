@@ -100,8 +100,9 @@ public:
     VFileLine* cbFilelinep() const { return m_cbFilelinep; }
     void cbFileline(VFileLine* filelinep) { m_cbFilelinep = filelinep; }
 
-    VParserXs(VFileLine* filelinep, av* symsp, bool sigparser, bool useUnreadback)
-	: VParse(filelinep, symsp, sigparser, useUnreadback)
+    VParserXs(VFileLine* filelinep, av* symsp,
+	      bool sigparser, bool useUnreadback, bool useProtected)
+	: VParse(filelinep, symsp, sigparser, useUnreadback, useProtected)
 	, m_cbFilelinep(filelinep)
 	{ set_cb_use(); }
     virtual ~VParserXs();
@@ -304,14 +305,14 @@ MODULE = Verilog::Parser  PACKAGE = Verilog::Parser
 #// self->_new (class, sigparser)
 
 static VParserXs *
-VParserXs::_new (SV* SELF, AV* symsp, bool sigparser, bool useUnreadback)
+VParserXs::_new (SV* SELF, AV* symsp, bool sigparser, bool useUnreadback, bool useProtected)
 PROTOTYPE: $$$$
 CODE:
 {
     if (CLASS) {}  /* Prevent unused warning */
     if (!SvROK(SELF)) { warn("${Package}::$func_name() -- SELF is not a hash reference"); }
     VFileLineParseXs* filelinep = new VFileLineParseXs(NULL/*ok,for initial*/);
-    VParserXs* parserp = new VParserXs(filelinep, symsp, sigparser, useUnreadback);
+    VParserXs* parserp = new VParserXs(filelinep, symsp, sigparser, useUnreadback, useProtected);
     filelinep->setParser(parserp);
     parserp->m_self = SvRV(SELF);
     RETVAL = parserp;

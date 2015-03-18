@@ -38,12 +38,14 @@ VParseGrammar*	VParseGrammar::s_grammarp = NULL;
 
 //*************************************************************************
 
-VParse::VParse(VFileLine* filelinep, av* symsp, bool sigParser, bool useUnreadbackFlag)
+VParse::VParse(VFileLine* filelinep, av* symsp,
+	       bool sigParser, bool useUnreadbackFlag, bool useProtected)
     : m_syms(filelinep, symsp)
 {
     m_inFilelinep = filelinep;
     m_sigParser = sigParser;
     m_useUnreadback = useUnreadbackFlag;
+    m_useProtected = useProtected;
     m_debug = 0;
     m_lexp = new VParseLex(this);
     m_grammarp = new VParseGrammar(this);

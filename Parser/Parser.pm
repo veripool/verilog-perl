@@ -57,6 +57,7 @@ sub new {
 		symbol_table=>[],	# .xs will init further for us
 		use_vars => 1,
 		use_unreadback => 1,   # Backward compatibility
+		use_protected => 1,   # Backward compatibility
 		use_std => undef,	# Undef = silent
 		#use_cb_{callback-name} => 0/1
 		#
@@ -70,6 +71,7 @@ sub new {
 		$self->{symbol_table},
 		$self->{_sigparser},
 		$self->{use_unreadback},
+		$self->{use_protected},
 		);
 
     $self->{use_cb_contassign} = $self->{use_vars} if !exists $self->{use_cb_contassign};
@@ -326,6 +328,9 @@ speed up the parser as a large percentage of time is spent calling between
 C and Perl to invoke the callbacks.  When using this feature,
 use_unreadback=>0 should be used too, as since whole tokens are skipped,
 skipping whitespace shouldn't matter either.
+
+Adding "use_protected => 0" will disable callbacks on `protected regions,
+which may improve performance.
 
 Adding "use_std => 1" will add parsing of the SystemVerilog built-in std::
 package, or "use_std => 0" will disable it.  If unspecified it is silently

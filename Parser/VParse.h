@@ -56,6 +56,7 @@ private:
     bool	m_callbackMasterEna; ///< Callbacks are enabled
 
     bool	m_useUnreadback;///< Need m_unreadback tracking
+    bool	m_useProtected;	///< Need `protected tracking
     string	m_unreadback;	///< Otherwise unprocessed whitespace before current token
     deque<string> m_buffers;	///< Buffer of characters to process
 
@@ -111,7 +112,8 @@ private:
 
 public:
     // CONSTRUCTORS
-    VParse(VFileLine* filelinep, av* symsp, bool sigParser, bool useUnreadbackFlag);
+    VParse(VFileLine* filelinep, av* symsp,
+	   bool sigParser, bool useUnreadbackFlag, bool useProtected);
     virtual ~VParse();
 
     // ACCESSORS
@@ -124,6 +126,7 @@ public:
     void language(const char* valuep);
     void callbackMasterEna(bool flag) { m_callbackMasterEna=flag; }
     bool callbackMasterEna() const { return m_callbackMasterEna; }
+    bool useProtected() const { return m_useProtected; }
 
     VFileLine* inFilelinep() const;		///< File/Line number for last callback
     void inFileline(const string& filename, int lineno) { m_inFilelinep = m_inFilelinep->create(filename, lineno); }

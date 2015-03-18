@@ -596,10 +596,10 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 
   /************************************************************************/
   /* Protected */
-<PROTMODE>\n		{ yymore(); NEXTLINE(); }
+<PROTMODE>\n		{ if (LPARSEP->useProtected()) yymore(); NEXTLINE(); }
 <PROTMODE>"`endprotected"	{ FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); }
-<PROTMODE>. 		{ yymore(); }
-<PROTMODE>{word}	{ yymore(); }
+<PROTMODE>. 		{ if (LPARSEP->useProtected()) yymore(); }
+<PROTMODE>{word}	{ if (LPARSEP->useProtected()) yymore(); }
 <PROTMODE><<EOF>>	{ yyerrorf("EOF in `protected");
 			  yyleng = 0; yy_pop_state(); }
 

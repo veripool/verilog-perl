@@ -54,6 +54,7 @@ sub new {
 
     my $self = $class->SUPER::new(_sigparser => 1,
 				  use_unreadback => 0,
+				  use_protected => 0,
 				  @_);
     bless $self, $class;
     $self->debug($Debug) if $Debug;
