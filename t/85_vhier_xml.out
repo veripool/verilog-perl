@@ -1,6 +1,8 @@
 <vhier>
  <cells>
   <cell name="v_hier_top" submodname="v_hier_top" hier="v_hier_top">
+    <cell name="recursive" submodname="v_recursive" hier="v_hier_top.recursive">
+    </cell>
     <cell name="sub" submodname="v_hier_sub" hier="v_hier_top.sub">
       <cell name="subsub0" submodname="v_hier_subsub" hier="v_hier_top.sub.subsub0">
       </cell>
@@ -12,12 +14,14 @@
  <module_files>
    <file>verilog/v_hier_top.v</file>
     <file>verilog/v_hier_sub.v</file>
+    <file>verilog/v_recursive.v</file>
      <file>verilog/v_hier_subsub.v</file>
  </module_files>
  <input_files>
   <file>verilog/v_hier_sub.v</file>
   <file>verilog/v_hier_subsub.v</file>
   <file>verilog/v_hier_top.v</file>
+  <file>verilog/v_recursive.v</file>
  </input_files>
  <missing_modules>
   <module name="missing" />

@@ -162,6 +162,7 @@ verilog/v_hier_subprim.v
 verilog/v_hier_subsub.v
 verilog/v_hier_top.v
 verilog/v_hier_top2.v
+verilog/v_recursive.v
 verilog/v_sv_intf.v
 verilog/v_sv_mod.v
 verilog/v_sv_pgm.v

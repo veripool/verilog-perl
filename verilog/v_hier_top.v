@@ -20,6 +20,8 @@ module v_hier_top (/*AUTOARG*/
 
    missing missing ();
 
+   v_recursive #(.DEPTH(3)) recursive ();
+
    // Width checks, bug65
    wire  	WC_w1;
    wire [0:0]   WC_w1b;

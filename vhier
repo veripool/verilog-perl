@@ -168,7 +168,8 @@ sub vhier {
 	$fh->print(" <cells>\n") if $Opt_Xml;
 	foreach my $mod ($nl->modules_sorted) {
 	    if ($mod->is_top) {
-		show_hier ($fh, $mod, undef, "  ", $mod->name);
+		my %recursing;
+		show_hier ($fh, \%recursing, $mod, undef, "  ", $mod->name);
 	    }
 	}
 	$fh->print(" </cells>\n") if $Opt_Xml;
@@ -240,7 +241,8 @@ sub show_mod_files {
     # Recurse the tree and determine level
     foreach my $mod ($nl->modules, $nl->interfaces) {
 	if ($mod->is_top) {
-	    _mod_files_recurse($mod, 1);
+	    my %recursing;
+	    _mod_files_recurse($mod, 1, \%recursing);
 	}
     }
     # Make sort key based on numeric level
@@ -272,7 +274,7 @@ sub _mod_mark_recurse {
     my $mod = shift;
     my $marked = shift;
 
-    $marked->{$mod->name} = 1;
+    return if $marked->{$mod->name}++;
     foreach my $cell ($mod->cells_sorted) {
 	if ($cell->submod) {
 	    _mod_mark_recurse ($nl, $cell->submod, $marked);
@@ -283,18 +285,25 @@ sub _mod_mark_recurse {
 sub _mod_files_recurse {
     my $mod = shift;
     my $level = shift;
+    my $recursing = shift;
+
+    my $name = $mod->name;
+    return if $recursing->{$name};
+    ++$recursing->{$name};
     if (($mod->attributes("_vhier_level")||0) < $level) {
 	$mod->attributes("_vhier_level", $level);
     }
     foreach my $cell ($mod->cells_sorted) {
 	if ($cell->submod) {
-	    _mod_files_recurse ($cell->submod, $level+1);
+	    _mod_files_recurse ($cell->submod, $level+1, $recursing);
 	}
     }
+    --$recursing->{$name};
 }
 
 sub show_hier {
     my $fh = shift;
+    my $recursing = shift;
     my $mod = shift;
     my $parcell = shift;
     my $indent = shift;
@@ -302,23 +311,26 @@ sub show_hier {
     my $submodname = shift;
     # print the design hierarchy starting at mod (recursive)
 
-    printf "%-38s %s\n", $indent."Module ".$mod->name,$hier if $Debug;
-    my $instance = $parcell ? $parcell->name : $mod->name;
+    my $name = $mod->name;
+    return if $recursing->{$name};
+    ++$recursing->{$name};
+    printf "%-38s %s\n", $indent."Module ".$name,$hier if $Debug;
+    my $instance = $parcell ? $parcell->name : $name;
 
     # print the mod instance
     $Opt_Xml ?
         $fh->printf("%s<cell name=\"%s\" submodname=\"%s\" hier=\"%s\">\n",
-            $indent, $parcell ? $parcell->name : $mod->name, $mod->name, $hier) :
+            $indent, $parcell ? $parcell->name : $name, $name, $hier) :
             $Opt_Instance ?
-                $fh->printf("%s%s %s\n", $indent, $instance, $mod->name) :
-                $fh->printf("%s%s\n",    $indent,            $mod->name);
+                $fh->printf("%s%s %s\n", $indent, $instance, $name) :
+                $fh->printf("%s%s\n",    $indent,            $name);
 
     # print the design hierarchy of each cell in mod
     my $i = 0;
     my $suffix;
 
     my @cellCount = $mod->cells_sorted; # Returns list of name sorted references to Verilog::Netlist::Cell in the module
-    $fh->printf("\t\t%d cells_sorted for %s\n", $#cellCount+1, $mod->name) if $Debug;
+    $fh->printf("\t\t%d cells_sorted for %s\n", $#cellCount+1, $name) if $Debug;
 
     my @subMods = grep($_->submod, $mod->cells_sorted); # list of submods of the current mod
 
@@ -340,11 +352,12 @@ sub show_hier {
             } else {
                 $suffix = "  "; # simple indenting with spaces
             }
-            show_hier ($fh, $cell->submod, $cell, $indent.$suffix, $hier.".".$cell->name);
+            show_hier ($fh, $recursing, $cell->submod, $cell, $indent.$suffix, $hier.".".$cell->name);
             $i++;
         }
     }
     $fh->printf("%s</cell>\n", $indent) if $Opt_Xml;
+    --$recursing->{$name};
 }
 
 ######################################################################

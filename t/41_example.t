@@ -38,6 +38,7 @@ ok(1, "use");
     #$nl->lint();  # Optional, see docs; probably not wanted
     $nl->exit_if_error();
 
+    my %recursing;  # Prevent recursion; not in example
     foreach my $mod ($nl->top_modules_sorted) {
 	show_hier ($mod, "  ", "", "");
     }
@@ -47,6 +48,8 @@ ok(1, "use");
 	my $indent = shift;
 	my $hier = shift;
 	my $cellname = shift;
+	return if ++$recursing{$mod->name};
+	++$recursing{$mod->name};  # Not in example
 	if (!$cellname) {$hier = $mod->name;} #top modules get the design name
 	else {$hier .= ".$cellname";} #append the cellname
 	printf ("%-45s %s\n", $indent."Module ".$mod->name,$hier);
@@ -60,6 +63,7 @@ ok(1, "use");
 	    }
 	    show_hier ($cell->submod, $indent."	 ", $hier, $cell->name) if $cell->submod;
 	}
+	--$recursing{$mod->name};  # Not in example
     }
 
     print "Dump\n";

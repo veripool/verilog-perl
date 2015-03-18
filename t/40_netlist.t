@@ -52,6 +52,7 @@ is_deeply (\@mods, ['$root',
 		    'v_sv_pgm',
 		    'v_hier_sub',
 		    'v_hier_top2',
+		    'v_recursive',
 		    'v_hier_top',
 		    'v_sv_mod']);
 

@@ -62,6 +62,8 @@ Module:v_hier_top  Kwd:module  File:verilog/v_hier_top.v
   Net:asn_clk    DeclT:net  NetT:wire  DataT:  Array:
   Net:clk  O  DeclT:port  NetT:  DataT:  Array:
   Cell:missing  is-a:missing
+  Cell:recursive  is-a:v_recursive .DEPTH(3)
+            Module:v_recursive  Kwd:module  File:verilog/v_recursive.v
   Cell:sub  is-a:v_hier_sub
             Module:v_hier_sub  Kwd:module  File:verilog/v_hier_sub.v
     Pin:avec  Net:{avec[3],avec[2:0]}
@@ -79,3 +81,7 @@ Module:v_hier_top2  Kwd:module  File:verilog/v_hier_top2.v
   Net:iosig    DeclT:port  NetT:  DataT:[2:0]  Array:  2:0
   Cell:noport  is-a:v_hier_noport
             Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+Module:v_recursive  Kwd:module  File:verilog/v_recursive.v
+  Net:DEPTH    DeclT:parameter  NetT:  DataT:  Array:  Value:1
+  Cell:recurse  is-a:v_recursive .DEPTH(DEPTH-1)
+            Module:v_recursive  Kwd:module  File:verilog/v_recursive.v

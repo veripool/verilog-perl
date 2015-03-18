@@ -8,6 +8,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Add Parser useProtected argument to aid runtime, bug899. [Corey Teffetalor]
 
+****	Fix vhier infinite loop on recursive modules.
+
 
 * Verilog::Language 3.412 2015-03-16
 

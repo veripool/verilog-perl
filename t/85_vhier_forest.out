@@ -1,4 +1,5 @@
   v_hier_top v_hier_top
+  |--recursive v_recursive
   \--sub v_hier_sub
      |--subsub0 v_hier_subsub
      \--subsub2 v_hier_subsub
