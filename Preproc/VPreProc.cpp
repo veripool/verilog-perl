@@ -566,6 +566,7 @@ bool VPreProcImp::readWholefile(const string& filename, StrList& outl) {
     }
     while (!eof) {
 	ssize_t todo = INFILTER_IPC_BUFSIZ;
+	errno = 0;
 	ssize_t got = read (fd, buf, todo);
 	if (got>0) {
 	    outl.push_back(string(buf, got));

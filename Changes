@@ -8,6 +8,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Add Parser useProtected argument to aid runtime, bug899. [Corey Teffetalor]
 
+****	Fix Preproc loop under Perl-Tk, bug913. [Stefan Tauner]
+
 ****	Fix vhier infinite loop on recursive modules.
 
 
