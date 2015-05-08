@@ -324,10 +324,8 @@ verilog/inc1.v:98:       $display(DS<"DS<left_side>: \"DS<right_side>\"">);
 verilog/inc1.v:99:       $display(DS<"DS<na>: \"DS<right_side>\"">);
 verilog/inc1.v:100:       $display(DS<"prep ( midp1 DS<left_side> midp2 ( outp ) ): \"DS<right_side>\"">);
 verilog/inc1.v:101:       $display(DS<"DS<na>: \"DS<na>DS<na>\"">);
-verilog/inc1.v:102: COMMENT: /*CMT*/
-verilog/inc1.v:102: COMMENT: /*CMT*/
 verilog/inc1.v:102: COMMENT: // Results vary between simulators
-verilog/inc1.v:102:       $display(DS<"DS<DS<left_side> DS<right_side>	  /*CMT*/  >: \"DS<DS<left_side> DS<right_side>	  /*CMT*/  >\"">);    /*CMT*/  
+verilog/inc1.v:102:       $display(DS<"DS<DS<left_side> DS<right_side>	 /*CMT*/>: \"DS<DS<left_side> DS<right_side>	 /*CMT*/>\"">);    /*CMT*/  
 verilog/inc1.v:103: COMMENT: // Empty
 verilog/inc1.v:103:       $display(DS<"DS<>: \"\"">);   /*CMT*/  
 verilog/inc1.v:104:       $display(DS<"DS<left side>: \"DS<right side>\"">);
@@ -1007,27 +1005,36 @@ verilog/inc1.v:523: COMMENT: // bug845
 verilog/inc1.v:523:     /*CMT*/  
 verilog/inc1.v:524:  
 verilog/inc1.v:525:    initial $write("Slashed=`%s'\n", "1//2.3");
-verilog/inc1.v:526: endmodule
-verilog/inc1.v:527: COMMENT: //======================================================================
-verilog/inc1.v:527:  /*CMT*/  
-verilog/inc1.v:528: COMMENT: // IEEE mandated predefines
-verilog/inc1.v:528:  /*CMT*/  
-verilog/inc1.v:529: COMMENT: // undefineall should have no effect on these
-verilog/inc1.v:529:    /*CMT*/  
-verilog/inc1.v:530: predef DS<0> 0
-verilog/inc1.v:531: predef DS<1> 1
-verilog/inc1.v:532: predef DS<2> 2
-verilog/inc1.v:533: predef DS<3> 3
-verilog/inc1.v:534: predef DS<10> 10
-verilog/inc1.v:535: predef DS<11> 11
-verilog/inc1.v:536: predef DS<20> 20
-verilog/inc1.v:537: predef DS<21> 21
-verilog/inc1.v:538: predef DS<22> 22
-verilog/inc1.v:539: predef DS<23> 23
-verilog/inc1.v:540: predef DS<-2> -2
-verilog/inc1.v:541: predef DS<-1> -1
-verilog/inc1.v:542: predef DS<0> 0
-verilog/inc1.v:543: predef DS<1> 1
-verilog/inc1.v:544: predef DS<2> 2
-verilog/inc1.v:545: 
-verilog/inc1.v:546: `line 546 "verilog/inc1.v" 2
+verilog/inc1.v:526: COMMENT: //----
+verilog/inc1.v:526:     /*CMT*/  
+verilog/inc1.v:527: COMMENT: // bug915
+verilog/inc1.v:527:     /*CMT*/  
+verilog/inc1.v:528:  
+verilog/inc1.v:528: 
+verilog/inc1.v:530:    initial DS<
+verilog/inc1.v:530: `line 530 "verilog/inc1.v" 0
+verilog/inc1.v:530:        $display("%s%s","a1","b2c3\n")>;
+verilog/inc1.v:531: endmodule
+verilog/inc1.v:532: COMMENT: //======================================================================
+verilog/inc1.v:532:  /*CMT*/  
+verilog/inc1.v:533: COMMENT: // IEEE mandated predefines
+verilog/inc1.v:533:  /*CMT*/  
+verilog/inc1.v:534: COMMENT: // undefineall should have no effect on these
+verilog/inc1.v:534:    /*CMT*/  
+verilog/inc1.v:535: predef DS<0> 0
+verilog/inc1.v:536: predef DS<1> 1
+verilog/inc1.v:537: predef DS<2> 2
+verilog/inc1.v:538: predef DS<3> 3
+verilog/inc1.v:539: predef DS<10> 10
+verilog/inc1.v:540: predef DS<11> 11
+verilog/inc1.v:541: predef DS<20> 20
+verilog/inc1.v:542: predef DS<21> 21
+verilog/inc1.v:543: predef DS<22> 22
+verilog/inc1.v:544: predef DS<23> 23
+verilog/inc1.v:545: predef DS<-2> -2
+verilog/inc1.v:546: predef DS<-1> -1
+verilog/inc1.v:547: predef DS<0> 0
+verilog/inc1.v:548: predef DS<1> 1
+verilog/inc1.v:549: predef DS<2> 2
+verilog/inc1.v:550: 
+verilog/inc1.v:551: `line 551 "verilog/inc1.v" 2

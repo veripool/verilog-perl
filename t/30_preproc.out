@@ -732,6 +732,12 @@ verilog/inc1.v:    //----
 verilog/inc1.v:    // bug845
 verilog/inc1.v:  
 verilog/inc1.v:    initial $write("Slashed=`%s'\n", "1//2.3");
+verilog/inc1.v:    //----
+verilog/inc1.v:    // bug915
+verilog/inc1.v:  
+verilog/inc1.v: 
+verilog/inc1.v:    initial 
+verilog/inc1.v:        $display("%s%s","a1","b2c3\n");
 verilog/inc1.v: endmodule
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // IEEE mandated predefines

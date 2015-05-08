@@ -76,6 +76,7 @@ void yyerrorf(const char* format, ...) {
 %x DEFFORM
 %x DEFVAL
 %x DEFCMT
+%x STRIFY
 %x ARGMODE
 %x INCMODE
 %x PRTMODE
@@ -109,8 +110,8 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 	/**************************************************************/
 %%
 
-<INITIAL>^{ws}*"`line"{ws}+.*{crnl}	{ LEXP->lineDirective(yytext);
-					  return(VP_LINE); }
+<INITIAL,STRIFY>^{ws}*"`line"{ws}+.*{crnl}	{ LEXP->lineDirective(yytext);
+						  return(VP_LINE); }
 
 	/* Special directives we recognize */
 <INITIAL>"`define"	{ return(VP_DEFINE); }
@@ -122,17 +123,15 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 <INITIAL>"`include"	{ return(VP_INCLUDE); }
 <INITIAL>"`undef"	{ return(VP_UNDEF); }
 <INITIAL>"`undefineall"	{ return(VP_UNDEFINEALL); }
-
-	/* Optional directives we recognize */
-<INITIAL>"`__FILE__"	{ static string rtnfile;
+<INITIAL>"`error"	{ if (!pedantic()) return (VP_ERROR); else return(VP_DEFREF); }
+<INITIAL,STRIFY>"`__FILE__"	{ static string rtnfile;
 			  rtnfile = '"'; rtnfile += LEXP->curFilelinep()->filename();
 			  rtnfile += '"'; yytext=(char*)rtnfile.c_str(); yyleng = rtnfile.length();
 			  return (VP_STRING); }
-<INITIAL>"`__LINE__"	{ static char buf[10];
+<INITIAL,STRIFY>"`__LINE__"	{ static char buf[10];
 			  sprintf(buf, "%d",LEXP->curFilelinep()->lineno());
 	                  yytext = buf; yyleng = strlen(yytext);
 			  return (VP_TEXT); }
-<INITIAL>"`error"	{ if (!pedantic()) return (VP_ERROR); else return(VP_DEFREF); }
 
 	/* Pass-through strings */
 <INITIAL>{quote}	{ yy_push_state(STRMODE); yymore(); }
@@ -147,8 +146,20 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 			  else return (VP_STRING); }
 
 	/* Stringification */
-<INITIAL>{tickquote}	{ return VP_STRIFY; }
-<INITIAL>"`\\`\""	{ return VP_BACKQUOTE; }
+<INITIAL>{tickquote}	{ yy_push_state(STRIFY); return VP_STRIFY; }
+<STRIFY><<EOF>>		{ linenoInc(); yyerrorf("EOF in unterminated '\""); yyleng=0; yyterminate(); }
+<STRIFY>"`\\`\""	{ return VP_BACKQUOTE; }
+<STRIFY>{quote}		{ yy_push_state(STRMODE); yymore(); }
+<STRIFY>{tickquote}	{ yy_pop_state(); return VP_STRIFY; }
+<STRIFY>{symbdef}	{ return (VP_SYMBOL); }
+<STRIFY>{symbdef}``	{ yyleng-=2; return (VP_SYMBOL_JOIN); }
+<STRIFY>"`"{symbdef}	{ return (VP_DEFREF); }
+<STRIFY>"`"{symbdef}``	{ yyleng-=2; return (VP_DEFREF_JOIN); }
+<STRIFY>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
+<STRIFY>{wsn}+		{ return (VP_WHITE); }
+<STRIFY>{drop}		{ }
+<STRIFY>[\r]		{ }
+<STRIFY>.		{ return (VP_TEXT); }
 
 	/* Protected blocks */
 <INITIAL>"`protected"	{ yy_push_state(PRTMODE); yymore(); }

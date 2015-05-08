@@ -108,7 +108,7 @@ verilog/inc1.v:103:  $display(": \"\"");
 verilog/inc1.v:104:  $display("left side: \"right side\"");
 verilog/inc1.v:105:  $display("left side: \"right side\"");
 verilog/inc1.v:106:  $display("standalone");
-verilog/inc1.v:111:  $display("twoline: \"first   second\"");
+verilog/inc1.v:111:  $display("twoline: \"first        second\"");
 verilog/inc1.v:113:  $write("*-* All Finished *-*\n");
 verilog/inc1.v:114:  $finish;
 verilog/inc1.v:115:  end
@@ -277,20 +277,23 @@ verilog/inc1.v:508:  initial begin : \`DEF_NO_EXPAND $write("GOT%%m='%m' EXP='%s
 verilog/inc1.v:514:  initial $write("GOT='%s' EXP='%s'\n", "foo bar baz", "foo bar baz");
 verilog/inc1.v:520:  initial $write("GOT='%s' EXP='%s'\n", "foo `A(bar) baz", "foo `A(bar) baz");
 verilog/inc1.v:525:  initial $write("Slashed=`%s'\n", "1//2.3");
-verilog/inc1.v:526: endmodule
-verilog/inc1.v:530: predef 0 0
-verilog/inc1.v:531: predef 1 1
-verilog/inc1.v:532: predef 2 2
-verilog/inc1.v:533: predef 3 3
-verilog/inc1.v:534: predef 10 10
-verilog/inc1.v:535: predef 11 11
-verilog/inc1.v:536: predef 20 20
-verilog/inc1.v:537: predef 21 21
-verilog/inc1.v:538: predef 22 22
-verilog/inc1.v:539: predef 23 23
-verilog/inc1.v:540: predef -2 -2
-verilog/inc1.v:541: predef -1 -1
-verilog/inc1.v:542: predef 0 0
-verilog/inc1.v:543: predef 1 1
-verilog/inc1.v:544: predef 2 2
-verilog/inc1.v:546: `line 546 "verilog/inc1.v" 2
+verilog/inc1.v:530:  initial 
+verilog/inc1.v:530: `line 530 "verilog/inc1.v" 0
+verilog/inc1.v:530:  $display("%s%s","a1","b2c3\n");
+verilog/inc1.v:531: endmodule
+verilog/inc1.v:535: predef 0 0
+verilog/inc1.v:536: predef 1 1
+verilog/inc1.v:537: predef 2 2
+verilog/inc1.v:538: predef 3 3
+verilog/inc1.v:539: predef 10 10
+verilog/inc1.v:540: predef 11 11
+verilog/inc1.v:541: predef 20 20
+verilog/inc1.v:542: predef 21 21
+verilog/inc1.v:543: predef 22 22
+verilog/inc1.v:544: predef 23 23
+verilog/inc1.v:545: predef -2 -2
+verilog/inc1.v:546: predef -1 -1
+verilog/inc1.v:547: predef 0 0
+verilog/inc1.v:548: predef 1 1
+verilog/inc1.v:549: predef 2 2
+verilog/inc1.v:551: `line 551 "verilog/inc1.v" 2

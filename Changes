@@ -12,6 +12,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix vhier infinite loop on recursive modules.
 
+****	Fix preprocessing stringified newline escapes, bug915. [Anton Rapp]
+
 
 * Verilog::Language 3.412 2015-03-16
 
