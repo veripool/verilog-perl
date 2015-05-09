@@ -16,3 +16,18 @@ module v_comments ( a,                // Pragma for a
    reg [11:0]    e;             // Comment for e
 
 endmodule
+
+// 'Third' below not attached to 'b' becase there's no ) or , after b.
+// Not clear how to fix this as no callback until ) or ,
+module v_bug917
+  (input wire  a, // First
+   output wire b // Second
+   );
+   // Third
+endmodule
+
+module v_bug917p
+  (input wire  a, // First
+   output wire b); // Secondparen
+   // Third
+endmodule

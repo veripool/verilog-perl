@@ -8,7 +8,7 @@
 use strict;
 use Test::More;
 
-BEGIN { plan tests => 12 }
+BEGIN { plan tests => 14 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::SigParser::Debug = $Verilog::Parser::Debug = 1;
@@ -19,6 +19,7 @@ check ('test_dir/42.dmp', ['verilog/v_hier_top.v', 'verilog/v_hier_top2.v', 'ver
        [link_read_nonfatal=>1, keep_comments => 1,]);
 ok(1);
 ok(files_identical("test_dir/42.dmp", "t/42_dumpcheck_1.out"));
+ok(files_identical("test_dir/42.dmp.v", "t/42_dumpcheck_1v.out"));
 
 my $n2 = check ('test_dir/42_n2.dmp', ['verilog/pinorder.v'],
 		[link_read_nonfatal=>1, keep_comments => 1,]);
@@ -30,6 +31,7 @@ check ('test_dir/42_v2k.dmp', ['verilog/v_v2k.v'],
        [link_read_nonfatal=>1, keep_comments => 1,]);
 ok(1);
 ok(files_identical("test_dir/42_v2k.dmp", "t/42_dumpcheck_v2k.out"));
+ok(files_identical("test_dir/42_v2k.dmp.v", "t/42_dumpcheck_v2kv.out"));
 
 print "Edit tests\n";
 $n2->find_module("pinorder4")->find_cell("foo3")->delete;

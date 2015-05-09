@@ -93,11 +93,13 @@ t/40_netlist.t
 t/41_example.t
 t/42_dumpcheck.t
 t/42_dumpcheck_1.out
+t/42_dumpcheck_1v.out
 t/42_dumpcheck_2.out
 t/42_dumpcheck_2e.out
 t/42_dumpcheck_2v.out
 t/42_dumpcheck_sv.out
 t/42_dumpcheck_v2k.out
+t/42_dumpcheck_v2kv.out
 t/44_create.t
 t/46_link.t
 t/48_leak.t

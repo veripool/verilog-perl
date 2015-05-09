@@ -1,5 +1,15 @@
 Module:$root  Kwd:root_module  File:verilog/v_hier_top.v
   Net:GLOBAL_PARAM    DeclT:localparam  NetT:  DataT:  Array:  Value:1
+Module:v_bug917  Kwd:module  File:verilog/v_comments.v
+  Port:a  Dir:in  DataT:  Array:
+  Port:b  Dir:out  DataT:  Array:
+  Net:a  O  DeclT:port  NetT:wire  DataT:  Array:
+  Net:b  I  DeclT:port  NetT:wire  DataT:  Array:
+Module:v_bug917p  Kwd:module  File:verilog/v_comments.v
+  Port:a  Dir:in  DataT:  Array:
+  Port:b  Dir:out  DataT:  Array:
+  Net:a  O  DeclT:port  NetT:wire  DataT:  Array:
+  Net:b  I  DeclT:port  NetT:wire  DataT:  Array:
 Module:v_comments  Kwd:module  File:verilog/v_comments.v
   Port:a  Dir:in  DataT:  Array:
   Port:b  Dir:inout  DataT:[10:0]  Array:

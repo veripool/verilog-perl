@@ -1,0 +1,91 @@
+root_module $root (
+   );
+   localparam GLOBAL_PARAM = 1; // Local Variables:
+// eval:(verilog-read-defines)
+// End:
+endroot_module
+
+module v_bug917 (
+   a, b);
+   input a; // First
+   output b; // Third
+endmodule
+
+module v_bug917p (
+   a, b);
+   input a; // First
+   output b; // Secondparen
+// Third
+endmodule
+
+module v_comments (
+   a, b, c, d, d1, d2, d3);
+   input a; // comment for a
+   inout [10:0] b;
+   output [0:10] c; // comment for c
+   output reg d;
+   output [32:0] d1;
+   output [(MATH-1):0] d2;
+   output [32-1:0] d3;
+   var reg [11:0] e; // Comment for e
+endmodule
+
+module v_hier_noport (
+   );
+   var reg internal;
+endmodule
+
+module v_hier_sub (
+   avec, clk, qvec);
+   parameter FROM_DEFPARAM = 1;
+   genvar K;
+   genvar K_UNUSED;
+   supply1 a1; // Outputs
+   input [3:0] avec; // Comment for v_hier_sub, avec
+   input clk;
+   output [3:0] qvec;
+   v_hier_subsub subsub0 (.a(a1), .q(qvec[0]));
+   v_hier_subsub subsub2 (.a(1'b0), .q(qvec[2]));
+endmodule
+
+module v_hier_subsub (
+   a, q);
+   parameter IGNORED = 0;
+   input signed a;
+   output q;
+endmodule
+
+module v_hier_top (
+   clk);
+   localparam [0:0] WC_p1 = 0;
+   localparam [2:0] WC_p3 = 0;
+   localparam WC_p32 = 0;
+   localparam [-1:2] WC_p4 = 0;
+   localparam integer WC_pint = 0; // Assignments
+   wire WC_w1;
+   wire [0:0] WC_w1b;
+   wire [2:0] WC_w3;
+   wire [-1:2] WC_w4;
+   wire asn_clk;
+   input clk; /* pragma jsc_clk */
+   missing missing ();
+   v_recursive recursive ();
+   v_hier_sub sub (.avec({avec[3],avec[2:0]}), .clk(1'b0), .qvec(qvec[3:0]));
+   defparam sub.FROM_DEFPARAM = 2;
+   assign asn_clk = clk;
+endmodule
+
+module v_hier_top2 (
+   clk, iosig);
+   input clk;
+   inout [2:0] iosig; /* synthesis aftersemi*/
+// NetListName=F12_IO
+   v_hier_noport noport ();
+endmodule
+
+module v_recursive (
+   );
+   parameter DEPTH = 1;
+   v_recursive recurse ();
+endmodule
+

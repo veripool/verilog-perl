@@ -1,0 +1,9 @@
+module v_v2k (
+   clk, rst, sig1, sig2);
+   parameter WIDTH = 16;
+   input clk;
+   input rst;
+   input [WIDTH:0] sig1;
+   output reg [WIDTH:0] sig2;
+endmodule
+
