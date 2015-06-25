@@ -128,6 +128,7 @@ sub interface {
 	 (name=>$name,
 	  filename=>$self->filename, lineno=>$self->lineno);
     $fileref->_interfaces($name, $self->{modref});
+    $self->{_cmtpre} = undef;
     $self->{_cmtref} = $self->{modref};
 }
 
@@ -144,6 +145,7 @@ sub modport {
     $self->{_modportref} = $modref->new_modport
 	 (name=>$name,
 	  filename=>$self->filename, lineno=>$self->lineno);
+    $self->{_cmtpre} = undef;
     $self->{_cmtref} = $self->{modref};
 }
 
@@ -163,6 +165,7 @@ sub module {
 	  is_libcell=>($fileref->is_libcell() || $in_celldefine),
 	  filename=>$self->filename, lineno=>$self->lineno);
     $fileref->_modules($name, $self->{modref});
+    $self->{_cmtpre} = undef;
     $self->{_cmtref} = $self->{modref};
 }
 
@@ -178,12 +181,14 @@ sub endinterface {
 
 sub endmodport {
     my $self = shift;
+    $self->{_cmtpre} = undef;
     $self->{_cmtref} = $self->{modref};
     $self->{_modportref} = undef;
 }
 
 sub endmodule {
     my $self = shift;
+    $self->{_cmtpre} = undef;
     $self->{_cmtref} = undef;  # Assume all module comments are inside the module, not after
     $self->{modref} = undef;
 }
@@ -278,13 +283,14 @@ sub var {
 	(name=>$name,
 	 filename=>$self->filename, lineno=>$self->lineno,
 	 simple_type=>1, data_type=>$data_type, array=>$array,
-	 comment=>undef, msb=>$msb, lsb=>$lsb,
+	 comment=>$self->{_cmtpre}, msb=>$msb, lsb=>$lsb,
 	 net_type=>$net_type, decl_type=>$decl_type,
 	 signed=>$signed, value=>$value,
 	);
     $net->data_type($data_type);  # If it was declared earlier as in/out etc
     $net->net_type($net_type) if $net_type;
     # (from a single non-typed input/output stmt), remark the type now
+    $self->{_cmtpre} = undef;
     $self->{_cmtref} = $net;
 }
 
@@ -303,11 +309,13 @@ sub instant {
 	 (name=>$instname,
 	  filename=>$self->filename, lineno=>$self->lineno,
 	  submodname=>$submodname, params=>$params,);
+    $self->{_cmtpre} = undef;
     $self->{_cmtref} = $self->{cellref};
 }
 
 sub endcell {
     my $self = shift;
+    $self->{_cmtpre} = undef;
     $self->{_cmtref} = $self->{cellref};  # Comments after cell decl go to the cell
 }
 
@@ -344,6 +352,7 @@ sub pin {
 				    netname=>$net, );
     # If any pin uses call-by-name, then all are assumed to use call-by-name
     $cellref->byorder(1) if !$hasnamedports;
+    $self->{_cmtpre} = undef;
     $self->{_cmtref} = $pinref;
 }
 
@@ -367,20 +376,23 @@ sub keyword {
     # OVERRIDE Verilog::Parse calls when keyword occurs
     # Note we use_cb_keyword only if comments are parsed!
     my $self = shift;	# Parser invoked
-    $self->SUPER::keyword(@_);
+    $self->{_cmtpre} = undef;
     $self->{_cmtref} = undef;
 }
 
 sub comment {
     my $self = shift;
     # OVERRIDE Verilog::Parse calls when comment occurs
-    $self->SUPER::comment(@_);
     my $text = shift;	# Includes comment delimiters
     if ($self->{_cmtref}) {
 	my $old = $self->{_cmtref}->comment();
-	if (defined $old) { $old .= "\n"; } else { $old=""; }
-	$old .= $text;
+	$old = (defined $old) ? $old."\n".$text : $text;
 	$self->{_cmtref}->comment($old);
+    }
+    elsif ($self->{modref}) {
+	my $old = $self->{_cmtpre};
+	$old = (defined $old) ? $old."\n".$text : $text;
+	$self->{_cmtpre} = $old;
     }
 }
 

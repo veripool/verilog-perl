@@ -8,7 +8,7 @@
 use strict;
 use Test::More;
 
-BEGIN { plan tests => 19 }
+BEGIN { plan tests => 17 }
 BEGIN { require "t/test_utils.pl"; }
 
 #$Verilog::Netlist::Debug = 1;
@@ -79,16 +79,6 @@ is_deeply (\@mods, ['$root',
 
     @o = $mod->ports_ordered;
     ok ($#o == 2 && $o[0]->name eq 'clk');
-}
-
-# Comments
-{
-    my $mod = $nl->find_module("v_hier_top2");
-
-    my $net = $mod->find_net("iosig");
-    ok($net);
-    # Someday ->comment should include stuff before the ; also
-    is($net->comment, "/* synthesis aftersemi*/\n// NetListName=F12_IO");
 }
 
 ok(1);

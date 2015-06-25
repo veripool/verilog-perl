@@ -16,6 +16,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****	Fix building for Mac 10.10 with Perl 5.18.2, bug923. [S Liu]
 
+****	Fix parsing comments before signal end, bug917. [Raj G, Jeffrey Huynh]
+
 
 * Verilog::Language 3.412 2015-03-16
 

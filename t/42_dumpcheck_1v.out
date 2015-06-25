@@ -8,8 +8,9 @@ endroot_module
 module v_bug917 (
    a, b, m);
    input a; // a-First
-   output b; // Third
-   output m;
+   output b; // b-Third
+// Third
+   output m; // m-Second
 endmodule
 
 module v_bug917p (
@@ -44,7 +45,7 @@ module v_hier_sub (
    supply1 a1; // Outputs
    input [3:0] avec; // Comment for v_hier_sub, avec
    input clk;
-   output [3:0] qvec;
+   output [3:0] qvec; /* Comment for v_hier_sub, qvec */
    v_hier_subsub subsub0 (.a(a1), .q(qvec[0]));
    v_hier_subsub subsub2 (.a(1'b0), .q(qvec[2]));
 endmodule
@@ -79,7 +80,8 @@ endmodule
 module v_hier_top2 (
    clk, iosig);
    input clk;
-   inout [2:0] iosig; /* synthesis aftersemi*/
+   inout [2:0] iosig; /* synthesis useioff = 1 //*synthesis fpga_attr = "BLAH=ON"//* synthesis fpga_pin = "A22"*/
+/* synthesis aftersemi*/
 // NetListName=F12_IO
    v_hier_noport noport ();
 endmodule
