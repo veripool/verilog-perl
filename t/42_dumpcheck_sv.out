@@ -26,3 +26,6 @@ Module:v_sv_mod  Kwd:module  File:verilog/v_sv_mod.v
   Cell:pgm  is-a:v_sv_pgm
             Module:v_sv_pgm  Kwd:program  File:verilog/v_sv_pgm.v
 Module:v_sv_pgm  Kwd:program  File:verilog/v_sv_pgm.v
+#### Commentary:
+verilog/v_sv_mod.v:0010: clk   cmt="// Import types"
+verilog/v_sv_mod.v:0010: intf   cmt=""

@@ -76,6 +76,18 @@ sub check {
 	if (0) { print SAVEOUT "To prevent used only once"; }
 	open (STDOUT, ">$outfilename") or die "%Error: $! $outfilename,";
 	$nl->dump;
+
+	print STDOUT "#### Commentary:\n";
+	foreach my $mod ($nl->modules) {
+	    foreach my $net ($mod->nets) {
+		my $cmt = $net->comment||'';
+		$cmt =~ s/\n/\\n/g;
+		$cmt = qq{"$cmt"};
+		printf STDOUT "%s:%04d: %s   cmt=%s\n"
+		    , $net->filename, $net->lineno, $net->name, $cmt;
+	    }
+	}
+
 	close(STDOUT);
 	open (STDOUT, ">&SAVEOUT");
     }

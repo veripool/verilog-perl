@@ -6,15 +6,16 @@ root_module $root (
 endroot_module
 
 module v_bug917 (
-   a, b);
-   input a; // First
+   a, b, m);
+   input a; // a-First
    output b; // Third
+   output m;
 endmodule
 
 module v_bug917p (
    a, b);
-   input a; // First
-   output b; // Secondparen
+   input a; // a-First
+   output b; // b-Secondparen
 // Third
 endmodule
 

@@ -68,3 +68,19 @@ Module:pinorder4  Kwd:module  File:verilog/pinorder.v
               Net:b_i  IO  DeclT:net  NetT:wire  DataT:  Array:
   ContAssign:assign  lhs:a_i  rhs:0
   ContAssign:assign  lhs:b_i  rhs:0
+#### Commentary:
+verilog/pinorder.v:0049: iow   cmt=""
+verilog/pinorder.v:0050: iw   cmt=""
+verilog/pinorder.v:0048: ow   cmt=""
+verilog/pinorder.v:0039: y   cmt=""
+verilog/pinorder.v:0042: noconnect   cmt=""
+verilog/pinorder.v:0041: abcconst   cmt=""
+verilog/pinorder.v:0043: def   cmt=""
+verilog/pinorder.v:0040: x   cmt=""
+verilog/pinorder.v:0029: y   cmt=""
+verilog/pinorder.v:0030: x   cmt=""
+verilog/pinorder.v:0028: z   cmt=""
+verilog/pinorder.v:0010: IPCD_const   cmt=""
+verilog/pinorder.v:0008: d_o   cmt=""
+verilog/pinorder.v:0007: b_i   cmt=""
+verilog/pinorder.v:0009: a_i   cmt=""

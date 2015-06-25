@@ -8,3 +8,9 @@ Module:v_v2k  Kwd:module  File:verilog/v_v2k.v
   Net:rst  O  DeclT:port  NetT:  DataT:  Array:
   Net:sig1  O  DeclT:port  NetT:  DataT:[WIDTH:0]  Array:  WIDTH:0
   Net:sig2  I  DeclT:port  NetT:  DataT:reg [WIDTH:0]  Array:  WIDTH:0
+#### Commentary:
+verilog/v_v2k.v:0007: clk   cmt=""
+verilog/v_v2k.v:0006: WIDTH   cmt=""
+verilog/v_v2k.v:0009: sig1   cmt=""
+verilog/v_v2k.v:0008: rst   cmt=""
+verilog/v_v2k.v:0010: sig2   cmt=""
