@@ -4,6 +4,9 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
+* Verilog::Language 3.415 devel
+
+
 * Verilog::Language 3.414 2015-06-26
 
 ****	Add Parser useProtected argument to aid runtime, bug899. [Corey Teffetalor]
