@@ -78,8 +78,8 @@ sub check {
 	$nl->dump;
 
 	print STDOUT "#### Commentary:\n";
-	foreach my $mod ($nl->modules) {
-	    foreach my $net ($mod->nets) {
+	foreach my $mod ($nl->modules_sorted) {
+	    foreach my $net ($mod->nets_sorted) {
 		my $cmt = $net->comment||'';
 		$cmt =~ s/\n/\\n/g;
 		$cmt = qq{"$cmt"};

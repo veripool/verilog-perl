@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.415 devel
 
+****	Fix dumpcheck test false failures, bug939. [Gene Sullivan]
+
 
 * Verilog::Language 3.414 2015-06-26
 
