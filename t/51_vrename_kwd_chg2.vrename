@@ -1,0 +1,8 @@
+# DESCRIPTION: Verilog-Perl: Example Verilog for testing package
+# This file ONLY is placed into the Public Domain, for any use,
+# without warranty, 2010-2015 by Wilson Snyder.
+#
+#	Original Signal Name		Name to change to
+#	--------------------		-----------------
+#
+sigren	"foo"				"bar"

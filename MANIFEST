@@ -109,6 +109,8 @@ t/50_vrename.t
 t/51_vrename_kwd.t
 t/51_vrename_kwd.v
 t/51_vrename_kwd_chg.out
+t/51_vrename_kwd_chg2.out
+t/51_vrename_kwd_chg2.vrename
 t/51_vrename_kwd_list.out
 t/56_editfiles.t
 t/56_editfiles.v

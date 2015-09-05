@@ -6,4 +6,6 @@ module 51_vrename_kwd;
    wire do = foo;
    wire \esc[ape]d = foo;
    wire \do = foo;
+   initial $display("foo");
+   initial $display("foo.foo");
 endmodule

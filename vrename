@@ -446,7 +446,7 @@ sub verilog_change_sig {
 	if ($new ne $sig) {
 	    my $magic = "@@@@@!~${hadrepl}~!@@@@@";
 	    my $sig_quoted = quotemeta $sig;
-	    if ($filestrg =~ s/([^a-zA-Z0-9_\$\%\'\"\\])$sig_quoted(?=[^a-zA-Z0-9_])/$1$magic/g) {
+	    if ($filestrg =~ s/([^a-zA-Z0-9_\$\%\'\\])$sig_quoted(?=[^a-zA-Z0-9_])/$1$magic/g) {
 		print "match s$sig n$new m$magic\n" if $Debug;
 		$hadrepl ++;
 		$signal_magic{$sig} = $magic;

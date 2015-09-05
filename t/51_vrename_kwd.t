@@ -8,7 +8,7 @@
 use strict;
 use Test::More;
 
-BEGIN { plan tests => 4 }
+BEGIN { plan tests => 6 }
 BEGIN { require "t/test_utils.pl"; }
 
 print "Checking vrename...\n";
@@ -22,11 +22,21 @@ my $changefile = "test_dir/51_vrename_kwd_list.vrename";
 }
 
 {
-    # Try renaming
+    # Try renaming - no change
     mkdir 'test_dir/t', 0777;
     my $cmd = ("${PERL} ./vrename -change --changefile=$changefile"
 	       ." -o test_dir t/51_vrename_kwd.v");
     run_system ($cmd);
-    ok(1, "vrename change");
+    ok(1, "vrename change same");
     ok(files_identical("test_dir/t/51_vrename_kwd.v", "t/51_vrename_kwd_chg.out"), "diff");
+}
+
+{
+    # Try renaming - with change
+    mkdir 'test_dir/t', 0777;
+    my $cmd = ("${PERL} ./vrename -change --changefile=t/51_vrename_kwd_chg2.vrename"
+	       ." -o test_dir t/51_vrename_kwd.v");
+    run_system ($cmd);
+    ok(1, "vrename change");
+    ok(files_identical("test_dir/t/51_vrename_kwd.v", "t/51_vrename_kwd_chg2.out"), "diff");
 }

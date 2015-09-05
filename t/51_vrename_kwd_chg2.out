@@ -3,9 +3,9 @@
 // without warranty, 2010-2012 by Wilson Snyder.
 
 module 51_vrename_kwd;
-   wire \do  = foo;
-   wire \esc[ape]d = foo;
-   wire \do = foo;
-   initial $display("foo");
-   initial $display("foo.foo");
+   wire do = bar;
+   wire \esc[ape]d = bar;
+   wire \do = bar;
+   initial $display("bar");
+   initial $display("bar.bar");
 endmodule
