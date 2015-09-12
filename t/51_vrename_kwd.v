@@ -8,4 +8,6 @@ module 51_vrename_kwd;
    wire \do = foo;
    initial $display("foo");
    initial $display("foo.foo");
+   initial $display("baz_foo");
+   initial $display("foo_baz");
 endmodule
