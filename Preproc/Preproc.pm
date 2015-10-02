@@ -11,7 +11,7 @@ use base qw(DynaLoader);
 use strict;
 use vars qw($VERSION);
 
-$VERSION = '3.416';
+$VERSION = '3.417';
 
 ######################################################################
 #### Configuration Section
