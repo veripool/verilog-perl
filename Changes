@@ -4,7 +4,7 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
-* Verilog::Language 3.415 devel
+* Verilog::Language 3.416 2015-10-02
 
 ****    Fix dumpcheck test false failures, bug939. [Gene Sullivan]
 
