@@ -805,5 +805,5 @@ Wilson Snyder <wsnyder@wsnyder.org>
 
 L<Verilog-Perl>,
 L<Verilog::Language>
-=
-cut
+
+=cut
