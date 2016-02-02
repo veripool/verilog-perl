@@ -202,8 +202,6 @@ sub random_string {
 			   (rand (26)) + ord('a'),
 			   (rand (26)) + ord('a'),
 			   (rand (26)) + ord('a'),
-			   (rand (26)) + ord('a'),
-			   (rand (26)) + ord('a'),
 			   (rand (26)) + ord('a'));
 	return $sig if !Verilog::Language::is_keyword($sig);
     }

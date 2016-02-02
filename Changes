@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.417 devel
 
+****    Fix Flex 2.6.0 warnings.
+
 
 * Verilog::Language 3.416 2015-10-02
 
