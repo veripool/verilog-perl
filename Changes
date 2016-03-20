@@ -4,6 +4,10 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
+* Verilog::Language 3.419 devel
+
+
+
 * Verilog::Language 3.418 2016-02-02
 
 ****    Fix Flex 2.6.0 warnings.
