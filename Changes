@@ -6,6 +6,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.419 devel
 
+****    Fix duplicate cells when delete cells, bug1049.  [Stefan Tauner]
 
 
 * Verilog::Language 3.418 2016-02-02

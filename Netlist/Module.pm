@@ -37,8 +37,10 @@ structs('new',
 	   _cells	=> '%',		# hash of Verilog::Netlist::Cells
 	   _celldecls	=> '%',		# hash of declared cells (for autocell only)
 	   _cellarray	=> '%',		# hash of declared cell widths (for autocell only)
+	   _cellnum	=> '$',		# Number of next unnamed cell
 	   _level	=> '$',		# Depth in hierarchy (if calculated)
 	   _statements	=> '%',		# hash of Verilog::Netlist::ContAssigns
+	   _stmtnum	=> '$',		# Number of next unnamed statement
 	   is_top	=> '$', #'	# Module is at top of hier (not a child)
 	   is_libcell	=> '$', #'	# Module is a library cell
 	   # SystemPerl:
@@ -189,10 +191,12 @@ sub new_cell {
     # Create a new cell under this module
     if (!defined $params{name} || $params{name} eq '') {
 	# Blank instance name; invent a new one; use the next instance number in this module t$
-	$params{name} = '__unnamed_instance_' . (scalar $self->cells() + 1);
+	$self->_cellnum(($self->_cellnum||0) + 1);
+	$params{name} = '__unnamed_instance_' . $self->_cellnum;
     }
     if (my $preexist = $self->find_cell($params{name})) {
-	$params{name} .= '__duplicate_' . (scalar $self->cells() + 1);
+	$self->_cellnum(($self->_cellnum||0) + 1);
+	$params{name} .= '__duplicate_' . $self->_cellnum;
     }
     # Create a new cell; pass the potentially modified options
     my $cellref = new Verilog::Netlist::Cell(%params, module=>$self,);
@@ -207,7 +211,8 @@ sub new_contassign {
     # Create a new statement under this module
     if (!defined $params{name} || $params{name} eq '') {
 	# Blank instance name; invent a new one; use the next instance number in this module t$
-	$params{name} = '__unnamed_statement_' . ((scalar keys %{$self->_statements}) + 1);
+	$self->_stmtnum(($self->_stmtnum||0) + 1);
+	$params{name} = '__unnamed_statement_' . $self->_stmtnum;
     }
     # Create a new object; pass the potentially modified options
     my $newref = new Verilog::Netlist::ContAssign(%params, module=>$self,);
@@ -222,7 +227,8 @@ sub new_defparam {
     # Create a new statement under this module
     if (!defined $params{name} || $params{name} eq '') {
 	# Blank instance name; invent a new one; use the next instance number in this module t$
-	$params{name} = '__unnamed_statement_' . ((scalar keys %{$self->_statements}) + 1);
+	$self->_stmtnum(($self->_stmtnum||0) + 1);
+	$params{name} = '__unnamed_statement_' . $self->_stmtnum;
     }
     # Create a new object; pass the potentially modified options
     my $newref = new Verilog::Netlist::Defparam(%params, module=>$self,);
