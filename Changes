@@ -8,6 +8,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****    Fix duplicate cells when delete cells, bug1049.  [Stefan Tauner]
 
+****    Fix core dump on Storable store/retrieve, bug1063. [G Aydos]
+
 
 * Verilog::Language 3.418 2016-02-02
 

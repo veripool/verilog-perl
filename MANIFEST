@@ -100,6 +100,7 @@ t/42_dumpcheck_2v.out
 t/42_dumpcheck_sv.out
 t/42_dumpcheck_v2k.out
 t/42_dumpcheck_v2kv.out
+t/43_storable.t
 t/44_create.t
 t/46_link.t
 t/48_leak.t

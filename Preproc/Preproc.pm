@@ -84,6 +84,13 @@ sub DESTROY {
     $self->_DESTROY;
 }
 
+sub STORABLE_freeze {
+    my ($self, $cloning) = @_;
+    # Prevent crash on Storable::store then retrieve
+    delete $self->{_cthis};
+    return;
+}
+
 sub open {
     my $self = shift;
     my %params = (
