@@ -9,7 +9,7 @@ use IO::File;
 use strict;
 use Test::More;
 
-BEGIN { plan tests => 15 }
+BEGIN { plan tests => 17 }
 BEGIN { require "t/test_utils.pl"; }
 
 print "Checking vhier...\n";
@@ -20,6 +20,7 @@ vhier ("t/85_vhier_resolvefiles.out","--resolve-files");
 vhier ("t/85_vhier_modfiles.out",   "--module-files --language 2001");
 vhier ("t/85_vhier_topmodule.out",  "--module-files --top-module v_hier_sub");
 vhier ("t/85_vhier_forest.out",	    "--forest --instance");
+vhier ("t/85_vhier_skiplist.out",   "--forest --instance --skiplist t/85_vhier_skiplist.dat");
 vhier ("t/85_vhier_xml.out",	    "--xml --cells --input-files --module-files --missing-modules");
 check_valid_xml("test_dir/vhier.out");
 

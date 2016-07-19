@@ -133,6 +133,8 @@ t/85_vhier_forest.out
 t/85_vhier_inpfiles.out
 t/85_vhier_modfiles.out
 t/85_vhier_resolvefiles.out
+t/85_vhier_skiplist.dat
+t/85_vhier_skiplist.out
 t/85_vhier_topmodule.out
 t/85_vhier_xml.out
 t/86_vhier_tick.t

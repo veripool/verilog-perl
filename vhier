@@ -42,6 +42,8 @@ my $Opt_ResolveFiles;
 my $Opt_Synthesis;
 my $Opt_Instance;
 my $Opt_Forest;
+my $opt_skiplist;
+my @Opt_Skiplist_Names;
 my $Opt_Xml;
 
 Getopt::Long::config ("no_auto_abbrev","pass_through");
@@ -58,6 +60,7 @@ if (! GetOptions (
 		  "modules!"		=> \$Opt_Modules,
 		  "input-files!"	=> \$Opt_InFiles,
 		  "resolve-files!"	=> \$Opt_ResolveFiles,
+		  "skiplist=s"		=> \$opt_skiplist,
 		  "sv!"			=> sub { shift; Verilog::Language::language_standard("1800-2012"); },
 		  "language=s"		=> sub { shift; Verilog::Language::language_standard(shift); },
 		  "missing!"		=> \$Opt_Missing,
@@ -83,6 +86,8 @@ if ($opt_output_filename) {
 } else {
     $fh->open(">-") or die;
 }
+
+read_skiplist($opt_skiplist) if $opt_skiplist;
 
 vhier($fh, @opt_files);
 
@@ -312,8 +317,16 @@ sub show_hier {
     # print the design hierarchy starting at mod (recursive)
 
     my $name = $mod->name;
+
+    # check if mod name has match in regex list to skip
+    if (grep { $name =~ $_ } @Opt_Skiplist_Names) {
+        print "Debug: Skipping module $name" if $Debug;
+        return;
+    }
+
     return if $recursing->{$name};
     ++$recursing->{$name};
+
     printf "%-38s %s\n", $indent."Module ".$name,$hier if $Debug;
     my $instance = $parcell ? $parcell->name : $name;
 
@@ -358,6 +371,20 @@ sub show_hier {
     }
     $fh->printf("%s</cell>\n", $indent) if $Opt_Xml;
     --$recursing->{$name};
+}
+
+sub read_skiplist {
+    my $filename = shift;
+    my $fh = IO::File->new("<$filename") or die "%Error: $! $filename,";
+    while (<$fh>) {
+            chomp;
+            push @Opt_Skiplist_Names, $_;
+    }
+    $fh->close;
+    if ($Debug) {
+	print "Debug: skiplist:\n";
+	foreach (@Opt_Skiplist_Names) { print "\t$_\n"; }
+    }
 }
 
 ######################################################################
@@ -490,6 +517,12 @@ Do not complain about references to missing modules.
 =item --missing-modules
 
 With --nomissing, show all modules that are not found.
+
+=item --skiplist I<file>
+
+Given file contains a list of regular expressions, one per line. If a
+module name in the design hierarchy matches one of these expressions, skip
+showing that module and any sub-hierarchy.
 
 =item --synthesis
 
