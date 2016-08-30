@@ -149,6 +149,7 @@ verilog/inc_nonl.v
 verilog/parser_bugs.v
 verilog/parser_sv.v
 verilog/parser_sv09.v
+verilog/parser_vectors.v
 verilog/pinorder.v
 verilog/pli.v
 verilog/t_80_bar/bar.f

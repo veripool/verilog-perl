@@ -74,6 +74,7 @@ read_test("verilog/parser_bugs.v", $dump_fh);
 read_test("verilog/pinorder.v", $dump_fh);
 read_test("verilog/parser_sv.v", $dump_fh);
 read_test("verilog/parser_sv09.v", $dump_fh);
+read_test("verilog/parser_vectors.v", $dump_fh);
 ok(1, "read");
 $dump_fh->close();
 
