@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****    Add additional tests, msg1982. [by Stefan Tauner]
 
+****	Fix passing enum types in SigParser, bug1107. [by Lalit Chhabra]
+
 
 * Verilog::Language 3.420 2016-07-30
 

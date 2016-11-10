@@ -1441,11 +1441,11 @@ enum_base_typeE<str>:	// IEEE: enum_base_type
 	|	signingE rangeList			{ $<fl>$=$<fl>1; $$=$1+$2; }
 	|	signing					{ $<fl>$=$<fl>1; $$=$1; }
 	//
-	|	integer_atom_type signingE		{ $<fl>$=$<fl>1; $$=$1; }
-	|	integer_vector_type signingE regrangeE	{ $<fl>$=$<fl>1; $$=$1; }
+	|	integer_atom_type signingE		{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
+	|	integer_vector_type signingE regrangeE	{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
 	//			// below can be idAny or yaID__aTYPE
 	//			// IEEE requires a type, though no shift conflict if idAny
-	|	idAny regrangeE			{ $<fl>$=$<fl>1; $$=$1; }
+	|	idAny regrangeE			{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
 	;
 
 enum_nameList:
