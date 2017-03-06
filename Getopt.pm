@@ -664,7 +664,8 @@ for downstream programs that also use Verilog::Getopt.
 =item $self->parameter ( \@params )
 
 Parses any recognized parameters in the referenced array, removing the
-standard parameters and returning a array with all unparsed parameters.
+standard parameters from any previous parameters() call, and returning a
+array with all unparsed parameters.
 
 The below list shows the VCS-like parameters that are supported, and the
 functions that are called:
