@@ -10,7 +10,7 @@ use Test::More;
 use Cwd;
 
 BEGIN { plan tests => 15 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 use Verilog::Getopt;
 ok(1, "use");

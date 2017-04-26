@@ -11,7 +11,7 @@ use Time::HiRes qw(gettimeofday tv_interval);
 use Data::Dumper; $Data::Dumper::Indent = 1;
 
 BEGIN { plan tests => 4 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 use Verilog::SigParser;
 use Verilog::Preproc;

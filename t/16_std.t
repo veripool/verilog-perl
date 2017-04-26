@@ -9,7 +9,7 @@ use strict;
 use Test::More;
 
 BEGIN { plan tests => 3 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 use Verilog::Std;
 ok(1, "use");

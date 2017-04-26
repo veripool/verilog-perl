@@ -9,7 +9,7 @@ use strict;
 use Test::More;
 
 BEGIN { plan tests => 2 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 $ENV{HARNESS_ACTIVE} = 1;  # vsplitmodule checks this and doesn't die
 

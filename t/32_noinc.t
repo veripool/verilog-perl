@@ -10,7 +10,7 @@ use strict;
 use Test::More;
 
 BEGIN { plan tests => 7 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 #######################################################################
 

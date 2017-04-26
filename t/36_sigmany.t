@@ -13,7 +13,7 @@ use Test;  # Not Test::More due to skip usage
 use Data::Dumper; $Data::Dumper::Indent = 1;
 
 BEGIN { plan tests => 3 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 our $Any_Error;
 our $Got_Eof_Module;

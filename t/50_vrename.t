@@ -9,7 +9,7 @@ use strict;
 use Test::More;
 
 BEGIN { plan tests => 6 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 print "Checking vrename...\n";
 {

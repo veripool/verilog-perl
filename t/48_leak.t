@@ -11,7 +11,7 @@ use Data::Dumper; $Data::Dumper::Indent = 1;
 BEGIN { eval "use Devel::Leak;"; }  # Optional
 
 BEGIN { plan tests => 2 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 use Verilog::SigParser;
 use Verilog::Preproc;

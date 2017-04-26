@@ -8,7 +8,7 @@
 use strict;
 use Test::More;
 
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 my @execs = glob ("blib/script/[a-z]*");
 plan tests => (3 * ($#execs+1));
 

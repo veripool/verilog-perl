@@ -10,7 +10,7 @@ use Test::More;
 use File::Copy;
 
 BEGIN { plan tests => 9 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 BEGIN { use Verilog::EditFiles; }
 ok(1);

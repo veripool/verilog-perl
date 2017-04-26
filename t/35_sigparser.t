@@ -10,7 +10,7 @@ use Test::More;
 use Data::Dumper; $Data::Dumper::Indent = 1;
 
 BEGIN { plan tests => 4 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 our %_TestCoverage;
 our %_TestCallbacks;

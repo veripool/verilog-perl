@@ -5,7 +5,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.423 devel
 
-
+****	Fix tests '.' for Perl 5.26.0, rt121025.  [Dan Collins]
 
 
 * Verilog::Language 3.422 2016-11-24

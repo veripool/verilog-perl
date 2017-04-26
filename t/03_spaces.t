@@ -8,7 +8,7 @@
 use strict;
 use Test;
 
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 eval { use ExtUtils::Manifest; };
 my $manifest = ExtUtils::Manifest::maniread();
 plan tests => (1 + (keys %{$manifest}));

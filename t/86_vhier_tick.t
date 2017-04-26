@@ -10,7 +10,7 @@ use strict;
 use Test::More;
 
 BEGIN { plan tests => 2 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 # bug300
 my $cmd = "${PERL} ./vhier --input-files -y verilog t_86_vhier_tick.v";

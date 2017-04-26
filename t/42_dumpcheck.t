@@ -9,7 +9,7 @@ use strict;
 use Test::More;
 
 BEGIN { plan tests => 14 }
-BEGIN { require "t/test_utils.pl"; }
+BEGIN { require "./t/test_utils.pl"; }
 
 #$Verilog::SigParser::Debug = $Verilog::Parser::Debug = 1;
 use Verilog::Netlist;
