@@ -5,6 +5,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.425 devel
 
+****	Fix lineno with class callbacks, bug1162. [Dave Storrar]
 
 
 * Verilog::Language 3.423 2017-04-26

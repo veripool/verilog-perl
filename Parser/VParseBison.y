@@ -4469,11 +4469,11 @@ class_declaration:		// ==IEEE: part of class_declaration
 classFront:			// IEEE: part of class_declaration
 		classVirtualE yCLASS lifetimeE idAny/*class_identifier*/
 			{ PARSEP->symPushNew(VAstType::CLASS, $4);
-			  PARSEP->classCb($<fl>1,$2,$4,$1); }
+			  PARSEP->classCb($<fl>2,$2,$4,$1); }
 	//			// IEEE: part of interface_class_declaration
 	|	yINTERFACE yCLASS lifetimeE idAny/*class_identifier*/
 			{ PARSEP->symPushNew(VAstType::CLASS, $4);
-			  PARSEP->classCb($<fl>1,$2,$4,$1); }
+			  PARSEP->classCb($<fl>2,$2,$4,$1); }
 	;
 
 classVirtualE<str>:
