@@ -3,7 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.424 2017-04-26
+* Verilog::Language 3.425 devel
+
+
+
+* Verilog::Language 3.423 2017-04-26
 
 ****	Fix tests '.' for Perl 5.26.0, rt121025.  [Dan Collins]
 
