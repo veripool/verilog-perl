@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.425 devel
+* Verilog::Language 3.426 2017-06-06
 
 ****	Fix lineno with class callbacks, bug1162. [Dave Storrar]
 
