@@ -1076,6 +1076,7 @@ int VPreProcImp::getStateToken(string& buf) {
 	    }
 	    else if (tok==VP_EOF) {
 		error("`\" not terminated at EOF\n");
+		break;
 	    }
 	    else if (tok==VP_BACKQUOTE) {
 		m_strify += "\\\"";
