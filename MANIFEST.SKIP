@@ -2,8 +2,8 @@
 /CVS/
 ^.git/
 ,v$
-\.(bak|old)/
-\.(bak|old)$
+\.(bak|old|new)/
+\.(bak|old|new)$
 \bMakefile$
 ^INSTALL$
 \.wpsin$

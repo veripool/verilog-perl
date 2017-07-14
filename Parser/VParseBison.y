@@ -116,7 +116,7 @@ static void ERRSVKWD(VFileLine* fileline, const string& tokname) {
 
 static void NEED_S09(VFileLine*, const string&) {
     //Let lint tools worry about it
-    //fileline->error((string)"Advanced feature: \""+tokname+"\" is a 1800-2009 construct, but used under --lanugage 1800-2005 or earlier.");
+    //fileline->error((string)"Advanced feature: \""+tokname+"\" is a 1800-2009 construct, but used under --language 1800-2005 or earlier.");
 }
 
 %}
