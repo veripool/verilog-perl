@@ -9,7 +9,7 @@ use strict;
 use Test::More;
 use Data::Dumper; $Data::Dumper::Indent = 1;
 
-BEGIN { plan tests => 4 }
+BEGIN { plan tests => 6 }
 BEGIN { require "./t/test_utils.pl"; }
 
 our %_TestCoverage;
@@ -34,6 +34,17 @@ BEGIN {
     }
 }
 
+sub _serialize {
+    my $in = shift;
+    if (ref($in)) {
+	my $dd = Data::Dumper->new([$in], [qw(in)]);
+	$dd->Reset->Indent(0)->Terse(1)->Sortkeys(1);
+	return $dd->Dump;
+    } else {
+	return $in;
+    }
+}
+
 sub _common {
     my $self = shift;
     my $what = shift;
@@ -42,7 +53,13 @@ sub _common {
 
     $_TestCoverage{$what}++;
     my $args="";
-    foreach (@args) { $args .= defined $_ ? " '$_'" : " undef"; }
+    foreach (@args) {
+	if (defined $_) {
+	    $args .= " \'"._serialize($_)."\'";
+	} else {
+	    $args .= " undef";
+	}
+    }
     $self->{dump_fh}->printf("%s:%03d: %s %s\n",
 			     $self->filename, $self->lineno,
 			     uc $what,
@@ -63,23 +80,17 @@ use Verilog::SigParser;
 use Verilog::Preproc;
 ok(1, "use");
 
-# Use our class and dump to a file
-my $dump_fh = new IO::File("test_dir/35.dmp","w")
-    or die "%Error: $! test_dir/35.dmp,";
-
-read_test("/dev/null", $dump_fh);  # Empty files should be ok
-read_test("verilog/v_hier_subprim.v", $dump_fh);
-read_test("verilog/v_hier_sub.v", $dump_fh);
-read_test("verilog/parser_bugs.v", $dump_fh);
-read_test("verilog/pinorder.v", $dump_fh);
-read_test("verilog/parser_sv.v", $dump_fh);
-read_test("verilog/parser_sv09.v", $dump_fh);
-read_test("verilog/parser_vectors.v", $dump_fh);
+read_tests("test_dir/35.dmp",
+	   []);
 ok(1, "read");
-$dump_fh->close();
-
 # Did we read the right stuff?
 ok(files_identical("test_dir/35.dmp", "t/35_sigparser.out"), "diff");
+
+read_tests("test_dir/35_ps.dmp",
+	   [use_pinselects => 1]);
+ok(1, "read-pinselects");
+# Did we read the right stuff?
+ok(files_identical("test_dir/35_ps.dmp", "t/35_sigparser_ps.out"), "diff");
 
 # Did we cover everything?
 my $err;
@@ -91,16 +102,37 @@ foreach my $cb (sort keys %_TestCallbacks) {
 }
 ok (!$err, "coverage");
 
+
 ######################################################################
 
+# Use our class and dump to a file
+sub read_tests {
+    my $dump_filename = shift;
+    my $option_ref = shift;
+
+    my $dump_fh = new IO::File($dump_filename,"w")
+	or die "%Error: $! $dump_filename,";
+    read_test($dump_fh, $option_ref, "/dev/null");  # Empty files should be ok
+    read_test($dump_fh, $option_ref, "verilog/v_hier_subprim.v");
+    read_test($dump_fh, $option_ref, "verilog/v_hier_sub.v");
+    read_test($dump_fh, $option_ref, "verilog/parser_bugs.v");
+    read_test($dump_fh, $option_ref, "verilog/pinorder.v");
+    read_test($dump_fh, $option_ref, "verilog/parser_sv.v");
+    read_test($dump_fh, $option_ref, "verilog/parser_sv09.v");
+    read_test($dump_fh, $option_ref, "verilog/parser_vectors.v");
+    $dump_fh->close();
+}
+
 sub read_test {
-    my $filename = shift;
     my $dump_fh = shift;
+    my $option_ref = shift;
+    my $filename = shift;
 
     my $pp = Verilog::Preproc->new(keep_comments=>1,);
 
     my $parser = new MyParser (dump_fh => $dump_fh,
-			       metacomment=>{synopsys=>1},);
+			       metacomment=>{synopsys=>1},
+			       @$option_ref);
 
     if ($ENV{VERILOG_TEST_DEBUG}) {  # For example, VERILOG_TEST_DEBUG=9
 	$parser->debug($ENV{VERILOG_TEST_DEBUG});

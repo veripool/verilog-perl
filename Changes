@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.427 devel
 
+**	Support Verilog::SigParser pin select parsing, msg1626. [by Stefan Tauner]
+
 
 * Verilog::Language 3.426 2017-06-06
 

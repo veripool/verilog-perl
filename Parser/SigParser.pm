@@ -40,6 +40,7 @@ our @_Callback_Names = qw(
   package
   parampin
   pin
+  pinselects
   port
   program
   task
@@ -55,6 +56,7 @@ sub new {
     my $self = $class->SUPER::new(_sigparser => 1,
 				  use_unreadback => 0,
 				  use_protected => 0,
+				  use_pinselects => 0,
 				  @_);
     bless $self, $class;
     $self->debug($Debug) if $Debug;
@@ -205,6 +207,13 @@ sub pin {
     my $self = shift;
     my $name = shift;
     my $conn = shift;
+    my $number = shift;
+}
+
+sub pinselects {
+    my $self = shift;
+    my $name = shift;
+    my $conns = shift;
     my $number = shift;
 }
 
@@ -424,12 +433,21 @@ instantiation is for an UDP versus a module.
 
 =item $self->pin ( $name, $connection, $index )
 
-This method is called when a pin on a instant is defined.  If a pin name
+This method is called when a pin on an instant is defined and "use_pinselects"
+is not set (the default, see pinselects() below.  If a pin name
 was not provided and the connection is by position, name will be '' or
 undef.
 
 If you do not need the pin nor var nor port callbacks, consider the
 "$self->new (... use_vars=>0 ...)"  option to accelerate parsing.
+
+=item $self->pinselects ( $name, $connections, $index )
+
+If "$self->new (... use_pinselects=>1 ...)" is used this function is called
+instead of "$self->pin (...)".  The difference is that the second parameter
+("$connections") is a Perl hash that contains all connected nets in the
+case of concatenations including the MSB and LSB bounds used at these
+locations.
 
 =item $self->port ( $name, $objof, $direction, $data_type, $array, $pinnum )
 

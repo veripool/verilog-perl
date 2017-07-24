@@ -30,6 +30,10 @@
 #include <map>
 #include <deque>
 #include <cassert>
+#include <cstring>
+#include <cerrno>
+#include <cstdlib>
+#include <climits>
 
 #include "VParse.h"
 #include "VParseGrammar.h"
@@ -61,7 +65,10 @@
 
 #define PINNUMINC()	{ GRAMMARP->pinNumInc(); }
 
-#define INSTPREP(cellmod,cellparam) { GRAMMARP->pinNum(1); GRAMMARP->m_cellMod=(cellmod); GRAMMARP->m_cellParam=(cellparam); }
+#define INSTPREP(cellmod,cellparam,withinInst) { GRAMMARP->pinNum(1); GRAMMARP->m_cellMod=(cellmod); GRAMMARP->m_cellParam=(cellparam); GRAMMARP->m_withinInst = 1; }
+#define INSTDONE() { GRAMMARP->m_withinInst = 0; }
+
+enum net_idx {NI_NETNAME = 0, NI_MSB, NI_LSB};
 
 static void VARDONE(VFileLine* fl, const string& name, const string& array, const string& value) {
     if (GRAMMARP->m_varIO!="" && GRAMMARP->m_varDecl=="") GRAMMARP->m_varDecl="port";
@@ -85,22 +92,200 @@ static void VARDONETYPEDEF(VFileLine* fl, const string& name, const string& type
     PARSEP->syms().replaceInsert(VAstType::TYPE,name);
 }
 
+static void parse_net_constants(VFileLine* fl, VParseHashElem nets[][3]) {
+    VParseHashElem (*net)[3] = &nets[0];
+    VParseHashElem* nhp = net[0];
+
+    std::deque<VParseNet>::iterator it = GRAMMARP->m_portStack.begin();
+    while (it != GRAMMARP->m_portStack.end()) {
+	// Default net name is simply the complete token
+	const char* netnamep = it->m_name.c_str();
+
+	size_t delim = it->m_name.find_first_of("'");
+	if (it->m_name[0] != '\\' && it->m_msb.empty() && it->m_name[delim] == '\'') {
+	    // Handle sized integer constants (e.g., 7'b0) specifically
+	    if (delim != 0) {
+		// Handle the first part that indicates the width for sized constants (guaranteed to be a decimal)
+		char* endp;
+		errno = 0;
+		long l = strtol(netnamep, &endp, 10);
+		if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX || l <= 0) {
+		    fl->error((string)"Unexpected length in size of integer constant: \""+netnamep+"\".");
+		    return;
+		}
+		// Skip whitespace
+		while (endp < netnamep + delim && isspace(*endp)) {
+		    endp++;
+		}
+		if (endp != netnamep + delim) {
+		    fl->error((string)"Could not convert size of integer constant: \""+netnamep+"\".");
+		    return;
+		}
+		int count = l;
+
+		// Skip characters up to the delimiter ' to determine new netnamep
+		netnamep += delim;
+
+		// Test for legal base specifiers:
+		// d, D, h, H, o, O , b, or B for the decimal, hexadecimal, octal, and binary bases, respectively
+		char base = netnamep[1];
+		// 's' indicates a signed constant, is followed by the actual base; currently ignored
+		if (base == 's' || base == 'S') {
+		    base = netnamep[2];
+		}
+		if (strchr("dDhHoObB", base) == NULL) {
+		    fl->error((string)"Base specifier \""+base+"\" is not valid in integer constant \""+it->m_name.c_str()+"\".");
+		    return;
+		}
+
+		// These assignments could be prettified with C++11
+		nhp[NI_MSB].keyp = "msb";
+		nhp[NI_MSB].val_type = VParseHashElem::ELEM_INT;
+		nhp[NI_MSB].val_int = count - 1;
+		nhp[NI_LSB].keyp = "lsb";
+		nhp[NI_LSB].val_type = VParseHashElem::ELEM_INT;
+		nhp[NI_LSB].val_int = 0;
+	    } else {
+		// fl->error increases the error count which would create regressions for no good reasons.
+		// There is no ->warn or similar though but we could print, e.g., to stderr in these cases
+		//fl->error((string)"Unsized integer constant are not fully supported in nets (\""+netnamep+"\").");
+		//fprintf(stderr, "Unsized integer constant are not fully supported in nets (\"%s\").", netnamep);
+	    }
+	} else {
+	    // Ordinary net names might have a range attached or not.
+	    // If it does then parse its bounds into proper integers.
+	    const char *msbstr = it->m_msb.c_str();
+	    if (msbstr[0] != '\0') {
+		{ // Parse NI_MSB
+		    char* endp;
+		    errno = 0;
+		    long l = strtol(msbstr, &endp, 10);
+		    // Test for range within int, and proper parsing
+		    if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX || l < 0 || (endp != NULL && l == 0 && errno == ERANGE)) {
+			fl->error((string)"Unexpected length in msb specification of \""+netnamep+"\" (endp="+endp+", errno="+strerror(errno)+").");
+			return;
+		    }
+		    nhp[NI_MSB].keyp = "msb";
+		    nhp[NI_MSB].val_type = VParseHashElem::ELEM_INT;
+		    nhp[NI_MSB].val_int = (int)l;
+		}
+		{ // Parse NI_LSB
+		    char* endp;
+		    errno = 0;
+		    long l = strtol(it->m_lsb.c_str(), &endp, 10);
+		    if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX || l < 0 || (endp != NULL && l == 0 && errno == ERANGE)) {
+			fl->error((string)"Unexpected length in lsb specification of \""+netnamep+"\".");
+			return;
+		    }
+		    nhp[NI_LSB].keyp = "lsb";
+		    nhp[NI_LSB].val_type = VParseHashElem::ELEM_INT;
+		    nhp[NI_LSB].val_int = (int)l;
+		}
+	    } else {
+		nhp[NI_MSB].keyp = NULL;
+		nhp[NI_LSB].keyp = NULL;
+	    }
+	}
+
+	nhp[NI_NETNAME].keyp = "netname";
+	nhp[NI_NETNAME].val_type = VParseHashElem::ELEM_STR;
+	nhp[NI_NETNAME].val_str = netnamep;
+	*it++;
+	nhp += 3; // We operate on three elements in each iteration
+    }
+}
+
 static void PINDONE(VFileLine* fl, const string& name, const string& expr) {
     if (GRAMMARP->m_cellParam) {
 	// Stack them until we create the instance itself
 	GRAMMARP->m_pinStack.push_back(VParseGPin(fl, name, expr, GRAMMARP->pinNum()));
     } else {
 	PARSEP->pinCb(fl, name, expr, GRAMMARP->pinNum());
+	if (PARSEP->usePinSelects()) {
+	    if (GRAMMARP->m_portStack.empty()) {
+		string netname;
+		if (GRAMMARP->m_portNextNetName.empty()) {
+		    netname = expr;
+		} else {
+		    netname = GRAMMARP->m_portNextNetName;
+		    GRAMMARP->m_portNextNetName.clear();
+		}
+		size_t elem_cnt = GRAMMARP->m_portNextNetMsb.empty() ? 1 : 3;
+		VParseHashElem nets[elem_cnt];
+		// These assignments could be prettified with C++11
+		nets[NI_NETNAME].keyp = "netname";
+		nets[NI_NETNAME].val_type = VParseHashElem::ELEM_STR;
+		nets[NI_NETNAME].val_str = netname;
+		if (elem_cnt > 1) {
+		    nets[NI_MSB].keyp = "msb";
+		    nets[NI_MSB].val_type = VParseHashElem::ELEM_STR;
+		    nets[NI_MSB].val_str = GRAMMARP->m_portNextNetMsb;
+		    nets[NI_LSB].keyp = "lsb";
+		    nets[NI_LSB].val_type = VParseHashElem::ELEM_STR;
+		    nets[NI_LSB].val_str = GRAMMARP->m_portNextNetLsb;
+		}
+		PARSEP->pinselectsCb(fl, name, 1, elem_cnt, &nets[0], GRAMMARP->pinNum());
+		if (elem_cnt > 1) {
+		    GRAMMARP->m_portNextNetMsb.clear();
+		    GRAMMARP->m_portNextNetLsb.clear();
+		}
+	    } else {
+		// Connection with multiple pins was parsed completely.
+		// There might be one net left in the pipe...
+		if (GRAMMARP->m_portNextNetValid) {
+		    GRAMMARP->m_portStack.push_front(VParseNet(GRAMMARP->m_portNextNetName, GRAMMARP->m_portNextNetMsb, GRAMMARP->m_portNextNetLsb));
+		}
+
+		unsigned int arraycnt = GRAMMARP->m_portStack.size();
+		VParseHashElem nets[arraycnt][3];
+		parse_net_constants(fl, nets);
+		PARSEP->pinselectsCb(fl, name, arraycnt, 3, &nets[0][0], GRAMMARP->pinNum());
+	    }
+	    GRAMMARP->m_portNextNetValid = false;
+	    GRAMMARP->m_portStack.clear();
+	}
     }
 }
 
 static void PINPARAMS() {
-    // Throw out all the pins we found before we could do instanceCb
+    // Throw out all the "pins" we found before we could do instanceCb
     while (!GRAMMARP->m_pinStack.empty()) {
 	VParseGPin& pinr = GRAMMARP->m_pinStack.front();
 	PARSEP->parampinCb(pinr.m_fl, pinr.m_name, pinr.m_conn, pinr.m_number);
 	GRAMMARP->m_pinStack.pop_front();
     }
+    GRAMMARP->m_withinPin = true;
+}
+
+static void PORTNET(VFileLine* fl, const string& name) {
+    if (!GRAMMARP->m_withinInst) {
+        return;
+    }
+    GRAMMARP->m_portNextNetValid = true;
+    GRAMMARP->m_portNextNetName = name;
+    GRAMMARP->m_portNextNetMsb.clear();
+    GRAMMARP->m_portNextNetLsb.clear();
+}
+
+static void PORTRANGE(const string& msb, const string& lsb) {
+    if (!GRAMMARP->m_withinInst) {
+        return;
+    }
+    GRAMMARP->m_portNextNetMsb = msb;
+    GRAMMARP->m_portNextNetLsb = lsb;
+}
+
+static void PIN_CONCAT_APPEND(const string& expr) {
+    if (!GRAMMARP->m_withinPin) {
+        return;
+    }
+    // Only while not within a valid net term the expression is part of a replication constant.
+    if (!GRAMMARP->m_portNextNetValid) {
+        GRAMMARP->m_portStack.push_front(VParseNet(expr));
+    } else {
+        GRAMMARP->m_portStack.push_front(VParseNet(GRAMMARP->m_portNextNetName, GRAMMARP->m_portNextNetMsb, GRAMMARP->m_portNextNetLsb));
+    }
+    GRAMMARP->m_portNextNetValid = false;
 }
 
 /* Yacc */
@@ -1973,10 +2158,11 @@ defparam_assignment:		// ==IEEE: defparam_assignment
 //   checker_id			  name  (pins) ;		// checker_instantiation
 
 etcInst:			// IEEE: module_instantiation + gate_instantiation + udp_instantiation
-		instName {INSTPREP($1,1);} strengthSpecE parameter_value_assignmentE {INSTPREP($1,0);} instnameList ';'
-		 	{ }
+		instName { INSTPREP($1,1,0); } strengthSpecE parameter_value_assignmentE { INSTPREP($1,0,1); } instnameList ';'
+			{ INSTDONE(); }
 	//			// IEEE: interface_identifier' .' modport_identifier list_of_interface_identifiers
-	|	instName {INSTPREP($1,1);} '.' id {INSTPREP($1,0);} mpInstnameList ';' 	{ }
+	|	instName { INSTPREP($1,1,0); } '.' id {INSTPREP($1,0,0);} mpInstnameList ';'
+			{ INSTDONE(); }
 	;
 
 instName<str>:
@@ -1999,7 +2185,7 @@ mpInstnameParen:		// Similar to instnameParen, but for modport instantiations wh
 
 mpInstname:			// Similar to instname, but for modport instantiations which have no parenthesis
 	//			// id is-a: interface_port_identifier   (interface.modport)
-		id instRangeE	 			{ PARSEP->instantCb($<fl>1, GRAMMARP->m_cellMod, $1, $2); PINPARAMS(); }
+		id instRangeE	 			{ PARSEP->instantCb($<fl>1, GRAMMARP->m_cellMod, $1, $2); }
 	;
 
 instnameList:
@@ -2027,11 +2213,11 @@ instRangeE<str>:
 	;
 
 cellpinList:
-		{ VARRESET_LIST(""); } cellpinItList	{ VARRESET_NONLIST(""); }
+		{ VARRESET_LIST(""); } cellpinItList	{ VARRESET_NONLIST(""); GRAMMARP->m_withinPin = false; }
 	;
 
 cellpinItList:			// IEEE: list_of_port_connections + list_of_parameter_assignmente
-		cellpinItemE				{ }
+		{ GRAMMARP->m_portNextNetName.clear(); }	cellpinItemE	{ }
 	|	cellpinItList ',' cellpinItemE		{ }
 	;
 
@@ -3123,7 +3309,7 @@ exprScope<str>:			// scope and variable for use to inside an expression
 	|	idArrayed				{ $<fl>$=$<fl>1; $$ = $1; }
 	|	package_scopeIdFollows idArrayed	{ $<fl>$=$<fl>1; $$ = $1+$2; }
 	|	class_scopeIdFollows idArrayed		{ $<fl>$=$<fl>1; $$ = $<str>1+$2; }
-	|	~l~expr '.' idArrayed			{ $<fl>$=$<fl>1; $$ = $1+"."+$3; }
+	|	~l~expr '.' idArrayed			{ $<fl>$=$<fl>1; $$ = $1+"."+$3; PORTNET($<fl>1, $$); }
 	//			// expr below must be a "yTHIS"
 	|	~l~expr '.' ySUPER			{ $<fl>$=$<fl>1; $$ = $1+"."+$3; }
 	//			// Part of implicit_class_handle
@@ -3171,8 +3357,8 @@ exprOrDataTypeOrMinTypMax<str>:	// exprOrDataType or mintypmax_expression
 
 cateList<str>:
 	//			// Not just 'expr' to prevent conflict via stream_concOrExprOrType
-		stream_expression			{ $<fl>$=$<fl>1; $$ = $1; }
-	|	cateList ',' stream_expression		{ $<fl>$=$<fl>1; $$ = $1+","+$3; }
+		stream_expression			{ $<fl>$=$<fl>1; $$ = $1; PIN_CONCAT_APPEND($1); }
+	|	cateList ',' stream_expression		{ $<fl>$=$<fl>1; $$ = $1+","+$3; PIN_CONCAT_APPEND($3); }
 	;
 
 exprOrDataTypeList<str>:
@@ -3291,15 +3477,15 @@ stream_expression<str>:		// ==IEEE: stream_expression
 //	+ n_input_gatetype + n_output_gatetype + pass_en_switchtype
 //	+ pass_switchtype
 gateKwd<str>:
-		ygenGATE				{ $<fl>$=$<fl>1; INSTPREP($1,0); }
-	|	yAND					{ $<fl>$=$<fl>1; INSTPREP($1,0); }
-	| 	yBUF					{ $<fl>$=$<fl>1; INSTPREP($1,0); }
-	|	yNAND					{ $<fl>$=$<fl>1; INSTPREP($1,0); }
-	|	yNOR					{ $<fl>$=$<fl>1; INSTPREP($1,0); }
-	|	yNOT					{ $<fl>$=$<fl>1; INSTPREP($1,0); }
-	|	yOR					{ $<fl>$=$<fl>1; INSTPREP($1,0); }
-	|	yXNOR					{ $<fl>$=$<fl>1; INSTPREP($1,0); }
-	|	yXOR					{ $<fl>$=$<fl>1; INSTPREP($1,0); }
+		ygenGATE				{ $<fl>$=$<fl>1; INSTPREP($1,0,0); }
+	|	yAND					{ $<fl>$=$<fl>1; INSTPREP($1,0,0); }
+	| 	yBUF					{ $<fl>$=$<fl>1; INSTPREP($1,0,0); }
+	|	yNAND					{ $<fl>$=$<fl>1; INSTPREP($1,0,0); }
+	|	yNOR					{ $<fl>$=$<fl>1; INSTPREP($1,0,0); }
+	|	yNOT					{ $<fl>$=$<fl>1; INSTPREP($1,0,0); }
+	|	yOR					{ $<fl>$=$<fl>1; INSTPREP($1,0,0); }
+	|	yXNOR					{ $<fl>$=$<fl>1; INSTPREP($1,0,0); }
+	|	yXOR					{ $<fl>$=$<fl>1; INSTPREP($1,0,0); }
 	;
 
 // This list is also hardcoded in VParseLex.l
@@ -3477,10 +3663,10 @@ idDottedForeachMore<str>:
 // id below includes:
 //	 enum_identifier
 idArrayed<str>:			// IEEE: id + select
-		id					{ $<fl>$=$<fl>1; $$ = $1; }
+		id					{ $<fl>$=$<fl>1; $$ = $1; PORTNET($<fl>1, $1);}
 	//			// IEEE: part_select_range/constant_part_select_range
-	|	idArrayed '[' expr ']'				{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"]"; }
-	|	idArrayed '[' constExpr ':' constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+":"+$5+"]"; }
+	|	idArrayed '[' expr ']'				{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"]"; PORTRANGE($3, $3);}
+	|	idArrayed '[' constExpr ':' constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+":"+$5+"]"; PORTRANGE($3, $5);}
 	//	 		// IEEE: indexed_range/constant_indexed_range
 	|	idArrayed '[' expr yP_PLUSCOLON  constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"+:"+$5+"]"; }
 	|	idArrayed '[' expr yP_MINUSCOLON constExpr ']'	{ $<fl>$=$<fl>1; $$ = $1+"["+$3+"-:"+$5+"]"; }

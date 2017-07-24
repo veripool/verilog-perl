@@ -52,6 +52,7 @@ my %Cbs =
      package	=> {which=>'SigParser', args => [kwd=>'string', name=>'string']},
      parampin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', index=>'int']},
      pin	=> {which=>'SigParser', args => [name=>'string', conn=>'string', index=>'int']},
+     pinselects	=> {which=>'SigParser', args => [name=>'string', conns=>'hash', index=>'int']},
      port	=> {which=>'SigParser', args => [name=>'string', objof=>'string', direction=>'string',
 						 data_type=>'string', array=>'string', index=>'int']},
      program	=> {which=>'SigParser', args => [kwd=>'string', name=>'string'],},
@@ -196,6 +197,8 @@ sub _arglist {
 	    $args .= ", const string\& $arg";
 	} elsif ($type eq 'bool' || $type eq 'int') {
 	    $args .= ", $type $arg";
+	} elsif ($type eq 'hash') {
+	    $args .= ", unsigned int arraycnt${n}, unsigned int elemcnt${n}, const VParseHashElem* $arg${n}";
 	} elsif ($type eq 'undef') {
 	    $args .= ", bool";
 	} else {
@@ -228,6 +231,8 @@ sub _xs {
 	} elsif ($type eq 'int') {
 	    push @out, "        static string hold${n}; static char num".$n."[30]; sprintf(num${n},\"%d\",$arg); hold${n}=num${n};\n";
 	    $callargs .= ", hold${n}.c_str()";
+	} elsif ($type eq 'hash') {
+	    $callargs .= ", hasharray_param, arraycnt${n}, elemcnt${n}, ${arg}${n}";
 	} elsif ($type eq 'undef') {
 	    $callargs .= ", NULL";
 	} else {
