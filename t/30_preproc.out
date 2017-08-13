@@ -308,7 +308,22 @@ verilog/inc1.v:     I!#r#e6<_Q{{E2+]I3<[3s)1@D|'E''i!O?]jD>Jo_![Cl)
 verilog/inc1.v:     #nj1]p,3^1~,="E@QZB\T)eU\pC#C|7=\$J$##A[@-@{Qk]
 verilog/inc1.v: `endprotected
 verilog/inc1.v: endmodule
-verilog/inc1.v: //"
+verilog/inc1.v: 
+verilog/inc1.v: module prot2();
+verilog/inc1.v: `pragma protect begin_protected
+verilog/inc1.v: `pragma protect encrypt_agent = "Whatever agent"
+verilog/inc1.v: `pragma protect encrypt_agent_info = "1.2.3"
+verilog/inc1.v: `pragma protect data_method = "aes128-cbc"
+verilog/inc1.v: `pragma protect key_keyowner = "Someone"
+verilog/inc1.v: `pragma protect key_keyname = "somekey", key_method = "rsa"
+verilog/inc1.v: `pragma protect key_block encoding = (enctype = "base64")
+verilog/inc1.v:    wefjosdfjklajklasjkl
+verilog/inc1.v: `pragma protect data_block encoding = (enctype = "base64", bytes = 1059)
+verilog/inc1.v:     I!#r#e6<_Q{{E2+]I3<[3s)1@D|'E''i!O?]jD>Jo_![Cl)
+verilog/inc1.v:     #nj1]p,3^1~,="E@QZB\T)eU\pC#C|7=\$J$##A[@-@{Qk]
+verilog/inc1.v: `pragma protect end_protected
+verilog/inc1.v: `pragma reset protect
+verilog/inc1.v: endmodule
 verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // macro call with define that has comma
@@ -366,7 +381,7 @@ verilog/inc1.v:
 verilog/inc1.v:  
 verilog/inc1.v:    
 verilog/inc1.v: 
-verilog/inc1.v: Line_Preproc_Check 206
+verilog/inc1.v: Line_Preproc_Check 221
 verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // bug84
@@ -379,7 +394,7 @@ verilog/inc1.v: //Here
 verilog/inc1.v: 
 verilog/inc1.v: //Too
 verilog/inc1.v: (x,y)
-verilog/inc1.v: Line_Preproc_Check 219
+verilog/inc1.v: Line_Preproc_Check 234
 verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // defines split arguments
@@ -516,7 +531,7 @@ verilog/inc1.v:       /* synopsys translate_off */
 verilog/inc1.v:   
 verilog/inc1.v:     
 verilog/inc1.v:  
-verilog/inc1.v:       if (start("verilog/inc1.v", 333)) begin 
+verilog/inc1.v:       if (start("verilog/inc1.v", 348)) begin 
 verilog/inc1.v:  
 verilog/inc1.v: 	 message({"Blah-", "clx_scen", " end"}); 
 verilog/inc1.v:       end 
@@ -592,18 +607,18 @@ verilog/inc1.v:
 verilog/inc1.v:      
 verilog/inc1.v:      
 verilog/inc1.v:      
-verilog/inc1.v: Line_Preproc_Check 394
+verilog/inc1.v: Line_Preproc_Check 409
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // Quoted multiline - track line numbers, and insure \\n gets propagated
 verilog/inc1.v:  
 verilog/inc1.v: 
 verilog/inc1.v:  
-verilog/inc1.v: Line_Preproc_Check 400
+verilog/inc1.v: Line_Preproc_Check 415
 verilog/inc1.v: "FOO \
 verilog/inc1.v:   BAR " "arg_line1 \
 verilog/inc1.v:   arg_line2" "FOO \
 verilog/inc1.v:   BAR "
-verilog/inc1.v: Line_Preproc_Check 403
+verilog/inc1.v: Line_Preproc_Check 418
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // bug283
 verilog/inc1.v: 

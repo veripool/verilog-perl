@@ -331,8 +331,8 @@ C and Perl to invoke the callbacks.  When using this feature,
 use_unreadback=>0 should be used too, as since whole tokens are skipped,
 skipping whitespace shouldn't matter either.
 
-Adding "use_protected => 0" will disable callbacks on `protected regions,
-which may improve performance.
+Adding "use_protected => 0" will disable callbacks on `protected and
+"`pragma protect protected" regions, which may improve performance.
 
 Adding "use_std => 1" will add parsing of the SystemVerilog built-in std::
 package, or "use_std => 0" will disable it.  If unspecified it is silently

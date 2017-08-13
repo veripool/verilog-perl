@@ -54,7 +54,8 @@ module v_hier_subsub (
    a, q);
    parameter IGNORED = 0;
    input signed a;
-   output q;
+   output q; // Test protected
+//"
 endmodule
 
 module v_hier_top (

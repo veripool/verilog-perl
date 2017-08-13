@@ -597,7 +597,8 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   /************************************************************************/
   /* Protected */
 <PROTMODE>\n		{ if (LPARSEP->useProtected()) yymore(); NEXTLINE(); }
-<PROTMODE>"`endprotected"	{ FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); }
+<PROTMODE>"`endprotected"				{ FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); }
+<PROTMODE>"`pragma"{ws}+"protect"{ws}+"end_protected"	{ FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); }
 <PROTMODE>. 		{ if (LPARSEP->useProtected()) yymore(); }
 <PROTMODE>{word}	{ if (LPARSEP->useProtected()) yymore(); }
 <PROTMODE><<EOF>>	{ yyerrorf("EOF in `protected");
@@ -646,6 +647,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   "`nosuppress_faults"			{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`nounconnected_drive"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`portcoerce"				{ FL; VALTEXT; CALLBACK(preprocCb); }
+  "`pragma"{ws}+"protect"{ws}+"begin_protected"	{ FL; VALTEXT; CALLBACK(preprocCb); yy_push_state(PROTMODE); }
   "`pragma"{ws}+[^\n\r]*		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog 2005
   "`protect"				{ FL; VALTEXT; CALLBACK(preprocCb); }
   "`protected"				{ FL; VALTEXT; CALLBACK(preprocCb); yy_push_state(PROTMODE); }

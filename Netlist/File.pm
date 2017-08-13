@@ -462,6 +462,7 @@ sub read {
 	  filename=>$filepath,	# for ->read
 	  metacomment=>($params{metacomment} || $netlist->{metacomment}),
 	  keep_comments => $keep_cmt,
+	  use_protected => 0,
 	  use_vars=>($params{use_vars} || $netlist->{use_vars}),
 	  preproc=>($params{preproc} || $netlist->{preproc}),
 	  # Callbacks we need; disable unused for speed

@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.431 devel
 
+**	Support pragma protect begin_protected/end_protected, msg2313. [George Cuan]
+
 
 * Verilog::Language 3.430 2017-07-24
 
