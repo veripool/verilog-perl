@@ -8,7 +8,7 @@
 use strict;
 use Test::More;
 
-BEGIN { plan tests => 2 }
+BEGIN { plan tests => 3 }
 BEGIN { require "./t/test_utils.pl"; }
 
 #$Verilog::Netlist::Debug = 1;
@@ -35,12 +35,15 @@ ok(1, "use");
 	my $b = $moda->new_cell (name=>'i_b', submodname=>'b', @fl);
 	{
 	    $b->new_pin(name=>'z', portname=>'z', pinnamed=>1, netname=>'x', @fl);
-	    $b->new_pin(name=>'w', portname=>'w', pinnamed=>1, netname=>'y', @fl);
+	    $b->new_pin(name=>'w', portname=>'w', pinnamed=>1, pinselects=>[{netname=>'y', msb=>2, lsb=>0}], @fl);
 	}
     }
 
-    #$nl->link;
-    print $nl->verilog_text;
+    $nl->link;
+    my $fh = IO::File->new('test_dir/44_create.dmp', "w") or die "%Error: $! creating dump file,";
+    print $fh $nl->verilog_text;
+    $fh->close;
+    ok(files_identical("test_dir/44_create.dmp", "t/44_create.out"));
 }
 
 ok(1, "done");

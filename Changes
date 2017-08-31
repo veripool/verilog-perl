@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.431 devel
 
+**	Support for buses and concats in Netlist, msg1626. [by Stefan Tauner]
+
 **	Support pragma protect begin_protected/end_protected, msg2313. [George Cuan]
 
 

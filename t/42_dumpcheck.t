@@ -8,7 +8,7 @@
 use strict;
 use Test::More;
 
-BEGIN { plan tests => 14 }
+BEGIN { plan tests => 17 }
 BEGIN { require "./t/test_utils.pl"; }
 
 #$Verilog::SigParser::Debug = $Verilog::Parser::Debug = 1;
@@ -20,6 +20,12 @@ check ('test_dir/42.dmp', ['verilog/v_hier_top.v', 'verilog/v_hier_top2.v', 'ver
 ok(1);
 ok(files_identical("test_dir/42.dmp", "t/42_dumpcheck_1.out"));
 ok(files_identical("test_dir/42.dmp.v", "t/42_dumpcheck_1v.out"));
+
+check ('test_dir/42_ps.dmp', ['verilog/v_hier_top.v', 'verilog/v_hier_top2.v', 'verilog/v_comments.v'],
+       [link_read_nonfatal=>1, keep_comments => 1, use_pinselects => 1]);
+ok(1);
+ok(files_identical("test_dir/42_ps.dmp", "t/42_dumpcheck_1_ps.out"));
+ok(files_identical("test_dir/42_ps.dmp.v", "t/42_dumpcheck_1v_ps.out"));
 
 my $n2 = check ('test_dir/42_n2.dmp', ['verilog/pinorder.v'],
 		[link_read_nonfatal=>1, keep_comments => 1,]);

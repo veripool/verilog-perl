@@ -1,0 +1,7 @@
+module a (
+   x, y);
+   input [2:0] x;
+   output [2:0] y;
+   b i_b (.w(y[2:0]), .z(x));
+endmodule
+

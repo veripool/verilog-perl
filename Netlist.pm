@@ -43,6 +43,7 @@ sub new {
 		#include_open_nonfatal => 0,
 		#keep_comments => 0,
 		#synthesis => 0,
+		#use_pinselects => 0,
 		use_vars => 1,
 		_libraries_done => {},
 		_need_link => [],	# Objects we need to ->link
@@ -533,6 +534,11 @@ With synthesis set, define SYNTHESIS, and ignore text bewteen "ambit",
 comments.  Note using metacomments is discouraged as they have led to
 silicon bugs (versus ifdef SYNTHESIS); see
 L<http://www.veripool.org/papers/TenIPEdits_SNUGBos07_paper.pdf>.
+
+=item use_pinselects => $true_or_false
+
+Indicates that bit selects should be parsed and intpreted.  False for
+backward compatibility, but true recommended in new applications.
 
 =item use_vars => $true_or_false
 

@@ -333,23 +333,42 @@ sub parampin {
 
 sub pin {
     my $self = shift;
+    if (!$self->{use_pinselects}) {
+	$self->pinselects(@_);
+    }
+}
+
+sub pinselects {
+    my $self = shift;
     my $pin = shift;
-    my $net = shift;
+    my $nets = shift;
     my $number = shift;
     my $hasnamedports = (($pin||'') ne '');
     $pin = "pin".$number if !$hasnamedports;
 
-    print "   Pin $pin  $net $number \n" if $Verilog::Netlist::Debug;
+    my $net_cnt = scalar($nets);
+    print "   Pin $pin  $number (connected to $net_cnt nets) \n" if $Verilog::Netlist::Debug;
     my $cellref = $self->{cellref};
     if (!$cellref) {
-	return $self->error ("PIN outside of cell definition", $net);
+	return $self->error ("PIN outside of cell definition", $pin);
     }
-    my $pinref = $cellref->new_pin (name=>$pin,
-				    portname=>$pin,
-				    portnumber=>$number,
-				    pinnamed=>$hasnamedports,
-				    filename=>$self->filename, lineno=>$self->lineno,
-				    netname=>$net, );
+
+    my %params = (
+	name => $pin,
+	portname => $pin,
+	portnumber => $number,
+	pinnamed => $hasnamedports,
+	filename => $self->filename,
+	lineno => $self->lineno,
+    );
+
+    if ($self->{use_pinselects}) {
+	$params{pinselects} = $nets;
+    } else {
+	$params{netname} = $nets;
+    }
+
+    my $pinref = $cellref->new_pin (%params);
     # If any pin uses call-by-name, then all are assumed to use call-by-name
     $cellref->byorder(1) if !$hasnamedports;
     $self->{_cmtpre} = undef;
@@ -458,18 +477,19 @@ sub read {
     my $parser_class = ($params{parser} || $netlist->{parser});
 
     my $parser = $parser_class->new
-	( fileref=>$fileref,
-	  filename=>$filepath,	# for ->read
-	  metacomment=>($params{metacomment} || $netlist->{metacomment}),
+	( fileref => $fileref,
+	  filename => $filepath,	# for ->read
+	  metacomment => ($params{metacomment} || $netlist->{metacomment}),
 	  keep_comments => $keep_cmt,
+	  use_vars => ($params{use_vars} || $netlist->{use_vars}),
+	  use_pinselects => ($params{use_pinselects} || $netlist->{use_pinselects}),
 	  use_protected => 0,
-	  use_vars=>($params{use_vars} || $netlist->{use_vars}),
-	  preproc=>($params{preproc} || $netlist->{preproc}),
+	  preproc => ($params{preproc} || $netlist->{preproc}),
 	  # Callbacks we need; disable unused for speed
 	  use_cb_attribute => 1,
 	  use_cb_comment => $keep_cmt,
 	  use_cb_keyword => $keep_cmt,
-	  use_cb_number  => 0,
+	  use_cb_number => 0,
 	  use_cb_operator => 0,
 	  use_cb_string => 0,
 	  use_cb_symbol => 0,

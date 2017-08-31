@@ -99,7 +99,9 @@ sub find_port_by_index {
     # @{$self->_portsordered}[$myindex-1] returns the name of
     # the port in the module at this index.  Then, this is
     # used to find the port reference via the port hash
-    return $self->_ports->{@{$self->_portsordered}[$myindex-1]};
+    my $name = @{$self->_portsordered}[$myindex-1];
+    return undef if !$name;
+    return $self->_ports->{$name};
 }
 sub find_cell {
     my $self = shift;
@@ -161,11 +163,26 @@ sub nets_and_ports_sorted {
 
 sub new_net {
     my $self = shift;
-    # @_ params
+    my %params = @_;
+
     # Create a new net under this
-    my $netref = new Verilog::Netlist::Net (direction=>'net', data_type=>'wire',
-					    @_,
-					    module=>$self, );
+    my $netref;
+    if (defined($params{msb})) {
+	my $data_type;
+	$data_type = "[".($params{msb});
+	$data_type .= ":".($params{lsb}) if defined $params{lsb};
+	$data_type .= "]";
+	$netref = new Verilog::Netlist::Net (decl_type=>'net',
+					     net_type => 'wire',
+					     data_type => $data_type,
+					     %params,
+					     module => $self);
+    } else {
+	$netref = new Verilog::Netlist::Net (decl_type => 'net',
+					     net_type => 'wire',
+					     %params,
+					     module => $self);
+    }
     $self->_nets ($netref->name(), $netref);
     return $netref;
 }

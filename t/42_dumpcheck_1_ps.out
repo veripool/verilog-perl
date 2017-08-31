@@ -1,0 +1,141 @@
+Module:$root  Kwd:root_module  File:verilog/v_hier_top.v
+  Net:GLOBAL_PARAM    DeclT:localparam  NetT:  DataT:  Array:  Value:1
+Module:v_bug917  Kwd:module  File:verilog/v_comments.v
+  Port:a  Dir:in  DataT:  Array:
+  Port:b  Dir:out  DataT:  Array:
+  Port:m  Dir:out  DataT:  Array:
+  Net:a  O  DeclT:port  NetT:wire  DataT:  Array:
+  Net:b  I  DeclT:port  NetT:wire  DataT:  Array:
+  Net:m  I  DeclT:port  NetT:wire  DataT:  Array:
+Module:v_bug917p  Kwd:module  File:verilog/v_comments.v
+  Port:a  Dir:in  DataT:  Array:
+  Port:b  Dir:out  DataT:  Array:
+  Net:a  O  DeclT:port  NetT:wire  DataT:  Array:
+  Net:b  I  DeclT:port  NetT:wire  DataT:  Array:
+Module:v_comments  Kwd:module  File:verilog/v_comments.v
+  Port:a  Dir:in  DataT:  Array:
+  Port:b  Dir:inout  DataT:[10:0]  Array:
+  Port:c  Dir:out  DataT:[0:10]  Array:
+  Port:d  Dir:out  DataT:[((2*32)-1):0]  Array:
+  Port:d1  Dir:out  DataT:[32:0]  Array:
+  Port:d2  Dir:out  DataT:[(MATH-1):0]  Array:
+  Port:d3  Dir:out  DataT:[32-1:0]  Array:
+  Net:a  O  DeclT:port  NetT:  DataT:  Array:
+  Net:b    DeclT:port  NetT:  DataT:[10:0]  Array:  10:0
+  Net:c  I  DeclT:port  NetT:  DataT:[0:10]  Array:  0:10
+  Net:d  I  DeclT:port  NetT:  DataT:reg  Array:  ((2*32)-1):0
+  Net:d1  I  DeclT:port  NetT:  DataT:[32:0]  Array:  32:0
+  Net:d2  I  DeclT:port  NetT:  DataT:[(MATH-1):0]  Array:  (MATH-1):0
+  Net:d3  I  DeclT:port  NetT:  DataT:[32-1:0]  Array:  32-1:0
+  Net:e    DeclT:var  NetT:  DataT:reg [11:0]  Array:  11:0
+Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+  Net:internal    DeclT:var  NetT:  DataT:reg  Array:
+Module:v_hier_sub  Kwd:module  File:verilog/v_hier_sub.v
+  Port:avec  Dir:in  DataT:[3:0]  Array:
+  Port:clk  Dir:in  DataT:  Array:
+  Port:qvec  Dir:out  DataT:[3:0]  Array:
+  Net:FROM_DEFPARAM    DeclT:parameter  NetT:  DataT:  Array:  Value:1
+  Net:K    DeclT:genvar  NetT:  DataT:  Array:
+  Net:K_UNUSED    DeclT:genvar  NetT:  DataT:  Array:
+  Net:a1  I  DeclT:net  NetT:supply1  DataT:  Array:
+  Net:avec  O  DeclT:port  NetT:  DataT:[3:0]  Array:  3:0
+  Net:clk  O  DeclT:port  NetT:  DataT:  Array:
+  Net:qvec  IO  DeclT:port  NetT:  DataT:[3:0]  Array:  3:0
+  Cell:subsub0  is-a:v_hier_subsub .IGNORED('sh20)
+            Module:v_hier_subsub  Kwd:module  File:verilog/v_hier_subsub.v
+    Pin:a  Net:a1
+              Port:a  Dir:in  DataT:signed  Array:
+              Net:a1  I  DeclT:net  NetT:supply1  DataT:  Array:
+    Pin:q  Net:qvec[0]
+              Port:q  Dir:out  DataT:  Array:
+              Net:qvec  IO  DeclT:port  NetT:  DataT:[3:0]  Array:  3:0
+  Cell:subsub2  is-a:v_hier_subsub
+            Module:v_hier_subsub  Kwd:module  File:verilog/v_hier_subsub.v
+    Pin:a  Net:1'b0
+              Port:a  Dir:in  DataT:signed  Array:
+    Pin:q  Net:qvec[2]
+              Port:q  Dir:out  DataT:  Array:
+              Net:qvec  IO  DeclT:port  NetT:  DataT:[3:0]  Array:  3:0
+Module:v_hier_subsub  Kwd:module  File:verilog/v_hier_subsub.v
+  Port:a  Dir:in  DataT:signed  Array:
+  Port:q  Dir:out  DataT:  Array:
+  Net:IGNORED    DeclT:parameter  NetT:  DataT:  Array:  Value:0
+  Net:a  O  DeclT:port  NetT:  DataT:signed  Array:
+  Net:q  I  DeclT:port  NetT:wire  DataT:  Array:
+Module:v_hier_top  Kwd:module  File:verilog/v_hier_top.v
+  Port:clk  Dir:in  DataT:  Array:
+  Net:WC_p1    DeclT:localparam  NetT:  DataT:[0:0]  Array:  0:0  Value:0
+  Net:WC_p3    DeclT:localparam  NetT:  DataT:[2:0]  Array:  2:0  Value:0
+  Net:WC_p32    DeclT:localparam  NetT:  DataT:  Array:  Value:0
+  Net:WC_p4    DeclT:localparam  NetT:  DataT:[-1:2]  Array:  -1:2  Value:0
+  Net:WC_pint    DeclT:localparam  NetT:  DataT:integer  Array:  Value:0
+  Net:WC_w1    DeclT:net  NetT:wire  DataT:  Array:
+  Net:WC_w1b    DeclT:net  NetT:wire  DataT:[0:0]  Array:  0:0
+  Net:WC_w3    DeclT:net  NetT:wire  DataT:[2:0]  Array:  2:0
+  Net:WC_w4    DeclT:net  NetT:wire  DataT:[-1:2]  Array:  -1:2
+  Net:asn_clk    DeclT:net  NetT:wire  DataT:  Array:
+  Net:clk  O  DeclT:port  NetT:  DataT:  Array:
+  Cell:missing  is-a:missing
+  Cell:recursive  is-a:v_recursive .DEPTH(3)
+            Module:v_recursive  Kwd:module  File:verilog/v_recursive.v
+  Cell:sub  is-a:v_hier_sub
+            Module:v_hier_sub  Kwd:module  File:verilog/v_hier_sub.v
+    Pin:avec  Nets:avec[3],avec[2:0]
+              Port:avec  Dir:in  DataT:[3:0]  Array:
+    Pin:clk  Net:1'b0
+              Port:clk  Dir:in  DataT:  Array:
+    Pin:qvec  Net:qvec[3:0]
+              Port:qvec  Dir:out  DataT:[3:0]  Array:
+  Defparam:defparam  lhs:sub.FROM_DEFPARAM  rhs:2
+  ContAssign:assign  lhs:asn_clk  rhs:clk
+Module:v_hier_top2  Kwd:module  File:verilog/v_hier_top2.v
+  Port:clk  Dir:in  DataT:  Array:
+  Port:iosig  Dir:inout  DataT:[2:0]  Array:
+  Net:clk  O  DeclT:port  NetT:  DataT:  Array:
+  Net:iosig    DeclT:port  NetT:  DataT:[2:0]  Array:  2:0
+  Cell:noport  is-a:v_hier_noport
+            Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+Module:v_recursive  Kwd:module  File:verilog/v_recursive.v
+  Net:DEPTH    DeclT:parameter  NetT:  DataT:  Array:  Value:1
+  Cell:recurse  is-a:v_recursive .DEPTH(DEPTH-1)
+            Module:v_recursive  Kwd:module  File:verilog/v_recursive.v
+#### Commentary:
+verilog/v_hier_top.v:0042: GLOBAL_PARAM   cmt="// Local Variables:\n// eval:(verilog-read-defines)\n// End:"
+verilog/v_comments.v:0022: a   cmt="// a-First"
+verilog/v_comments.v:0025: b   cmt="// b-Third\n// Third"
+verilog/v_comments.v:0023: m   cmt="// m-Second"
+verilog/v_comments.v:0031: a   cmt="// a-First"
+verilog/v_comments.v:0032: b   cmt="// b-Secondparen\n// Third"
+verilog/v_comments.v:0007: a   cmt="// comment for a"
+verilog/v_comments.v:0008: b   cmt=""
+verilog/v_comments.v:0009: c   cmt="// comment for c"
+verilog/v_comments.v:0010: d   cmt=""
+verilog/v_comments.v:0011: d1   cmt=""
+verilog/v_comments.v:0012: d2   cmt=""
+verilog/v_comments.v:0013: d3   cmt=""
+verilog/v_comments.v:0016: e   cmt="// Comment for e"
+verilog/v_hier_noport.v:0006: internal   cmt=""
+verilog/v_hier_sub.v:0012: FROM_DEFPARAM   cmt=""
+verilog/v_hier_sub.v:0027: K   cmt=""
+verilog/v_hier_sub.v:0027: K_UNUSED   cmt=""
+verilog/v_hier_sub.v:0014: a1   cmt="// Outputs"
+verilog/v_hier_sub.v:0008: avec   cmt="// Comment for v_hier_sub, avec"
+verilog/v_hier_sub.v:0007: clk   cmt=""
+verilog/v_hier_sub.v:0009: qvec   cmt="/* Comment for v_hier_sub, qvec */"
+verilog/v_hier_subsub.v:0011: IGNORED   cmt=""
+verilog/v_hier_subsub.v:0012: a   cmt=""
+verilog/v_hier_subsub.v:0013: q   cmt="// Test protected\n//""
+verilog/v_hier_top.v:0031: WC_p1   cmt=""
+verilog/v_hier_top.v:0032: WC_p3   cmt=""
+verilog/v_hier_top.v:0030: WC_p32   cmt=""
+verilog/v_hier_top.v:0033: WC_p4   cmt=""
+verilog/v_hier_top.v:0034: WC_pint   cmt="// Assignments"
+verilog/v_hier_top.v:0026: WC_w1   cmt=""
+verilog/v_hier_top.v:0027: WC_w1b   cmt=""
+verilog/v_hier_top.v:0028: WC_w3   cmt=""
+verilog/v_hier_top.v:0029: WC_w4   cmt=""
+verilog/v_hier_top.v:0037: asn_clk   cmt=""
+verilog/v_hier_top.v:0011: clk   cmt="/* pragma jsc_clk */"
+verilog/v_hier_top2.v:0009: clk   cmt=""
+verilog/v_hier_top2.v:0013: iosig   cmt="/* synthesis useioff = 1 //*synthesis fpga_attr = "BLAH=ON"//* synthesis fpga_pin = "A22"*/\n/* synthesis aftersemi*/\n// NetListName=F12_IO"
+verilog/v_recursive.v:0002: DEPTH   cmt=""
