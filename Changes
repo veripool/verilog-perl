@@ -3,6 +3,11 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.441 devel
+
+****	Fix new concatenation handling error in 3.440. [by Stefan Tauner]
+
+
 * Verilog::Language 3.440 2017-08-31
 
 **	Support for buses and concats in Netlist, msg1626. [by Stefan Tauner]

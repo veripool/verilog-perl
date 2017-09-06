@@ -208,7 +208,6 @@ static void PINDONE(VFileLine* fl, const string& name, const string& expr) {
 		    netname = expr;
 		} else {
 		    netname = GRAMMARP->m_portNextNetName;
-		    GRAMMARP->m_portNextNetName.clear();
 		}
 		size_t elem_cnt = GRAMMARP->m_portNextNetMsb.empty() ? 1 : 3;
 		VParseHashElem nets[elem_cnt];
@@ -225,10 +224,6 @@ static void PINDONE(VFileLine* fl, const string& name, const string& expr) {
 		    nets[NI_LSB].val_str = GRAMMARP->m_portNextNetLsb;
 		}
 		PARSEP->pinselectsCb(fl, name, 1, elem_cnt, &nets[0], GRAMMARP->pinNum());
-		if (elem_cnt > 1) {
-		    GRAMMARP->m_portNextNetMsb.clear();
-		    GRAMMARP->m_portNextNetLsb.clear();
-		}
 	    } else {
 		// Connection with multiple pins was parsed completely.
 		// There might be one net left in the pipe...
@@ -241,8 +236,12 @@ static void PINDONE(VFileLine* fl, const string& name, const string& expr) {
 		parse_net_constants(fl, nets);
 		PARSEP->pinselectsCb(fl, name, arraycnt, 3, &nets[0][0], GRAMMARP->pinNum());
 	    }
+	    // Clear all pin-related fields
 	    GRAMMARP->m_portNextNetValid = false;
+	    GRAMMARP->m_portNextNetName.clear();
 	    GRAMMARP->m_portStack.clear();
+	    GRAMMARP->m_portNextNetMsb.clear();
+	    GRAMMARP->m_portNextNetLsb.clear();
 	}
     }
 }
