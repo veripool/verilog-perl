@@ -303,7 +303,7 @@ void VParserXs::call (
 		    av_store(av, i, newRV_noinc((SV*)hv));
 		    elemp++;
 		}
-		XPUSHs(newRV_noinc(sv_2mortal((SV*)av)));
+		XPUSHs(sv_2mortal(newRV_noinc((SV*)av)));
 	    } else if (textp) {  // Non hasharray_param, so is text
 		XPUSHs(sv_2mortal(newSVpv (textp, 0)));
 	    } else {

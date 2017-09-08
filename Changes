@@ -5,7 +5,9 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.441 devel
 
-****	Fix new concatenation handling error in 3.440. [by Stefan Tauner]
+****	Fix new concatenation handling error, bug1200. [by Stefan Tauner]
+
+****	Fix unreferenced scalar warning, bug1200. [by Stefan Tauner]
 
 
 * Verilog::Language 3.440 2017-08-31
