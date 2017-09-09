@@ -3,6 +3,9 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.443 devel
+
+
 * Verilog::Language 3.442 2017-09-08
 
 ****	Fix new concatenation handling error, bug1200. [by Stefan Tauner]
