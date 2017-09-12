@@ -1147,7 +1147,7 @@ verilog/parser_vectors.v:043: PINSELECTS  'y' '[{'lsb' => '30','msb' => '30','ne
 verilog/parser_vectors.v:044: ENDCELL  ''
 verilog/parser_vectors.v:046: INSTANT  'mod' 'instmod_6' ''
 verilog/parser_vectors.v:047: PIN  'a' '{somenet_1,3'b101,{someotherbus[2],someotherbus[2]},somewidebus[2:1]}' '1'
-verilog/parser_vectors.v:047: PINSELECTS  'a' '[{'lsb' => 1,'msb' => 2,'netname' => 'somewidebus'},{'netname' => '{someotherbus[2],someotherbus[2]}'},{'lsb' => 2,'msb' => 2,'netname' => 'someotherbus'},{'lsb' => 2,'msb' => 2,'netname' => 'someotherbus'},{'lsb' => 0,'msb' => 2,'netname' => '\'b101'},{'netname' => 'somenet_1'}]' '1'
+verilog/parser_vectors.v:047: PINSELECTS  'a' '[{'lsb' => 1,'msb' => 2,'netname' => 'somewidebus'},{'lsb' => 2,'msb' => 2,'netname' => 'someotherbus'},{'lsb' => 2,'msb' => 2,'netname' => 'someotherbus'},{'lsb' => 0,'msb' => 2,'netname' => '\'b101'},{'netname' => 'somenet_1'}]' '1'
 verilog/parser_vectors.v:048: PIN  'y' 'o[30]' '2'
 verilog/parser_vectors.v:048: PINSELECTS  'y' '[{'lsb' => '30','msb' => '30','netname' => 'o'}]' '2'
 verilog/parser_vectors.v:049: ENDCELL  ''

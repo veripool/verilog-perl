@@ -103,8 +103,8 @@ static void parse_net_constants(VFileLine* fl, VParseHashElem nets[][3]) {
 
 	size_t delim = it->m_name.find_first_of("'");
 	if (it->m_name[0] != '\\' && it->m_msb.empty() && it->m_name[delim] == '\'') {
-	    // Handle sized integer constants (e.g., 7'b0) specifically
-	    if (delim != 0) {
+	    // Handle sized integer constants (e.g., 7'b0) specifically but ignore replications (e.g., {4{w}})
+	    if (delim != 0 && netnamep[0] != '{') {
 		// Handle the first part that indicates the width for sized constants (guaranteed to be a decimal)
 		char* endp;
 		errno = 0;
@@ -148,8 +148,8 @@ static void parse_net_constants(VFileLine* fl, VParseHashElem nets[][3]) {
 	    } else {
 		// fl->error increases the error count which would create regressions for no good reasons.
 		// There is no ->warn or similar though but we could print, e.g., to stderr in these cases
-		//fl->error((string)"Unsized integer constant are not fully supported in nets (\""+netnamep+"\").");
-		//fprintf(stderr, "Unsized integer constant are not fully supported in nets (\"%s\").", netnamep);
+		//fl->error((string)"Neither unsized integer constant nor replications are not fully supported in nets (\""+netnamep+"\").");
+		//fprintf(stderr, "Neither unsized integer constant nor replications are not fully supported in nets (\"%s\").\n", netnamep);
 	    }
 	} else {
 	    // Ordinary net names might have a range attached or not.
@@ -161,7 +161,8 @@ static void parse_net_constants(VFileLine* fl, VParseHashElem nets[][3]) {
 		    errno = 0;
 		    long l = strtol(msbstr, &endp, 10);
 		    // Test for range within int, and proper parsing
-		    if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX || l < 0 || (endp != NULL && l == 0 && errno == ERANGE)) {
+		    if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX || l < 0
+			|| (endp && l == 0 && errno == ERANGE)) {
 			fl->error((string)"Unexpected length in msb specification of \""+netnamep+"\" (endp="+endp+", errno="+strerror(errno)+").");
 			return;
 		    }
@@ -173,7 +174,8 @@ static void parse_net_constants(VFileLine* fl, VParseHashElem nets[][3]) {
 		    char* endp;
 		    errno = 0;
 		    long l = strtol(it->m_lsb.c_str(), &endp, 10);
-		    if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX || l < 0 || (endp != NULL && l == 0 && errno == ERANGE)) {
+		    if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX || l < 0
+			|| (endp && l == 0 && errno == ERANGE)) {
 			fl->error((string)"Unexpected length in lsb specification of \""+netnamep+"\".");
 			return;
 		    }
@@ -278,9 +280,20 @@ static void PIN_CONCAT_APPEND(const string& expr) {
     if (!GRAMMARP->m_withinPin) {
         return;
     }
-    // Only while not within a valid net term the expression is part of a replication constant.
     if (!GRAMMARP->m_portNextNetValid) {
-        GRAMMARP->m_portStack.push_front(VParseNet(expr));
+	// Only while not within a valid net term the expression is part
+	// of a replication constant. If that's detected ignore the
+	// previous expression (that is actually just the contained
+	// concatenation) in favor of the full replication expression.
+	if (expr[0] == '{') {
+	    if (expr.find_first_of("{", 1) != string::npos) {
+		// fprintf(stderr, "%d: ignoring \"%s\" in favor of \"%s\".\n", __LINE__, GRAMMARP->m_portStack.front().m_name.c_str(), expr.c_str());
+		GRAMMARP->m_portStack.pop_front();
+		GRAMMARP->m_portStack.push_front(VParseNet(expr));
+	    }
+	} else {
+	    GRAMMARP->m_portStack.push_front(VParseNet(expr));
+	}
     } else {
         GRAMMARP->m_portStack.push_front(VParseNet(GRAMMARP->m_portNextNetName, GRAMMARP->m_portNextNetMsb, GRAMMARP->m_portNextNetLsb));
     }

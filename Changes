@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.443 devel
 
+****	Fix replication handling error, bug1205. [Leon Medpum]
+
 
 * Verilog::Language 3.442 2017-09-08
 
