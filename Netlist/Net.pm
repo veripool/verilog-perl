@@ -315,8 +315,9 @@ See also Verilog::Netlist::Subclass for additional accessors and methods.
 
 =item $self->array
 
-Any array (vector) declaration for the net.  This is for multidimensional
-signals, for the width of a signal, use msb/lsb/width.
+Any array (vector) declaration for the net.  This is for Verilog 2001
+multidimensional signals; for the width of a signal, use msb/lsb/width. For
+newer applications use data_type() as it supports SystemVerilog types.
 
 =item $self->comment
 

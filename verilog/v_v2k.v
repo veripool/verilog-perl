@@ -18,4 +18,15 @@ module v_v2k
 	 sig2 <= #1 sig1;
       end
    end
+
+   // Multidim, bug1206
+   wire [1:2] [3:4]   netmd;
+   v_v2k_sub sub (.net1 (netmd[1]));
+
+endmodule
+
+module v_v2k_sub
+  (
+   input [3:4] net1
+   );
 endmodule
