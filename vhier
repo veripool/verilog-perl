@@ -510,7 +510,7 @@ processing of modules.  Unlike input-files, header files are not included.
 
 Show all module names.
 
-=item --nomissing
+=item --no-missing
 
 Do not complain about references to missing modules.
 
