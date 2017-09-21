@@ -281,10 +281,10 @@ void VParserXs::call (
 		// Second hasharray param defines how many keys are within one hash
 		unsigned int elemcnt = va_arg(ap, unsigned int);
 		// Followed by the hash array pointer...
-		VParseHashElem (*arrp)[elemcnt] = va_arg(ap, VParseHashElem (*)[elemcnt]);
+		const VParseHashElem* arrp = va_arg(ap, const VParseHashElem*);  // [arrcnt][elemcnt]
 		for (unsigned int i = 0; i < arrcnt; i++) {
 		    HV* hv = newHV();
-		    const VParseHashElem* elemp = arrp[i];
+		    const VParseHashElem* elemp = arrp + elemcnt*i;
 		    for (unsigned int j = 0; j < elemcnt; j++) {
 			if (!elemp[j].keyp)
 			    continue;
