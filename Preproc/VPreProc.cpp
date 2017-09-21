@@ -102,7 +102,7 @@ public:
 		     ps_DEFNAME_IFDEF, ps_DEFNAME_IFNDEF, ps_DEFNAME_ELSIF,
 		     ps_DEFFORM, ps_DEFVALUE, ps_DEFPAREN, ps_DEFARG,
 		     ps_INCNAME, ps_ERRORNAME, ps_JOIN, ps_STRIFY };
-    const char* procStateName(ProcState s) {
+    static const char* procStateName(ProcState s) {
 	static const char* states[]
 	    = {"ps_TOP",
 	       "ps_DEFNAME_UNDEF", "ps_DEFNAME_DEFINE",
@@ -399,24 +399,24 @@ string VPreProcImp::defineSubst(VPreDefRef* refp) {
 	    //if (debug()>=5) cout <<"   Parse  Paren="<<paren<<"  Arg="<<numArgs<<"  token='"<<token<<"'  Parse="<<cp<<endl;
 	    if (!quote && paren==1) {
 		if (*cp==')' || *cp==',') {
-		    string value;
-		    if (haveDefault) { value=token; } else { argName=token; }
+		    string valueDef;
+		    if (haveDefault) { valueDef=token; } else { argName=token; }
 		    argName = trimWhitespace(argName,true);
-		    if (debug()>=5) cout<<"    Got Arg="<<numArgs<<"  argName='"<<argName<<"'  default='"<<value<<"'"<<endl;
+		    if (debug()>=5) cout<<"    Got Arg="<<numArgs<<"  argName='"<<argName<<"'  default='"<<valueDef<<"'"<<endl;
 		    // Parse it
 		    if (argName!="") {
 			if (refp->args().size() > numArgs) {
 			    // A call `def( a ) must be equivelent to `def(a ), so trimWhitespace
 			    // At one point we didn't trim trailing whitespace, but this confuses `"
 			    string arg = trimWhitespace(refp->args()[numArgs], true);
-			    if (arg != "") value = arg;
+			    if (arg != "") valueDef = arg;
 			} else if (!haveDefault) {
 			    error("Define missing argument '"+argName+"' for: "+refp->name()+"\n");
 			    return " `"+refp->name()+" ";
 			}
 			numArgs++;
 		    }
-		    argValueByName[argName] = value;
+		    argValueByName[argName] = valueDef;
 		    // Prepare for next
 		    argName = "";
 		    token = "";
@@ -454,7 +454,6 @@ string VPreProcImp::defineSubst(VPreDefRef* refp) {
     string out = "";
     {   // Parse substitution define using arguments
 	string argName;
-	string prev;
 	bool quote = false;
 	bool backslashesc = false;  // In \.....{space} block
 	// Note we go through the loop once more at the NULL end-of-string
@@ -779,7 +778,7 @@ int VPreProcImp::getStateToken(string& buf) {
 	    if (m_preprocp->defExists(name)) {   // JOIN(DEFREF)
 		// Put back the `` and process the defref
 		if (debug()>=5) cout<<"```: define "<<name<<" exists, expand first\n";
-		m_defPutJoin = true;  // After define, unputString("``").  Not now as would loose yyourtext()
+		m_defPutJoin = true;  // After define, unputString("``").  Not now as would lose yyourtext()
 		if (debug()>=5) cout<<"TOKEN now DEFREF\n";
 		tok = VP_DEFREF;
 	    } else {  // DEFREF(JOIN)
@@ -983,7 +982,7 @@ int VPreProcImp::getStateToken(string& buf) {
 		// Value of building argument is data before the lower defref
 		// we'll append it when we push the argument.
 		break;
-	    } else if (tok==VP_SYMBOL || tok==VP_STRING || VP_TEXT || VP_WHITE || VP_PSL) {
+	    } else if (tok==VP_SYMBOL || tok==VP_STRING || tok==VP_TEXT || tok==VP_WHITE || tok==VP_PSL) {
 		string rtn; rtn.assign(yyourtext(),yyourleng());
 		refp->nextarg(refp->nextarg()+rtn);
 		goto next_tok;
