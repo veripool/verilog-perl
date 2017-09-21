@@ -14,7 +14,7 @@ use base qw(Verilog::Netlist::Subclass);
 use strict;
 use vars qw($Debug $Verbose $VERSION);
 
-$VERSION = '3.443';
+$VERSION = '3.444';
 
 ######################################################################
 #### Error Handling
