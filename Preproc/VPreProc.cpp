@@ -1163,26 +1163,25 @@ int VPreProcImp::getStateToken(string& buf) {
 		}
 	    }
 	    else if (params=="0") {  // Found, as simple substitution
-		if (m_off) {
-		    goto next_tok;
-		}
-		else {
+		string out;
+		if (!m_off) {
 		    VPreDefRef tempref(name, "");
-		    string out = defineSubst(&tempref);
-		    // Similar code in parenthesized define (Search for END_OF_DEFARG)
-		    out = m_preprocp->defSubstitute(out);
-		    if (m_defRefs.empty()) {
-			// Just output the substitution
-			unputDefrefString(out);
-		    } else {  // Inside another define.
-			// Can't subst now, or
-			// `define a x,y
-			// foo(`a,`b)  would break because a contains comma
-			VPreDefRef* refp = &(m_defRefs.top());
-			refp->nextarg(refp->nextarg()+m_lexp->m_defValue+out); m_lexp->m_defValue="";
-		    }
-		    goto next_tok;
+		    out = defineSubst(&tempref);
 		}
+		// Similar code in parenthesized define (Search for END_OF_DEFARG)
+		out = m_preprocp->defSubstitute(out);
+		if (m_defRefs.empty()) {
+		    // Just output the substitution
+		    if (!m_off) unputDefrefString(out);
+		} else {
+		    // Inside another define.
+		    // Can't subst now, or
+		    // `define a x,y
+		    // foo(`a,`b)  would break because a contains comma
+		    VPreDefRef* refp = &(m_defRefs.top());
+		    refp->nextarg(refp->nextarg()+m_lexp->m_defValue+out); m_lexp->m_defValue="";
+		}
+		goto next_tok;
 	    }
 	    else {  // Found, with parameters
 		if (debug()>=5) cout<<"Defref `"<<name<<" => parametrized"<<endl;
