@@ -210,6 +210,7 @@ private:
     int getStateToken(string& buf);
     int getFinalToken(string& buf);
 
+    ProcState state() const { return m_states.top(); }
     void statePush(ProcState state) {
 	m_states.push(state);
     }
@@ -677,7 +678,7 @@ int VPreProcImp::getRawToken() {
 	    yyourtext(rtncmt.c_str(), rtncmt.length());
 	    m_lineCmt = "";
 	    if (yyourleng()) m_rawAtBol = (yyourtext()[yyourleng()-1]=='\n');
-	    if (m_states.top()==ps_DEFVALUE) {
+	    if (state()==ps_DEFVALUE) {
 		VPreLex::s_currentLexp->appendDefValue(yyourtext(),yyourleng());
 		goto next_tok;
 	    } else {
@@ -710,7 +711,7 @@ void VPreProcImp::debugToken(int tok, const char* cmtp) {
 	while ((pos=buf.find("\r")) != string::npos) { buf.replace(pos, 1, "\\r"); }
 	fprintf (stderr, "%d: %s %s %s(%d) dr%d:  <%d>%-10s: %s\n",
 		 m_lexp->m_tokFilelinep->lineno(), cmtp, m_off?"of":"on",
-		 procStateName(m_states.top()), (int)m_states.size(), (int)m_defRefs.size(),
+		 procStateName(state()), (int)m_states.size(), (int)m_defRefs.size(),
 		 m_lexp->currentStartState(), tokenName(tok), buf.c_str());
     }
 }
@@ -727,14 +728,13 @@ int VPreProcImp::getStateToken(string& buf) {
 	    return VP_EOF;
 	}
 	int tok = getRawToken();
-	ProcState state = m_states.top();
 
 	// Most states emit white space and comments between tokens. (Unless collecting a string)
-	if (tok==VP_WHITE && state !=ps_STRIFY) {
+	if (tok==VP_WHITE && state() !=ps_STRIFY) {
 	    buf = string (yyourtext(), yyourleng());
 	    return (tok);
 	}
-	if (tok==VP_BACKQUOTE && state !=ps_STRIFY) { tok = VP_TEXT; }
+	if (tok==VP_BACKQUOTE && state() !=ps_STRIFY) { tok = VP_TEXT; }
 	if (tok==VP_COMMENT) {
 	    if (!m_off) {
 		if (m_lexp->m_keepComments == KEEPCMT_SUB
@@ -797,7 +797,7 @@ int VPreProcImp::getStateToken(string& buf) {
 	}
 
 	// Deal with some special parser states
-	switch (state) {
+	switch (state()) {
 	case ps_TOP: {
 	    break;
 	}
@@ -808,17 +808,17 @@ int VPreProcImp::getStateToken(string& buf) {
 	case ps_DEFNAME_ELSIF: {
 	    if (tok==VP_SYMBOL) {
 		m_lastSym.assign(yyourtext(),yyourleng());
-		if (state==ps_DEFNAME_IFDEF
-		    || state==ps_DEFNAME_IFNDEF) {
+		if (state()==ps_DEFNAME_IFDEF
+		    || state()==ps_DEFNAME_IFNDEF) {
 		    bool enable = m_preprocp->defExists(m_lastSym);
 		    if (debug()>=5) cout<<"Ifdef "<<m_lastSym<<(enable?" ON":" OFF")<<endl;
-		    if (state==ps_DEFNAME_IFNDEF) enable = !enable;
+		    if (state()==ps_DEFNAME_IFNDEF) enable = !enable;
 		    m_ifdefStack.push(VPreIfEntry(enable,false));
 		    if (!enable) parsingOff();
 		    statePop();
 		    goto next_tok;
 		}
-		else if (state==ps_DEFNAME_ELSIF) {
+		else if (state()==ps_DEFNAME_ELSIF) {
 		    if (m_ifdefStack.empty()) {
 			error("`elsif with no matching `if\n");
 		    } else {
@@ -834,7 +834,7 @@ int VPreProcImp::getStateToken(string& buf) {
 		    statePop();
 		    goto next_tok;
 		}
-		else if (state==ps_DEFNAME_UNDEF) {
+		else if (state()==ps_DEFNAME_UNDEF) {
 		    if (!m_off) {
 			if (debug()>=5) cout<<"Undef "<<m_lastSym<<endl;
 			m_preprocp->undef(m_lastSym);
@@ -842,7 +842,7 @@ int VPreProcImp::getStateToken(string& buf) {
 		    statePop();
 		    goto next_tok;
 		}
-		else if (state==ps_DEFNAME_DEFINE) {
+		else if (state()==ps_DEFNAME_DEFINE) {
 		    // m_lastSym already set.
 		    stateChange(ps_DEFFORM);
 		    m_lexp->pushStateDefForm();
@@ -1099,7 +1099,7 @@ int VPreProcImp::getStateToken(string& buf) {
 	case VP_INCLUDE:
 	    if (!m_off) {
 		statePush(ps_INCNAME);
-	    }
+	    } // Else incname looks like normal text, that will be ignored
 	    goto next_tok;
 	case VP_UNDEF:
 	    statePush(ps_DEFNAME_UNDEF);
