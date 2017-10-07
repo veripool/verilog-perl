@@ -846,23 +846,100 @@ verilog/inc1.v:545:    initial
 verilog/inc1.v:545: `line 545 "verilog/inc1.v" 0
 verilog/inc1.v:545:        $display("%s%s","a1","b2c3\n");
 verilog/inc1.v:546: endmodule
-verilog/inc1.v:547: //======================================================================
-verilog/inc1.v:548: // IEEE mandated predefines
-verilog/inc1.v:549:   // undefineall should have no effect on these
-verilog/inc1.v:550: predef 0 0
-verilog/inc1.v:551: predef 1 1
-verilog/inc1.v:552: predef 2 2
-verilog/inc1.v:553: predef 3 3
-verilog/inc1.v:554: predef 10 10
-verilog/inc1.v:555: predef 11 11
-verilog/inc1.v:556: predef 20 20
-verilog/inc1.v:557: predef 21 21
-verilog/inc1.v:558: predef 22 22
-verilog/inc1.v:559: predef 23 23
-verilog/inc1.v:560: predef -2 -2
-verilog/inc1.v:561: predef -1 -1
-verilog/inc1.v:562: predef 0 0
-verilog/inc1.v:563: predef 1 1
-verilog/inc1.v:564: predef 2 2
-verilog/inc1.v:565: 
-verilog/inc1.v:566: `line 566 "verilog/inc1.v" 2
+verilog/inc1.v:547: 
+verilog/inc1.v:548: //======================================================================
+verilog/inc1.v:549: //bug1225
+verilog/inc1.v:550: 
+verilog/inc1.v:551:  
+verilog/inc1.v:552:  
+verilog/inc1.v:553: $display("RAM0");
+verilog/inc1.v:554: $display("CPU");
+verilog/inc1.v:555: 
+verilog/inc1.v:556:  
+verilog/inc1.v:557:  
+verilog/inc1.v:558:  
+verilog/inc1.v:559:  
+verilog/inc1.v:560: 
+verilog/inc1.v:561:  
+verilog/inc1.v:562: XXE_FAMILY = XXE_
+verilog/inc1.v:563:  
+verilog/inc1.v:564:  
+verilog/inc1.v:565:      $display("XXE_ is defined");
+verilog/inc1.v:566: 
+verilog/inc1.v:567: 
+verilog/inc1.v:568:  
+verilog/inc1.v:569: XYE_FAMILY = XYE_
+verilog/inc1.v:570:  
+verilog/inc1.v:571:  
+verilog/inc1.v:572:      $display("XYE_ is defined");
+verilog/inc1.v:573: 
+verilog/inc1.v:574: 
+verilog/inc1.v:575:  
+verilog/inc1.v:576: XXS_FAMILY = XXS_some
+verilog/inc1.v:577:  
+verilog/inc1.v:578:  
+verilog/inc1.v:579:      $display("XXS_some is defined");
+verilog/inc1.v:580: 
+verilog/inc1.v:581: 
+verilog/inc1.v:582:  
+verilog/inc1.v:583: XYS_FAMILY = XYS_foo
+verilog/inc1.v:584:  
+verilog/inc1.v:585:  
+verilog/inc1.v:586:      $display("XYS_foo is defined");
+verilog/inc1.v:587: 
+verilog/inc1.v:588: 
+verilog/inc1.v:589: //====
+verilog/inc1.v:590: 
+verilog/inc1.v:591:  
+verilog/inc1.v:592:   
+verilog/inc1.v:593:   
+verilog/inc1.v:594:   
+verilog/inc1.v:595:   
+verilog/inc1.v:596:      
+verilog/inc1.v:597:  
+verilog/inc1.v:598: 
+verilog/inc1.v:599:   
+verilog/inc1.v:600:   
+verilog/inc1.v:601:   
+verilog/inc1.v:602:   
+verilog/inc1.v:603:      
+verilog/inc1.v:604:  
+verilog/inc1.v:605: 
+verilog/inc1.v:606:   
+verilog/inc1.v:607:   
+verilog/inc1.v:608:   
+verilog/inc1.v:609:   
+verilog/inc1.v:610:      
+verilog/inc1.v:611:  
+verilog/inc1.v:612: 
+verilog/inc1.v:613:   
+verilog/inc1.v:614:   
+verilog/inc1.v:615:   
+verilog/inc1.v:616:   
+verilog/inc1.v:617:      
+verilog/inc1.v:618:  
+verilog/inc1.v:619: 
+verilog/inc1.v:620:   
+verilog/inc1.v:621: 
+verilog/inc1.v:622:  // NEVER
+verilog/inc1.v:623: 
+verilog/inc1.v:624: //======================================================================
+verilog/inc1.v:625: // IEEE mandated predefines
+verilog/inc1.v:626:   // undefineall should have no effect on these
+verilog/inc1.v:627: predef 0 0
+verilog/inc1.v:628: predef 1 1
+verilog/inc1.v:629: predef 2 2
+verilog/inc1.v:630: predef 3 3
+verilog/inc1.v:631: predef 10 10
+verilog/inc1.v:632: predef 11 11
+verilog/inc1.v:633: predef 20 20
+verilog/inc1.v:634: predef 21 21
+verilog/inc1.v:635: predef 22 22
+verilog/inc1.v:636: predef 23 23
+verilog/inc1.v:637: predef -2 -2
+verilog/inc1.v:638: predef -1 -1
+verilog/inc1.v:639: predef 0 0
+verilog/inc1.v:640: predef 1 1
+verilog/inc1.v:641: predef 2 2
+verilog/inc1.v:642: 
+verilog/inc1.v:643: `line 643 "verilog/inc1.v" 2

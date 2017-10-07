@@ -211,6 +211,13 @@ private:
     int getFinalToken(string& buf);
 
     ProcState state() const { return m_states.top(); }
+    bool stateIsDefname() const {
+        return state()==ps_DEFNAME_UNDEF
+            || state()==ps_DEFNAME_DEFINE
+            || state()==ps_DEFNAME_IFDEF
+            || state()==ps_DEFNAME_IFNDEF
+            || state()==ps_DEFNAME_ELSIF;
+    }
     void statePush(ProcState state) {
 	m_states.push(state);
     }
@@ -475,7 +482,15 @@ string VPreProcImp::defineSubst(VPreDefRef* refp) {
 		if (iter != argValueByName.end()) {
 		    // Substitute
 		    string subst = iter->second;
-		    out += subst;
+		    if (subst == "") {
+			// Normally `` is removed later, but with no token after, we're otherwise
+			// stuck, so remove proceeding ``
+			if (out.size()>=2 && out.substr(out.size()-2) == "``") {
+			    out = out.substr(0, out.size()-2);
+			}
+		    } else {
+			out += subst;
+		    }
 		} else {
 		    out += argName;
 		}
@@ -488,6 +503,7 @@ string VPreProcImp::defineSubst(VPreDefRef* refp) {
 			// Don't put out the ``, we're forming an escape which will not expand further later
 		    } else {
 			out += "``";   // `` must get removed later, as `FOO```BAR must pre-expand FOO and BAR
+			// See also removal in empty substitutes above
 		    }
 		    cp++;
 		    continue;
@@ -964,7 +980,16 @@ int VPreProcImp::getStateToken(string& buf) {
 		m_defRefs.pop();  refp=NULL;
 		if (m_defRefs.empty()) {
 		    statePop();
+		    if (state() == ps_JOIN) {  // Handle {left}```FOO(ARG) where `FOO(ARG) might be empty
+			if (m_joinStack.empty()) fatalSrc("`` join stack empty, but in a ``");
+			string lhs = m_joinStack.top(); m_joinStack.pop();
+			out = lhs+out;
+			if (debug()>=5) cout<<"``-end-defarg Out:"<<out<<endl;
+			statePop();
+		    }
 		    if (!m_off) unputDefrefString(out);
+		    // Prevent problem when EMPTY="" in `ifdef NEVER `define `EMPTY
+		    else if (stateIsDefname()) unputDefrefString("__IF_OFF_IGNORED_DEFINE");
 		    m_lexp->m_parenLevel = 0;
 		}
 		else {  // Finished a defref inside a upper defref
@@ -1172,7 +1197,16 @@ int VPreProcImp::getStateToken(string& buf) {
 		out = m_preprocp->defSubstitute(out);
 		if (m_defRefs.empty()) {
 		    // Just output the substitution
+		    if (state() == ps_JOIN) {  // Handle {left}```FOO where `FOO might be empty
+			if (m_joinStack.empty()) fatalSrc("`` join stack empty, but in a ``");
+			string lhs = m_joinStack.top(); m_joinStack.pop();
+			out = lhs+out;
+			if (debug()>=5) cout<<"``-end-defref Out:"<<out<<endl;
+			statePop();
+		    }
 		    if (!m_off) unputDefrefString(out);
+		    // Prevent problem when EMPTY="" in `ifdef NEVER `define `EMPTY
+		    else if (stateIsDefname()) unputDefrefString("__IF_OFF_IGNORED_DEFINE");
 		} else {
 		    // Inside another define.
 		    // Can't subst now, or

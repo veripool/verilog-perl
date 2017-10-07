@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.445 devel
 
+****	Fix `` expansion of empty `defines, bug1225. [Odd Magne Reitan]
+
 
 * Verilog::Language 3.444 2017-09-21
 

@@ -754,6 +754,83 @@ verilog/inc1.v:
 verilog/inc1.v:    initial 
 verilog/inc1.v:        $display("%s%s","a1","b2c3\n");
 verilog/inc1.v: endmodule
+verilog/inc1.v: 
+verilog/inc1.v: //======================================================================
+verilog/inc1.v: //bug1225
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v: $display("RAM0");
+verilog/inc1.v: $display("CPU");
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v: XXE_FAMILY = XXE_
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v:      $display("XXE_ is defined");
+verilog/inc1.v: 
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v: XYE_FAMILY = XYE_
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v:      $display("XYE_ is defined");
+verilog/inc1.v: 
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v: XXS_FAMILY = XXS_some
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v:      $display("XXS_some is defined");
+verilog/inc1.v: 
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v: XYS_FAMILY = XYS_foo
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v:      $display("XYS_foo is defined");
+verilog/inc1.v: 
+verilog/inc1.v: 
+verilog/inc1.v: //====
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:      
+verilog/inc1.v:  
+verilog/inc1.v: 
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:      
+verilog/inc1.v:  
+verilog/inc1.v: 
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:      
+verilog/inc1.v:  
+verilog/inc1.v: 
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:   
+verilog/inc1.v:      
+verilog/inc1.v:  
+verilog/inc1.v: 
+verilog/inc1.v:   
+verilog/inc1.v: 
+verilog/inc1.v:  // NEVER
+verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // IEEE mandated predefines
 verilog/inc1.v:   // undefineall should have no effect on these
