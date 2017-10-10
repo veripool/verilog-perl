@@ -831,6 +831,10 @@ verilog/inc1.v:
 verilog/inc1.v: 
 verilog/inc1.v:  // NEVER
 verilog/inc1.v: 
+verilog/inc1.v: //bug1227
+verilog/inc1.v:  
+verilog/inc1.v: (.mySig (myInterface.pa5),
+verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // IEEE mandated predefines
 verilog/inc1.v:   // undefineall should have no effect on these

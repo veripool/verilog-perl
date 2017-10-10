@@ -854,7 +854,7 @@ verilog/inc1.v:424:
 verilog/inc1.v:425: COMMENT: // EXP: abc
 verilog/inc1.v:425:  /*CMT*/  
 verilog/inc1.v:426:  
-verilog/inc1.v:427: DS<DS<a>``bDS<c>>
+verilog/inc1.v:427: DS<DS<a>bDS<c>>
 verilog/inc1.v:428:  
 verilog/inc1.v:429:  
 verilog/inc1.v:430:  
@@ -863,7 +863,7 @@ verilog/inc1.v:432:
 verilog/inc1.v:433:  
 verilog/inc1.v:434:  
 verilog/inc1.v:435: EXP: sonet_frame
-verilog/inc1.v:436: DS<DS<DS<sonet>``_frame>>
+verilog/inc1.v:436: DS<DS<DS<sonet>_frame>>
 verilog/inc1.v:437: COMMENT: //
 verilog/inc1.v:437:  /*CMT*/  
 verilog/inc1.v:438:  
@@ -875,7 +875,7 @@ verilog/inc1.v:442:  /*CMT*/
 verilog/inc1.v:443:  
 verilog/inc1.v:444:  
 verilog/inc1.v:445: EXP: sonet_frame
-verilog/inc1.v:446: DS<DS<sonet>``_frame>
+verilog/inc1.v:446: DS<DS<sonet>_frame>
 verilog/inc1.v:447: 
 verilog/inc1.v:448: COMMENT: // The existance of non-existance of a base define can make a difference
 verilog/inc1.v:448:  /*CMT*/  
@@ -887,8 +887,8 @@ verilog/inc1.v:453: module DS<DS<zzz>> ; endmodule
 verilog/inc1.v:454: 
 verilog/inc1.v:455:  
 verilog/inc1.v:456: EXP: module a_b ; endmodule
-verilog/inc1.v:457: module DS<DS<a>``_b> ; endmodule
-verilog/inc1.v:458: module DS<DS<a>``_b> ; endmodule
+verilog/inc1.v:457: module DS<DS<a>_b> ; endmodule
+verilog/inc1.v:458: module DS<DS<a>_b> ; endmodule
 verilog/inc1.v:459: 
 verilog/inc1.v:460: COMMENT: //======================================================================
 verilog/inc1.v:460:  /*CMT*/  
@@ -1110,26 +1110,31 @@ verilog/inc1.v:621:
 verilog/inc1.v:622: COMMENT: // NEVER
 verilog/inc1.v:622:   /*CMT*/  
 verilog/inc1.v:623: 
-verilog/inc1.v:624: COMMENT: //======================================================================
+verilog/inc1.v:624: COMMENT: //bug1227
 verilog/inc1.v:624:  /*CMT*/  
-verilog/inc1.v:625: COMMENT: // IEEE mandated predefines
-verilog/inc1.v:625:  /*CMT*/  
-verilog/inc1.v:626: COMMENT: // undefineall should have no effect on these
-verilog/inc1.v:626:    /*CMT*/  
-verilog/inc1.v:627: predef DS<0> 0
-verilog/inc1.v:628: predef DS<1> 1
-verilog/inc1.v:629: predef DS<2> 2
-verilog/inc1.v:630: predef DS<3> 3
-verilog/inc1.v:631: predef DS<10> 10
-verilog/inc1.v:632: predef DS<11> 11
-verilog/inc1.v:633: predef DS<20> 20
-verilog/inc1.v:634: predef DS<21> 21
-verilog/inc1.v:635: predef DS<22> 22
-verilog/inc1.v:636: predef DS<23> 23
-verilog/inc1.v:637: predef DS<-2> -2
-verilog/inc1.v:638: predef DS<-1> -1
-verilog/inc1.v:639: predef DS<0> 0
-verilog/inc1.v:640: predef DS<1> 1
-verilog/inc1.v:641: predef DS<2> 2
-verilog/inc1.v:642: 
-verilog/inc1.v:643: `line 643 "verilog/inc1.v" 2
+verilog/inc1.v:625:  
+verilog/inc1.v:626: DS<(.mySig (myInterface.pa5),>
+verilog/inc1.v:627: 
+verilog/inc1.v:628: COMMENT: //======================================================================
+verilog/inc1.v:628:  /*CMT*/  
+verilog/inc1.v:629: COMMENT: // IEEE mandated predefines
+verilog/inc1.v:629:  /*CMT*/  
+verilog/inc1.v:630: COMMENT: // undefineall should have no effect on these
+verilog/inc1.v:630:    /*CMT*/  
+verilog/inc1.v:631: predef DS<0> 0
+verilog/inc1.v:632: predef DS<1> 1
+verilog/inc1.v:633: predef DS<2> 2
+verilog/inc1.v:634: predef DS<3> 3
+verilog/inc1.v:635: predef DS<10> 10
+verilog/inc1.v:636: predef DS<11> 11
+verilog/inc1.v:637: predef DS<20> 20
+verilog/inc1.v:638: predef DS<21> 21
+verilog/inc1.v:639: predef DS<22> 22
+verilog/inc1.v:640: predef DS<23> 23
+verilog/inc1.v:641: predef DS<-2> -2
+verilog/inc1.v:642: predef DS<-1> -1
+verilog/inc1.v:643: predef DS<0> 0
+verilog/inc1.v:644: predef DS<1> 1
+verilog/inc1.v:645: predef DS<2> 2
+verilog/inc1.v:646: 
+verilog/inc1.v:647: `line 647 "verilog/inc1.v" 2

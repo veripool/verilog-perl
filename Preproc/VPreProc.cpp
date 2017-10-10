@@ -313,6 +313,7 @@ const char* VPreProcImp::tokenName(int tok) {
     case VP_ERROR	: return("ERROR");
     case VP_IFDEF	: return("IFDEF");
     case VP_IFNDEF	: return("IFNDEF");
+    case VP_JOIN	: return("JOIN");
     case VP_INCLUDE	: return("INCLUDE");
     case VP_LINE	: return("LINE");
     case VP_PSL		: return("PSL");
@@ -802,7 +803,7 @@ int VPreProcImp::getStateToken(string& buf) {
 		// FALLTHRU, handle as with VP_SYMBOL_JOIN
 	    }
 	}
-	if (tok==VP_SYMBOL_JOIN || tok==VP_DEFREF_JOIN) {  // not else if, can fallthru from above if()
+	if (tok==VP_SYMBOL_JOIN || tok==VP_DEFREF_JOIN || tok==VP_JOIN) {  // not else if, can fallthru from above if()
 	    // a`` -> string doesn't include the ``, so can just grab next and continue
 	    string out (yyourtext(),yyourleng());
 	    if (debug()>=5) cout<<"`` LHS:"<<out<<endl;
@@ -1073,7 +1074,10 @@ int VPreProcImp::getStateToken(string& buf) {
 		statePop();
 		goto next_tok;
 	    } else if (tok==VP_EOF || tok==VP_WHITE || tok == VP_COMMENT || tok==VP_STRING) {
-		error((string)"Expecting symbol to terminate ``; whitespace etc cannot follow ``. Found: "+tokenName(tok)+"\n");
+		// Other compilers just ignore this, so no warning
+		// "Expecting symbol to terminate ``; whitespace etc cannot follow ``. Found: "+tokenName(tok)+"\n"
+		string lhs = m_joinStack.top(); m_joinStack.pop();
+		unputString(lhs);
 		statePop();
 		goto next_tok;
 	    } else {

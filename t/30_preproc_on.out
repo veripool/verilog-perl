@@ -923,23 +923,27 @@ verilog/inc1.v:620:
 verilog/inc1.v:621: 
 verilog/inc1.v:622:  // NEVER
 verilog/inc1.v:623: 
-verilog/inc1.v:624: //======================================================================
-verilog/inc1.v:625: // IEEE mandated predefines
-verilog/inc1.v:626:   // undefineall should have no effect on these
-verilog/inc1.v:627: predef 0 0
-verilog/inc1.v:628: predef 1 1
-verilog/inc1.v:629: predef 2 2
-verilog/inc1.v:630: predef 3 3
-verilog/inc1.v:631: predef 10 10
-verilog/inc1.v:632: predef 11 11
-verilog/inc1.v:633: predef 20 20
-verilog/inc1.v:634: predef 21 21
-verilog/inc1.v:635: predef 22 22
-verilog/inc1.v:636: predef 23 23
-verilog/inc1.v:637: predef -2 -2
-verilog/inc1.v:638: predef -1 -1
-verilog/inc1.v:639: predef 0 0
-verilog/inc1.v:640: predef 1 1
-verilog/inc1.v:641: predef 2 2
-verilog/inc1.v:642: 
-verilog/inc1.v:643: `line 643 "verilog/inc1.v" 2
+verilog/inc1.v:624: //bug1227
+verilog/inc1.v:625:  
+verilog/inc1.v:626: (.mySig (myInterface.pa5),
+verilog/inc1.v:627: 
+verilog/inc1.v:628: //======================================================================
+verilog/inc1.v:629: // IEEE mandated predefines
+verilog/inc1.v:630:   // undefineall should have no effect on these
+verilog/inc1.v:631: predef 0 0
+verilog/inc1.v:632: predef 1 1
+verilog/inc1.v:633: predef 2 2
+verilog/inc1.v:634: predef 3 3
+verilog/inc1.v:635: predef 10 10
+verilog/inc1.v:636: predef 11 11
+verilog/inc1.v:637: predef 20 20
+verilog/inc1.v:638: predef 21 21
+verilog/inc1.v:639: predef 22 22
+verilog/inc1.v:640: predef 23 23
+verilog/inc1.v:641: predef -2 -2
+verilog/inc1.v:642: predef -1 -1
+verilog/inc1.v:643: predef 0 0
+verilog/inc1.v:644: predef 1 1
+verilog/inc1.v:645: predef 2 2
+verilog/inc1.v:646: 
+verilog/inc1.v:647: `line 647 "verilog/inc1.v" 2

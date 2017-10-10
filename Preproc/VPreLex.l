@@ -155,6 +155,7 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 <STRIFY>{symbdef}``	{ yyleng-=2; return (VP_SYMBOL_JOIN); }
 <STRIFY>"`"{symbdef}	{ return (VP_DEFREF); }
 <STRIFY>"`"{symbdef}``	{ yyleng-=2; return (VP_DEFREF_JOIN); }
+<STRIFY>``              { yyleng-=2; return (VP_JOIN); }
 <STRIFY>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
 <STRIFY>{wsn}+		{ return (VP_WHITE); }
 <STRIFY>{drop}		{ }
@@ -260,6 +261,7 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 			}}
 <ARGMODE>"`"{symbdef}	{ appendDefValue(yytext,yyleng); }  /* defref in defref - outer macro expands first */
 <ARGMODE>"`"{symbdef}`` { appendDefValue(yytext,yyleng); }  /* defref in defref - outer macro expands first */
+<ARGMODE>``             { appendDefValue(yytext,yyleng); }  /* defref in defref - outer macro expands first */
 <ARGMODE>[^\/\*\n\r\\(,){}\[\]\"`]+	|
 <ARGMODE>.		{ appendDefValue(yytext,yyleng); }
 
@@ -291,12 +293,14 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 	/* symbdef prevents normal lex rules from making `\`"foo a symbol {`"foo} instead of a BACKQUOTE */
 <INITIAL>"`"{symbdef}	{ return (VP_DEFREF); }
 <INITIAL>"`"{symbdef}``	{ yyleng-=2; return (VP_DEFREF_JOIN); }
+<INITIAL>``             { yyleng-=2; return (VP_JOIN); }
 
 	/* Generics */
 <INITIAL><<EOF>> 	{ yyterminate(); }  /* A "normal" EOF */
 <INITIAL>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
 <INITIAL>{symb}		{ return (VP_SYMBOL); }
 <INITIAL>{symb}``	{ yyleng-=2; return (VP_SYMBOL_JOIN); }
+<INITIAL>``		{ yyleng-=2; return (VP_JOIN); }
 <INITIAL>[\r]		{ }
 <INITIAL>{wsn}+		{ if (!keepWhitespace()) { yytext=(char*)" "; yyleng=1; } return VP_WHITE; }
 <INITIAL>{drop}		{ }
