@@ -3,7 +3,7 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
-* Verilog::Language 3.445 devel
+* Verilog::Language 3.446 2017-11-08
 
 ****	Fix `` expansion of `defines, bug1225, bug1227, bug1228. [Odd Magne Reitan]
 
