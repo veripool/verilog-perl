@@ -588,7 +588,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   /* Multi-line COMMENTS */
 <CMTMODE>"*"+[^*/\n]* 	{ yymore(); }
 <CMTMODE>\n		{ yymore(); NEXTLINE(); }
-<CMTMODE>"*"+"/"	{ VALTEXT; CALLBACK(commentCb); yy_pop_state(); } // No FL; it's at comment begin
+<CMTMODE>"*"+"/"	{ VALTEXT; CALLBACK(commentCb); yy_pop_state(); } /* No FL; it's at comment begin */
 <CMTMODE>{word}		{ yymore(); }
 <CMTMODE>. 		{ yymore(); }
 <CMTMODE><<EOF>>	{ yyerrorf("EOF in '/* ... */' block comment");
@@ -617,7 +617,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   /* Attributes */
   /* Note simulators vary in support for "(* /_*something*_/ foo*)" where _ doesn't exist */
 <V95,V01,V05,S05,S09,S12>{
-    "(*"({ws}|{crnl})*({id}|{escid})	{ yymore(); yy_push_state(ATTRMODE); }	// Doesn't match (*), but (* attr_spec
+    "(*"({ws}|{crnl})*({id}|{escid})	{ yymore(); yy_push_state(ATTRMODE); }	/* Doesn't match (*), but (* attr_spec */
 }
 
   /************************************************************************/
@@ -676,7 +676,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 			  if (LPARSEP->sigParser()) { yyerrorf("Define or directive not defined: %s",yytext); }
 			  else { CALLBACK(preprocCb); } }
   "//"[^\n]*		{ FL; VALTEXT; CALLBACK(commentCb); }  /* throw away single line comments */
-  "/*"		       	{ FL; yy_push_state(CMTMODE); yymore(); }  // FL; marks start for COMMENT callback
+  "/*"		       	{ FL; yy_push_state(CMTMODE); yymore(); }  /* FL; marks start for COMMENT callback */
   .			{ FL; VALTEXT; CALLBACK(operatorCb); return ygenOPERATOR; } /* return single char ops. */
 }
 

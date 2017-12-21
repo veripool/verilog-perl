@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.447 devel
 
+****    Workaround comment bug in flex 2.6.4, bug1252. [Rob Stoddard]
+
 
 * Verilog::Language 3.446 2017-11-08
 
