@@ -2,6 +2,8 @@
 // This file ONLY is placed into the Public Domain, for any use,
 // without warranty, 2007-2012 by Wilson Snyder.
 
+`celldefine
+
 a_front_matter;
 
 module a;
@@ -20,3 +22,5 @@ module b (input x);
    wire in_translate_off;
    // synopsys translate_on
 endmodule
+
+`endcelldefine
