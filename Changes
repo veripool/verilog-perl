@@ -5,7 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.449 devel
 
-**	Moving forward, use the git "stable" branch to track the latest release.
+**      Moving forward, use the git "stable" branch to track the latest release,
+        and git "v#.###" tags for specific releases.
 
 
 * Verilog::Language 3.448 2018-01-02
