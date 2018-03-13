@@ -193,7 +193,7 @@ on how low level and complete the information you need is.
 
 The low level VParse* source files may be of use when you need a starting
 point for your own a full C++ SystemVerilog grammar parser, using Bison and
-Flex.  It understands most of the SystemVerilog 2012 grammar (1800-2012
+Flex.  It understands most of the SystemVerilog 2017 grammar (1800-2017
 Appendix A).
 
 =item Verilog::Preproc
@@ -202,14 +202,14 @@ Verilog::Preproc is useful when you need only post-preprocessed text
 output, or a list of defines, includes, etc.  It can preprocess a file, or
 be used to provide the Verilog macro language on top of synthesis scripts.
 It understands and implements all preprocessor features of SystemVerilog
-2012.
+2017.
 
 =item Verilog::Parser
 
 Verilog::Parser is useful when you need to tokenize or write source filters
 (where you need everything including whitespace).  It can take raw files,
 or preprocessed input, and generates callbacks.  It understands all
-SystemVerilog 2012 keywords.
+SystemVerilog 2017 keywords.
 
 =item Abstract Syntax Tree
 
@@ -225,7 +225,7 @@ whitespace).  If you'd find this useful please contact the author.
 
 Verilog::SigParser is useful when you need a list of modules, signals,
 ports, functions, etc.  It requires a preprocessed file (from
-Verilog::Preproc), and can parse all SystemVerilog 2012 files, but only
+Verilog::Preproc), and can parse all SystemVerilog 2017 files, but only
 provides callbacks on certain interesting things.  The SigParser operates
 only on a file at a time; it does not interconnect signals nor perform any
 elaboration (resolution of parameters).
@@ -235,7 +235,7 @@ elaboration (resolution of parameters).
 Verilog::Netlist is useful for when you need the hierarchy, and a list of
 signals per module, pins per cell, etc.  It builds upon the output of
 Verilog::SigParser, so requires preprocessed files (from Verilog::Preproc).
-It parses all SystemVerilog 2012 files, but not all SystemVerilog
+It parses all SystemVerilog 2017 files, but not all SystemVerilog
 constructs are loaded into objects. Verilog::Netlist interconnects modules
 with instantiations but does not perform any elaboration (resolution of
 parameters).

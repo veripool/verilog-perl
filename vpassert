@@ -1495,7 +1495,7 @@ Exclude processing any files which begin with the specified prefix.
 
 Displays this message and program version and exits.
 
-=item --language <1364-1995|1364-2001|1364-2005|1800-2005|1800-2009|1800-2012>
+=item --language <1364-1995|1364-2001|1364-2005|1800-2005|1800-2009|1800-2012|1800-2017>
 
 Set the language standard for the files.  This determines which tokens are
 signals versus keywords, such as the ever-common "do" (data-out signal,

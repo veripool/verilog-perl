@@ -119,6 +119,7 @@ sub read_tests {
     read_test($dump_fh, $option_ref, "verilog/pinorder.v");
     read_test($dump_fh, $option_ref, "verilog/parser_sv.v");
     read_test($dump_fh, $option_ref, "verilog/parser_sv09.v");
+    read_test($dump_fh, $option_ref, "verilog/parser_sv17.v");
     read_test($dump_fh, $option_ref, "verilog/parser_vectors.v");
     $dump_fh->close();
 }

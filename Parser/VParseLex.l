@@ -40,7 +40,7 @@
 
 #define YY_SKIP_YYWRAP
 
-#define STATE_VERILOG_RECENT  S12		// State name for most recent Verilog Version
+#define STATE_VERILOG_RECENT  S17		// State name for most recent Verilog Version
 
 // Flex 2.5.35 has compile warning in ECHO, so we'll default our own rule
 #define ECHO yyerrorf("Missing VParseLex.l rule: ECHO rule invoked in state %d: %s", YY_START, yytext);
@@ -88,7 +88,7 @@ void yyerrorf(const char* format, ...) {
 /**********************************************************************/
 %}
 
-%s V95 V01 V05 S05 S09 S12
+%s V95 V01 V05 S05 S09 S12 S17
 %s STRING ATTRMODE
 %s CMTMODE PROTMODE
 %s DUMMY_TO_AVOID_WARNING
@@ -114,7 +114,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 <INITIAL>.|\n 		{BEGIN STATE_VERILOG_RECENT; yyless(0); }
 
   /* Verilog 1995 */
-<V95,V01,V05,S05,S09,S12>{
+<V95,V01,V05,S05,S09,S12,S17>{
   {ws}			{ StashPrefix; }	/* otherwise ignore white-space */
   {crnl}		{ StashPrefix; NEXTLINE(); }		/* Count line numbers */
   /*     Keywords */
@@ -224,7 +224,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 }
 
   /* Verilog 2001 */
-<V01,V05,S05,S09,S12>{
+<V01,V05,S05,S09,S12,S17>{
   /*     Keywords*/
   "automatic"		{ FL; VALTEXT; CALLBACK(keywordCb); return yAUTOMATIC; }
   "endgenerate"		{ FL; VALTEXT; CALLBACK(keywordCb); return yENDGENERATE; }
@@ -252,13 +252,13 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 }
 
   /* Verilog 2005 */
-<V05,S05,S09,S12>{
+<V05,S05,S09,S12,S17>{
   /*     Keywords */
   "uwire"		{ FL; VALTEXT; CALLBACK(keywordCb); return yWIRE; }
 }
 
   /* System Verilog 2005 */
-<S05,S09,S12>{
+<S05,S09,S12,S17>{
   /*     System Tasks */
   "$error"		{ FL; VALTEXT; CALLBACK(keywordCb); return yD_ERROR; }
   "$fatal"		{ FL; VALTEXT; CALLBACK(keywordCb); return yD_FATAL; }
@@ -367,7 +367,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 }
 
   /* System Verilog 2009 */
-<S09,S12>{
+<S09,S12,S17>{
   /*     Keywords */
   "accept_on"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return yACCEPT_ON; }
   "checker"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return yCHECKER; }
@@ -395,7 +395,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 }
 
   /* System Verilog 2012 */
-<S12>{
+<S12,S17>{
   /*     Keywords */
   "implements"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return yIMPLEMENTS; }
   "interconnect" 	{ FL; VALTEXT; CALLBACK(keywordCb); return yINTERCONNECT; }
@@ -403,19 +403,22 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   "soft"	 	{ FL; VALTEXT; CALLBACK(keywordCb); return ySOFT; }
 }
 
+  /* System Verilog 2017 */
+  /* No new keywords */
+
   /* Default PLI rule */
-<V95,V01,V05,S05,S09,S12>{
+<V95,V01,V05,S05,S09,S12,S17>{
     "$"[a-zA-Z_$][a-zA-Z0-9_$]*	{ FL; VALTEXT; CALLBACK(sysfuncCb); return ygenSYSCALL; }
 }
 
   /************************************************************************/
 
   /* Single character operator thingies */
-<V95,V01,V05,S05,S09,S12>{
+<V95,V01,V05,S05,S09,S12,S17>{
   "{"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
   "}"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
 }
-<V95,V01,V05,S05,S09,S12>{
+<V95,V01,V05,S05,S09,S12,S17>{
   "!"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
   "#"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
   "$"			{ FL; VALTEXT; CALLBACK(operatorCb); return yytext[0]; }
@@ -447,7 +450,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   /* Operators and multi-character symbols */
 
   /* Verilog 1995 Operators */
-<V95,V01,V05,S05,S09,S12>{
+<V95,V01,V05,S05,S09,S12,S17>{
   "&&"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_ANDAND; }
   "||"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_OROR; }
   "<="			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_LTE; }
@@ -469,7 +472,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 }
 
   /* Verilog 2001 Operators */
-<V01,V05,S05,S09,S12>{
+<V01,V05,S05,S09,S12,S17>{
   "<<<"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_SLEFT; }
   ">>>"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_SSRIGHT; }
   "**"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_POW; }
@@ -479,7 +482,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 }
 
   /* SystemVerilog 2005 Operators */
-<S05,S09,S12>{
+<S05,S09,S12,S17>{
   "'"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_TICK; }
   "'{"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_TICKBRA; }
   "==?"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_WILDEQUAL; }
@@ -514,14 +517,14 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 }
 
   /* SystemVerilog 2009 Operators */
-<S09,S12>{
+<S09,S12,S17>{
   "#-#"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_POUNDMINUSPD; }
   "#=#"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_POUNDEQPD; }
   "<->"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_LTMINUSGT; }
 }
 
   /* Identifiers and numbers */
-<V95,V01,V05,S05,S09,S12>{
+<V95,V01,V05,S05,S09,S12,S17>{
   /* Consume a following space, as we're going to add one to the symbol, we'd like to avoid inserting an extra */
   {escid}{space}	{ if (VParseLex::symEscapeless(yytext+1,yyleng-1-1)) {
 			      string sym = string(yytext+1,yyleng-1-1);
@@ -616,13 +619,13 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   /************************************************************************/
   /* Attributes */
   /* Note simulators vary in support for "(* /_*something*_/ foo*)" where _ doesn't exist */
-<V95,V01,V05,S05,S09,S12>{
+<V95,V01,V05,S05,S09,S12,S17>{
     "(*"({ws}|{crnl})*({id}|{escid})	{ yymore(); yy_push_state(ATTRMODE); }	/* Doesn't match (*), but (* attr_spec */
 }
 
   /************************************************************************/
   /* Preprocessor */
-<V95,V01,V05,S05,S09,S12>{
+<V95,V01,V05,S05,S09,S12,S17>{
   "`accelerate"				{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`autoexpand_vectornets"		{ FL; VALTEXT; CALLBACK(preprocCb); } // Verilog-XL compatibility
   "`celldefine"				{ FL; VALTEXT; CALLBACK(preprocCb); LEXP->m_inCellDefine=true; }
@@ -665,13 +668,14 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   "`begin_keywords"[ \t]*\"1800-2005\"		{ yy_push_state(S05); CALLBACK(preprocCb); }
   "`begin_keywords"[ \t]*\"1800-2009\"		{ yy_push_state(S09); CALLBACK(preprocCb); }
   "`begin_keywords"[ \t]*\"1800-2012\"		{ yy_push_state(S12); CALLBACK(preprocCb); }
+  "`begin_keywords"[ \t]*\"1800-2017\"		{ yy_push_state(S17); CALLBACK(preprocCb); }
   "`end_keywords"				{ yy_pop_state();     CALLBACK(preprocCb); }
 }
 
   /************************************************************************/
   /* Default rules - leave last */
 
-<V95,V01,V05,S05,S09,S12>{
+<V95,V01,V05,S05,S09,S12,S17>{
   "`"[a-zA-Z_0-9]+	{ FL; VALTEXT;
 			  if (LPARSEP->sigParser()) { yyerrorf("Define or directive not defined: %s",yytext); }
 			  else { CALLBACK(preprocCb); } }
@@ -875,6 +879,7 @@ void VParseLex::language(const char* value) {
     else if (0==strcmp(value,"1800-2005"))	{ BEGIN S05; }
     else if (0==strcmp(value,"1800-2009"))	{ BEGIN S09; }
     else if (0==strcmp(value,"1800-2012"))	{ BEGIN S12; }
+    else if (0==strcmp(value,"1800-2017"))	{ BEGIN S17; }
     else yyerrorf("Unknown setLanguage code: %s", value);
 }
 

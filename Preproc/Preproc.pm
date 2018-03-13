@@ -428,11 +428,11 @@ after resolving the filename with the options parameter.
 
 =head1 COMPLIANCE
 
-The preprocessor supports the constructs defined in the SystemVerilog 2012
-standard (IEEE 1800-2012), which is a superset of Verilog 1995 (IEEE
+The preprocessor supports the constructs defined in the SystemVerilog 2017
+standard (IEEE 1800-2017), which is a superset of Verilog 1995 (IEEE
 1364-1995), Verilog 2001 (IEEE 1364-2001), Verilog 2005 (IEEE 1364-2005)
-and SystemVerilog 2005 (IEEE 1800-2005), and SystemVerilog 2009 (IEEE
-1800-2009).
+SystemVerilog 2005 (IEEE 1800-2005), SystemVerilog 2009 (IEEE
+1800-2009), and SystemVerilog 2012 (IEEE 1800-2012).
 
 Verilog::Preproc adds the `error macro (unless the pedantic parameter is
 set.):
