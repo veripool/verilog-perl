@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.451 devel
 
+****	Fix parsing "output signed" in V2K port list, msg2540. [James Jung]
+
 
 * Verilog::Language 3.450 2018-03-12
 

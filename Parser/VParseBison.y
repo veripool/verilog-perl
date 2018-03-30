@@ -1022,6 +1022,8 @@ portE:				// ==IEEE: [ port ]
 	//			// No VARDECL("port") for implicit, as we don't want to declare variables for them
 	|	portDirNetE var_data_type       '.' portSig '(' portAssignExprE ')' sigAttrListE
 			{ VARDTYPE($2); VARDONE($<fl>4, $4, "", ""); PINNUMINC(); }
+	|	portDirNetE signing '.' portSig '(' portAssignExprE ')' sigAttrListE
+			{ VARDTYPE($2); VARDONE($<fl>4, $4, "", ""); PINNUMINC(); }
 	|	portDirNetE signingE variable_dimensionList  '.' portSig '(' portAssignExprE ')' sigAttrListE
 			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>5, $5, "", ""); PINNUMINC(); }
 	|	portDirNetE yINTERCONNECT signingE variable_dimensionListE '.' portSig '(' portAssignExprE ')' sigAttrListE
@@ -1031,6 +1033,8 @@ portE:				// ==IEEE: [ port ]
 	//
 	|	portDirNetE var_data_type       portSig variable_dimensionListE sigAttrListE
 			{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, ""); PINNUMINC(); }
+	|	portDirNetE signing  portSig variable_dimensionListE sigAttrListE
+			{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, ""); PINNUMINC(); }
 	|	portDirNetE signingE variable_dimensionList  portSig variable_dimensionListE sigAttrListE
 			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, ""); PINNUMINC(); }
 	|	portDirNetE yINTERCONNECT signingE variable_dimensionList  portSig variable_dimensionListE sigAttrListE
@@ -1039,6 +1043,8 @@ portE:				// ==IEEE: [ port ]
 			{ /*VARDTYPE-same*/ VARDONE($<fl>2, $2, $3, ""); PINNUMINC(); }
 	//
 	|	portDirNetE var_data_type       portSig variable_dimensionListE sigAttrListE '=' constExpr
+			{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, $7); PINNUMINC(); }
+	|	portDirNetE signing  portSig variable_dimensionListE sigAttrListE '=' constExpr
 			{ VARDTYPE($2); VARDONE($<fl>3, $3, $4, $7); PINNUMINC(); }
 	|	portDirNetE signingE variable_dimensionList  portSig variable_dimensionListE sigAttrListE '=' constExpr
 			{ VARDTYPE(SPACED($2,$3)); VARDONE($<fl>4, $4, $5, $8); PINNUMINC(); }

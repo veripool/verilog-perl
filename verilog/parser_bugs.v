@@ -511,3 +511,7 @@ module msg1491(A,B);
    trireg (small) A;
    output trireg B;
 endmodule
+
+module msg2540
+  (output signed foo);
+endmodule

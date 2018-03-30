@@ -36,3 +36,23 @@ module impbegin
    import pkgb::*;
    (input foobar);
 endmodule
+
+
+// msg2546
+module def_cov_point;
+   logic [7:0] data;
+   logic [7:0] addr;
+   covergroup c;
+      ADDRESS : coverpoint addr {
+         bins low[] = {[0:10]};
+         bins med[] = {[11:20]};
+      }
+   endgroup
+   // Can't handle this due to package parsing yaID__ETC
+   //covergroup d;
+   //   d : coverpoint data {
+   //      bins low[] = {[0:10]};
+   //      bins med[] = {[11:20]};
+   //   }
+   //endgroup
+endmodule
