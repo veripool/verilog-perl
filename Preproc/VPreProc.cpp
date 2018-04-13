@@ -570,7 +570,6 @@ bool VPreProcImp::readWholefile(const string& filename, StrList& outl) {
     int fd;
     bool eof = false;
 
-    ssize_t position = filename.find_last_of(".");
     if (filename.length()>3 && 0==filename.compare(filename.length()-3, 3, ".gz")) {
 	string cmd = "gunzip -c "+filename;
         if ((fp = popen(cmd.c_str(), "r")) == NULL) {
