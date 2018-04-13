@@ -3,6 +3,9 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+* Verilog::Language 3.453 devel
+
+
 * Verilog::Language 3.452 2018-04-12
 
 ****	Fix parsing "output signed" in V2K port list, msg2540. [James Jung]
