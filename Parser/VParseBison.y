@@ -102,7 +102,8 @@ static void parse_net_constants(VFileLine* fl, VParseHashElem nets[][3]) {
 	const char* netnamep = it->m_name.c_str();
 
 	size_t delim = it->m_name.find_first_of("'");
-	if (it->m_name[0] != '\\' && it->m_msb.empty() && it->m_name[delim] == '\'') {
+	if (it->m_name[0] != '\\' && it->m_msb.empty()
+	    && delim != string::npos && it->m_name[delim] == '\'') {
 	    // Handle sized integer constants (e.g., 7'b0) specifically but ignore replications (e.g., {4{w}})
 	    if (delim != 0 && netnamep[0] != '{') {
 		// Handle the first part that indicates the width for sized constants (guaranteed to be a decimal)
