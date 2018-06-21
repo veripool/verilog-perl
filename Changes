@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.453 devel
 
+****    Fix define argument stringification (`"), broke since 3.446. [Joe DErrico]
+
 
 * Verilog::Language 3.452 2018-04-12
 

@@ -236,7 +236,7 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 <ARGMODE>{crnl}		{ linenoInc(); yytext=(char*)"\n"; yyleng=1; return(VP_WHITE); }
 <ARGMODE>{quote}	{ yy_push_state(STRMODE); yymore(); }
 <ARGMODE>"`\\`\""	{ appendDefValue(yytext,yyleng); }  /* Literal text */
-<ARGMODE>{tickquote}	{ return(VP_STRIFY); }
+<ARGMODE>{tickquote}	{ yy_push_state(STRIFY); return(VP_STRIFY); }
 <ARGMODE>[{\[]		{ LEXP->m_parenLevel++; appendDefValue(yytext,yyleng); }
 <ARGMODE>[}\]]		{ LEXP->m_parenLevel--; appendDefValue(yytext,yyleng); }
 <ARGMODE>[(]		{ LEXP->m_parenLevel++;

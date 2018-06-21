@@ -307,19 +307,32 @@ verilog/inc1.v:579:  $display("XXS_some is defined");
 verilog/inc1.v:583: XYS_FAMILY = XYS_foo
 verilog/inc1.v:586:  $display("XYS_foo is defined");
 verilog/inc1.v:626: (.mySig (myInterface.pa5),
-verilog/inc1.v:631: predef 0 0
-verilog/inc1.v:632: predef 1 1
-verilog/inc1.v:633: predef 2 2
-verilog/inc1.v:634: predef 3 3
-verilog/inc1.v:635: predef 10 10
-verilog/inc1.v:636: predef 11 11
-verilog/inc1.v:637: predef 20 20
-verilog/inc1.v:638: predef 21 21
-verilog/inc1.v:639: predef 22 22
-verilog/inc1.v:640: predef 23 23
-verilog/inc1.v:641: predef -2 -2
-verilog/inc1.v:642: predef -1 -1
-verilog/inc1.v:643: predef 0 0
-verilog/inc1.v:644: predef 1 1
-verilog/inc1.v:645: predef 2 2
-verilog/inc1.v:647: `line 647 "verilog/inc1.v" 2
+verilog/inc1.v:632: `dbg_hdl(UVM_LOW, ("Functional coverage enabled: paramgrp"));
+verilog/inc1.v:642: module pcc2_cfg;
+verilog/inc1.v:643:  generate
+verilog/inc1.v:644: `line 644 "verilog/inc1.v" 0
+verilog/inc1.v:644:  covergroup a @(posedge b); 
+verilog/inc1.v:644: `line 644 "verilog/inc1.v" 0
+verilog/inc1.v:644:  c: coverpoint d iff ((c) === 1'b1); endgroup 
+verilog/inc1.v:644: `line 644 "verilog/inc1.v" 0
+verilog/inc1.v:644:  a u_a; 
+verilog/inc1.v:644: `line 644 "verilog/inc1.v" 0
+verilog/inc1.v:644:  initial do begin $display ("DEBUG : %s [%m]", $sformatf ("Functional coverage enabled: u_a")); end while(0);
+verilog/inc1.v:645:  endgenerate
+verilog/inc1.v:646: endmodule
+verilog/inc1.v:651: predef 0 0
+verilog/inc1.v:652: predef 1 1
+verilog/inc1.v:653: predef 2 2
+verilog/inc1.v:654: predef 3 3
+verilog/inc1.v:655: predef 10 10
+verilog/inc1.v:656: predef 11 11
+verilog/inc1.v:657: predef 20 20
+verilog/inc1.v:658: predef 21 21
+verilog/inc1.v:659: predef 22 22
+verilog/inc1.v:660: predef 23 23
+verilog/inc1.v:661: predef -2 -2
+verilog/inc1.v:662: predef -1 -1
+verilog/inc1.v:663: predef 0 0
+verilog/inc1.v:664: predef 1 1
+verilog/inc1.v:665: predef 2 2
+verilog/inc1.v:667: `line 667 "verilog/inc1.v" 2

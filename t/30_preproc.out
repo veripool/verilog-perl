@@ -836,6 +836,30 @@ verilog/inc1.v:
 verilog/inc1.v: (.mySig (myInterface.pa5),
 verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
+verilog/inc1.v: // Stringify bug
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v: `dbg_hdl(UVM_LOW, ("Functional coverage enabled: paramgrp"));
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v:  
+verilog/inc1.v: 
+verilog/inc1.v:  
+verilog/inc1.v: 
+verilog/inc1.v: 
+verilog/inc1.v: 
+verilog/inc1.v: 
+verilog/inc1.v: module pcc2_cfg;
+verilog/inc1.v:   generate
+verilog/inc1.v:    
+verilog/inc1.v:   covergroup a @(posedge b); 
+verilog/inc1.v:     c: coverpoint d iff ((c) === 1'b1); endgroup 
+verilog/inc1.v:       a u_a; 
+verilog/inc1.v:    initial do begin $display ("DEBUG : %s [%m]", $sformatf ("Functional coverage enabled: u_a")); end while(0);
+verilog/inc1.v:   endgenerate
+verilog/inc1.v: endmodule
+verilog/inc1.v: 
+verilog/inc1.v: //======================================================================
 verilog/inc1.v: // IEEE mandated predefines
 verilog/inc1.v:   // undefineall should have no effect on these
 verilog/inc1.v: predef 0 0
