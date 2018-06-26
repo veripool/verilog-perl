@@ -96,6 +96,7 @@ symb		([a-zA-Z_][a-zA-Z0-9_$]*|\\[^ \t\f\r\n]+)
 symbdef		([a-zA-Z_][a-zA-Z0-9_$]*|\\[^ \t\f\r\n`]+)
 word		[a-zA-Z0-9_]+
 drop		[\032]
+bom		[\357\273\277]
 /* Case insensitive; unfortunately ?i: isn't in flex 2.5.4 which is popular */
 ambit		[Aa][Mm][Bb][Ii][Tt]
 pragma		[Pp][Rr][Aa][Gg][Mm][Aa]
@@ -110,6 +111,7 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 	/**************************************************************/
 %%
 
+<INITIAL>{bom}		{ }
 <INITIAL,STRIFY>^{ws}*"`line"{ws}+.*{crnl}	{ LEXP->lineDirective(yytext);
 						  return(VP_LINE); }
 

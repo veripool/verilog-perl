@@ -7,6 +7,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****    Fix define argument stringification (`"), broke since 3.446. [Joe DErrico]
 
+****    Fix to ignore Unicode UTF-8 BOM sequences, msg2576. [HyungKi Jeong]
+
 
 * Verilog::Language 3.452 2018-04-12
 

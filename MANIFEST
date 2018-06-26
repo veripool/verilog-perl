@@ -143,6 +143,7 @@ t/85_vhier_skiplist.out
 t/85_vhier_topmodule.out
 t/85_vhier_xml.out
 t/86_vhier_tick.t
+t/87_vhier_unicode.t
 t/test_utils.pl
 Verilog-Perl.pod
 verilog/example.v
