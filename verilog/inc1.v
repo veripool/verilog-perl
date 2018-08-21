@@ -168,6 +168,30 @@ module prot2();
 `pragma reset protect
 endmodule
 
+module prot3();
+//pragma protect begin_protected
+//pragma protect key_keyowner=Cadence Design Systems.
+//pragma protect key_keyname=CDS_KEY
+//pragma protect key_method=RC5
+//pragma protect key_block
+zzZzZ/4ZzzZZZzzz4zZzZzZZZZzZzZ/Zz+33zZ2zz/zzzzzzzzZZZzZ4z+ZZZZz1
+Z1ZzzzZZzZZzz9ZZZZ37zzZzZzZzzz9ZZzzZzZz9Zz64+z8Z7ZzZZZzzzzZZZzZz
+zzZzZZZzZ0463zzzzzZzZ6z00z4zZzzZZzzZzzzZZ8zzz09ZzZZZZZ==
+//pragma protect end_key_block
+//pragma protect digest_block
+ZzZZzzZ9ZZZZz2ZzzzZz/Zzzz8Z=
+//pragma protect end_digest_block
+//pragma protect data_block
+ZZZ8zZzz6ZZ/zZZ5zZZzzz3ZzzzZzZZZ6ZzZzZZZZZz1zzZZZZ7ZZZZz3Zzz+9zz
+4zzz+8zZzzzzZzZZzzzZzz1Z7ZzZz+zZz8ZZZZzZ6ZzzZzZZzzZZzzZzzZzZzZzZ
+ZzzzzZ0zZz1ZzzZzzZzZzz==
+//pragma protect end_data_block
+//pragma protect digest_block
+Z4Z6zZzZ3Z7ZZ6zzZZZZzzzzZZZ=
+//pragma protect end_digest_block
+//pragma protect end_protected
+endmodule
+
 //======================================================================
 // macro call with define that has comma
 `define REG_H   6

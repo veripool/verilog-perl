@@ -158,181 +158,204 @@ verilog/inc1.v:166:     #nj1]p,3^1~,="E@QZB\T)eU\pC#C|7=\$J$##A[@-@{Qk]
 verilog/inc1.v:167: `pragma protect end_protected
 verilog/inc1.v:168: `pragma reset protect
 verilog/inc1.v:169: endmodule
-verilog/inc1.v:181: begin addr <= (({regs[6], regs[7]} + 1)); rd <= 1; end and begin addr <= (({regs[6], regs[7]})); wdata <= (rdata); wr <= 1; end
-verilog/inc1.v:182: begin addr <= ({regs[6], regs[7]} + 1); rd <= 1; end
-verilog/inc1.v:183: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end more
-verilog/inc1.v:188: `line 188 "verilog/inc1.v" 0
-verilog/inc1.v:188: `line 1 "verilog/t_preproc_inc4.vh" 1
+verilog/inc1.v:171: module prot3();
+verilog/inc1.v:172: //pragma protect begin_protected
+verilog/inc1.v:173: //pragma protect key_keyowner=Cadence Design Systems.
+verilog/inc1.v:174: //pragma protect key_keyname=CDS_KEY
+verilog/inc1.v:175: //pragma protect key_method=RC5
+verilog/inc1.v:176: //pragma protect key_block
+verilog/inc1.v:177: zzZzZ/4ZzzZZZzzz4zZzZzZZZZzZzZ/Zz+33zZ2zz/zzzzzzzzZZZzZ4z+ZZZZz1
+verilog/inc1.v:178: Z1ZzzzZZzZZzz9ZZZZ37zzZzZzZzzz9ZZzzZzZz9Zz64+z8Z7ZzZZZzzzzZZZzZz
+verilog/inc1.v:179: zzZzZZZzZ0463zzzzzZzZ6z00z4zZzzZZzzZzzzZZ8zzz09ZzZZZZZ==
+verilog/inc1.v:180: //pragma protect end_key_block
+verilog/inc1.v:181: //pragma protect digest_block
+verilog/inc1.v:182: ZzZZzzZ9ZZZZz2ZzzzZz/Zzzz8Z=
+verilog/inc1.v:183: //pragma protect end_digest_block
+verilog/inc1.v:184: //pragma protect data_block
+verilog/inc1.v:185: ZZZ8zZzz6ZZ/zZZ5zZZzzz3ZzzzZzZZZ6ZzZzZZZZZz1zzZZZZ7ZZZZz3Zzz+9zz
+verilog/inc1.v:186: 4zzz+8zZzzzzZzZZzzzZzz1Z7ZzZz+zZz8ZZZZzZ6ZzzZzZZzzZZzzZzzZzZzZzZ
+verilog/inc1.v:187: ZzzzzZ0zZz1ZzzZzzZzZzz==
+verilog/inc1.v:188: //pragma protect end_data_block
+verilog/inc1.v:189: //pragma protect digest_block
+verilog/inc1.v:190: Z4Z6zZzZ3Z7ZZ6zzZZZZzzzzZZZ=
+verilog/inc1.v:191: //pragma protect end_digest_block
+verilog/inc1.v:192: //pragma protect end_protected
+verilog/inc1.v:193: endmodule
+verilog/inc1.v:205: begin addr <= (({regs[6], regs[7]} + 1)); rd <= 1; end and begin addr <= (({regs[6], regs[7]})); wdata <= (rdata); wr <= 1; end
+verilog/inc1.v:206: begin addr <= ({regs[6], regs[7]} + 1); rd <= 1; end
+verilog/inc1.v:207: begin addr <= ({regs[6], regs[7]}); wdata <= (rdata); wr <= 1; end more
+verilog/inc1.v:212: `line 212 "verilog/inc1.v" 0
+verilog/inc1.v:212: `line 1 "verilog/t_preproc_inc4.vh" 1
 verilog/t_preproc_inc4.vh:2: `line 2 "verilog/t_preproc_inc4.vh" 0
 verilog/t_preproc_inc4.vh:7: `line 7 "verilog/t_preproc_inc4.vh" 2
-verilog/inc1.v:188: `line 188 "verilog/inc1.v" 0
-verilog/inc1.v:202: $blah("ab,cd","e,f");
-verilog/inc1.v:203: $blah(this.logfile,vec);
-verilog/inc1.v:204: $blah(this.logfile,vec[1,2,3]);
-verilog/inc1.v:205: $blah(this.logfile,{blah.name(), " is not foo"});
-verilog/inc1.v:210: `pragma foo = 1
-verilog/inc1.v:211: `default_nettype none
-verilog/inc1.v:212: `default_nettype uwire
-verilog/inc1.v:221: Line_Preproc_Check 221
-verilog/inc1.v:229: (p,q)
-verilog/inc1.v:233: (x,y)
-verilog/inc1.v:234: Line_Preproc_Check 234
-verilog/inc1.v:243: beginend  
-verilog/inc1.v:244: beginend  
-verilog/inc1.v:245: "beginend"  
-verilog/inc1.v:251:  `\esc`def
-verilog/inc1.v:253: Not a \`define
-verilog/inc1.v:261: x,y)--bee submacro has comma paren
-verilog/inc1.v:266: $display("10 %d %d", $bits(foo), 10);
-verilog/inc1.v:290: `line 290 "verilog/inc1.v" 0
-verilog/inc1.v:290: `line 290 "verilog/inc1.v" 0
-verilog/inc1.v:290: `line 290 "verilog/inc1.v" 0
-verilog/inc1.v:290: `line 290 "verilog/inc1.v" 0
-verilog/inc1.v:290: `line 290 "verilog/inc1.v" 0
-verilog/inc1.v:290: `line 290 "verilog/inc1.v" 0
-verilog/inc1.v:290: `line 290 "verilog/inc1.v" 0
-verilog/inc1.v:290: `line 290 "verilog/inc1.v" 0
-verilog/inc1.v:290: `line 290 "verilog/inc1.v" 0
-verilog/inc1.v:290:  assign a3 = ~b3 ; 
-verilog/inc1.v:290: `line 290 "verilog/inc1.v" 0
-verilog/inc1.v:292: `line 292 "verilog/inc1.v" 0
-verilog/inc1.v:293:   \
-verilog/inc1.v:294: `line 294 "verilog/inc1.v" 0
-verilog/inc1.v:301: `line 301 "verilog/inc1.v" 0
-verilog/inc1.v:301: `line 301 "verilog/inc1.v" 0
-verilog/inc1.v:301: `line 301 "verilog/inc1.v" 0
-verilog/inc1.v:301:  def i 
-verilog/inc1.v:301: `line 301 "verilog/inc1.v" 0
-verilog/inc1.v:315: 1  (nodef)
-verilog/inc1.v:316: 2   (hasdef)
-verilog/inc1.v:317: 3  (nodef)
-verilog/inc1.v:318: 4 
+verilog/inc1.v:212: `line 212 "verilog/inc1.v" 0
+verilog/inc1.v:226: $blah("ab,cd","e,f");
+verilog/inc1.v:227: $blah(this.logfile,vec);
+verilog/inc1.v:228: $blah(this.logfile,vec[1,2,3]);
+verilog/inc1.v:229: $blah(this.logfile,{blah.name(), " is not foo"});
+verilog/inc1.v:234: `pragma foo = 1
+verilog/inc1.v:235: `default_nettype none
+verilog/inc1.v:236: `default_nettype uwire
+verilog/inc1.v:245: Line_Preproc_Check 245
+verilog/inc1.v:253: (p,q)
+verilog/inc1.v:257: (x,y)
+verilog/inc1.v:258: Line_Preproc_Check 258
+verilog/inc1.v:267: beginend  
+verilog/inc1.v:268: beginend  
+verilog/inc1.v:269: "beginend"  
+verilog/inc1.v:275:  `\esc`def
+verilog/inc1.v:277: Not a \`define
+verilog/inc1.v:285: x,y)--bee submacro has comma paren
+verilog/inc1.v:290: $display("10 %d %d", $bits(foo), 10);
+verilog/inc1.v:314: `line 314 "verilog/inc1.v" 0
+verilog/inc1.v:314: `line 314 "verilog/inc1.v" 0
+verilog/inc1.v:314: `line 314 "verilog/inc1.v" 0
+verilog/inc1.v:314: `line 314 "verilog/inc1.v" 0
+verilog/inc1.v:314: `line 314 "verilog/inc1.v" 0
+verilog/inc1.v:314: `line 314 "verilog/inc1.v" 0
+verilog/inc1.v:314: `line 314 "verilog/inc1.v" 0
+verilog/inc1.v:314: `line 314 "verilog/inc1.v" 0
+verilog/inc1.v:314: `line 314 "verilog/inc1.v" 0
+verilog/inc1.v:314:  assign a3 = ~b3 ; 
+verilog/inc1.v:314: `line 314 "verilog/inc1.v" 0
+verilog/inc1.v:316: `line 316 "verilog/inc1.v" 0
+verilog/inc1.v:317:   \
 verilog/inc1.v:318: `line 318 "verilog/inc1.v" 0
-verilog/inc1.v:318:   (nodef)
-verilog/inc1.v:319: 5 also in 
-verilog/inc1.v:319: `line 319 "verilog/inc1.v" 0
-verilog/inc1.v:319:  also3 (nodef)
-verilog/inc1.v:322: HAS a NEW 
-verilog/inc1.v:322: `line 322 "verilog/inc1.v" 0
-verilog/inc1.v:322: LINE
-verilog/inc1.v:342: EXP: clxx_scen
-verilog/inc1.v:343: clxx_scen
-verilog/inc1.v:344: EXP: clxx_scen
-verilog/inc1.v:345: "clxx_scen"
-verilog/inc1.v:347: EXP: do if (start("verilog/inc1.v", 25)) begin message({"Blah-", "clx_scen", " end"}); end while(0);
-verilog/inc1.v:348: `line 348 "verilog/inc1.v" 0
-verilog/inc1.v:348:  do 
-verilog/inc1.v:348: `line 348 "verilog/inc1.v" 0
-verilog/inc1.v:348: `line 348 "verilog/inc1.v" 0
-verilog/inc1.v:348:  while(0);
-verilog/inc1.v:356: `line 356 "verilog/inc1.v" 0
-verilog/inc1.v:356: `line 356 "verilog/inc1.v" 0
-verilog/inc1.v:356: `line 356 "verilog/inc1.v" 0
-verilog/inc1.v:359: EXP: This is fooed
-verilog/inc1.v:360: This is fooed
-verilog/inc1.v:361: EXP: This is fooed_2
-verilog/inc1.v:362: This is fooed_2
-verilog/inc1.v:366: np
-verilog/inc1.v:367: np
-verilog/inc1.v:390: hello3hello3hello3
-verilog/inc1.v:391: hello4hello4hello4hello4
-verilog/inc1.v:396: `line 396 "verilog/inc1.v" 0
-verilog/inc1.v:396: `line 1 "verilog/t_preproc_inc4.vh" 1
+verilog/inc1.v:325: `line 325 "verilog/inc1.v" 0
+verilog/inc1.v:325: `line 325 "verilog/inc1.v" 0
+verilog/inc1.v:325: `line 325 "verilog/inc1.v" 0
+verilog/inc1.v:325:  def i 
+verilog/inc1.v:325: `line 325 "verilog/inc1.v" 0
+verilog/inc1.v:339: 1  (nodef)
+verilog/inc1.v:340: 2   (hasdef)
+verilog/inc1.v:341: 3  (nodef)
+verilog/inc1.v:342: 4 
+verilog/inc1.v:342: `line 342 "verilog/inc1.v" 0
+verilog/inc1.v:342:   (nodef)
+verilog/inc1.v:343: 5 also in 
+verilog/inc1.v:343: `line 343 "verilog/inc1.v" 0
+verilog/inc1.v:343:  also3 (nodef)
+verilog/inc1.v:346: HAS a NEW 
+verilog/inc1.v:346: `line 346 "verilog/inc1.v" 0
+verilog/inc1.v:346: LINE
+verilog/inc1.v:366: EXP: clxx_scen
+verilog/inc1.v:367: clxx_scen
+verilog/inc1.v:368: EXP: clxx_scen
+verilog/inc1.v:369: "clxx_scen"
+verilog/inc1.v:371: EXP: do if (start("verilog/inc1.v", 25)) begin message({"Blah-", "clx_scen", " end"}); end while(0);
+verilog/inc1.v:372: `line 372 "verilog/inc1.v" 0
+verilog/inc1.v:372:  do 
+verilog/inc1.v:372: `line 372 "verilog/inc1.v" 0
+verilog/inc1.v:372: `line 372 "verilog/inc1.v" 0
+verilog/inc1.v:372:  while(0);
+verilog/inc1.v:380: `line 380 "verilog/inc1.v" 0
+verilog/inc1.v:380: `line 380 "verilog/inc1.v" 0
+verilog/inc1.v:380: `line 380 "verilog/inc1.v" 0
+verilog/inc1.v:383: EXP: This is fooed
+verilog/inc1.v:384: This is fooed
+verilog/inc1.v:385: EXP: This is fooed_2
+verilog/inc1.v:386: This is fooed_2
+verilog/inc1.v:390: np
+verilog/inc1.v:391: np
+verilog/inc1.v:414: hello3hello3hello3
+verilog/inc1.v:415: hello4hello4hello4hello4
+verilog/inc1.v:420: `line 420 "verilog/inc1.v" 0
+verilog/inc1.v:420: `line 1 "verilog/t_preproc_inc4.vh" 1
 verilog/t_preproc_inc4.vh:2: `line 2 "verilog/t_preproc_inc4.vh" 0
 verilog/t_preproc_inc4.vh:7: `line 7 "verilog/t_preproc_inc4.vh" 2
-verilog/inc1.v:396: `line 396 "verilog/inc1.v" 0
-verilog/inc1.v:405: `line 405 "verilog/inc1.v" 0
-verilog/inc1.v:409: Line_Preproc_Check 409
-verilog/inc1.v:415: Line_Preproc_Check 415
-verilog/inc1.v:417: "FOO \
-verilog/inc1.v:417:   BAR " "arg_line1 \
-verilog/inc1.v:417:   arg_line2" "FOO \
-verilog/inc1.v:417:   BAR "
-verilog/inc1.v:418: `line 418 "verilog/inc1.v" 0
-verilog/inc1.v:418: Line_Preproc_Check 418
-verilog/inc1.v:427: abc
-verilog/inc1.v:435: EXP: sonet_frame
-verilog/inc1.v:436: sonet_frame
-verilog/inc1.v:440: EXP: sonet_frame
-verilog/inc1.v:441: sonet_frame
-verilog/inc1.v:445: EXP: sonet_frame
-verilog/inc1.v:446: sonet_frame
-verilog/inc1.v:451: EXP: module zzz ; endmodule
-verilog/inc1.v:452: module zzz ; endmodule
-verilog/inc1.v:453: module zzz ; endmodule
-verilog/inc1.v:456: EXP: module a_b ; endmodule
-verilog/inc1.v:457: module a_b ; endmodule
-verilog/inc1.v:458: module a_b ; endmodule
-verilog/inc1.v:462: integer foo;
-verilog/inc1.v:464: synth_test:
-verilog/inc1.v:465: `line 465 "verilog/inc1.v" 0
-verilog/inc1.v:468: EXP: on
-verilog/inc1.v:471: module t;
-verilog/inc1.v:478:  initial begin : \`LEX_CAT(a[0],_assignment) 
-verilog/inc1.v:478: `line 478 "verilog/inc1.v" 0
-verilog/inc1.v:478:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\`LEX_CAT(a[0],_assignment) "); end
-verilog/inc1.v:485:  initial begin : \a[0]_assignment_a[1] 
-verilog/inc1.v:485: `line 485 "verilog/inc1.v" 0
-verilog/inc1.v:485:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\a[0]_assignment_a[1] "); end
-verilog/inc1.v:492:  initial begin : \`CAT(pp,suffix) $write("GOT%%m='%m' EXP='%s'\n", "t.\\`CAT(pp,suffix) "); end
-verilog/inc1.v:499:  initial begin : \`CAT(ff,bb) 
-verilog/inc1.v:499: `line 499 "verilog/inc1.v" 0
-verilog/inc1.v:499:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\`CAT(ff,bb) "); end
-verilog/inc1.v:505:  initial begin : \`zzz 
-verilog/inc1.v:505: `line 505 "verilog/inc1.v" 0
-verilog/inc1.v:505:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\`zzz "); end
-verilog/inc1.v:512:  initial begin : \`FOO 
-verilog/inc1.v:512: `line 512 "verilog/inc1.v" 0
-verilog/inc1.v:512:  $write("GOT%%m='%m' OTHER_EXP='%s'\n OUR_EXP='%s'", "t.bar ","t.\\`FOO "); end
-verilog/inc1.v:514:  initial begin : \xx`FOO 
-verilog/inc1.v:514: `line 514 "verilog/inc1.v" 0
-verilog/inc1.v:514:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\xx`FOO "); end
-verilog/inc1.v:519:  initial begin : \`UNKNOWN $write("GOT%%m='%m' EXP='%s'\n", "t.\\`UNKNOWN "); end
-verilog/inc1.v:523:  initial begin : \`DEF_NO_EXPAND $write("GOT%%m='%m' EXP='%s'\n", "t.\\`DEF_NO_EXPAND "); end
-verilog/inc1.v:529:  initial $write("GOT='%s' EXP='%s'\n", "foo bar baz", "foo bar baz");
-verilog/inc1.v:535:  initial $write("GOT='%s' EXP='%s'\n", "foo `A(bar) baz", "foo `A(bar) baz");
-verilog/inc1.v:540:  initial $write("Slashed=`%s'\n", "1//2.3");
-verilog/inc1.v:545:  initial 
-verilog/inc1.v:545: `line 545 "verilog/inc1.v" 0
-verilog/inc1.v:545:  $display("%s%s","a1","b2c3\n");
-verilog/inc1.v:546: endmodule
-verilog/inc1.v:553: $display("RAM0");
-verilog/inc1.v:554: $display("CPU");
-verilog/inc1.v:562: XXE_FAMILY = XXE_
-verilog/inc1.v:565:  $display("XXE_ is defined");
-verilog/inc1.v:569: XYE_FAMILY = XYE_
-verilog/inc1.v:572:  $display("XYE_ is defined");
-verilog/inc1.v:576: XXS_FAMILY = XXS_some
-verilog/inc1.v:579:  $display("XXS_some is defined");
-verilog/inc1.v:583: XYS_FAMILY = XYS_foo
-verilog/inc1.v:586:  $display("XYS_foo is defined");
-verilog/inc1.v:626: (.mySig (myInterface.pa5),
-verilog/inc1.v:632: `dbg_hdl(UVM_LOW, ("Functional coverage enabled: paramgrp"));
-verilog/inc1.v:642: module pcc2_cfg;
-verilog/inc1.v:643:  generate
-verilog/inc1.v:644: `line 644 "verilog/inc1.v" 0
-verilog/inc1.v:644:  covergroup a @(posedge b); 
-verilog/inc1.v:644: `line 644 "verilog/inc1.v" 0
-verilog/inc1.v:644:  c: coverpoint d iff ((c) === 1'b1); endgroup 
-verilog/inc1.v:644: `line 644 "verilog/inc1.v" 0
-verilog/inc1.v:644:  a u_a; 
-verilog/inc1.v:644: `line 644 "verilog/inc1.v" 0
-verilog/inc1.v:644:  initial do begin $display ("DEBUG : %s [%m]", $sformatf ("Functional coverage enabled: u_a")); end while(0);
-verilog/inc1.v:645:  endgenerate
-verilog/inc1.v:646: endmodule
-verilog/inc1.v:651: predef 0 0
-verilog/inc1.v:652: predef 1 1
-verilog/inc1.v:653: predef 2 2
-verilog/inc1.v:654: predef 3 3
-verilog/inc1.v:655: predef 10 10
-verilog/inc1.v:656: predef 11 11
-verilog/inc1.v:657: predef 20 20
-verilog/inc1.v:658: predef 21 21
-verilog/inc1.v:659: predef 22 22
-verilog/inc1.v:660: predef 23 23
-verilog/inc1.v:661: predef -2 -2
-verilog/inc1.v:662: predef -1 -1
-verilog/inc1.v:663: predef 0 0
-verilog/inc1.v:664: predef 1 1
-verilog/inc1.v:665: predef 2 2
-verilog/inc1.v:667: `line 667 "verilog/inc1.v" 2
+verilog/inc1.v:420: `line 420 "verilog/inc1.v" 0
+verilog/inc1.v:429: `line 429 "verilog/inc1.v" 0
+verilog/inc1.v:433: Line_Preproc_Check 433
+verilog/inc1.v:439: Line_Preproc_Check 439
+verilog/inc1.v:441: "FOO \
+verilog/inc1.v:441:   BAR " "arg_line1 \
+verilog/inc1.v:441:   arg_line2" "FOO \
+verilog/inc1.v:441:   BAR "
+verilog/inc1.v:442: `line 442 "verilog/inc1.v" 0
+verilog/inc1.v:442: Line_Preproc_Check 442
+verilog/inc1.v:451: abc
+verilog/inc1.v:459: EXP: sonet_frame
+verilog/inc1.v:460: sonet_frame
+verilog/inc1.v:464: EXP: sonet_frame
+verilog/inc1.v:465: sonet_frame
+verilog/inc1.v:469: EXP: sonet_frame
+verilog/inc1.v:470: sonet_frame
+verilog/inc1.v:475: EXP: module zzz ; endmodule
+verilog/inc1.v:476: module zzz ; endmodule
+verilog/inc1.v:477: module zzz ; endmodule
+verilog/inc1.v:480: EXP: module a_b ; endmodule
+verilog/inc1.v:481: module a_b ; endmodule
+verilog/inc1.v:482: module a_b ; endmodule
+verilog/inc1.v:486: integer foo;
+verilog/inc1.v:488: synth_test:
+verilog/inc1.v:489: `line 489 "verilog/inc1.v" 0
+verilog/inc1.v:492: EXP: on
+verilog/inc1.v:495: module t;
+verilog/inc1.v:502:  initial begin : \`LEX_CAT(a[0],_assignment) 
+verilog/inc1.v:502: `line 502 "verilog/inc1.v" 0
+verilog/inc1.v:502:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\`LEX_CAT(a[0],_assignment) "); end
+verilog/inc1.v:509:  initial begin : \a[0]_assignment_a[1] 
+verilog/inc1.v:509: `line 509 "verilog/inc1.v" 0
+verilog/inc1.v:509:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\a[0]_assignment_a[1] "); end
+verilog/inc1.v:516:  initial begin : \`CAT(pp,suffix) $write("GOT%%m='%m' EXP='%s'\n", "t.\\`CAT(pp,suffix) "); end
+verilog/inc1.v:523:  initial begin : \`CAT(ff,bb) 
+verilog/inc1.v:523: `line 523 "verilog/inc1.v" 0
+verilog/inc1.v:523:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\`CAT(ff,bb) "); end
+verilog/inc1.v:529:  initial begin : \`zzz 
+verilog/inc1.v:529: `line 529 "verilog/inc1.v" 0
+verilog/inc1.v:529:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\`zzz "); end
+verilog/inc1.v:536:  initial begin : \`FOO 
+verilog/inc1.v:536: `line 536 "verilog/inc1.v" 0
+verilog/inc1.v:536:  $write("GOT%%m='%m' OTHER_EXP='%s'\n OUR_EXP='%s'", "t.bar ","t.\\`FOO "); end
+verilog/inc1.v:538:  initial begin : \xx`FOO 
+verilog/inc1.v:538: `line 538 "verilog/inc1.v" 0
+verilog/inc1.v:538:  $write("GOT%%m='%m' EXP='%s'\n", "t.\\xx`FOO "); end
+verilog/inc1.v:543:  initial begin : \`UNKNOWN $write("GOT%%m='%m' EXP='%s'\n", "t.\\`UNKNOWN "); end
+verilog/inc1.v:547:  initial begin : \`DEF_NO_EXPAND $write("GOT%%m='%m' EXP='%s'\n", "t.\\`DEF_NO_EXPAND "); end
+verilog/inc1.v:553:  initial $write("GOT='%s' EXP='%s'\n", "foo bar baz", "foo bar baz");
+verilog/inc1.v:559:  initial $write("GOT='%s' EXP='%s'\n", "foo `A(bar) baz", "foo `A(bar) baz");
+verilog/inc1.v:564:  initial $write("Slashed=`%s'\n", "1//2.3");
+verilog/inc1.v:569:  initial 
+verilog/inc1.v:569: `line 569 "verilog/inc1.v" 0
+verilog/inc1.v:569:  $display("%s%s","a1","b2c3\n");
+verilog/inc1.v:570: endmodule
+verilog/inc1.v:577: $display("RAM0");
+verilog/inc1.v:578: $display("CPU");
+verilog/inc1.v:586: XXE_FAMILY = XXE_
+verilog/inc1.v:589:  $display("XXE_ is defined");
+verilog/inc1.v:593: XYE_FAMILY = XYE_
+verilog/inc1.v:596:  $display("XYE_ is defined");
+verilog/inc1.v:600: XXS_FAMILY = XXS_some
+verilog/inc1.v:603:  $display("XXS_some is defined");
+verilog/inc1.v:607: XYS_FAMILY = XYS_foo
+verilog/inc1.v:610:  $display("XYS_foo is defined");
+verilog/inc1.v:650: (.mySig (myInterface.pa5),
+verilog/inc1.v:656: `dbg_hdl(UVM_LOW, ("Functional coverage enabled: paramgrp"));
+verilog/inc1.v:666: module pcc2_cfg;
+verilog/inc1.v:667:  generate
+verilog/inc1.v:668: `line 668 "verilog/inc1.v" 0
+verilog/inc1.v:668:  covergroup a @(posedge b); 
+verilog/inc1.v:668: `line 668 "verilog/inc1.v" 0
+verilog/inc1.v:668:  c: coverpoint d iff ((c) === 1'b1); endgroup 
+verilog/inc1.v:668: `line 668 "verilog/inc1.v" 0
+verilog/inc1.v:668:  a u_a; 
+verilog/inc1.v:668: `line 668 "verilog/inc1.v" 0
+verilog/inc1.v:668:  initial do begin $display ("DEBUG : %s [%m]", $sformatf ("Functional coverage enabled: u_a")); end while(0);
+verilog/inc1.v:669:  endgenerate
+verilog/inc1.v:670: endmodule
+verilog/inc1.v:675: predef 0 0
+verilog/inc1.v:676: predef 1 1
+verilog/inc1.v:677: predef 2 2
+verilog/inc1.v:678: predef 3 3
+verilog/inc1.v:679: predef 10 10
+verilog/inc1.v:680: predef 11 11
+verilog/inc1.v:681: predef 20 20
+verilog/inc1.v:682: predef 21 21
+verilog/inc1.v:683: predef 22 22
+verilog/inc1.v:684: predef 23 23
+verilog/inc1.v:685: predef -2 -2
+verilog/inc1.v:686: predef -1 -1
+verilog/inc1.v:687: predef 0 0
+verilog/inc1.v:688: predef 1 1
+verilog/inc1.v:689: predef 2 2
+verilog/inc1.v:691: `line 691 "verilog/inc1.v" 2

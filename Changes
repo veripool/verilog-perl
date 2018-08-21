@@ -5,6 +5,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.453 devel
 
+****    Support parsing around Cadence protected meta-comments.
+
 ****    Fix define argument stringification (`"), broke since 3.446. [Joe DErrico]
 
 ****    Fix to ignore Unicode UTF-8 BOM sequences, msg2576. [HyungKi Jeong]

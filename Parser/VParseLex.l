@@ -602,6 +602,8 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 <PROTMODE>\n		{ if (LPARSEP->useProtected()) yymore(); NEXTLINE(); }
 <PROTMODE>"`endprotected"				{ FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); }
 <PROTMODE>"`pragma"{ws}+"protect"{ws}+"end_protected"	{ FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); }
+<PROTMODE>"//"{ws}*"pragma"{ws}+"protect"{ws}+"end_protected"  {
+                          FL; VALTEXT; CALLBACK(preprocCb); yy_pop_state(); }
 <PROTMODE>. 		{ if (LPARSEP->useProtected()) yymore(); }
 <PROTMODE>{word}	{ if (LPARSEP->useProtected()) yymore(); }
 <PROTMODE><<EOF>>	{ yyerrorf("EOF in `protected");
@@ -679,6 +681,8 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   "`"[a-zA-Z_0-9]+	{ FL; VALTEXT;
 			  if (LPARSEP->sigParser()) { yyerrorf("Define or directive not defined: %s",yytext); }
 			  else { CALLBACK(preprocCb); } }
+  "//"{ws}*"pragma"{ws}+"protect"{ws}+"begin_protected"   {
+                          FL; CALLBACK(preprocCb); yy_push_state(PROTMODE); }
   "//"[^\n]*		{ FL; VALTEXT; CALLBACK(commentCb); }  /* throw away single line comments */
   "/*"		       	{ FL; yy_push_state(CMTMODE); yymore(); }  /* FL; marks start for COMMENT callback */
   .			{ FL; VALTEXT; CALLBACK(operatorCb); return ygenOPERATOR; } /* return single char ops. */

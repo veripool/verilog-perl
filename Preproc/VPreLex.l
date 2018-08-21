@@ -167,11 +167,13 @@ prag_trans_on	({ws}*{pragma_tools}{ws}+{translate_on}{ws}*)
 	/* Protected blocks */
 <INITIAL>"`protected"						{ yy_push_state(PRTMODE); yymore(); }
 <INITIAL>"`pragma"{wsn}+"protect"{wsn}+"begin_protected"	{ yy_push_state(PRTMODE); yymore(); }
+<INITIAL>"//"{ws}*"pragma"{ws}+"protect"{ws}+"begin_protected"  { yy_push_state(PRTMODE); yymore(); }
 <PRTMODE><<EOF>>	{ linenoInc(); yyerrorf("EOF in `protected"); yyleng=0; yyterminate(); }
 <PRTMODE>{crnl}		{ linenoInc(); return VP_TEXT; }
 <PRTMODE>.	 	{ yymore(); }
 <PRTMODE>"`endprotected" 				{ yy_pop_state(); return VP_TEXT; }
 <PRTMODE>"`pragma"{wsn}+"protect"{wsn}+"end_protected"	{ yy_pop_state(); return VP_TEXT; }
+<PRTMODE>"//"{ws}*"pragma"{ws}+"protect"{ws}+"end_protected"  { yy_pop_state(); return VP_TEXT; }
 
 	/* Pass-through include <> filenames */
 <INCMODE><<EOF>>	{ linenoInc(); yyerrorf("EOF in unterminated include filename"); yyleng=0; yyterminate(); }

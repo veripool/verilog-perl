@@ -325,6 +325,30 @@ verilog/inc1.v: `pragma protect end_protected
 verilog/inc1.v: `pragma reset protect
 verilog/inc1.v: endmodule
 verilog/inc1.v: 
+verilog/inc1.v: module prot3();
+verilog/inc1.v: //pragma protect begin_protected
+verilog/inc1.v: //pragma protect key_keyowner=Cadence Design Systems.
+verilog/inc1.v: //pragma protect key_keyname=CDS_KEY
+verilog/inc1.v: //pragma protect key_method=RC5
+verilog/inc1.v: //pragma protect key_block
+verilog/inc1.v: zzZzZ/4ZzzZZZzzz4zZzZzZZZZzZzZ/Zz+33zZ2zz/zzzzzzzzZZZzZ4z+ZZZZz1
+verilog/inc1.v: Z1ZzzzZZzZZzz9ZZZZ37zzZzZzZzzz9ZZzzZzZz9Zz64+z8Z7ZzZZZzzzzZZZzZz
+verilog/inc1.v: zzZzZZZzZ0463zzzzzZzZ6z00z4zZzzZZzzZzzzZZ8zzz09ZzZZZZZ==
+verilog/inc1.v: //pragma protect end_key_block
+verilog/inc1.v: //pragma protect digest_block
+verilog/inc1.v: ZzZZzzZ9ZZZZz2ZzzzZz/Zzzz8Z=
+verilog/inc1.v: //pragma protect end_digest_block
+verilog/inc1.v: //pragma protect data_block
+verilog/inc1.v: ZZZ8zZzz6ZZ/zZZ5zZZzzz3ZzzzZzZZZ6ZzZzZZZZZz1zzZZZZ7ZZZZz3Zzz+9zz
+verilog/inc1.v: 4zzz+8zZzzzzZzZZzzzZzz1Z7ZzZz+zZz8ZZZZzZ6ZzzZzZZzzZZzzZzzZzZzZzZ
+verilog/inc1.v: ZzzzzZ0zZz1ZzzZzzZzZzz==
+verilog/inc1.v: //pragma protect end_data_block
+verilog/inc1.v: //pragma protect digest_block
+verilog/inc1.v: Z4Z6zZzZ3Z7ZZ6zzZZZZzzzzZZZ=
+verilog/inc1.v: //pragma protect end_digest_block
+verilog/inc1.v: //pragma protect end_protected
+verilog/inc1.v: endmodule
+verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // macro call with define that has comma
 verilog/inc1.v:  
@@ -381,7 +405,7 @@ verilog/inc1.v:
 verilog/inc1.v:  
 verilog/inc1.v:    
 verilog/inc1.v: 
-verilog/inc1.v: Line_Preproc_Check 221
+verilog/inc1.v: Line_Preproc_Check 245
 verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // bug84
@@ -394,7 +418,7 @@ verilog/inc1.v: //Here
 verilog/inc1.v: 
 verilog/inc1.v: //Too
 verilog/inc1.v: (x,y)
-verilog/inc1.v: Line_Preproc_Check 234
+verilog/inc1.v: Line_Preproc_Check 258
 verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // defines split arguments
@@ -531,7 +555,7 @@ verilog/inc1.v:       /* synopsys translate_off */
 verilog/inc1.v:   
 verilog/inc1.v:     
 verilog/inc1.v:  
-verilog/inc1.v:       if (start("verilog/inc1.v", 348)) begin 
+verilog/inc1.v:       if (start("verilog/inc1.v", 372)) begin 
 verilog/inc1.v:  
 verilog/inc1.v: 	 message({"Blah-", "clx_scen", " end"}); 
 verilog/inc1.v:       end 
@@ -607,18 +631,18 @@ verilog/inc1.v:
 verilog/inc1.v:      
 verilog/inc1.v:      
 verilog/inc1.v:      
-verilog/inc1.v: Line_Preproc_Check 409
+verilog/inc1.v: Line_Preproc_Check 433
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // Quoted multiline - track line numbers, and insure \\n gets propagated
 verilog/inc1.v:  
 verilog/inc1.v: 
 verilog/inc1.v:  
-verilog/inc1.v: Line_Preproc_Check 415
+verilog/inc1.v: Line_Preproc_Check 439
 verilog/inc1.v: "FOO \
 verilog/inc1.v:   BAR " "arg_line1 \
 verilog/inc1.v:   arg_line2" "FOO \
 verilog/inc1.v:   BAR "
-verilog/inc1.v: Line_Preproc_Check 418
+verilog/inc1.v: Line_Preproc_Check 442
 verilog/inc1.v: //======================================================================
 verilog/inc1.v: // bug283
 verilog/inc1.v: 
