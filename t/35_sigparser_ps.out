@@ -561,6 +561,11 @@ verilog/parser_bugs.v:526: MODULE  'module' 'prot2' undef '0'
 verilog/parser_bugs.v:540: ENDMODULE  'endmodule'
 verilog/parser_bugs.v:542: MODULE  'module' 'prot3' undef '0'
 verilog/parser_bugs.v:564: ENDMODULE  'endmodule'
+verilog/parser_bugs.v:566: MODULE  'module' 'bug1340' undef '0'
+verilog/parser_bugs.v:567: VAR  'parameter' 'B' 'module' '' '' '' '8
+                'b
+                1'
+verilog/parser_bugs.v:572: ENDMODULE  'endmodule'
 verilog/pinorder.v:001: COMMENT  '// DESCRIPTION: Verilog-Perl: Example Verilog for testing package'
 verilog/pinorder.v:002: COMMENT  '//'
 verilog/pinorder.v:003: COMMENT  '// This file ONLY is placed into the Public Domain, for any use,'

@@ -562,3 +562,11 @@ Z4Z6zZzZ3Z7ZZ6zzZZZZzzzzZZZ=
 //pragma protect end_digest_block
 //pragma protect end_protected
 endmodule
+
+module bug1340;
+    parameter B=
+                8
+                'b
+                1
+		;
+endmodule

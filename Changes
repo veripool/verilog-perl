@@ -3,6 +3,12 @@ Revision history for Perl extension Verilog::Language.
 The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
+
+* Verilog::Language 3.455 devel
+
+****    Fix number parsing with newline after radix, bug1340. [George Cuan]
+
+
 * Verilog::Language 3.454 2018-08-21
 
 ****    Support parsing around Cadence protected meta-comments.
