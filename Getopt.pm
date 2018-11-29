@@ -83,7 +83,7 @@ sub parameter_file {
 	chomp $line;
 	$line =~ s/\/\/.*$//;
 	next if $line =~ /^\s*$/;
-	$self->fileline ("$filename:$.");
+	$self->fileline("$filename:$.");
 	my @p = (split /\s+/,"$line ");
 	$self->_parameter_parse($optdir, @p);
     }
@@ -156,16 +156,16 @@ sub _parameter_parse {
 	    my $pn = $self->{_parameter_next};
 	    $self->{_parameter_next} = undef;
 	    if ($pn eq '-F') {
-		$self->parameter_file ($self->_parse_file_arg($optdir,$param), 1);
+		$self->parameter_file($self->_parse_file_arg($optdir,$param), 1);
 	    }
 	    elsif ($pn eq '-f') {
-		$self->parameter_file ($self->_parse_file_arg($optdir,$param), 0);
+		$self->parameter_file($self->_parse_file_arg($optdir,$param), 0);
 	    }
 	    elsif ($pn eq '-v') {
-		$self->library ($self->_parse_file_arg($optdir,$param));
+		$self->library($self->_parse_file_arg($optdir,$param));
 	    }
 	    elsif ($pn eq '-y') {
-		$self->module_dir ($self->_parse_file_arg($optdir,$param));
+		$self->module_dir($self->_parse_file_arg($optdir,$param));
 	    }
 	    else {
 		die "%Error: ".$self->fileline().": Bad internal next param ".$pn;
@@ -607,7 +607,7 @@ Verilog::Getopt - Get Verilog command line options
   my $opt = new Verilog::Getopt;
   $opt->parameter (qw( +incdir+standard_include_directory ));
 
-  @ARGV = $opt->parameter (@ARGV);
+  @ARGV = $opt->parameter(@ARGV);
   ...
   print "Path to foo.v is ", $opt->file_path('foo.v');
 
@@ -648,20 +648,20 @@ Disable parsing of VCS-like parameters.
 
 Create a new Getopt.  See OPTIONS above.
 
-=item $self->file_path ( I<filename>, [I<lookup_type>] )
+=item $self->file_path(I<filename>, [I<lookup_type>])
 
 Returns a new path to the filename, using the library directories and
 search paths to resolve the file.  Optional lookup_type is 'module',
 'include', or 'all', to use only module_dirs, incdirs, or both for the
 lookup.
 
-=item $self->get_parameters ( )
+=item $self->get_parameters()
 
 Returns a list of parameters that when passed through $self->parameter()
 should result in the same state.  Often this is used to form command lines
 for downstream programs that also use Verilog::Getopt.
 
-=item $self->parameter ( \@params )
+=item $self->parameter(\@params)
 
 Parses any recognized parameters in the referenced array, removing the
 standard parameters from any previous parameters() call, and returning a
@@ -692,7 +692,7 @@ functions that are called:
     -f I<file>		Parse parameters in file
     all others		Put in returned list
 
-=item $self->write_parameters_file ( I<filename> )
+=item $self->write_parameters_file(I<filename>)
 
 Write the output from get_parameters to the specified file.
 
@@ -702,7 +702,7 @@ Write the output from get_parameters to the specified file.
 
 =over 4
 
-=item $self->define ( $token, $value )
+=item $self->define($token, $value)
 
 This method is called when a define is recognized.  The default behavior
 loads a hash that is used to fulfill define references.  This function may
@@ -716,73 +716,73 @@ should not be removed by `undefineall.
 
 Return sorted list of all define names that currently exist.
 
-=item $self->defparams ( $token )
+=item $self->defparams($token)
 
 This method returns the parameter list of the define.  This will be defined,
 but false, if the define does not have arguments.
 
-=item $self->defvalue ( $token )
+=item $self->defvalue($token)
 
 This method returns the value of a given define, or prints a warning.
 
-=item $self->defvalue_nowarn ( $token )
+=item $self->defvalue_nowarn($token)
 
 This method returns the value of a given define, or undef.
 
-=item $self->depend_files ()
+=item $self->depend_files()
 
 Returns reference to list of filenames referenced with file_path, useful
 for creating dependency lists.  With argument, adds that file.  With list
 reference argument, sets the list to the argument.
 
-=item $self->file_abs ( $filename )
+=item $self->file_abs($filename)
 
 Using the incdir and libext lists, convert the specified module or filename
 ("foo") to a absolute filename ("include/dir/foo.v").
 
-=item $self->file_skip_special ( $filename )
+=item $self->file_skip_special($filename)
 
 Return true if the filename is one that generally should be ignored when
 recursing directories, such as for example, ".", "CVS", and ".svn".
 
-=item $self->file_substitute ( $filename )
+=item $self->file_substitute($filename)
 
 Removes existing environment variables from the provided filename.  Any
 undefined variables are not substituted nor cause errors.
 
-=item $self->incdir ()
+=item $self->incdir
 
 Returns reference to list of include directories.  With argument, adds that
 directory.
 
-=item $self->libext ()
+=item $self->libext
 
 Returns reference to list of library extensions.  With argument, adds that
 extension.
 
-=item $self->libext_matches (I<filename>)
+=item $self->libext_matches(I<filename>)
 
 Returns true if the passed filename matches the libext.
 
-=item $self->library ()
+=item $self->library
 
 Returns reference to list of libraries.  With argument, adds that library.
 
-=item $self->module_dir ()
+=item $self->module_dir
 
 Returns reference to list of module directories.  With argument, adds that
 directory.
 
-=item $self->remove_defines ( $token )
+=item $self->remove_defines($token)
 
 Return string with any definitions in the token removed.
 
-=item $self->undef ( $token )
+=item $self->undef($token)
 
 Deletes a hash element that is used to fulfill define references.  This
 function may also be called outside parsing to erase a predefined value.
 
-=item $self->undefineall ()
+=item $self->undefineall
 
 Deletes all non-command line definitions, for implementing `undefineall.
 

@@ -61,7 +61,7 @@ public:
     /// Return type of current lookup
     VAstType curType() { return m_currentSymp->type(); }
 
-    void showUpward () {
+    void showUpward() {
 	cout<<"SymTable Stack:\n";
 	for (SymStack::reverse_iterator it=m_sympStack.rbegin(); it!=m_sympStack.rend(); ++it) {
 	    VAstEnt* symp = *it;
@@ -75,7 +75,7 @@ public:
 
     /// Lookup the given string as an identifier, return type of the id
     // This recurses upwards if not found; for flat lookup use symp->findSym
-    VAstEnt* findEntUpward (const string& name) {
+    VAstEnt* findEntUpward(const string& name) {
 	for (VAstEnt* symp=currentSymp(); symp; symp=symp->parentp()) {
 	    if (VAstEnt* subp = symp->findSym(name)) {
 		return subp;
@@ -83,7 +83,7 @@ public:
 	}
 	return NULL;
     }
-    VAstType findTypeUpward (const string& name) {
+    VAstType findTypeUpward(const string& name) {
 	if (VAstEnt* subp = findEntUpward(name)) {
 	    return subp->type();
 	} else {
@@ -118,7 +118,7 @@ public:
 
     /// Import from package::id_or_star to this
     void import(VFileLine* fl, const string& pkg, const string& id_or_star) {
-	import (fl, pkg, findEntUpward(pkg), id_or_star);
+	import(fl, pkg, findEntUpward(pkg), id_or_star);
     }
     void import(VFileLine* fl, const string& pkg, VAstEnt* entp, const string& id_or_star) {
 	if (!entp) {  // Internal problem, because we earlier found pkg to label it an ID__aPACKAGE

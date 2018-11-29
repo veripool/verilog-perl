@@ -8,7 +8,7 @@ use File::Path;
 use Carp;
 use strict;
 
-use vars qw ($VERSION $Debug);
+use vars qw($VERSION $Debug);
 
 ######################################################################
 #### Configuration Section
@@ -175,7 +175,7 @@ sub write_files {
     foreach my $file (sort (keys %{$self->{_files}})) {
 	my $fileref = $self->{_files}{$file};
 	next if !$fileref->{created};
-	$self->_write_file ($self->{outdir}."/".$fileref->{modname}.$self->{v_suffix}, $fileref);
+	$self->_write_file($self->{outdir}."/".$fileref->{modname}.$self->{v_suffix}, $fileref);
     }
 }
 
@@ -346,7 +346,7 @@ If true, print what files are being read and written.
 
 =back
 
-=item $self->read_and_split ([filenames])
+=item $self->read_and_split([filenames])
 
 Read from the specified filenames.
 

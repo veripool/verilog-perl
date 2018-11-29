@@ -518,8 +518,6 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
 
   /* SystemVerilog 2009 Operators */
 <S09,S12,S17>{
-  "#-#"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_POUNDMINUSPD; }
-  "#=#"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_POUNDEQPD; }
   "<->"			{ FL; VALTEXT; CALLBACK(operatorCb); return yP_LTMINUSGT; }
 }
 

@@ -34,7 +34,7 @@ void VFileLine::init(const string& filename, int lineno) {
     m_lineno = lineno;
 }
 
-const string VFileLine::filebasename () const {
+const string VFileLine::filebasename() const {
     string name = filename();
     string::size_type slash;
     if ((slash = name.rfind("/")) != string::npos) {
@@ -51,9 +51,9 @@ void VFileLine::fatal(const string& msg) {
 void VFileLine::error(const string& msg) {
     VFileLine::s_numErrors++;
     if (msg[msg.length()-1] != '\n') {
-	fprintf (stderr, "%%Error: %s", msg.c_str());
+	fprintf(stderr, "%%Error: %s", msg.c_str());
     } else {
-	fprintf (stderr, "%%Error: %s\n", msg.c_str());	// Append newline, as user omitted it.
+	fprintf(stderr, "%%Error: %s\n", msg.c_str());  // Append newline, as user omitted it.
     }
 }
 

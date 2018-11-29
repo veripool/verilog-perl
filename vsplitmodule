@@ -64,7 +64,7 @@ my $split = Verilog::EditFiles->new
 
 # Remove all existing files under the output.  You might not want to do
 # this if there are files you want to keep from there
-unlink (glob("$split->{outdir}/*.v"));
+unlink(glob("$split->{outdir}/*.v"));
 
 # Read specified libraries and split them
 $split->read_and_split(glob("t/*.v"));

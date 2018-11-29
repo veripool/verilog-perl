@@ -15,7 +15,7 @@ use Pod::Usage;
 use Verilog::Netlist;
 use Verilog::Getopt;
 use strict;
-use vars qw ($Debug $VERSION);
+use vars qw($Debug $VERSION);
 
 $VERSION = '3.456';
 
@@ -46,11 +46,11 @@ my $opt_skiplist;
 my @Opt_Skiplist_Names;
 my $Opt_Xml;
 
-Getopt::Long::config ("no_auto_abbrev","pass_through");
-GetOptions ("debug" => \&debug);  # Snarf --debug ASAP, before parse -f files
+Getopt::Long::config("no_auto_abbrev","pass_through");
+GetOptions("debug" => \&debug);  # Snarf --debug ASAP, before parse -f files
 
 @ARGV = $Opt->parameter(@ARGV);
-Getopt::Long::config ("no_auto_abbrev","no_pass_through");
+Getopt::Long::config("no_auto_abbrev","no_pass_through");
 if (! GetOptions (
 		  "help"	=> \&usage,
 		  "debug"	=> \&debug,
@@ -91,14 +91,14 @@ read_skiplist($opt_skiplist) if $opt_skiplist;
 
 vhier($fh, @opt_files);
 
-exit (0);
+exit(0);
 
 ######################################################################
 
 sub usage {
     print "Version $VERSION\n";
     pod2usage(-verbose=>2, -exitval=>2, -output=>\*STDOUT, -noperldoc=>1);
-    exit (1);
+    exit(1);
 }
 
 sub debug {
@@ -121,12 +121,12 @@ sub vhier {
     my $fh = shift;
     my @files = @_;
 
-    my $nl = new Verilog::Netlist (options => $Opt,
-				   keep_comments => 0,
-				   use_vars => 0,
-				   link_read_nonfatal => !$Opt_Missing,
-				   synthesis => $Opt_Synthesis,
-				   );
+    my $nl = new Verilog::Netlist(options => $Opt,
+				  keep_comments => 0,
+				  use_vars => 0,
+				  link_read_nonfatal => !$Opt_Missing,
+				  synthesis => $Opt_Synthesis,
+				  );
 
     $fh->print("<vhier>\n") if $Opt_Xml;
 
@@ -144,7 +144,7 @@ sub vhier {
     }
     foreach my $file (@files) {
 	print "   Reading $file\n" if $Debug;
-	$nl->read_file (filename=>$file);
+	$nl->read_file(filename=>$file);
     }
     # Read in any sub-modules
     $nl->link();
@@ -174,7 +174,7 @@ sub vhier {
 	foreach my $mod ($nl->modules_sorted) {
 	    if ($mod->is_top) {
 		my %recursing;
-		show_hier ($fh, \%recursing, $mod, undef, "  ", $mod->name);
+		show_hier($fh, \%recursing, $mod, undef, "  ", $mod->name);
 	    }
 	}
 	$fh->print(" </cells>\n") if $Opt_Xml;
@@ -282,7 +282,7 @@ sub _mod_mark_recurse {
     return if $marked->{$mod->name}++;
     foreach my $cell ($mod->cells_sorted) {
 	if ($cell->submod) {
-	    _mod_mark_recurse ($nl, $cell->submod, $marked);
+	    _mod_mark_recurse($nl, $cell->submod, $marked);
 	}
     }
 }
@@ -300,7 +300,7 @@ sub _mod_files_recurse {
     }
     foreach my $cell ($mod->cells_sorted) {
 	if ($cell->submod) {
-	    _mod_files_recurse ($cell->submod, $level+1, $recursing);
+	    _mod_files_recurse($cell->submod, $level+1, $recursing);
 	}
     }
     --$recursing->{$name};
@@ -365,7 +365,7 @@ sub show_hier {
             } else {
                 $suffix = "  "; # simple indenting with spaces
             }
-            show_hier ($fh, $recursing, $cell->submod, $cell, $indent.$suffix, $hier.".".$cell->name);
+            show_hier($fh, $recursing, $cell->submod, $cell, $indent.$suffix, $hier.".".$cell->name);
             $i++;
         }
     }

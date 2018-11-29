@@ -9,7 +9,7 @@ use Verilog::Language;
 use Carp;
 use strict;
 
-use vars qw ($VERSION);
+use vars qw($VERSION);
 
 ######################################################################
 #### Configuration Section
@@ -108,7 +108,7 @@ SystemVerilog standard.
 
 =over 4
 
-=item std ({I<standard>})
+=item std({I<standard>})
 
 Return the definition of the std package.  Optionally pass the language
 standard, defaulting to what Verilog::Language::language_standard returns if

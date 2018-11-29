@@ -172,18 +172,18 @@ sub new_net {
 	$data_type = "[".($params{msb});
 	$data_type .= ":".($params{lsb}) if defined $params{lsb};
 	$data_type .= "]";
-	$netref = new Verilog::Netlist::Net (decl_type=>'net',
-					     net_type => 'wire',
-					     data_type => $data_type,
-					     %params,
-					     module => $self);
+	$netref = new Verilog::Netlist::Net(decl_type=>'net',
+					    net_type => 'wire',
+					    data_type => $data_type,
+					    %params,
+					    module => $self);
     } else {
-	$netref = new Verilog::Netlist::Net (decl_type => 'net',
-					     net_type => 'wire',
-					     %params,
-					     module => $self);
+	$netref = new Verilog::Netlist::Net(decl_type => 'net',
+					    net_type => 'wire',
+					    %params,
+					    module => $self);
     }
-    $self->_nets ($netref->name(), $netref);
+    $self->_nets($netref->name(), $netref);
     return $netref;
 }
 
@@ -197,8 +197,8 @@ sub new_port {
     my $self = shift;
     # @_ params
     # Create a new port under this module
-    my $portref = new Verilog::Netlist::Port (@_, module=>$self,);
-    $self->_ports ($portref->name(), $portref);
+    my $portref = new Verilog::Netlist::Port(@_, module=>$self,);
+    $self->_ports($portref->name(), $portref);
     return $portref;
 }
 

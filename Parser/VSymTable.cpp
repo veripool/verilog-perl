@@ -116,7 +116,7 @@ void VSymStack::selftest() {
     VFileLine* fl = flt.create(__FILE__,__LINE__);
 
     AV* topavp = newAV();
-    VSymStack stack (fl, topavp);
+    VSymStack stack(fl, topavp);
     //
     DBG_UINFO(9,"=============\n");
     assert(stack.objofUpward() == "netlist");

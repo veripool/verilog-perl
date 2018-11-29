@@ -57,7 +57,7 @@ sub new {
 	}
 	delete $params{pinselects};
     }
-    return $class->_new_base (%params);
+    return $class->_new_base(%params);
 }
 
 sub delete {
@@ -188,7 +188,7 @@ sub type_match {
 sub lint {
     my $self = shift;
     if (!$self->port && $self->submod) {
-        $self->error ($self,"Port not found in ",$self->submod->keyword," ",$self->submod->name,": ",$self->portname,"\n");
+        $self->error($self,"Port not found in ",$self->submod->keyword," ",$self->submod->name,": ",$self->portname,"\n");
     }
     if ($self->port && $self->nets) {
 	if (!$self->type_match) {
@@ -281,7 +281,7 @@ Verilog::Netlist::Pin - Pin on a Verilog Cell
   use Verilog::Netlist;
 
   ...
-  my $pin = $cell->find_pin ('pinname');
+  my $pin = $cell->find_pin('pinname');
   print $pin->name;
 
 =head1 DESCRIPTION

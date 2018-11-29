@@ -276,7 +276,7 @@ sub resolve_filename {
     if (!-r $filename || -d $filename) {
 	return undef;
     }
-    $self->dependency_in ($filename);
+    $self->dependency_in($filename);
     return $filename;
 }
 
@@ -290,7 +290,7 @@ sub new_file {
 	 @_);
     defined $fileref->name or carp "%Error: No name=> specified, stopped";
     $self->{_files}{$fileref->name} = $fileref;
-    $fileref->basename (Verilog::Netlist::Module::modulename_from_filename($fileref->name));
+    $fileref->basename(Verilog::Netlist::Module::modulename_from_filename($fileref->name));
     push @{$self->{_need_link}}, $fileref;
     return $fileref;
 }
@@ -391,9 +391,9 @@ Verilog::Netlist - Verilog Netlist
 		     );
 
     # Prepare netlist
-    my $nl = new Verilog::Netlist (options => $opt,);
+    my $nl = new Verilog::Netlist(options => $opt,);
     foreach my $file ('testnetlist.v') {
-	$nl->read_file (filename=>$file);
+	$nl->read_file(filename=>$file);
     }
     # Read in any sub-modules
     $nl->link();
@@ -401,7 +401,7 @@ Verilog::Netlist - Verilog Netlist
     $nl->exit_if_error();
 
     foreach my $mod ($nl->top_modules_sorted) {
-	show_hier ($mod, "  ", "", "");
+	show_hier($mod, "  ", "", "");
     }
 
     sub show_hier {
@@ -411,16 +411,16 @@ Verilog::Netlist - Verilog Netlist
 	my $cellname = shift;
 	if (!$cellname) {$hier = $mod->name;} #top modules get the design name
 	else {$hier .= ".$cellname";} #append the cellname
-	printf ("%-45s %s\n", $indent."Module ".$mod->name,$hier);
+	printf("%-45s %s\n", $indent."Module ".$mod->name,$hier);
 	foreach my $sig ($mod->ports_sorted) {
-	    printf ($indent."	  %sput %s\n", $sig->direction, $sig->name);
+	    printf($indent."	  %sput %s\n", $sig->direction, $sig->name);
 	}
 	foreach my $cell ($mod->cells_sorted) {
-	    printf ($indent. "    Cell %s\n", $cell->name);
+	    printf($indent. "    Cell %s\n", $cell->name);
 	    foreach my $pin ($cell->pins_sorted) {
-		printf ($indent."     .%s(%s)\n", $pin->name, $pin->netname);
+		printf($indent."     .%s(%s)\n", $pin->name, $pin->netname);
 	    }
-	    show_hier ($cell->submod, $indent."	 ", $hier, $cell->name) if $cell->submod;
+	    show_hier($cell->submod, $indent."	 ", $hier, $cell->name) if $cell->submod;
 	}
     }
 
@@ -448,7 +448,7 @@ to a net in the module doing the instantiation.
 
 Each of these types, files, modules, ports, nets, cells and pins have a
 class.  For example Verilog::Netlist::Cell has the list of
-Verilog::Netlist::Pin (s) that interconnect that cell.
+Verilog::Netlist::Pin(s) that interconnect that cell.
 
 =head1 FUNCTIONS
 
@@ -621,7 +621,7 @@ modules which have no children and are not unused library cells.
 
 Writes a dependency file for make, listing all input and output files.
 
-=item $netlist->defvalue_nowarn (I<define>)
+=item $netlist->defvalue_nowarn(I<define>)
 
 Return the value of the specified define or undef.
 
@@ -661,18 +661,18 @@ Generally called as $netlist->read_file.  Pass a hash of parameters.  Reads
 the filename=> parameter, parsing all instantiations, ports, and signals,
 and creating Verilog::Netlist::Module structures.
 
-=item $netlist->read_libraries ()
+=item $netlist->read_libraries()
 
 Read any libraries specified in the options=> argument passed with the
 netlist constructor.  Automatically invoked when netlist linking results in
 a module that wasn't found, and thus might be inside the libraries.
 
-=item $netlist->remove_defines (I<string>)
+=item $netlist->remove_defines(I<string>)
 
 Expand any `defines in the string and return the results.  Undefined
 defines will remain in the returned string.
 
-=item $netlist->resolve_filename (I<string>, [I<lookup_type>])
+=item $netlist->resolve_filename(I<string>, [I<lookup_type>])
 
 Convert a module name to a filename.  Optional lookup_type is 'module',
 'include', or 'all', to use only module_dirs, incdirs, or both for the

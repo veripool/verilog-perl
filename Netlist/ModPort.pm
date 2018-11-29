@@ -109,10 +109,10 @@ sub new_net {
     my $self = shift;
     # @_ params
     # Create a new net under this
-    my $netref = new Verilog::Netlist::Net (direction=>'net', data_type=>'wire',
-					    @_,
-					    module=>$self, );
-    $self->_nets ($netref->name(), $netref);
+    my $netref = new Verilog::Netlist::Net(direction=>'net', data_type=>'wire',
+					   @_,
+					   module=>$self, );
+    $self->_nets($netref->name(), $netref);
     return $netref;
 }
 
@@ -120,8 +120,8 @@ sub new_port {
     my $self = shift;
     # @_ params
     # Create a new port under this module
-    my $portref = new Verilog::Netlist::Port (@_, module=>$self,);
-    $self->_ports ($portref->name(), $portref);
+    my $portref = new Verilog::Netlist::Port(@_, module=>$self,);
+    $self->_ports($portref->name(), $portref);
     return $portref;
 }
 

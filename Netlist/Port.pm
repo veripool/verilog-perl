@@ -40,7 +40,7 @@ sub new {
 	$params{direction} = 'in' if $params{direction} eq 'input';
 	$params{direction} = 'out' if $params{direction} eq 'output';
     }
-    return $class->_new_base (%params);
+    return $class->_new_base(%params);
 }
 
 sub delete {
@@ -65,7 +65,7 @@ sub type {  # Backward compatibility only
 sub _link {
     my $self = shift;
     if (!$self->net) {
-	my $net = $self->module->find_net ($self->name);
+	my $net = $self->module->find_net($self->name);
 	if (!$net) {
 	    my $msb;
 	    my $lsb;
@@ -84,7 +84,7 @@ sub _link {
 	    $net->attributes($self->attributes);  # Copy attributes across
 	}
 	if ($net && $net->port && $net->port != $self) {
-	    $self->error ("Port redeclares existing port: ",$self->name,"\n");
+	    $self->error("Port redeclares existing port: ",$self->name,"\n");
 	}
 	$self->net($net);
 	$self->net->port($self);
@@ -124,7 +124,7 @@ Verilog::Netlist::Port - Port for a Verilog Module
   use Verilog::Netlist;
 
   ...
-  my $port = $module->find_port ('pinname');
+  my $port = $module->find_port('pinname');
   print $port->name;
 
 =head1 DESCRIPTION

@@ -53,17 +53,17 @@ public:
     virtual void init(const string& filename, int lineno);
     virtual ~VFileLine() {}
     // ACCESSORS
-    int lineno () const { return m_lineno; }	///< Return line number
-    void linenoIncInPlace() { m_lineno++; }	///< Increment line IN PLACE; normally use create() instead
-    const string filename () const { return m_filename; }	///< Return filename
-    const string filebasename () const;	///< Filename with any directory stripped
+    int lineno() const { return m_lineno; }  ///< Return line number
+    void linenoIncInPlace() { m_lineno++; }  ///< Increment line IN PLACE; normally use create() instead
+    const string filename() const { return m_filename; }  ///< Return filename
+    const string filebasename() const;  ///< Filename with any directory stripped
     string lineDirectiveStrg(int enter_exit_level) const;
     // METHODS
-    virtual void fatal(const string& msg);	///< Report a fatal error at given location
-    virtual void error(const string& msg);	///< Report a error at given location
+    virtual void fatal(const string& msg);  ///< Report a fatal error at given location
+    virtual void error(const string& msg);  ///< Report a error at given location
     VFileLine* lineDirective(const char* textp, int& enterExitRef);
     // STATIC METHODS
-    static int numErrors() {return s_numErrors;}	///< Return total errors detected
+    static int numErrors() { return s_numErrors; }  ///< Return total errors detected
 
     // Internal methods -- special use
     static const char* itoa(int i);	///< Internal: Not reentrant! - for fatalSrc() only
@@ -73,7 +73,7 @@ ostream& operator<<(ostream& os, VFileLine* fileline);
 /// Use this instead of fatal() to mention the source code line.
 #define fatalSrc(msg) fatal((string)"Internal Error: "+__FILE__+":"+VFileLine::itoa(__LINE__)+": "+(msg))
 
-template< class T> std::string cvtToStr (const T& t) {
+template< class T> std::string cvtToStr(const T& t) {
     ostringstream os; os<<t; return os.str();
 }
 

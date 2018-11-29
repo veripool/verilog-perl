@@ -152,7 +152,7 @@ string VPreProcXs::defSubstitute(string subs) {
     return outStr;
 }
 
-void VPreProcXs::call (
+void VPreProcXs::call(
     string* rtnStrp,	/* If non-null, load return value here */
     int params,		/* Number of parameters.  Negative frees the parameters */
     const char* method,	/* Name of method to call */
@@ -173,7 +173,7 @@ void VPreProcXs::call (
 	    char* text = va_arg(ap, char *);
 	    SV* sv;
 	    if (text) {
-		sv = sv_2mortal(newSVpv (text, 0));
+		sv = sv_2mortal(newSVpv(text, 0));
 	    } else {
 		sv = &PL_sv_undef;
 	    }
@@ -183,7 +183,7 @@ void VPreProcXs::call (
 	PUTBACK;			/* make local stack pointer global */
 
 	if (rtnStrp) {
-	    int rtnCount = perl_call_method ((char*)method, G_SCALAR);
+	    int rtnCount = perl_call_method((char*)method, G_SCALAR);
 	    SPAGAIN;			/* refresh stack pointer */
 	    if (rtnCount > 0) {
 		SV* sv = POPs;
@@ -196,7 +196,7 @@ void VPreProcXs::call (
 	    }
 	    PUTBACK;
 	} else {
-	    perl_call_method ((char*)method, G_DISCARD | G_VOID);
+	    perl_call_method((char*)method, G_DISCARD | G_VOID);
 	}
 
 	FREETMPS;			/* free that return value */
@@ -210,10 +210,10 @@ void VPreProcXs::call (
 MODULE = Verilog::Preproc  PACKAGE = Verilog::Preproc
 
 #//**********************************************************************
-#// self->_new (class, keepcmt, keepwhite, linedir, pedantic, synthesis)
+#// self->_new(class, keepcmt, keepwhite, linedir, pedantic, synthesis)
 
 static VPreProcXs *
-VPreProcXs::_new (SELF, keepcmt, keepwhite, linedir, pedantic, synthesis)
+VPreProcXs::_new(SELF, keepcmt, keepwhite, linedir, pedantic, synthesis)
 SV *SELF
 int keepcmt
 int keepwhite
@@ -253,7 +253,7 @@ CODE:
 #// self->debug()
 
 void
-VPreProcXs::_debug (level)
+VPreProcXs::_debug(level)
 int level
 PROTOTYPE: $$
 CODE:
@@ -265,7 +265,7 @@ CODE:
 #// self->lineno()
 
 int
-VPreProcXs::lineno ()
+VPreProcXs::lineno()
 PROTOTYPE: $
 CODE:
 {
@@ -278,7 +278,7 @@ OUTPUT: RETVAL
 #// self->filename()
 
 SV*
-VPreProcXs::filename ()
+VPreProcXs::filename()
 PROTOTYPE: $
 CODE:
 {
@@ -292,7 +292,7 @@ OUTPUT: RETVAL
 #// self->unreadback()
 
 void
-VPreProcXs::unreadback (text)
+VPreProcXs::unreadback(text)
 char* text
 PROTOTYPE: $$
 CODE:
@@ -305,7 +305,7 @@ CODE:
 #// self->getall()
 
 SV*
-VPreProcXs::getall (approx_chunk=0)
+VPreProcXs::getall(approx_chunk=0)
 size_t approx_chunk
 PROTOTYPE: $;$
 CODE:
@@ -323,7 +323,7 @@ OUTPUT: RETVAL
 #// self->getline()
 
 SV*
-VPreProcXs::getline ()
+VPreProcXs::getline()
 PROTOTYPE: $
 CODE:
 {
@@ -340,7 +340,7 @@ OUTPUT: RETVAL
 #// self->eof()
 
 int
-VPreProcXs::eof ()
+VPreProcXs::eof()
 PROTOTYPE: $
 CODE:
 {
@@ -349,10 +349,10 @@ CODE:
 OUTPUT: RETVAL
 
 #//**********************************************************************
-#// self->_open (filename)
+#// self->_open(filename)
 
 int
-VPreProcXs::_open (filename)
+VPreProcXs::_open(filename)
 const char *filename
 PROTOTYPE: $$
 CODE:

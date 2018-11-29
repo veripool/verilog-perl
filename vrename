@@ -18,10 +18,10 @@ use Verilog::Getopt;
 use Verilog::Parser;
 use strict;
 
-use vars qw ($VERSION %Vrename_Dont_Crypt %Vrename_Left_Edge_Define
-	     %Signal_Locs %Signal_Newname %Encrypt
-	     $Debug $Opt_Xref $Opt_Crypt $Opt_Crypt_All $Opt_Write $Opt_Keywords
-	     @Files);
+use vars qw($VERSION %Vrename_Dont_Crypt %Vrename_Left_Edge_Define
+	    %Signal_Locs %Signal_Newname %Encrypt
+	    $Debug $Opt_Xref $Opt_Crypt $Opt_Crypt_All $Opt_Write $Opt_Keywords
+	    @Files);
 
 $VERSION = '3.456';
 
@@ -96,16 +96,16 @@ if (!@Files) { &usage(); }
 
 if ($output_dir eq "" && $Opt_Crypt && $opt_change) {
     print STDERR "You must use -o with -crypt or your uncrypted files will be overwritten.\n";
-    exit (10);
+    exit(10);
 }
 
 if ($opt_read || $opt_change) {
-    changes_read ($opt_change_filename);
+    changes_read($opt_change_filename);
 }
 
 if ($opt_change) {
     foreach my $file_or_dir (@Files) {
-	verilog_change_sig ($file_or_dir);
+	verilog_change_sig($file_or_dir);
     }
 }
 
@@ -116,14 +116,14 @@ if ($opt_list) {
     if ($Opt_Crypt) {
 	changes_crypt();
     }
-    changes_from_loc ();
+    changes_from_loc();
     if ($opt_change_lang) {
 	changes_lang();
     }
-    changes_write ($opt_change_filename);
+    changes_write($opt_change_filename);
 }
 
-exit (0);
+exit(0);
 
 ######################################################################
 
@@ -132,7 +132,7 @@ sub nop{}
 sub usage {
     print "Version: $VERSION\n";
     pod2usage(-verbose=>2, -exitval=>2, -output=>\*STDOUT, -noperldoc=>1);
-    exit (1);
+    exit(1);
 }
 
 sub debug {
@@ -196,13 +196,13 @@ sub changes_crypt {
 
 sub random_string {
     while (1) {
-	my $sig = sprintf ("%c%c%c%c%c%c",
-			   (rand (26)) + ord('a'),
-			   (rand (26)) + ord('a'),
-			   (rand (26)) + ord('a'),
-			   (rand (26)) + ord('a'),
-			   (rand (26)) + ord('a'),
-			   (rand (26)) + ord('a'));
+	my $sig = sprintf("%c%c%c%c%c%c",
+			  (rand(26)) + ord('a'),
+			  (rand(26)) + ord('a'),
+			  (rand(26)) + ord('a'),
+			  (rand(26)) + ord('a'),
+			  (rand(26)) + ord('a'),
+			  (rand(26)) + ord('a'));
 	return $sig if !Verilog::Language::is_keyword($sig);
     }
 }
@@ -406,7 +406,7 @@ sub parse_file {
     }
 
     my $parser = Verilog::Vrename::Reader->new();
-    $parser->parse_file ($filename);
+    $parser->parse_file($filename);
 }
 
 sub verilog_change_sig {
@@ -431,7 +431,7 @@ sub verilog_change_sig {
 
     # If crypting, strip comments
     if ($Encrypt{$filename}) {
-	$filestrg = crypt_string ($filestrg);
+	$filestrg = crypt_string($filestrg);
     }
 
     # Replace any changed signals

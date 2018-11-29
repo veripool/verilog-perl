@@ -69,10 +69,10 @@ public:
 	_MAX
     };
     enum en m_e;
-    inline VAstType () {};
-    inline VAstType (en _e) : m_e(_e) {};
-    explicit inline VAstType (int _e) : m_e(static_cast<en>(_e)) {};
-    operator en () const { return m_e; };
+    inline VAstType() {};
+    inline VAstType(en _e) : m_e(_e) {};
+    explicit inline VAstType(int _e) : m_e(static_cast<en>(_e)) {};
+    operator en() const { return m_e; };
     const char* ascii() const {
 	static const char* names[] = {
 	"NOT_FOUND", "netlist", "error", "unknown",
@@ -108,8 +108,8 @@ private:
     VAstEnt() { assert(0); }	// Not made by users, it's an AV*
     ~VAstEnt() { assert(0); }	// Not made by users, it's an AV*
 
-    av* newAVEnt (VAstType type);
-    static void initAVEnt (struct av* avp, VAstType type, struct av* parentp);
+    av* newAVEnt(VAstType type);
+    static void initAVEnt(struct av* avp, VAstType type, struct av* parentp);
 
     // ACCESSORS
     inline struct av* castAVp() { return (struct av*)(this); }
@@ -138,13 +138,13 @@ public:
 
     // METHODS
     /// Return internal pointer for given name or null
-    VAstEnt* findSym (const string& name);
+    VAstEnt* findSym(const string& name);
 
     /// Find or create a symbol under current entry
-    VAstEnt* findInsert (VAstType type, const string& name);
+    VAstEnt* findInsert(VAstType type, const string& name);
 
     /// Replace or create a symbol entry under current entry
-    VAstEnt* replaceInsert (VAstType type, const string& name);
+    VAstEnt* replaceInsert(VAstType type, const string& name);
 
     /// Insert into current table from another imported package's table
     void import(VAstEnt* fromEntp, const string& id_or_star);

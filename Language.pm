@@ -11,14 +11,14 @@ Verilog::Language - Verilog language utilities
 
   use Verilog::Language;
 
-  $result = Verilog::Language::is_keyword ("wire");  # true
-  $result = Verilog::Language::is_compdirect ("`notundef");  # false
-  $result = Verilog::Language::number_value ("4'b111");  # 8
-  $result = Verilog::Language::number_bits  ("32'h1b");  # 32
-  $result = Verilog::Language::number_signed ("1'sh1");  # 1
-  @vec    = Verilog::Language::split_bus ("[31,5:4]"); # 31, 5, 4
-  @vec    = Verilog::Language::split_bus_nocomma ("[31:29]"); # 31, 30, 29
-  $result = Verilog::Language::strip_comments ("a/*b*/c");  # ac
+  $result = Verilog::Language::is_keyword("wire");  # true
+  $result = Verilog::Language::is_compdirect("`notundef");  # false
+  $result = Verilog::Language::number_value("4'b111");  # 8
+  $result = Verilog::Language::number_bits("32'h1b");  # 32
+  $result = Verilog::Language::number_signed("1'sh1");  # 1
+  @vec    = Verilog::Language::split_bus("[31,5:4]");  # 31, 5, 4
+  @vec    = Verilog::Language::split_bus_nocomma("[31:29]");  # 31, 30, 29
+  $result = Verilog::Language::strip_comments("a/*b*/c");  # ac
 
 =head1 DESCRIPTION
 
@@ -30,28 +30,28 @@ General functions will be added as needed.
 
 =over 4
 
-=item Verilog::Language::is_keyword ($symbol_string)
+=item Verilog::Language::is_keyword($symbol_string)
 
 Return true if the given symbol string is a Verilog reserved keyword.
 Value indicates the language standard as per the `begin_keywords macro,
 '1364-1995', '1364-2001', '1364-2005', '1800-2005', '1800-2009',
 '1800-2012', '1800-2017' or 'VAMS'.
 
-=item Verilog::Language::is_compdirect ($symbol_string)
+=item Verilog::Language::is_compdirect($symbol_string)
 
 Return true if the given symbol string is a Verilog compiler directive.
 
-=item Verilog::Language::is_gateprim ($symbol_string)
+=item Verilog::Language::is_gateprim($symbol_string)
 
 Return true if the given symbol is a built in gate primitive; for example
 "buf", "xor", etc.
 
-=item Verilog::Language::language_keywords ($year)
+=item Verilog::Language::language_keywords($year)
 
 Returns a hash for keywords for given language standard year, where the
 value of the hash is the standard in which it was defined.
 
-=item Verilog::Language::language_standard ($year)
+=item Verilog::Language::language_standard($year)
 
 Sets the language standard to indicate what are keywords.  If undef, all
 standards apply.  The year is indicates the language standard as per the
@@ -63,7 +63,7 @@ standards apply.  The year is indicates the language standard as per the
 Returns the greatest language currently standardized, presently
 '1800-2017'.
 
-=item Verilog::Language::number_bigint ($number_string)
+=item Verilog::Language::number_bigint($number_string)
 
 Return the numeric value of a Verilog value stored as a Math::BigInt, or
 undef if incorrectly formed.  You must 'use Math::BigInt' yourself before
@@ -71,42 +71,42 @@ calling this function.  Note bigints do not have an exact size, so NOT of a
 Math::BigInt may return a different value than verilog.  See also
 number_value and number_bitvector.
 
-=item Verilog::Language::number_bits ($number_string)
+=item Verilog::Language::number_bits($number_string)
 
 Return the number of bits in a value string, or undef if incorrectly
 formed, _or_ not specified.
 
-=item Verilog::Language::number_bitvector ($number_string)
+=item Verilog::Language::number_bitvector($number_string)
 
 Return the numeric value of a Verilog value stored as a Bit::Vector, or
 undef if incorrectly formed.  You must 'use Bit::Vector' yourself before
 calling this function.  The size of the Vector will be that returned by
 number_bits.
 
-=item Verilog::Language::number_signed ($number_string)
+=item Verilog::Language::number_signed($number_string)
 
 Return true if the Verilog value is signed, else undef.
 
-=item Verilog::Language::number_value ($number_string)
+=item Verilog::Language::number_value($number_string)
 
 Return the numeric value of a Verilog value, or undef if incorrectly
 formed.  It ignores any signed Verilog attributes, but is is returned as a
 perl signed integer, so it may fail for over 31 bit values.  See also
 number_bigint and number_bitvector.
 
-=item Verilog::Language::split_bus ($bus)
+=item Verilog::Language::split_bus($bus)
 
 Return a list of expanded arrays.  When passed a string like
 "foo[5:1:2,10:9]", it will return a array with ("foo[5]", "foo[3]", ...).
 It correctly handles connectivity expansion also, so that "x[1:0] = y[3:0]"
 will get intuitive results.
 
-=item Verilog::Language::split_bus_nocomma ($bus)
+=item Verilog::Language::split_bus_nocomma($bus)
 
 As with split_bus, but faster.  Only supports simple decimal colon
 separated array specifications, such as "foo[3:0]".
 
-=item Verilog::Language::strip_comments ($text)
+=item Verilog::Language::strip_comments($text)
 
 Return text with any // or /**/ comments stripped, correctly handing quoted
 strings.  Newlines will be preserved in this process.
@@ -292,7 +292,7 @@ foreach my $kwd (
 		 "`default_discipline", "`default_transition",
 		 ) { $Keywords{$kwd}{'1364-2005'} = $Compdirect{$kwd} = '1364-2005'; }
 
-language_standard (language_maximum());  # Default standard
+language_standard(language_maximum());  # Default standard
 
 foreach my $kwd (qw(
 		    and buf bufif0 bufif1 cmos nand nmos nor not notif0
@@ -586,12 +586,12 @@ sub split_bus {
 	    }
 	    else {
 		if ($inbra == 1) {	# Begin value
-		    $beg = $end = number_value ($_);	# [2'b11:2'b00] is legal
+		    $beg = $end = number_value($_);  # [2'b11:2'b00] is legal
 		    $step = 1;
 		} elsif ($inbra == 2) {	# End value
-		    $end = number_value ($_);		# [2'b11:2'b00] is legal
+		    $end = number_value($_);  # [2'b11:2'b00] is legal
 		} elsif ($inbra == 3) {	# Middle value
-		    $step = number_value ($_);		# [2'b11:2'b00] is legal
+		    $step = number_value($_);  # [2'b11:2'b00] is legal
 		}
 		# Else ignore extra colons
 	    }

@@ -8,7 +8,7 @@ OUTPUT
 O_CTHIS
     // SELF->{_cthis} = THIS
     if( sv_isobject(SELF) && (SvTYPE(SvRV(SELF)) == SVt_PVHV) ) {
-	SV **svp = hv_fetch ((HV*)SvRV(SELF), \"_cthis\", 6, 1);
+	SV **svp = hv_fetch((HV*)SvRV(SELF), \"_cthis\", 6, 1);
 	sv_setiv(*svp, PTR2IV( $var ));
 	XSRETURN_UNDEF;
     } else {
@@ -20,7 +20,7 @@ INPUT
 O_CTHIS
     $var = NULL;
     if( sv_isobject($arg) && (SvTYPE(SvRV( $arg )) == SVt_PVHV) ) {
-        SV **svp = hv_fetch ((HV*)SvRV(( $arg )), \"_cthis\", 6, 0);
+        SV **svp = hv_fetch((HV*)SvRV(( $arg )), \"_cthis\", 6, 0);
 	$var = NULL;
 	if (svp) { $var = INT2PTR($type,SvIV( *svp )); }
     }

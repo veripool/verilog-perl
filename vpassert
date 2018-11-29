@@ -98,12 +98,12 @@ $Prog_Mtime = (stat("$RealBin/vpassert"))[9];
 
 autoflush STDOUT 1;
 
-Getopt::Long::config ("no_auto_abbrev","pass_through");
-GetOptions ("debug" => \&debug);  # Snarf --debug ASAP, before parse -f files
+Getopt::Long::config("no_auto_abbrev","pass_through");
+GetOptions("debug" => \&debug);  # Snarf --debug ASAP, before parse -f files
 
 $Opt = new Verilog::Getopt();
 @ARGV = $Opt->parameter(@ARGV);	# Strip -y, +incdir+, etc
-Getopt::Long::config ("no_auto_abbrev","no_pass_through");
+Getopt::Long::config("no_auto_abbrev","no_pass_through");
 if (! GetOptions (
 		  # When add flags, update _switch_line also as appropriate
 		  "-o=s"	=> \$output_dirname,
@@ -173,13 +173,13 @@ if ($#files >= 0) {
 	foreach my $exclude (@Opt_Exclude) {
 	    next file if $file =~ /^$exclude/;
 	}
-	vpassert_recursive ($file, $output_dirname);
+	vpassert_recursive($file, $output_dirname);
     }
     vpassert_recursive_postlude($output_dirname);
 }
 
 print "\tVPASSERT generated $Total_Files new file(s)\n";
-exit (0);
+exit(0);
 
 ######################################################################
 
@@ -191,7 +191,7 @@ sub usage {
     }
     print "\n";
     pod2usage(-verbose=>2, -exitval=>2, -output=>\*STDOUT, -noperldoc=>1);
-    exit (1);
+    exit(1);
 }
 
 sub debug {
@@ -215,15 +215,15 @@ sub parameter {
 # Functions that transform the tokens
 
 # Note -I is specially detected below
-sub ins_uinfo   { shift; sendout( message (get_lineinfo(), 1, '-I',  1, "", @_)); }
-sub ins_uwarn   { shift; sendout( message (get_lineinfo(), 1, '%%W', 1, "", @_)); }
-sub ins_uerror  { shift; sendout( message (get_lineinfo(), 1, '%%E', 1, "", @_)); }
+sub ins_uinfo   { shift; sendout(message(get_lineinfo(), 1, '-I',  1, "", @_)); }
+sub ins_uwarn   { shift; sendout(message(get_lineinfo(), 1, '%%W', 1, "", @_)); }
+sub ins_uerror  { shift; sendout(message(get_lineinfo(), 1, '%%E', 1, "", @_)); }
 
 sub ins_uassert {
     shift;
     my $cond = shift;
     my @params = @_;
-    sendout( message (get_lineinfo(), 1, '%%E', $cond, "", 0, @params));
+    sendout(message(get_lineinfo(), 1, '%%E', $cond, "", 0, @params));
 }
 
 sub ins_uassert_info {
@@ -231,7 +231,7 @@ sub ins_uassert_info {
     my $cond = shift;
     my @params = @_;
     # Lower case -i indicates it's a assert vs. a info
-    sendout( message (get_lineinfo(), 1, "-i", $cond, "", 0, @params));
+    sendout(message(get_lineinfo(), 1, "-i", $cond, "", 0, @params));
 }
 
 sub check_signame {
@@ -310,7 +310,7 @@ sub ins_ucheck_ilevel {
     my $chk = "/*vpassert*/if ((`__message_on) && ";
     $chk .= ' && (`__message_minimum >= (' . $level . '))' if $Opt_Minimum;
     $chk = $chk . '(__message >= (' . $level . ')))';
-    sendout ($chk);
+    sendout($chk);
 }
 
 sub uassert_hot {
@@ -371,7 +371,7 @@ sub umessage_clk {
     _insert_always_begin('assert', "/*vpassert*/ $sig=1'b0; /*vpassert*/");
 
     my $bot = (" always @ (posedge $clk) if ($sig) "
-	       .message (get_lineinfo(), 1, $char, 1, "", @_)
+	       .message(get_lineinfo(), 1, $char, 1, "", @_)
 	       ." ");
     push @Endmodule_Inserts, [0, $bot];
 }
@@ -468,9 +468,9 @@ sub get_lineinfo {
     # Align the lineinfo so that right hand sides are aligned
     my $message_filename = $Last_Parser->filename;
     $message_filename =~ s/^.*\///g;
-    my $lineinfo = substr ($message_filename, 0, 17); # Don't make too long
+    my $lineinfo = substr($message_filename, 0, 17); # Don't make too long
     $lineinfo = $lineinfo . sprintf(":%04d:", $Last_Parser->lineno );
-    $lineinfo = sprintf ("%-21s", $lineinfo);
+    $lineinfo = sprintf("%-21s", $lineinfo);
 }
 
 use vars qw($Msg_Header_Level);
@@ -772,7 +772,7 @@ sub vpassert_process {
     }
 
     while (my $line = $fh->getline() ) {
-	$parser->parse ($line);
+	$parser->parse($line);
     }
     $parser->eof;
     push @Sendout, [$Last_Parser->lineno, $parser->unreadback()];    $parser->unreadback('');
@@ -897,10 +897,10 @@ sub vpassert_db_write_file {
     # Save which unprocessed files did not need processing
     my $filename = shift;
     my $fh = IO::File->new(">$filename") or die "%Error: $! $filename.\n";
-    $fh->print ("switch\t"._switch_line()."\n");
+    $fh->print("switch\t"._switch_line()."\n");
     foreach my $file (sort (keys %Files)) {
 	next if !$Files{$file}{mtime};
-	$fh->print ("unproc\t$file\t$Files{$file}{mtime}\t$Files{$file}{size}\n");
+	$fh->print("unproc\t$file\t$Files{$file}{mtime}\t$Files{$file}{size}\n");
     }
     $fh->close;
 }
@@ -915,11 +915,11 @@ sub vpassert_recursive_prelude {
 
     %Files = ();
     %Files_Read = ();
-    vpassert_db_read_file ("${destdir}/.vpassert_skipped_times");
+    vpassert_db_read_file("${destdir}/.vpassert_skipped_times");
     form_conversions_regexp();
 
     if (! -d $destdir) {
-	mkdir ($destdir,0777) or die "%Error: Can't mkdir $destdir\n";
+	mkdir($destdir,0777) or die "%Error: Can't mkdir $destdir\n";
     }
 
     # Don't include directory in time saving, as path may change dep how run
@@ -957,7 +957,7 @@ sub vpassert_recursive_postlude {
 	}
     }
 
-    vpassert_db_write_file ("${destdir}/.vpassert_skipped_times");
+    vpassert_db_write_file("${destdir}/.vpassert_skipped_times");
 }
 
 sub vpassert_recursive {
@@ -981,7 +981,7 @@ sub vpassert_recursive {
 	$dh->close();
     } else {
 	# Plain file
-	vpassert_process_one ($srcdir, $destdir, 1);
+	vpassert_process_one($srcdir, $destdir, 1);
     }
 }
 
@@ -1256,7 +1256,7 @@ sub operator {
 		if ($Opt_NoPli) {
 		    # ""  doesn't work, as need semi for "if (1) $x()"
 		    # ";" doesn't work, as need empty for "begin $x() end"
-		    ::sendout ("begin end ");
+		    ::sendout("begin end ");
 		    for (my $p=0; $p<=$#Params; $p++) {
 			while ($Params[$p]=~/\n/g) { ::sendout("\n"); }
 		    }
@@ -1270,10 +1270,10 @@ sub operator {
 		    }
 		    my $func = $Vpassert_Conversions {$Params[0]};
 		    print " CALL ",join(':',@Params),"\n" if $Debug;
-		    &$func (@Params);
-		    ::sendout ($nl) if $nl; # Adjust for \n's in params
+		    &$func(@Params);
+		    ::sendout($nl) if $nl;  # Adjust for \n's in params
 		} else {
-		    ::sendout ("");
+		    ::sendout("");
 		}
 	    }
 	    $In_Message=0;
@@ -1593,43 +1593,43 @@ on a unique line.
 Re-enable coverage after a vp_coverage_off.  Does not need to be on a
 unique line.
 
-=item $uassert (I<case>, "message", [I<vars>...] )
+=item $uassert(I<case>, "message", [I<vars>...] )
 
 Report a $uerror if the given case is FALSE.  (Like assert() in C.)
 
-=item $uassert_amone (I<sig>, [I<sig>...], "message", [I<vars>...] )
+=item $uassert_amone(I<sig>, [I<sig>...], "message", [I<vars>...] )
 
 Report a $uerror if more than one signal is asserted, or any are X.  (None
 asserted is ok.)  The error message will include a binary display of the
 signal values.
 
-=item $uassert_info (I<case>, "message", [I<vars>...] )
+=item $uassert_info(I<case>, "message", [I<vars>...] )
 
 Report a $uinfo if the given case is FALSE.  (Like assert() in C.)
 
-=item $uassert_onehot (I<sig>, [I<sig>...], "message", [I<vars>...] )
+=item $uassert_onehot(I<sig>, [I<sig>...], "message", [I<vars>...] )
 
 Report a $uerror if other than one signal is asserted, or any are X.  The
 error message will include a binary display of the signal values.
 
-=item $uassert_req_ack (I<req_sig>, I<ack_sig>, [I<data_sig>,...] )
+=item $uassert_req_ack(I<req_sig>, I<ack_sig>, [I<data_sig>,...] )
 
 Check for a single cycle request pulse, followed by a single cycle
 acknowledgment pulse.  Do not allow any of the data signals to change
 between the request and acknowledgement.
 
-=item $ucheck_ilevel (I<level> )
+=item $ucheck_ilevel(I<level> )
 
 Return true if the __message level is greater or equal to the given
 level, and that global messages are turned on.
 
-=item $ucover_clk (I<clock>, I<label>)
+=item $ucover_clk(I<clock>, I<label>)
 
 Similar to $uerror_clk, add a SystemVerilog assertion at the next specified
 clock's edge, with the label specified. This allows cover properties to be
 specified "inline" with normal RTL code.
 
-=item $ucover_foreach_clk (I<clock>, I<label>, "I<msb>:I<lsb>", (... $ui ...))
+=item $ucover_foreach_clk(I<clock>, I<label>, "I<msb>:I<lsb>", (... $ui ...))
 
 Similar to $ucover_clk, however cover a range where $ui in the expression
 is replaced with the range index.
@@ -1651,16 +1651,16 @@ However there's no way to form a label from a for loop (as psudocoded with
 
 Loop index used inside $ucover_foreach_clk.
 
-=item $uinfo (I<level>, "message", [I<vars>...] )
+=item $uinfo(I<level>, "message", [I<vars>...] )
 
 Report a informational message in standard form.  End test if warning
 limit exceeded.
 
-=item $uerror ("message", [I<vars>...] )
+=item $uerror("message", [I<vars>...] )
 
 Report a error message in standard form.  End test if error limit exceeded.
 
-=item $uerror_clk (I<clock>, "message", [I<vars>...] )
+=item $uerror_clk(I<clock>, "message", [I<vars>...] )
 
 Report a error message in standard form at the next clock edge.  If you
 place a $uerror etc in a combo logic block (always @*), event based
@@ -1670,11 +1670,11 @@ itself to a new clocked block at the specified edge.  Note any variables
 printed will be the values at the time of the next clock edge, which may
 differ from the value where the $uerror_clk is assigned.
 
-=item $uwarn ("message", [I<vars>...] )
+=item $uwarn("message", [I<vars>...] )
 
 Report a warning message in standard form.
 
-=item $uwarn_clk (I<clock> "message", [I<vars>...] )
+=item $uwarn_clk(I<clock> "message", [I<vars>...] )
 
 Report a warning message in standard form at the next clock edge.  See
 $uerror_clk.

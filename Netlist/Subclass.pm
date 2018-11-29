@@ -229,7 +229,7 @@ sub structs {
 	    package $overclass;
 	    sub ${func} {
 		my \$class = shift;
-		my \$self = new $baseclass (\@_);
+		my \$self = new $baseclass(\@_);
 		bless \$self, \$class;
 	    }";
     }
@@ -269,7 +269,7 @@ and $self->error() will produce consistent results.
 
 =over 4
 
-=item $self->error (I<Text...>)
+=item $self->error(I<Text...>)
 
 Print an error in a standard format.
 
@@ -285,7 +285,7 @@ Exits the program if any errors were detected.
 
 The filename number the entity was created in.
 
-=item $self->info (I<Text...>)
+=item $self->info(I<Text...>)
 
 Print a informational in a standard format.
 
@@ -298,13 +298,13 @@ The line number the entity was created on.
 The class to report errors using, generally a Verilog::Netlist::Logger
 object.
 
-=item $self->userdata (I<key>)
-=item $self->userdata (I<key>, I<data>)
+=item $self->userdata(I<key>)
+=item $self->userdata(I<key>, I<data>)
 
 Sets (with two arguments) or retrieves the specified key from an opaque
 hash.  This may be used to store application data on the specified node.
 
-=item $self->warn (I<Text...>)
+=item $self->warn(I<Text...>)
 
 Print a warning in a standard format.
 

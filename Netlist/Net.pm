@@ -6,7 +6,7 @@ package Verilog::Netlist::Net;
 
 use Verilog::Netlist;
 use Verilog::Netlist::Subclass;
-use vars qw ($VERSION @ISA);
+use vars qw($VERSION @ISA);
 use strict;
 @ISA = qw(Verilog::Netlist::Net::Struct
 	Verilog::Netlist::Subclass);
@@ -109,7 +109,7 @@ structs('_new_base',
 sub new {
     my $class = shift;
     my %params = @_;
-    my $self = $class->_new_base (%params);
+    my $self = $class->_new_base(%params);
     $self->type($params{type}) if $params{type};  # Backward compatibility
     return $self;
 }
@@ -298,7 +298,7 @@ Verilog::Netlist::Net - Net for a Verilog Module
   use Verilog::Netlist;
 
   ...
-  my $net = $module->find_net ('signalname');
+  my $net = $module->find_net('signalname');
   print $net->name;
 
 =head1 DESCRIPTION

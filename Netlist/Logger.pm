@@ -130,7 +130,7 @@ messages.
 
 =over 4
 
-=item $self->error (object, I<Text...>)
+=item $self->error(object, I<Text...>)
 
 Print an error about the object in a standard format.  The object must have
 a fileline method.
@@ -140,7 +140,7 @@ a fileline method.
 Exits the program if any errors were detected.  Optionally specify
 allow=>'warning' to ignore warnings.
 
-=item $self->info (I<Text...>)
+=item $self->info(I<Text...>)
 
 Print an informational about the object in a standard format.  The object
 must have a fileline method.
@@ -149,12 +149,12 @@ must have a fileline method.
 
 The line number the entity was created on.
 
-=item $self->unlink_if_error (I<filename>)
+=item $self->unlink_if_error(I<filename>)
 
 Requests the given file be deleted if any errors are detected when the
 Logger object is destroyed.  Used for temporary files.
 
-=item $self->warn (I<Text...>)
+=item $self->warn(I<Text...>)
 
 Print a warning about the object in a standard format.  The object must
 have a fileline method.

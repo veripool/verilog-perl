@@ -62,10 +62,10 @@ sub _link_guts {
     if (!$self->submod) {
 	if (my $name = $self->submodname) {
 	    my $netlist = $self->netlist;
-	    my $sm = $netlist->find_module_or_interface_for_cell ($name);
+	    my $sm = $netlist->find_module_or_interface_for_cell($name);
 	    if (!$sm) {
 		my $name2 = $netlist->remove_defines($name);
-		$sm = $netlist->find_module_or_interface_for_cell ($name2)
+		$sm = $netlist->find_module_or_interface_for_cell($name2)
 		    if $name ne $name2;
 	    }
 	    if ($sm) {
@@ -119,7 +119,7 @@ sub _link {
 sub lint {
     my $self = shift;
     if (!$self->submod() && !$self->gateprim && !$self->netlist->{link_read_nonfatal}) {
-        $self->error ($self,"Module/Program/Interface reference not found: ",$self->submodname(),,"\n");
+        $self->error($self,"Module/Program/Interface reference not found: ",$self->submodname(),,"\n");
     }
     if ($self->netlist->{use_vars}) {
 	foreach my $pinref ($self->pins) {
@@ -165,8 +165,8 @@ sub new_pin {
     # @_ params
     # Create a new pin under this cell
     push @_, (cell=>$self);
-    my $pinref = new Verilog::Netlist::Pin (@_);
-    $self->_pins ($pinref->name(), $pinref);
+    my $pinref = new Verilog::Netlist::Pin(@_);
+    $self->_pins($pinref->name(), $pinref);
     return $pinref;
 }
 
@@ -200,7 +200,7 @@ Verilog::Netlist::Cell - Instantiated cell within a Verilog Netlist
   use Verilog::Netlist;
 
   ...
-  my $cell = $module->find_cell ('cellname');
+  my $cell = $module->find_cell('cellname');
   print $cell->name;
 
 =head1 DESCRIPTION

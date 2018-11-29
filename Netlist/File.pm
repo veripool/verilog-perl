@@ -36,7 +36,7 @@ structs('new',
 package Verilog::Netlist::File::Parser;
 use Verilog::SigParser;
 use Verilog::Preproc;
-use base qw (Verilog::SigParser);
+use base qw(Verilog::SigParser);
 use strict;
 
 sub new {
@@ -79,7 +79,7 @@ sub new {
 				      parent => $params{fileref});
     $params{fileref}->preproc($preproc);
     $preproc->open($params{filename});
-    $parser->parse_preproc_file ($preproc);
+    $parser->parse_preproc_file($preproc);
     return $parser;
 }
 
@@ -92,7 +92,7 @@ sub contassign {
     print " ContAssign $keyword $lhs\n" if $Verilog::Netlist::Debug;
     my $modref = $self->{modref};
     if (!$modref) {
-	 return $self->error ("CONTASSIGN outside of module definition", $lhs);
+	 return $self->error("CONTASSIGN outside of module definition", $lhs);
     }
     $modref->new_contassign
 	 (filename=>$self->filename, lineno=>$self->lineno,
@@ -108,7 +108,7 @@ sub defparam {
     print " Defparam $keyword $lhs\n" if $Verilog::Netlist::Debug;
     my $modref = $self->{modref};
     if (!$modref) {
-	 return $self->error ("DEFPARAM outside of module definition", $lhs);
+	 return $self->error("DEFPARAM outside of module definition", $lhs);
     }
     $modref->new_defparam
 	 (filename=>$self->filename, lineno=>$self->lineno,
@@ -140,7 +140,7 @@ sub modport {
     print " Modport $name\n" if $Verilog::Netlist::Debug;
     my $modref = $self->{modref};
     if (!$modref) {
-	return $self->error ("MODPORT outside of interface definition", $name);
+	return $self->error("MODPORT outside of interface definition", $name);
     }
     $self->{_modportref} = $modref->new_modport
 	 (name=>$name,
@@ -215,7 +215,7 @@ sub attribute {
 	}
 	# Treat as module-level if attribute appears before any declarations.
 	if ($modref) {
-	    my $attr = $modref->new_attr ($cleaned);
+	    my $attr = $modref->new_attr($cleaned);
 	}
     }
 }
@@ -273,12 +273,12 @@ sub var {
 	    (filename=>$self->filename, lineno=>$self->lineno);
     }
     if (!$underref) {
-	return $self->error ("Signal declaration outside of module definition", $name);
+	return $self->error("Signal declaration outside of module definition", $name);
     }
 
     my $signed = ($data_type =~ /signed/);
 
-    my $net = $underref->find_net ($name);
+    my $net = $underref->find_net($name);
     $net or $net = $underref->new_net
 	(name=>$name,
 	 filename=>$self->filename, lineno=>$self->lineno,
@@ -303,7 +303,7 @@ sub instant {
     print " Cell $instname\n" if $Verilog::Netlist::Debug;
     my $modref = $self->{modref};
     if (!$modref) {
-	 return $self->error ("CELL outside of module definition", $instname);
+	 return $self->error("CELL outside of module definition", $instname);
     }
     $self->{cellref} = $modref->new_cell
 	 (name=>$instname,
@@ -350,7 +350,7 @@ sub pinselects {
     print "   Pin $pin  $number (connected to $net_cnt nets) \n" if $Verilog::Netlist::Debug;
     my $cellref = $self->{cellref};
     if (!$cellref) {
-	return $self->error ("PIN outside of cell definition", $pin);
+	return $self->error("PIN outside of cell definition", $pin);
     }
 
     my %params = (
@@ -368,7 +368,7 @@ sub pinselects {
 	$params{netname} = $nets;
     }
 
-    my $pinref = $cellref->new_pin (%params);
+    my $pinref = $cellref->new_pin(%params);
     # If any pin uses call-by-name, then all are assumed to use call-by-name
     $cellref->byorder(1) if !$hasnamedports;
     $self->{_cmtpre} = undef;
@@ -426,7 +426,7 @@ sub error {
 
     my $fileref = $self->{fileref};
     # Call Verilog::Netlist::Subclass's error reporting, it will track # errors
-    $fileref->error ($self, "$text\n");
+    $fileref->error($self, "$text\n");
 }
 
 sub warn {
@@ -434,7 +434,7 @@ sub warn {
     my $text = shift;
 
     my $fileref = $self->{fileref};
-    $fileref->warn ($self, "$text\n");
+    $fileref->warn($self, "$text\n");
 }
 
 package Verilog::Netlist::File;
@@ -459,7 +459,7 @@ sub read {
 		  @_);	# netlist=>, filename=>, per-file options
 
     my $filename = $params{filename} or croak "%Error: ".__PACKAGE__."::read_file (filename=>) parameter required, stopped";
-    my $netlist = $params{netlist} or croak ("Call Verilog::Netlist::read_file instead,");
+    my $netlist = $params{netlist} or croak("Call Verilog::Netlist::read_file instead,");
 
     my $filepath = $netlist->resolve_filename($filename, $params{lookup_type});
     if (!$filepath) {
@@ -469,9 +469,9 @@ sub read {
     }
     print __PACKAGE__."::read_file $filepath\n" if $Verilog::Netlist::Debug;
 
-    my $fileref = $netlist->new_file (name=>$filepath,
-				      is_libcell=>$params{is_libcell}||0,
-				      );
+    my $fileref = $netlist->new_file(name=>$filepath,
+				     is_libcell=>$params{is_libcell}||0,
+				     );
 
     my $keep_cmt = ($params{keep_comments} || $netlist->{keep_comments});
     my $parser_class = ($params{parser} || $netlist->{parser});
@@ -526,7 +526,7 @@ Verilog::Netlist::File - File containing Verilog code
   use Verilog::Netlist;
 
   my $nl = new Verilog::Netlist;
-  my $fileref = $nl->read_file (filename=>'filename');
+  my $fileref = $nl->read_file(filename=>'filename');
 
 =head1 DESCRIPTION
 

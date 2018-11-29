@@ -252,7 +252,7 @@ VParserXs::~VParserXs() {
 #//**********************************************************************
 #// General callback invoker
 
-void VParserXs::call (
+void VParserXs::call(
     string* rtnStrp,	/* If non-null, load return value here */
     int params,		/* Number of parameters */
     const char* method,	/* Name of method to call */
@@ -305,7 +305,7 @@ void VParserXs::call (
 		}
 		XPUSHs(sv_2mortal(newRV_noinc((SV*)av)));
 	    } else if (textp) {  // Non hasharray_param, so is text
-		XPUSHs(sv_2mortal(newSVpv (textp, 0)));
+		XPUSHs(sv_2mortal(newSVpv(textp, 0)));
 	    } else {
 		XPUSHs(&PL_sv_undef);
 	    }
@@ -314,7 +314,7 @@ void VParserXs::call (
 	PUTBACK;			/* make local stack pointer global */
 
 	if (rtnStrp) {
-	    int rtnCount = perl_call_method ((char*)method, G_SCALAR);
+	    int rtnCount = perl_call_method((char*)method, G_SCALAR);
 	    SPAGAIN;			/* refresh stack pointer */
 	    if (rtnCount > 0) {
 		SV* sv = POPs;
@@ -327,7 +327,7 @@ void VParserXs::call (
 	    }
 	    PUTBACK;
 	} else {
-	    perl_call_method ((char*)method, G_DISCARD | G_VOID);
+	    perl_call_method((char*)method, G_DISCARD | G_VOID);
 	}
 
 	FREETMPS;			/* free that return value */
@@ -344,7 +344,7 @@ MODULE = Verilog::Parser  PACKAGE = Verilog::Parser
 #// self->_new (class, sigparser)
 
 static VParserXs *
-VParserXs::_new (SV* SELF, AV* symsp, bool sigparser, bool useUnreadback, bool useProtected, bool usePinselects)
+VParserXs::_new(SV* SELF, AV* symsp, bool sigparser, bool useUnreadback, bool useProtected, bool usePinselects)
 PROTOTYPE: $$$$
 CODE:
 {
@@ -373,7 +373,7 @@ CODE:
 #// self->debug(level)
 
 void
-VParserXs::_debug (level)
+VParserXs::_debug(level)
 int level
 PROTOTYPE: $$
 CODE:
@@ -387,7 +387,7 @@ CODE:
 #// Turn off callbacks during std:: parsing
 
 void
-VParserXs::_callback_master_enable (flag)
+VParserXs::_callback_master_enable(flag)
 bool flag
 PROTOTYPE: $$
 CODE:
@@ -411,7 +411,7 @@ CODE:
 #// self->eof()
 
 void
-VParserXs::eof ()
+VParserXs::eof()
 PROTOTYPE: $
 CODE:
 {
@@ -421,7 +421,7 @@ CODE:
 #// self->filename([setit])
 
 SV*
-VParserXs::filename (const char* flagp="")
+VParserXs::filename(const char* flagp="")
 PROTOTYPE: $;$
 CODE:
 {
@@ -439,7 +439,7 @@ OUTPUT: RETVAL
 #// self->language()
 
 void
-VParserXs::language (valuep)
+VParserXs::language(valuep)
 const char* valuep
 PROTOTYPE: $$
 CODE:
@@ -453,7 +453,7 @@ CODE:
 #// self->lineno([setit])
 
 int
-VParserXs::lineno (int flag=0)
+VParserXs::lineno(int flag=0)
 PROTOTYPE: $;$
 CODE:
 {
@@ -470,7 +470,7 @@ OUTPUT: RETVAL
 #// self->parse()
 
 void
-VParserXs::parse (const char* textp)
+VParserXs::parse(const char* textp)
 PROTOTYPE: $$
 CODE:
 {
@@ -481,7 +481,7 @@ CODE:
 #// self->selftest()
 
 void
-VParserXs::selftest ()
+VParserXs::selftest()
 PROTOTYPE: $
 CODE:
 {
@@ -494,7 +494,7 @@ CODE:
 #// self->unreadback()
 
 SV*
-VParserXs::unreadback (const char* flagp="")
+VParserXs::unreadback(const char* flagp="")
 PROTOTYPE: $;$
 CODE:
 {
@@ -512,7 +512,7 @@ OUTPUT: RETVAL
 #// self->unreadbackCat()
 
 void
-VParserXs::unreadbackCat (SV* textsvp)
+VParserXs::unreadbackCat(SV* textsvp)
 PROTOTYPE: $$
 CODE:
 {

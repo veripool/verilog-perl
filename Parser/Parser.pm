@@ -166,7 +166,7 @@ sub parse_file {
     $self->filename($filename);
     $self->lineno(1);
     while (defined(my $line = $fh->getline())) {
-	$self->parse ($line);
+	$self->parse($line);
     }
     $self->eof;
     $fh->close;
@@ -184,7 +184,7 @@ sub parse_preproc_file {
 
     # Chunk size of ~32K determined experimentally with t/49_largeish.t
     while (defined(my $text = $pp->getall(31*1024))) {
-	$self->parse ($text);
+	$self->parse($text);
     }
     $self->eof;
     return $self;
@@ -196,8 +196,8 @@ sub parse_preproc_file {
 sub error {
     my ($self,$text,$token)=@_;
     my $fileline = $self->filename.":".$self->lineno;
-    croak ("%Error: $fileline: $text\n"
-	   ."Stopped");
+    croak("%Error: $fileline: $text\n"
+	  ."Stopped");
 }
 
 sub attribute {
@@ -288,10 +288,10 @@ Verilog::Parser - Parse Verilog language files
   use Verilog::Parser;
 
   my $parser = new Verilog::Parser;
-  $string = $parser->unreadback ();
-  $line   = $parser->lineno ();
-  $parser->parse ($text)
-  $parser->parse_file ($filename)
+  $string = $parser->unreadback();
+  $line   = $parser->lineno();
+  $parser->parse($text)
+  $parser->parse_file($filename)
 
 =head1 DESCRIPTION
 
@@ -345,42 +345,42 @@ Adding "use_vars => 0" will disable contassign, defparam, pin, var and port
 callbacks to Verilog::SigParser.  This can greatly speed parsing when
 variable and interconnect information is not required.
 
-=item $parser->callback_names ()
+=item $parser->callback_names()
 
 Return an array of callback function names.  This may be used to
 automatically create callbacks for all functions, or to test for different
 callback functionality between versions of Verilog-Perl.
 
-=item $parser->eof ()
+=item $parser->eof()
 
 Indicate the end of the input stream.  All incomplete tokens will be parsed
 and all remaining callbacks completed.
 
-=item $parser->filename ($set)
+=item $parser->filename($set)
 
 Return (if $set is undefined) or set current filename.
 
-=item $parser->lineno ($set)
+=item $parser->lineno($set)
 
 Return (if $set is undefined) or set current line number.
 
-=item $parser->parse ($string)
+=item $parser->parse($string)
 
 Parse the $string as verilog text.  Can be called multiple times.  Note not
 all callbacks may be invoked until the eof method is called.
 
-=item $parser->parse_file ($filename);
+=item $parser->parse_file($filename);
 
 This method can be called to parse text from a file.  The argument can
 be a filename or an already opened file handle. The return value from
 parse_file() is a reference to the parser object.
 
-=item $parser->parse_preproc_file ($preproc);
+=item $parser->parse_preproc_file($preproc);
 
 This method can be called to parse preprocessed text from a predeclared
 Verilog::Preproc object.
 
-=item $parser->unreadback ($string)
+=item $parser->unreadback($string)
 
 Return any input string from the file that has not been sent to the
 callback.  This will include whitespace and tokens which did not have a
@@ -394,7 +394,7 @@ unreadback call.  See also unreadbackCat, which is much faster.
 To use this option, "use_unreadback => 1" must have been passed to the
 constructor.
 
-=item $parser->unreadbackCat ($text)
+=item $parser->unreadbackCat($text)
 
 Add text to be returned with the next unreadback call.  This is much faster
 than using "$parser->unreadback($parser->unreadback . $text)".
@@ -409,59 +409,59 @@ as appropriate.
 
 =over 4
 
-=item $self->attribute ( $token )
+=item $self->attribute($token)
 
 This method is called when any text in (* *) are recognized.  The first
 argument, $token, is the contents of the attribute including the delimiters.
 
-=item $self->comment ( $token )
+=item $self->comment($token)
 
 This method is called when any text in // or /**/ comments are recognized.
 The first argument, $token, is the contents of the comment including the
 comment delimiters.
 
-=item $self->endparse ( $token )
+=item $self->endparse($token)
 
 This method is called when the file has been completely parsed, at the
 End-Of-File of the parsed file.  It is useful for writing clean up
 routines.
 
-=item $self->keyword ( $token )
+=item $self->keyword($token)
 
 This method is called when any Verilog keyword is recognized.
 The first argument, $token, is the keyword.
 
-=item $self->number ( $token )
+=item $self->number($token)
 
 This method is called when any number is recognized.  The first argument,
 $token, is the number.  The Verilog::Language::number_value function may be
 useful for converting a Verilog value to a Perl integer.
 
-=item $self->operator ( $token )
+=item $self->operator($token)
 
 This method is called when any symbolic operator (+, -, etc) is recognized.
 The first argument, $token, is the operator.
 
-=item $self->preproc ( $token )
+=item $self->preproc($token)
 
 This method is called when any Verilog preprocessor `command is recognized.
 Most of these are handled by the preprocessor, however any unrecognized
 `defines are passed through.  For backward compatibility, if not defined
 this function will call the symbol callback.
 
-=item $self->string ( $token )
+=item $self->string($token)
 
 This method is called when any text in double quotes are recognized, or on
 the text of protected regions.  The first argument, $token, is the contents
 of the string including the quotes.
 
-=item $self->symbol ( $token )
+=item $self->symbol($token)
 
 This method is called when any Verilog symbol is recognized.  A symbol is
 considered a non-keyword bare-word.  The first argument, $token, is the
 symbol.
 
-=item $self->sysfunc ( $token )
+=item $self->sysfunc($token)
 
 This method is called when any Verilog $syscall is recognized.  The first
 argument, $token, is the symbol.  For backward compatibility, if not
@@ -506,7 +506,7 @@ file.
   package main;
 
   my $parser = MyParser->new();
-  $parser->parse_file (shift);
+  $parser->parse_file(shift);
   $parser->report();
 
 =head1 BUGS

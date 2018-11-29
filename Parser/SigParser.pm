@@ -287,7 +287,7 @@ Verilog::SigParser - Signal Parsing for Verilog language files
   my $pp = Verilog::Preproc->new(keep_comments=>0,);
 
   my $parser = new Verilog::SigParser;
-  $parser->parse_preproc_file ($pp);
+  $parser->parse_preproc_file($pp);
   # The below described callbacks are then invoked
 
 =head1 DESCRIPTION
@@ -316,89 +316,89 @@ Note Verilog::Parser callbacks also are invoked when SigParser is parsing.
 
 =over 4
 
-=item $self->attribute ( $text )
+=item $self->attribute($text)
 
 Scanned an attribute or meta-comment.  The parser inspects the first word
 of each comment line (C<//key rest> to end of line) or comment block
 (C</*key rest */).  It calls C<$self->attribute( meta_text )>
 if the first word has a true value in hash C<$self->metacomment>.
 
-=item $self->class ( $token, $name, $virtual )
+=item $self->class($token, $name, $virtual)
 
 This method is called at a class.
 
-=item $self->covergroup ( $token, $name )
+=item $self->covergroup($token, $name)
 
 This method is called at a covergroup.
 
-=item $self->contassign ( $token, $lhs, $rhs )
+=item $self->contassign($token, $lhs, $rhs)
 
 This method is called at a continuous "assign" keyword, with the left and
 right hand part of the assignment.  Note that "wire" initializations are
 not considered assignments; those are received via the var callback's value
 parameter.
 
-=item $self->defparam ( $token, $lhs, $rhs )
+=item $self->defparam($token, $lhs, $rhs)
 
 This method is called at a "defparam" keyword, with the left and right hand
 part of the assignment.
 
-=item $self->endcell ( $token )
+=item $self->endcell($token)
 
 This method is called at the end of defining a cell. It is useful for
 writing clean up routines.
 
-=item $self->endgroup ( $token )
+=item $self->endgroup($token)
 
 This method is called at the end of defining a covergroup. It is useful for
 writing clean up routines.
 
-=item $self->endinterface ( $token )
+=item $self->endinterface($token)
 
 This method is called at a endinterface keyword. It is useful for writing
 clean up routines.
 
-=item $self->endclass ( $token )
+=item $self->endclass($token)
 
 This method is called at a endclass keyword.  It is useful for writing
 clean up routines.
 
-=item $self->endtaskfunc ( $token )
+=item $self->endtaskfunc($token)
 
 This method is called at a endfunction or endtask keyword.  It is useful
 for writing clean up routines.
 
-=item $self->endmodport ( $token )
+=item $self->endmodport($token)
 
 This method is called at a endmodport keyword. It is useful for writing
 clean up routines.
 
-=item $self->endmodule ( $token )
+=item $self->endmodule($token)
 
 This method is called at a endmodule keyword. It is useful for writing
 clean up routines.
 
-=item $self->endpackage ( $token )
+=item $self->endpackage($token)
 
 This method is called at a endpackage keyword. It is useful for writing
 clean up routines.
 
-=item $self->endprogram ( $token )
+=item $self->endprogram($token)
 
 This method is called at a endprogram keyword. It is useful for writing
 clean up routines.
 
-=item $self->function ( $keyword, $name, $data-type )
+=item $self->function($keyword, $name, $data-type)
 
 This method is called when a function is defined.  Type is the output size
 or typename, plus "signed", for example "", "[3:0]", "integer", or "signed
 [2:0]".
 
-=item $self->import ( $package, $id )
+=item $self->import($package, $id)
 
 This method is called when an import is defined.
 
-=item $self->instant ( $module, $cell, $range )
+=item $self->instant($module, $cell, $range)
 
 This method is called when a instantiation is defined.  The first parameter
 is the name of the module being instantiated. The second parameter is the
@@ -408,30 +408,30 @@ if the cell was arrayed.
 Prior to version 3.000, the name of the parameters were also included in
 this callback. This has been replaced with the parampin callback.
 
-=item $self->interface ( $keyword, $name )
+=item $self->interface($keyword, $name)
 
 This method is called when an interface is defined.
 
-=item $self->modport ( $keyword, $name )
+=item $self->modport($keyword, $name)
 
 This method is called when an interface modport is defined.
 
-=item $self->module ( $keyword, $name, ignored, $in_celldefine )
+=item $self->module($keyword, $name, ignored, $in_celldefine)
 
 This method is called when a module is defined.
 
-=item $self->package ( $keyword, $name )
+=item $self->package($keyword, $name)
 
 This method is called when a package is defined.
 
-=item $self->parampin ( $name, $connection, $index )
+=item $self->parampin($name, $connection, $index)
 
 This method is called when a parameter is connected to an instantiation, IE
 the "#(...)" syntax.  It is also used for UDP delays (Three calls for
 "#(delay0,delay1,delay2)"), as the parser does not know if the
 instantiation is for an UDP versus a module.
 
-=item $self->pin ( $name, $connection, $index )
+=item $self->pin($name, $connection, $index)
 
 This method is called when a pin on an instant is defined and "use_pinselects"
 is not set (the default, see pinselects() below.  If a pin name
@@ -441,7 +441,7 @@ undef.
 If you do not need the pin nor var nor port callbacks, consider the
 "$self->new (... use_vars=>0 ...)"  option to accelerate parsing.
 
-=item $self->pinselects ( $name, $connections, $index )
+=item $self->pinselects($name, $connections, $index)
 
 If "$self->new (... use_pinselects=>1 ...)" is used this function is called
 instead of "$self->pin (...)".  The difference is that the second parameter
@@ -449,7 +449,7 @@ instead of "$self->pin (...)".  The difference is that the second parameter
 case of concatenations including the MSB and LSB bounds used at these
 locations.
 
-=item $self->port ( $name, $objof, $direction, $data_type, $array, $pinnum )
+=item $self->port($name, $objof, $direction, $data_type, $array, $pinnum)
 
 This method is called when a module port is defined.  It may be called
 twice on a port if the 1995 style is used; the first call is made at the
@@ -467,23 +467,23 @@ made outside the port list.
 If you do not need the pin nor var nor port callbacks, consider the
 "$self->new (... use_vars=>0 ...)"  option to accelerate parsing.
 
-=item $self->ppdefine ( $defvar, $definition )
+=item $self->ppdefine($defvar, $definition)
 
 This method is called when a preprocessor definition is encountered.
 
-=item $self->program ( $keyword, $name )
+=item $self->program($keyword, $name)
 
 This method is called when a program is defined.
 
-=item $self->signal_decl ( $keyword, $signame, $vector, $mem, $signed, $value )
+=item $self->signal_decl($keyword, $signame, $vector, $mem, $signed, $value)
 
 This method is no longer used, see $self->var.
 
-=item $self->task ( $keyword, $name )
+=item $self->task($keyword, $name)
 
 This method is called when a task is defined.
 
-=item $self->var ( $kwd, $name, $objof, $nettype, $data_type, $array, $value )
+=item $self->var($kwd, $name, $objof, $nettype, $data_type, $array, $value)
 
 This method is called when a variable or net is defined.
 

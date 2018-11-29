@@ -339,7 +339,6 @@ BISONPRE_VERSION(3.0,        %define lr.keep-unreachable-state)
 // package_identifier, type_identifier, variable_identifier,
 %token<str>		yaID__ETC	"IDENTIFIER"
 %token<str>		yaID__LEX	"IDENTIFIER-in-lex"
-%token<str>		yaID__aCLASS	"CLASS-IDENTIFIER"
 %token<str>		yaID__aPACKAGE	"PACKAGE-IDENTIFIER"
 %token<str>		yaID__aTYPE	"TYPE-IDENTIFIER"
 //			aCOVERGROUP is same as aTYPE
