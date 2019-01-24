@@ -86,6 +86,7 @@ module v_hier_top2 (
 /* synthesis aftersemi*/
 // NetListName=F12_IO
    v_hier_noport noport ();
+   v_hier_noport #(.P(1)) noporta [1:0] ();
    v_hier_noport #(.P(1)) noportp ();
 endmodule
 

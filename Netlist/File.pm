@@ -298,7 +298,7 @@ sub instant {
     my $self = shift;
     my $submodname = shift;
     my $instname = shift;
-    my $params = shift;
+    my $range = shift;
 
     print " Cell $instname\n" if $Verilog::Netlist::Debug;
     my $modref = $self->{modref};
@@ -308,7 +308,7 @@ sub instant {
     $self->{cellref} = $modref->new_cell
 	 (name=>$instname,
 	  filename=>$self->filename, lineno=>$self->lineno,
-	  submodname=>$submodname, params=>$params,);
+	  submodname=>$submodname, range=>$range,);
     $self->{_cmtpre} = undef;
     $self->{_cmtref} = $self->{cellref};
 }

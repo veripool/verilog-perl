@@ -94,6 +94,8 @@ Module:v_hier_top2  Kwd:module  File:verilog/v_hier_top2.v
   Net:iosig    DeclT:port  NetT:  DataT:[2:0]  Array:  2:0
   Cell:noport  is-a:v_hier_noport
             Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+  Cell:noporta  is-a:v_hier_noport .P(1)
+            Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
   Cell:noportp  is-a:v_hier_noport .P(1)
             Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
 Module:v_recursive  Kwd:module  File:verilog/v_recursive.v
@@ -139,5 +141,5 @@ verilog/v_hier_top.v:0029: WC_w4   cmt=""
 verilog/v_hier_top.v:0037: asn_clk   cmt=""
 verilog/v_hier_top.v:0011: clk   cmt="/* pragma jsc_clk */"
 verilog/v_hier_top2.v:0009: clk   cmt=""
-verilog/v_hier_top2.v:0015: iosig   cmt="/* synthesis useioff = 1 //*synthesis fpga_attr = "BLAH=ON"//* synthesis fpga_pin = "A22"*/\n/* synthesis aftersemi*/\n// NetListName=F12_IO"
+verilog/v_hier_top2.v:0018: iosig   cmt="/* synthesis useioff = 1 //*synthesis fpga_attr = "BLAH=ON"//* synthesis fpga_pin = "A22"*/\n/* synthesis aftersemi*/\n// NetListName=F12_IO"
 verilog/v_recursive.v:0002: DEPTH   cmt=""

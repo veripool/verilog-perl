@@ -25,6 +25,7 @@ structs('new',
 	   submodname	=> '$', #'	# Which module it instantiates
 	   module	=> '$', #'	# Module reference
 	   params	=> '$', #'	# Textual description of parameters
+	   range	=> '$', #'	# Range of ranged instance
 	   _pins	=> '%',		# List of Verilog::Netlist::Pins
 	   byorder 	=> '$',		# True if Cell call uses order based pins
 	   # after link():
@@ -134,7 +135,11 @@ sub verilog_text {
     if ($self->params) {
 	push @out, " #(".$self->params.")";
     }
-    push @out, " ".$self->name." (";
+    push @out, " ".$self->name;
+    if ($self->range) {
+	push @out, " ".$self->range;
+    }
+    push @out, " (";
     my $comma="";
     foreach my $pinref ($self->pins_sorted) {
 	push @out, $comma if $comma; $comma=", ";
@@ -251,6 +256,10 @@ List of Verilog::Netlist::Pin connections for the cell.
 =item $self->pins_sorted
 
 List of name sorted Verilog::Netlist::Pin connections for the cell.
+
+=item $self->range
+
+The range for the cell (e.g. "[1:0]") or undef if not ranged.
 
 =item $self->submod
 

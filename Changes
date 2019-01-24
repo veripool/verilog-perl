@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.45* devel
 
+***     Add Verilog::Cell::range accessor, bug1393. [Ed Carstens]
+
 ****    For write_verilog, print any cell parameters.
 
 

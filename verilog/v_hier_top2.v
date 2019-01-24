@@ -12,6 +12,9 @@ module v_hier_top2 (/*AUTOARG*/
 
    v_hier_noport #(.P(1)) noportp ();
 
+   //bug1393
+   v_hier_noport #(.P(1)) noporta[1:0] ();
+
    inout [2:0] iosig/* synthesis useioff = 1 //*synthesis fpga_attr = "BLAH=ON"//* synthesis fpga_pin = "A22"*/;/* synthesis aftersemi*/ // NetListName=F12_IO
 
 endmodule
