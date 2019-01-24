@@ -4,6 +4,11 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
+* Verilog::Language 3.45* devel
+
+****    For write_verilog, print any cell parameters.
+
+
 * Verilog::Language 3.456 2018-10-28
 
 ****    Fix number parsing with newline after radix, bug1340. [George Cuan]

@@ -130,7 +130,11 @@ sub lint {
 
 sub verilog_text {
     my $self = shift;
-    my @out = $self->submodname." ".$self->name." (";
+    my @out = $self->submodname;
+    if ($self->params) {
+	push @out, " #(".$self->params.")";
+    }
+    push @out, " ".$self->name." (";
     my $comma="";
     foreach my $pinref ($self->pins_sorted) {
 	push @out, $comma if $comma; $comma=", ";

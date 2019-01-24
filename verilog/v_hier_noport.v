@@ -3,5 +3,6 @@
 // without warranty, 2000-2012 by Wilson Snyder.
 
 module v_hier_noport;
+   parameter P;
    reg internal;
 endmodule

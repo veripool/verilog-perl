@@ -29,6 +29,7 @@ Module:v_comments  Kwd:module  File:verilog/v_comments.v
   Net:d3  I  DeclT:port  NetT:  DataT:[32-1:0]  Array:  32-1:0
   Net:e    DeclT:var  NetT:  DataT:reg [11:0]  Array:  11:0
 Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+  Net:P    DeclT:parameter  NetT:  DataT:  Array:
   Net:internal    DeclT:var  NetT:  DataT:reg  Array:
 Module:v_hier_sub  Kwd:module  File:verilog/v_hier_sub.v
   Port:avec  Dir:in  DataT:[3:0]  Array:
@@ -93,6 +94,8 @@ Module:v_hier_top2  Kwd:module  File:verilog/v_hier_top2.v
   Net:iosig    DeclT:port  NetT:  DataT:[2:0]  Array:  2:0
   Cell:noport  is-a:v_hier_noport
             Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+  Cell:noportp  is-a:v_hier_noport .P(1)
+            Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
 Module:v_recursive  Kwd:module  File:verilog/v_recursive.v
   Net:DEPTH    DeclT:parameter  NetT:  DataT:  Array:  Value:1
   Cell:recurse  is-a:v_recursive .DEPTH(DEPTH-1)
@@ -112,7 +115,8 @@ verilog/v_comments.v:0011: d1   cmt=""
 verilog/v_comments.v:0012: d2   cmt=""
 verilog/v_comments.v:0013: d3   cmt=""
 verilog/v_comments.v:0016: e   cmt="// Comment for e"
-verilog/v_hier_noport.v:0006: internal   cmt=""
+verilog/v_hier_noport.v:0006: P   cmt=""
+verilog/v_hier_noport.v:0007: internal   cmt=""
 verilog/v_hier_sub.v:0012: FROM_DEFPARAM   cmt=""
 verilog/v_hier_sub.v:0027: K   cmt=""
 verilog/v_hier_sub.v:0027: K_UNUSED   cmt=""
@@ -135,5 +139,5 @@ verilog/v_hier_top.v:0029: WC_w4   cmt=""
 verilog/v_hier_top.v:0037: asn_clk   cmt=""
 verilog/v_hier_top.v:0011: clk   cmt="/* pragma jsc_clk */"
 verilog/v_hier_top2.v:0009: clk   cmt=""
-verilog/v_hier_top2.v:0013: iosig   cmt="/* synthesis useioff = 1 //*synthesis fpga_attr = "BLAH=ON"//* synthesis fpga_pin = "A22"*/\n/* synthesis aftersemi*/\n// NetListName=F12_IO"
+verilog/v_hier_top2.v:0015: iosig   cmt="/* synthesis useioff = 1 //*synthesis fpga_attr = "BLAH=ON"//* synthesis fpga_pin = "A22"*/\n/* synthesis aftersemi*/\n// NetListName=F12_IO"
 verilog/v_recursive.v:0002: DEPTH   cmt=""
