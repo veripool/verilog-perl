@@ -4,7 +4,7 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
-* Verilog::Language 3.45* devel
+* Verilog::Language 3.458 2019-01-24
 
 ***     Add Verilog::Cell::range accessor, bug1393. [Ed Carstens]
 
@@ -1411,7 +1411,7 @@ DESCRIPTION: Documentation on change history for this package
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
 
-Copyright 2001-2018 by Wilson Snyder.  This program is free software;
+Copyright 2001-2019 by Wilson Snyder.  This program is free software;
 you can redistribute it and/or modify it under the terms of either the GNU
 Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
