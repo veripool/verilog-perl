@@ -17,30 +17,10 @@ use vars qw($VERSION);
 $VERSION = '3.458';
 
 #######################################################################
-# ACCESSORS
+# It's a PITRA to have pure datafiles get installed properly, so we have
+# the std text here in this package.
 
-our %_Std_Data;
-
-sub std {
-    my $std = shift || Verilog::Language::language_standard();
-    if (!$_Std_Data{$std}) {
-	my @out;
-	foreach (<DATA>) {
-	    last if $_ =~ /^__END__/;
-	    last if $std !~ /^1800/;  # Non system verilog, ie 1364 has no std package
-	    push @out, $_;
-	}
-	$_Std_Data{$std} = join('',@out);
-    }
-    return $_Std_Data{$std};
-}
-
-#######################################################################
-# It's a PITRA to have pure datafiles get installed properly,
-# so we just paste our text into this package.
-1;
-__DATA__
-
+our $_Std_Text = <<EOF;
 `line 1 "Perl_Verilog::Std_module" 0
 // Verilog-Perl Verilog::Std
 // The basis for this package is described in IEEE 1800-2017 Annex G
@@ -84,7 +64,22 @@ endpackage : std
 
 import std::*;
 
-__END__
+EOF
+
+#######################################################################
+# ACCESSORS
+
+sub std {
+    my $std = shift || Verilog::Language::language_standard();
+    if ($std =~ /^1800/) {
+	return $_Std_Text;
+    } else {
+	return "";
+    }
+}
+
+#######################################################################
+1;
 
 =pod
 

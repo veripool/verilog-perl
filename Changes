@@ -4,6 +4,11 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
+* Verilog::Language 3.460 2019-01-26
+
+***	Fix Verilog::Std being empty on fork, bug1394. [Corey Teffetalor]
+
+
 * Verilog::Language 3.458 2019-01-24
 
 ***     Add Verilog::Cell::range accessor, bug1393. [Ed Carstens]
