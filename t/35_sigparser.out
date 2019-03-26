@@ -538,6 +538,11 @@ verilog/parser_bugs.v:567: VAR  'parameter' 'B' 'module' '' '' '' '8
                 'b
                 1'
 verilog/parser_bugs.v:572: ENDMODULE  'endmodule'
+verilog/parser_bugs.v:574: MODULE  'module' 'msg2931' undef '0'
+verilog/parser_bugs.v:576: VAR  'var' 'mynet1' 'module' '' 'net1_t' '' ''
+verilog/parser_bugs.v:578: VAR  'var' 'mynet2' 'module' '' 'net2_t' '' ''
+verilog/parser_bugs.v:580: VAR  'var' 'mynet3' 'module' '' 'net3_t' '' ''
+verilog/parser_bugs.v:581: ENDMODULE  'endmodule'
 verilog/pinorder.v:001: COMMENT  '// DESCRIPTION: Verilog-Perl: Example Verilog for testing package'
 verilog/pinorder.v:002: COMMENT  '//'
 verilog/pinorder.v:003: COMMENT  '// This file ONLY is placed into the Public Domain, for any use,'

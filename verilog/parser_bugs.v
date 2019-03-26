@@ -570,3 +570,12 @@ module bug1340;
                 1
 		;
 endmodule
+
+module msg2931;
+   nettype int net1_t;
+   net1_t mynet1;
+   nettype int net2_t with resolvefunc;
+   net2_t mynet2;
+   nettype net_t net3_t;
+   net3_t mynet3;
+endmodule

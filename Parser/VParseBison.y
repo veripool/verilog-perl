@@ -1746,10 +1746,13 @@ data_declarationVarFrontClass:	// IEEE: part of data_declaration (for class_prop
 	;
 
 net_type_declaration:		// IEEE: net_type_declaration
-		yNETTYPE data_type idAny/*net_type_identifier*/ ';' { }
+		yNETTYPE data_type idAny/*net_type_identifier*/ ';'
+							{ PARSEP->syms().replaceInsert(VAstType::TYPE, $3); }
 	//			// package_scope part of data_type
-	|	yNETTYPE data_type idAny yWITH__ETC package_scopeIdFollows id/*tf_identifier*/ ';' { }
-	|	yNETTYPE package_scopeIdFollows id/*net_type_identifier*/ idAny/*net_type_identifier*/ ';' { }
+	|	yNETTYPE data_type idAny yWITH__ETC package_scopeIdFollowsE id/*tf_identifier*/ ';'
+							{ PARSEP->syms().replaceInsert(VAstType::TYPE, $3); }
+	|	yNETTYPE package_scopeIdFollowsE id/*net_type_identifier*/ idAny/*net_type_identifier*/ ';'
+							{ PARSEP->syms().replaceInsert(VAstType::TYPE, $4); }
 	;
 
 constE<str>:			// IEEE: part of data_declaration
