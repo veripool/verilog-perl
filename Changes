@@ -4,6 +4,9 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
+* Verilog::Language 3.463 devel
+
+
 * Verilog::Language 3.462 2019-04-09
 
 ***     Fix legacy $pin->netlist accessor.
