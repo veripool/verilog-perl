@@ -1,0 +1,114 @@
+Checking example in Netlist.pm
+  Module $root                                $root
+  Module v_hier_top                           v_hier_top
+  	  input clk
+      Cell missing
+      Cell recursive
+  	 Module v_recursive                        v_hier_top.recursive
+  	     Cell recurse
+      Cell sub
+       .avec({avec[3],avec[2:0]})
+       .clk(1'b0)
+       .qvec(qvec[3:0])
+  	 Module v_hier_sub                         v_hier_top.sub
+  	 	  input avec
+  	 	  input clk
+  	 	  output qvec
+  	     Cell subsub0
+  	      .a(a1)
+  	      .q(qvec[0])
+  	 	 Module v_hier_subsub                    v_hier_top.sub.subsub0
+  	 	 	  input a
+  	 	 	  output q
+  	     Cell subsub2
+  	      .a(1'b0)
+  	      .q(qvec[2])
+  	 	 Module v_hier_subsub                    v_hier_top.sub.subsub2
+  	 	 	  input a
+  	 	 	  output q
+  Module v_hier_top2                          v_hier_top2
+  	  input clk
+  	  inoutput iosig
+      Cell noport
+  	 Module v_hier_noport                      v_hier_top2.noport
+      Cell noporta
+  	 Module v_hier_noport                      v_hier_top2.noporta
+      Cell noportp
+  	 Module v_hier_noport                      v_hier_top2.noportp
+Dump
+Module:$root  Kwd:root_module  File:verilog/v_hier_top.v
+  Net:GLOBAL_PARAM    DeclT:localparam  NetT:  DataT:  Array:  Value:1
+Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+  Net:P    DeclT:parameter  NetT:  DataT:  Array:
+  Net:internal    DeclT:var  NetT:  DataT:reg  Array:
+Module:v_hier_sub  Kwd:module  File:verilog/v_hier_sub.v
+  Port:avec  Dir:in  DataT:[3:0]  Array:
+  Port:clk  Dir:in  DataT:  Array:
+  Port:qvec  Dir:out  DataT:[3:0]  Array:
+  Net:FROM_DEFPARAM    DeclT:parameter  NetT:  DataT:  Array:  Value:1
+  Net:K    DeclT:genvar  NetT:  DataT:  Array:
+  Net:K_UNUSED    DeclT:genvar  NetT:  DataT:  Array:
+  Net:a1  I  DeclT:net  NetT:supply1  DataT:  Array:
+  Net:avec  O  DeclT:port  NetT:  DataT:[3:0]  Array:  3:0
+  Net:clk  O  DeclT:port  NetT:  DataT:  Array:
+  Net:qvec  I  DeclT:port  NetT:  DataT:[3:0]  Array:  3:0
+  Cell:subsub0  is-a:v_hier_subsub .IGNORED('sh20)
+            Module:v_hier_subsub  Kwd:module  File:verilog/v_hier_subsub.v
+    Pin:a  Net:a1
+              Port:a  Dir:in  DataT:signed  Array:
+              Net:a1  I  DeclT:net  NetT:supply1  DataT:  Array:
+    Pin:q  Net:qvec[0]
+              Port:q  Dir:out  DataT:  Array:
+  Cell:subsub2  is-a:v_hier_subsub
+            Module:v_hier_subsub  Kwd:module  File:verilog/v_hier_subsub.v
+    Pin:a  Net:1'b0
+              Port:a  Dir:in  DataT:signed  Array:
+    Pin:q  Net:qvec[2]
+              Port:q  Dir:out  DataT:  Array:
+Module:v_hier_subsub  Kwd:module  File:verilog/v_hier_subsub.v
+  Port:a  Dir:in  DataT:signed  Array:
+  Port:q  Dir:out  DataT:  Array:
+  Net:IGNORED    DeclT:parameter  NetT:  DataT:  Array:  Value:0
+  Net:a  O  DeclT:port  NetT:  DataT:signed  Array:
+  Net:q  I  DeclT:port  NetT:wire  DataT:  Array:
+Module:v_hier_top  Kwd:module  File:verilog/v_hier_top.v
+  Port:clk  Dir:in  DataT:  Array:
+  Net:WC_p1    DeclT:localparam  NetT:  DataT:[0:0]  Array:  0:0  Value:0
+  Net:WC_p3    DeclT:localparam  NetT:  DataT:[2:0]  Array:  2:0  Value:0
+  Net:WC_p32    DeclT:localparam  NetT:  DataT:  Array:  Value:0
+  Net:WC_p4    DeclT:localparam  NetT:  DataT:[-1:2]  Array:  -1:2  Value:0
+  Net:WC_pint    DeclT:localparam  NetT:  DataT:integer  Array:  Value:0
+  Net:WC_w1    DeclT:net  NetT:wire  DataT:  Array:
+  Net:WC_w1b    DeclT:net  NetT:wire  DataT:[0:0]  Array:  0:0
+  Net:WC_w3    DeclT:net  NetT:wire  DataT:[2:0]  Array:  2:0
+  Net:WC_w4    DeclT:net  NetT:wire  DataT:[-1:2]  Array:  -1:2
+  Net:asn_clk    DeclT:net  NetT:wire  DataT:  Array:
+  Net:clk  O  DeclT:port  NetT:  DataT:  Array:
+  Cell:missing  is-a:missing
+  Cell:recursive  is-a:v_recursive .DEPTH(3)
+            Module:v_recursive  Kwd:module  File:verilog/v_recursive.v
+  Cell:sub  is-a:v_hier_sub
+            Module:v_hier_sub  Kwd:module  File:verilog/v_hier_sub.v
+    Pin:avec  Net:{avec[3],avec[2:0]}
+              Port:avec  Dir:in  DataT:[3:0]  Array:
+    Pin:clk  Net:1'b0
+              Port:clk  Dir:in  DataT:  Array:
+    Pin:qvec  Net:qvec[3:0]
+              Port:qvec  Dir:out  DataT:[3:0]  Array:
+  Defparam:defparam  lhs:sub.FROM_DEFPARAM  rhs:2
+  ContAssign:assign  lhs:asn_clk  rhs:clk
+Module:v_hier_top2  Kwd:module  File:verilog/v_hier_top2.v
+  Port:clk  Dir:in  DataT:  Array:
+  Port:iosig  Dir:inout  DataT:[2:0]  Array:
+  Net:clk  O  DeclT:port  NetT:  DataT:  Array:
+  Net:iosig    DeclT:port  NetT:  DataT:[2:0]  Array:  2:0
+  Cell:noport  is-a:v_hier_noport
+            Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+  Cell:noporta  is-a:v_hier_noport .P(1)
+            Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+  Cell:noportp  is-a:v_hier_noport .P(1)
+            Module:v_hier_noport  Kwd:module  File:verilog/v_hier_noport.v
+Module:v_recursive  Kwd:module  File:verilog/v_recursive.v
+  Net:DEPTH    DeclT:parameter  NetT:  DataT:  Array:  Value:1
+  Cell:recurse  is-a:v_recursive .DEPTH(DEPTH-1)
+            Module:v_recursive  Kwd:module  File:verilog/v_recursive.v

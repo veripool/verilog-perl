@@ -8,13 +8,16 @@
 use strict;
 use Test::More;
 
-BEGIN { plan tests => 2 }
+BEGIN { plan tests => 3 }
 BEGIN { require "./t/test_utils.pl"; }
 
 #$Verilog::Netlist::Debug = 1;
 use Verilog::Netlist;
 ok(1, "use");
 {
+    local *STDOUT;
+    open(STDOUT, ">", "test_dir/41_example.dmp");
+
     print "Checking example in Netlist.pm\n";
 
     use Verilog::Netlist;
@@ -27,11 +30,11 @@ ok(1, "use");
 		     );
 
     # Prepare netlist
-    my $nl = new Verilog::Netlist (options => $opt,
-				   link_read_nonfatal=>1,
-				   );
+    my $nl = new Verilog::Netlist(options => $opt,
+				  link_read_nonfatal=>1,
+	);
     foreach my $file ('verilog/v_hier_top.v', 'verilog/v_hier_top2.v') {
-	$nl->read_file (filename=>$file);
+	$nl->read_file(filename=>$file);
     }
     # Read in any sub-modules
     $nl->link();
@@ -40,7 +43,7 @@ ok(1, "use");
 
     my %recursing;  # Prevent recursion; not in example
     foreach my $mod ($nl->top_modules_sorted) {
-	show_hier ($mod, "  ", "", "");
+	show_hier($mod, "  ", "", "");
     }
 
     sub show_hier {
@@ -48,8 +51,7 @@ ok(1, "use");
 	my $indent = shift;
 	my $hier = shift;
 	my $cellname = shift;
-	return if ++$recursing{$mod->name};
-	++$recursing{$mod->name};  # Not in example
+	return if $recursing{$mod->name}++;  # Not in example
 	if (!$cellname) {$hier = $mod->name;} #top modules get the design name
 	else {$hier .= ".$cellname";} #append the cellname
 	printf ("%-45s %s\n", $indent."Module ".$mod->name,$hier);
@@ -59,9 +61,9 @@ ok(1, "use");
 	foreach my $cell ($mod->cells_sorted) {
 	    printf ($indent. "    Cell %s\n", $cell->name);
 	    foreach my $pin ($cell->pins_sorted) {
-		printf ($indent."     .%s(%s)\n", $pin->name, $pin->netname);
+		printf($indent."     .%s(%s)\n", $pin->name, $pin->netname);
 	    }
-	    show_hier ($cell->submod, $indent."	 ", $hier, $cell->name) if $cell->submod;
+	    show_hier($cell->submod, $indent."	 ", $hier, $cell->name) if $cell->submod;
 	}
 	--$recursing{$mod->name};  # Not in example
     }
@@ -69,5 +71,7 @@ ok(1, "use");
     print "Dump\n";
     $nl->dump;
 }
+
+ok(files_identical("test_dir/41_example.dmp", "t/41_example.out"));
 
 ok(1, "done");

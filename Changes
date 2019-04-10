@@ -6,7 +6,10 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.461 devel
 
+***     Fix legacy $pin->netlist accessor.
+
 ***	Fix nettype declarations, msg2931.  [Andreas Sunardi]
+
 
 * Verilog::Language 3.460 2019-01-26
 
