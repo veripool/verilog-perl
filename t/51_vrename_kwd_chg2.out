@@ -3,9 +3,41 @@
 // without warranty, 2010-2012 by Wilson Snyder.
 
 module 51_vrename_kwd;
-   wire do = bar;
-   wire \esc[ape]d = bar;
-   wire \do = bar;
+   // Keyword
+   wire do;
+   wire \do ;
+   // Non escapes
+   wire chg_non_2non;
+   wire chg_non_2non_nospace
+        ;
+   wire \chg_non_2ext ;
+   wire \chg_non_2ext_nospace 
+        ;
+   wire \chg_non[ape]_2esc ;
+   wire \chg_non[ape]_2esc_nospace 
+        ;
+   // Extra unnecessary escapes
+   // Note we cannot legally remove spaces if replacing with non-escaped name
+   wire chg_ext_2non ;
+   wire chg_ext_2non_nospace
+        ;
+   wire \chg_ext_2ext ;
+   wire \chg_ext_2ext_nospace 
+        ;
+   wire \chg_ext[ape]_2esc ;
+   wire \chg_ext[ape]_2esc_nospace 
+        ;
+   // Necessary escapes
+   wire chg_escape_2non ;
+   wire chg_escape_2non_nospace
+	;
+   wire \chg_escape_2ext ;
+   wire \chg_escape_2ext_nospace 
+	;
+   wire \chg_esc[ape]_2esc ;
+   wire \chg_esc[ape]_2esc_nospace 
+	;
+   // Strings
    initial $display("bar");
    initial $display("bar.bar");
    initial $display("baz_foo");

@@ -443,8 +443,19 @@ sub verilog_change_sig {
 	my $new = $Signal_Newname{$sig};
 	if ($new ne $sig) {
 	    my $magic = "@@@@@!~${hadrepl}~!@@@@@";
-	    my $sig_quoted = quotemeta $sig;
-	    if ($filestrg =~ s/([^a-zA-Z0-9_\$\%\'\\])$sig_quoted(?=[^a-zA-Z0-9_])/$1$magic/g) {
+	    my $hit;
+	    my $signs = $sig;
+	    if ($signs =~ /\\.* $/) {  # Escaped
+		$signs =~ s/ $//;
+		my $sig_quoted = quotemeta $signs;
+		$hit = 1 if $filestrg =~ s/$sig_quoted(?=[ \t\n\r])/$magic/g;
+	    } else {  # Unescaped
+		my $sig_quoted = quotemeta $signs;
+		$hit = 1 if $filestrg =~ s/([^a-zA-Z0-9_\$\%\'\\])$sig_quoted(?=[^a-zA-Z0-9_])/$1$magic/g;
+		# Consume leading \; either getting removed or part of replacement
+		$hit = 1 if $filestrg =~ s/(\\)$sig_quoted(?=[ \t\n\r])/$magic/g;
+	    }
+	    if ($hit) {
 		print "match s$sig n$new m$magic\n" if $Debug;
 		$hadrepl ++;
 		$signal_magic{$sig} = $magic;
@@ -456,6 +467,12 @@ sub verilog_change_sig {
 	if (defined $signal_magic{$sig}) {
 	    my $magic = $signal_magic{$sig};
 	    my $new = $Signal_Newname{$sig};
+	    if ($new =~ / $/) {
+		# new has trailing whitespace (due to escape) then
+		# try to remove a space from original file also if we can,
+		# so spacing remains the same
+		$magic .= ' ?';
+	    }
 	    if ($filestrg =~ s/$magic/$new/g) {
 		print "match s$sig n$new m$magic\n" if $Debug;
 	    }
@@ -590,6 +607,13 @@ Now, edit the signals.vrename file manually to specify the new signal
 names.  Then, use
 
     vrename --change [<file.v>...]  [<directory>....]
+
+Note that in the signals.vrename file any signal names including special
+characters must follow Verilog naming rules in that they must be escaped
+with a leading backslash and trailing space.  Vrename will attempt to
+preserve spacing when changing escaped to non-escaped names and vice-versa,
+however in some cases extra whitespace may be inserted to ensure proper
+downstream parsing.
 
 =head1 ARGUMENTS
 
