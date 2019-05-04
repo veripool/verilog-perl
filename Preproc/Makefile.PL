@@ -36,7 +36,7 @@ sub MY::postamble {
 	    $out .= sprintf("LDDLFLAGS = -dynamiclib -lstdc++ -L/System/Library/Perl/5.12/%s/CORE -lperl -L/usr/local/lib\n",$Config{archname});
 	} elsif ($^V eq '5.18.2') {
 	    $out .= sprintf("LDDLFLAGS = -dynamiclib -lstdc++ -L/System/Library/Perl/5.18/%s/CORE -lperl -L/usr/local/lib\n",$Config{archname});
-	} else {
+	} elsif ($^V < 'v5.26.3') {
 	    $out .= sprintf("LDDLFLAGS = -dynamiclib -lstdc++ -L/System/Library/Perl/%vd/%s/CORE -lperl -lgcc_eh -L/usr/local/lib\n",$^V,$Config{archname});
 	}
     }

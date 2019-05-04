@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.465 devel
 
+****    Fix Mac OS-X Perl 5.26.3 issues, bug1428. [Jack Langsdorf]
+
 
 * Verilog::Language 3.464 2019-05-01
 
