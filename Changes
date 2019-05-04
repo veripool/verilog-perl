@@ -4,7 +4,7 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
-* Verilog::Language 3.465 devel
+* Verilog::Language 3.466 2019-05-04
 
 ****    Fix Mac OS-X Perl 5.26.3 issues, bug1428. [Jack Langsdorf]
 
