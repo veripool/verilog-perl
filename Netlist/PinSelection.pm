@@ -74,7 +74,7 @@ __END__
 
 =head1 NAME
 
-Verilog::Netlist::PinSelection
+Verilog::Netlist::PinSelection - Nets attached to a Verilog Cell's Pins
 
 =head1 DESCRIPTION
 
@@ -94,11 +94,11 @@ and lsb fields.
 
 =item $self->lsb
 
-Least significent bit of the underlying net within the selection.
+Least significant bit of the underlying net within the selection.
 
 =item $self->msb
 
-Most significent bit of the underlying net within the selection.
+Most significant bit of the underlying net within the selection.
 
 =back
 
