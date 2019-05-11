@@ -231,7 +231,7 @@ Requests simple output, an alias for --noline, --nocomment and --noblank.
 
 =item --synthesis
 
-Define SYNTHESIS, and ignore text bewteen "ambit", "pragma", "synopsys" or
+Define SYNTHESIS, and ignore text between "ambit", "pragma", "synopsys" or
 "synthesis" translate_off and translate_on meta comments.  Note using
 metacomments is discouraged as they have led to silicon bugs (versus ifdef
 SYNTHESIS); see

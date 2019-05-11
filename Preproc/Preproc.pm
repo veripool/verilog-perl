@@ -363,7 +363,7 @@ standard. Defaults false.
 
 =item synthesis=>1
 
-With synthesis set, define SYNTHESIS, and ignore text bewteen "ambit",
+With synthesis set, define SYNTHESIS, and ignore text between "ambit",
 "pragma", "synopsys" or "synthesis" translate_off and translate_on meta
 comments.  Note using metacomments is discouraged as they have led to
 silicon bugs (versus ifdef SYNTHESIS); see

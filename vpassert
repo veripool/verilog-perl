@@ -1616,7 +1616,7 @@ error message will include a binary display of the signal values.
 
 Check for a single cycle request pulse, followed by a single cycle
 acknowledgment pulse.  Do not allow any of the data signals to change
-between the request and acknowledgement.
+between the request and acknowledgment.
 
 =item $ucheck_ilevel(I<level> )
 

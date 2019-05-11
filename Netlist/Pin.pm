@@ -392,7 +392,8 @@ Wilson Snyder <wsnyder@wsnyder.org>
 =head1 SEE ALSO
 
 L<Verilog-Perl>,
-L<Verilog::Netlist::Subclass>
-L<Verilog::Netlist>
+L<Verilog::Netlist::Subclass>,
+L<Verilog::Netlist>,
+L<Verilog::Netlist::PinSelection>
 
 =cut

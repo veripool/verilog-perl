@@ -529,7 +529,7 @@ The name of the preprocessor class. Defaults to "Verilog::Preproc".
 
 =item synthesis => $true_or_false
 
-With synthesis set, define SYNTHESIS, and ignore text bewteen "ambit",
+With synthesis set, define SYNTHESIS, and ignore text between "ambit",
 "pragma", "synopsys" or "synthesis" translate_off and translate_on meta
 comments.  Note using metacomments is discouraged as they have led to
 silicon bugs (versus ifdef SYNTHESIS); see
@@ -537,7 +537,7 @@ L<http://www.veripool.org/papers/TenIPEdits_SNUGBos07_paper.pdf>.
 
 =item use_pinselects => $true_or_false
 
-Indicates that bit selects should be parsed and intpreted.  False for
+Indicates that bit selects should be parsed and interpreted.  False for
 backward compatibility, but true recommended in new applications.
 
 =item use_vars => $true_or_false
@@ -717,6 +717,7 @@ L<Verilog::Netlist::ModPort>,
 L<Verilog::Netlist::Module>,
 L<Verilog::Netlist::Net>,
 L<Verilog::Netlist::Pin>,
+L<Verilog::Netlist::PinSelection>,
 L<Verilog::Netlist::Port>,
 L<Verilog::Netlist::Subclass>
 

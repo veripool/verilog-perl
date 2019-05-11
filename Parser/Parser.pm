@@ -336,7 +336,7 @@ Adding "use_protected => 0" will disable callbacks on `protected and
 
 Adding "use_std => 1" will add parsing of the SystemVerilog built-in std::
 package, or "use_std => 0" will disable it.  If unspecified it is silently
-included (no callbacks will be involed) when suspected to be necessary.
+included (no callbacks will be involved) when suspected to be necessary.
 
 Adding "use_unreadback => 0" will disable later use of the unreadback
 method, which may improve performance.
