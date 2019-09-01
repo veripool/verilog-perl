@@ -6,6 +6,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.467 devel
 
+****    Support ${} for env vars in file lists, msg3065.
 
 
 * Verilog::Language 3.466 2019-05-04
