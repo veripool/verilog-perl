@@ -53,7 +53,10 @@ sub new {
     } elsif (defined $params{pinselects}) {
 	# remap pinselects to _pinselects
 	foreach my $pinselect (@{$params{pinselects}}) {
-	    push(@{$params{_pinselects}}, new Verilog::Netlist::PinSelection($pinselect->{netname}, $pinselect->{msb}, $pinselect->{lsb}));
+	    push @{$params{_pinselects}},
+		new Verilog::Netlist::PinSelection($pinselect->{netname},
+						   $pinselect->{msb},
+						   $pinselect->{lsb});
 	}
 	delete $params{pinselects};
     }
@@ -328,8 +331,8 @@ instead.
 
 =item $self->nets
 
-Array of references to the Verilog::Netlist::Net the pin connects to.  Only
-valid after a link.
+Array of hashes the pin connects to.  Each hash contains a msb, lsb, and
+net (a Verilog::Netlist::Net).  Only valid after a link.
 
 =item $self->nets_sorted
 
