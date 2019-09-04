@@ -336,8 +336,8 @@ net (a Verilog::Netlist::Net).  Only valid after a link.
 
 =item $self->nets_sorted
 
-Array of sorted references to the Verilog::Netlist::Net the pin connects
-to.  Only valid after a link.
+Array of sorted hashes the pin connects to.  Each hash contains a msb, lsb,
+and net (a Verilog::Netlist::Net).  Only valid after a link.
 
 =item $self->netlist
 
