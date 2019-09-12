@@ -8,6 +8,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****    Support ${} for env vars in file lists, msg3065.
 
+****    Fix multidimensional cell/interfaces, bug1505. [Anderson Ignacio Da Silva]
+
 
 * Verilog::Language 3.466 2019-05-04
 

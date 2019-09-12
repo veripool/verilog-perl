@@ -2210,7 +2210,7 @@ mpInstnameParen:		// Similar to instnameParen, but for modport instantiations wh
 
 mpInstname:			// Similar to instname, but for modport instantiations which have no parenthesis
 	//			// id is-a: interface_port_identifier   (interface.modport)
-		id instRangeE	 			{ PARSEP->instantCb($<fl>1, GRAMMARP->m_cellMod, $1, $2); }
+		id instRangeListE			{ PARSEP->instantCb($<fl>1, GRAMMARP->m_cellMod, $1, $2); }
 	;
 
 instnameList:
@@ -2227,13 +2227,22 @@ instname:
 	//			// 	 or instance_identifier   (module)
 	//			// 	 or instance_identifier   (program)
 	//			// 	 or udp_instance	  (udp)
-		id instRangeE '(' 			{ PARSEP->instantCb($<fl>1, GRAMMARP->m_cellMod, $1, $2); PINPARAMS(); }
-	|	instRangeE '(' 				{ PARSEP->instantCb($<fl>2, GRAMMARP->m_cellMod, "", $1); PINPARAMS(); } // UDP
+		id instRangeListE '(' 			{ PARSEP->instantCb($<fl>1, GRAMMARP->m_cellMod, $1, $2); PINPARAMS(); }
+	|	instRangeListE '(' 			{ PARSEP->instantCb($<fl>2, GRAMMARP->m_cellMod, "", $1); PINPARAMS(); } // UDP
 	;
 
-instRangeE<str>:
+instRangeListE<str>:
 		/* empty */				{ $$ = ""; }
-	|	'[' constExpr ']'			{ $<fl>$=$<fl>1; $$ = "["+$2+"]"; }
+	|	instRangeList				{ $<fl>$=$<fl>1; $$ = $1; }
+	;
+
+instRangeList<str>:
+		instRange				{ $<fl>$=$<fl>1; $$ = $1; }
+	|	instRangeList instRange			{ $<fl>$=$<fl>1; $$ = $1+$2; }
+	;
+
+instRange<str>:
+		'[' constExpr ']'			{ $<fl>$=$<fl>1; $$ = "["+$2+"]"; }
 	|	'[' constExpr ':' constExpr ']'		{ $<fl>$=$<fl>1; $$ = "["+$2+":"+$4+"]"; }
 	;
 

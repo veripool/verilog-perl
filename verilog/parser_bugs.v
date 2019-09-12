@@ -579,3 +579,9 @@ module msg2931;
    nettype net_t net3_t;
    net3_t mynet3;
 endmodule
+
+module bug1505;
+   sub i_suba ();
+   sub i_subb[1:2] ();
+   sub i_subc[1:2][3:4][5:6] ();
+endmodule
