@@ -4,7 +4,7 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
-* Verilog::Language 3.467 devel
+* Verilog::Language 3.468 2019-09-12
 
 ****    Support ${} for env vars in file lists, msg3065.
 
