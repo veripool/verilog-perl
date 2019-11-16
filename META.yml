@@ -9,7 +9,7 @@ author:
     - Wilson Snyder <wsnyder@wsnyder.org>
 resources:
     homepage: http://www.veripool.org/verilog-perl
-    bugtracker: http://www.veripool.org/verilog-perl-bugs
+    bugtracker: http://www.veripool.org/verilog-perl/issues
 requires:
     Pod::Usage:                    1.34
     Data::Dumper:                  1
