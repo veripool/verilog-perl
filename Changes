@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.469 devel
 
+****    Fix capital S for signed numbers, [Piotr Binkowski].
+
 
 * Verilog::Language 3.468 2019-09-12
 
