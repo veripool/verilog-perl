@@ -8,6 +8,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****    Fix capital S for signed numbers, [Piotr Binkowski].
 
+****    Fix // in filenames, bug1610. [Peter Nelson]
+
 
 * Verilog::Language 3.468 2019-09-12
 

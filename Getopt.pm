@@ -81,7 +81,7 @@ sub parameter_file {
     my $hold_fileline = $self->fileline();
     while (my $line = $fh->getline()) {
 	chomp $line;
-	$line =~ s/\/\/.*$//;
+	$line =~ s/(?:^|\s)\/\/.*$//;
 	next if $line =~ /^\s*$/;
 	$self->fileline("$filename:$.");
 	my @p = (split /\s+/,"$line ");
