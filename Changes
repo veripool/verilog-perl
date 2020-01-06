@@ -4,9 +4,9 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
-* Verilog::Language 3.469 devel
+* Verilog::Language 3.470 2020-01-06
 
-****    Fix capital S for signed numbers, [Piotr Binkowski].
+****    Fix capital S for signed numbers, [Piotr Binkowski]
 
 ****    Fix // in filenames, bug1610. [Peter Nelson]
 
@@ -1447,7 +1447,7 @@ DESCRIPTION: Documentation on change history for this package
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
 
-Copyright 2001-2019 by Wilson Snyder.  This program is free software;
+Copyright 2001-2020 by Wilson Snyder.  This program is free software;
 you can redistribute it and/or modify it under the terms of either the GNU
 Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
