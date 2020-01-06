@@ -4,6 +4,9 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
+* Verilog::Language 3.471 devel
+
+
 * Verilog::Language 3.470 2020-01-06
 
 ****    Fix capital S for signed numbers, [Piotr Binkowski]
