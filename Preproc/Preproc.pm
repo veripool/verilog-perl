@@ -197,7 +197,7 @@ sub def_params {
     # Return define parameters
     my $self = shift;
     my $val = $self->{options}->defparams(@_);
-    #printf "DEFEXISTS @_ -> %s\n", $val if $self->{debug};
+    #printf "DEFPARAMS @_ -> %s\n", $val if $self->{debug};
     $val = "" if !defined $val;
     return $val;
 }
@@ -395,11 +395,12 @@ Called with each `undefineall.  Defaults to use options object.
 
 Called with each `define.  Defaults to use options object.
 
-=item $self->def_exists(I<defname>)
+=item $self->def_params(I<defname>)
 
-Called to determine if the define exists.  Return true if the define
-exists, or argument list with leading parenthesis if the define has
-arguments.  Defaults to use options object.
+Called to determine if the define exists and the parameters it expects.
+Return true if the define exists, or argument list with leading parenthesis
+if the define has arguments.  Defaults to use options object's defparams
+method.
 
 =item $self->def_substitute(I<string>)
 
