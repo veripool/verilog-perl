@@ -398,9 +398,9 @@ Called with each `define.  Defaults to use options object.
 =item $self->def_params(I<defname>)
 
 Called to determine if the define exists and the parameters it expects.
-Return true if the define exists, or argument list with leading parenthesis
-if the define has arguments.  Defaults to use options object's defparams
-method.
+Return undef if the define doesn't exist, 0 if the define exists with no
+arguments, or argument list with leading parenthesis if the define has
+arguments.  Defaults to use options object's defparams method.
 
 =item $self->def_substitute(I<string>)
 
