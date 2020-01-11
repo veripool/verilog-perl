@@ -27,7 +27,7 @@ sub def_substitute {
 	&& $out !~ /^".*"$/  # And don't corrupt `include test
 	&& $out !~ /\.v/   # Nor things that look like filenames
 	&& $out !~ /NODS/){
-	return "DS<".$out.">";
+	return "DS_".$out;  # Must use _ as need identifier character
     } else {
 	return $out;
     }

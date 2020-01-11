@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog::Language 3.471 devel
 
+****    Add error on misused define, bug1659. [Topa Tota]
+
 
 * Verilog::Language 3.470 2020-01-06
 
