@@ -375,22 +375,6 @@ sub pinselects {
     $self->{_cmtref} = $pinref;
 }
 
-sub ppdefine {
-    my $self = shift;
-    my $defvar = shift;
-    my $definition = shift;
-    if ($self->{netlist}{options}) {
-	$self->{netlist}{options}->defvalue($defvar,$definition);
-    }
-}
-
-sub ppinclude {
-    my $self = shift;
-    my $defvar = shift;
-    my $definition = shift;
-    $self->error("No `includes yet.\n");
-}
-
 sub keyword {
     # OVERRIDE Verilog::Parse calls when keyword occurs
     # Note we use_cb_keyword only if comments are parsed!

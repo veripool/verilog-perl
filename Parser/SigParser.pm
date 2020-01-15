@@ -240,12 +240,6 @@ sub port {
     my $pinnum = shift;
 }
 
-sub ppdefine {
-    my $self = shift;
-    my $defvar = shift;
-    my $definition = shift;
-}
-
 sub program {
     my $self = shift;
     my $kwd = shift;
@@ -466,10 +460,6 @@ made outside the port list.
 
 If you do not need the pin nor var nor port callbacks, consider the
 "$self->new (... use_vars=>0 ...)"  option to accelerate parsing.
-
-=item $self->ppdefine($defvar, $definition)
-
-This method is called when a preprocessor definition is encountered.
 
 =item $self->program($keyword, $name)
 
