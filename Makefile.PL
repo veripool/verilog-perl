@@ -45,7 +45,7 @@ sub MY::postamble {
     $out .= '
 all:: README
 
-README: Verilog-Perl.pod
+README: README.pod
 	-$(RM_RF) $@
 	pod2text --loose $< > $@
 

@@ -63,6 +63,7 @@ Preproc/VPreProc.cpp
 Preproc/VPreProc.h
 Preproc/xsubppfix
 README
+README.pod
 Std.pm
 t/00_pod.t
 t/01_manifest.t
@@ -146,7 +147,6 @@ t/85_vhier_xml.out
 t/86_vhier_tick.t
 t/87_vhier_unicode.t
 t/test_utils.pl
-Verilog-Perl.pod
 verilog/example.v
 verilog/inc1.v
 verilog/inc2.v
