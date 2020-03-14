@@ -16,7 +16,7 @@
 ///
 /// Authors: Wilson Snyder
 ///
-/// Code available from: http://www.veripool.org/verilog-perl
+/// Code available from: https://www.veripool.org/verilog-perl
 ///
 /// This header provides the interface between the lex proper VParseLex.l/.cpp
 /// and the class implementation file VParse.cpp

@@ -10,7 +10,7 @@
  *
  * Author: Wilson Snyder <wsnyder@wsnyder.org>
  *
- * Code available from: http://www.veripool.org/systemperl
+ * Code available from: https://www.veripool.org/verilog-perl
  *
  ******************************************************************************
  *

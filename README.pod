@@ -1,7 +1,3 @@
-# -*- Perl -*-
-# See copyright, etc in below POD section.
-######################################################################
-
 =pod
 
 =head1 NAME
@@ -11,15 +7,18 @@ Verilog-Perl - Overview of Verilog language packages for Perl
 =head1 DESCRIPTION
 
 The Verilog-Perl distribution provides Perl parsing and utilities for the
-Verilog Language.  This file provides an overview of the distribution, for
-specific details on each component, see that component's manpage.
+Verilog Language.  This file provides an overview of the distribution.
 
 Verilog-Perl is currently a mature tool. Bugs are fixed and IEEE language
 capabilities updated as needed, but the basic features and API are not
 expected to change.
 
+For general information see L<https://www.veripool.org/verilog-perl>.
+
+For specific details on each component, see that component's manpage.
+
 You may also want to try the AUTO features present in
-L<http://www.veripool.org/verilog-mode> Verilog-Mode.
+L<https://www.veripool.org/verilog-mode> Verilog-Mode.
 
 =head1 SCRIPTS
 
@@ -257,7 +256,7 @@ Read the rest of this file for details on the programs provided.
 =over 4
 
 Download the latest version from L<http://www.perl.org/CPAN/>, or
-from L<http://www.veripool.org/verilog-perl>.
+from L<https://www.veripool.org/verilog-perl>.
 
 C<cd> to the directory containing this README notice.
 
@@ -311,9 +310,9 @@ Verilator or the VPI, see the sections above.
 
 =head1 DISTRIBUTION
 
-Verilog-Perl is part of the L<http://www.veripool.org/> free Verilog EDA
+Verilog-Perl is part of the L<https://www.veripool.org/> free Verilog EDA
 software tool suite.  The latest version is available from CPAN and from
-L<http://www.veripool.org/verilog-perl>.
+L<https://www.veripool.org/verilog-perl>.
 
 Copyright 2000-2020 by Wilson Snyder.  This package is free software; you
 can redistribute it and/or modify it under the terms of either the GNU
@@ -352,6 +351,6 @@ L<Verilog::Netlist::Pin>,
 L<Verilog::Netlist::Port>,
 L<Verilog::Netlist::Subclass>,
 
-And the L<http://www.veripool.org/verilog-mode>Verilog-Mode package for Emacs.
+And the L<https://www.veripool.org/verilog-mode>Verilog-Mode package for Emacs.
 
 =cut

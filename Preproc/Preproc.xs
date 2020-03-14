@@ -5,7 +5,7 @@
 #*
 #* Author: Wilson Snyder <wsnyder@wsnyder.org>
 #*
-#* Code available from: http://www.veripool.org/
+#* Code available from: https://www.veripool.org/
 #*
 #*********************************************************************
 #*

@@ -762,7 +762,7 @@ indicates the contributor was also the author of the fix; Thanks!
 * Verilog::Language 3.041 2008-09-03
 
 **	Verilog-Perl development versions are now available from a git server.
-	See Installing under http://www.veripool.org/verilog-perl for details.
+	See Installing under https://www.veripool.org/verilog-perl for details.
 
 ***     Netlist errors are now always reported through the new
 	Verilog::Netlist::Logger class.  This allows errors to be caught or

@@ -11,7 +11,7 @@ module example (/*AUTOARG*/
    a, b
    );
 
-   // See http://www.veripool.org
+   // See https://www.veripool.org
    // for what AUTOARG and friends can do for you!
 
    /*Comment // test*/
