@@ -14,66 +14,12 @@ The Verilog-Perl distribution provides Perl parsing and utilities for the
 Verilog Language.  This file provides an overview of the distribution, for
 specific details on each component, see that component's manpage.
 
+Verilog-Perl is currently a mature tool. Bugs are fixed and IEEE language
+capabilities updated as needed, but the basic features and API are not
+expected to change.
+
 You may also want to try the AUTO features present in
 L<http://www.veripool.org/verilog-mode> Verilog-Mode.
-
-=head1 INSTALLATION
-
-Skip this section if Verilog-Perl has already been installed.
-
-=head2 Supported Systems
-
-Verilog-Perl should run on any system with Perl, G++, Flex, and Bison.  It
-is known to work on at least:
-
-=over 4
-
-=item * sparc-sun-solaris2.5.1
-
-=item * i386-linux
-
-=item * i686-w2k-cygwin
-
-=back
-
-=head2 CPAN Installation
-
-=over 4
-
-Easiest installation is using the "CPAN" command line that comes with Perl.
-After configuring CPAN the first time, simply
-
-   $ cpan
-   cpan> install Verilog-Perl
-
-Read the rest of this file for details on the programs provided.
-
-=back
-
-=head2 Manual Installation
-
-=over 4
-
-Download the latest version from L<http://www.perl.org/CPAN/>, or
-from L<http://www.veripool.org/verilog-perl>.
-
-C<cd> to the directory containing this README notice.
-
-Type C<perl Makefile.PL> to configure Verilog for your system.
-
-Type C<make> to compile Verilog.  Some Solaris users have had
-trouble with "open" being redefined.  If this happens, try editing
-the Makefile to change _FILE_OFFSET_BITS to 32 instead of 64.
-
-Type C<make test> to check the package.  If you don't have
-Synopsys' VCS, the test will print a warning, which you can ignore.
-
-Type C<make install> to install the programs and any data files and
-documentation.
-
-Read the rest of this file for details on the programs provided.
-
-=back
 
 =head1 SCRIPTS
 
@@ -270,6 +216,64 @@ automatically make shell modules and interconnect modules.  Verilog-Mode is
 a better solution to this problem, as it results in completely portable
 code; the program (Verilog-Mode) isn't needed for others to update the
 design.  It's also in very common usage, including by many IP providers.
+
+=back
+
+=head1 INSTALLATION
+
+Skip this section if Verilog-Perl has already been installed.
+
+=head2 Supported Systems
+
+Verilog-Perl should run on any system with Perl, G++, Flex, and Bison.  It
+is known to work on at least:
+
+=over 4
+
+=item * sparc-sun-solaris2.5.1
+
+=item * i386-linux
+
+=item * i686-w2k-cygwin
+
+=back
+
+=head2 CPAN Installation
+
+=over 4
+
+Easiest installation is using the "CPAN" command line that comes with Perl.
+After configuring CPAN the first time, simply
+
+   $ cpan
+   cpan> install Verilog-Perl
+
+Read the rest of this file for details on the programs provided.
+
+=back
+
+=head2 Manual Installation
+
+=over 4
+
+Download the latest version from L<http://www.perl.org/CPAN/>, or
+from L<http://www.veripool.org/verilog-perl>.
+
+C<cd> to the directory containing this README notice.
+
+Type C<perl Makefile.PL> to configure Verilog for your system.
+
+Type C<make> to compile Verilog.  Some Solaris users have had
+trouble with "open" being redefined.  If this happens, try editing
+the Makefile to change _FILE_OFFSET_BITS to 32 instead of 64.
+
+Type C<make test> to check the package.  If you don't have
+Synopsys' VCS, the test will print a warning, which you can ignore.
+
+Type C<make install> to install the programs and any data files and
+documentation.
+
+Read the rest of this file for details on the programs provided.
 
 =back
 
