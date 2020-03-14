@@ -15,6 +15,7 @@
 \.def$
 \.dll$
 \.exp$
+\.gitattributes$
 \.tmp$
 \.vcs.*$
 \.pre\..*$
