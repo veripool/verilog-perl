@@ -80,16 +80,17 @@ if (!@opt_files) {
     die "%Error: vhier: No input filenames specified.\n";
 }
 
-my $fh = IO::File->new;
-if ($opt_output_filename) {
-    $fh->open(">$opt_output_filename") or die "%Error: $! $opt_output_filename\n";
-} else {
-    $fh->open(">-") or die;
+{
+    my $fh = IO::File->new;
+    if ($opt_output_filename) {
+	$fh->open(">$opt_output_filename") or die "%Error: $! $opt_output_filename\n";
+    } else {
+	$fh->open(">-") or die;
+    }
+    read_skiplist($opt_skiplist) if $opt_skiplist;
+    vhier($fh, @opt_files);
+    $fh->close;
 }
-
-read_skiplist($opt_skiplist) if $opt_skiplist;
-
-vhier($fh, @opt_files);
 
 exit(0);
 
