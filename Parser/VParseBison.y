@@ -1652,7 +1652,11 @@ enum_base_typeE<str>:	// IEEE: enum_base_type
 	|	integer_vector_type signingE regrangeE	{ $<fl>$=$<fl>1; $$=SPACED($1,SPACED($2,$3)); }
 	//			// below can be idAny or yaID__aTYPE
 	//			// IEEE requires a type, though no shift conflict if idAny
+	//			// IEEE: type_identifier [ packed_dimension ]
+	//			// however other simulators allow [ class_scope | package_scope ] type_identifier
 	|	idAny regrangeE			{ $<fl>$=$<fl>1; $$=SPACED($1,$2); }
+	|	package_scopeIdFollows idAny rangeListE
+			{ $<fl>$=$<fl>1; $$ = $<str>1+$<str>2+$3; }
 	;
 
 enum_nameList:

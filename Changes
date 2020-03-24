@@ -8,6 +8,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****  Add error on misused define, #1659. [Topa Tota]
 
+****  Fix packages as enum base types, Verilator bug 2202. [Driss Hafdi]
+
 
 * Verilog-Perl 3.470 2020-01-06
 
