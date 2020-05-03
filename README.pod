@@ -164,9 +164,8 @@ as a data structure, but does not interconnect the AST nodes as would be
 needed to follow signals.  Not all keywords have been implemented; many are
 parsed but otherwise ignored.  A complete Ast tree would allow any
 arbitrary transformation of Verilog syntax (everything is known excluding
-whitespace).  Long term the authors would be interested in collaborating on
-a general parser, but for now, applications can leverate the C++ code or
-use Verilator's XML output (below).
+whitespace). For these applications consider Verilator's XML output
+(below).
 
 =item Verilog::SigParser
 
@@ -222,59 +221,44 @@ design.  It's also in very common usage, including by many IP providers.
 
 Skip this section if Verilog-Perl has already been installed.
 
-=head2 Supported Systems
-
 Verilog-Perl should run on any system with Perl, G++, Flex, and Bison.  It
-is known to work on at least:
+is known to work on most Linux distributions, plus Cygwin.
 
-=over 4
-
-=item * sparc-sun-solaris2.5.1
-
-=item * i386-linux
-
-=item * i686-w2k-cygwin
-
-=back
+You may install using either CPAN, or the sources.  If you plan to do any
+development on Verilog-Perl, use the sources.
 
 =head2 CPAN Installation
 
-=over 4
+Option 1: Easiest installation is using the "CPAN" command line that comes
+with Perl.  After configuring CPAN the first time, simply
 
-Easiest installation is using the "CPAN" command line that comes with Perl.
-After configuring CPAN the first time, simply
-
-   $ cpan
-   cpan> install Verilog-Perl
-
-Read the rest of this file for details on the programs provided.
-
-=back
-
-=head2 Manual Installation
-
-=over 4
-
-Download the latest version from L<http://www.perl.org/CPAN/>, or
-from L<https://www.veripool.org/verilog-perl>.
-
-C<cd> to the directory containing this README notice.
-
-Type C<perl Makefile.PL> to configure Verilog for your system.
-
-Type C<make> to compile Verilog.  Some Solaris users have had
-trouble with "open" being redefined.  If this happens, try editing
-the Makefile to change _FILE_OFFSET_BITS to 32 instead of 64.
-
-Type C<make test> to check the package.  If you don't have
-Synopsys' VCS, the test will print a warning, which you can ignore.
-
-Type C<make install> to install the programs and any data files and
-documentation.
+   cpan install Verilog-Perl
+   # And see the documentation
+   man Verilog-Perl
+   # Or, sometimes the capitalization is changed
+   man verilog-perl
 
 Read the rest of this file for details on the programs provided.
 
-=back
+=head2 Manual Installation from Repository
+
+Option 2: Build any version using the source development repository with:
+
+   git clone http://git.veripool.org/git/Verilog-Perl  # Only first time
+   cd Verilog-Perl
+   git pull        # Make sure we're up-to-date
+   git tag         # See what versions exist (recent GITs only)
+   #git checkout master      # Use development branch (e.g. recent bug fix)
+   #git checkout stable      # Use most recent release
+   #git checkout v{version}  # Switch to specified release version
+
+   perl Makefile.PL
+   # Ignore warning about README, this file will be generated
+   make
+   make test
+   make install
+
+Read the rest of this file for details on the programs provided.
 
 =head1 FAQ
 
