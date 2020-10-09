@@ -10,7 +10,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****  Fix packages as enum base types, Verilator bug 2202. [Driss Hafdi]
 
-****  Fix preprocessor stringify of undefined macro (#1668). [Martin Whitaker]
+****  Fix preprocessor stringify on undefined macro (#1668). [Martin Whitaker]
 
 
 * Verilog-Perl 3.470 2020-01-06
