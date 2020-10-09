@@ -964,22 +964,27 @@ verilog/inc1.v:669:   endgenerate
 verilog/inc1.v:670: endmodule
 verilog/inc1.v:671: 
 verilog/inc1.v:672: //======================================================================
-verilog/inc1.v:673: // IEEE mandated predefines
-verilog/inc1.v:674:   // undefineall should have no effect on these
-verilog/inc1.v:675: predef 0 0
-verilog/inc1.v:676: predef 1 1
-verilog/inc1.v:677: predef 2 2
-verilog/inc1.v:678: predef 3 3
-verilog/inc1.v:679: predef 10 10
-verilog/inc1.v:680: predef 11 11
-verilog/inc1.v:681: predef 20 20
-verilog/inc1.v:682: predef 21 21
-verilog/inc1.v:683: predef 22 22
-verilog/inc1.v:684: predef 23 23
-verilog/inc1.v:685: predef -2 -2
-verilog/inc1.v:686: predef -1 -1
-verilog/inc1.v:687: predef 0 0
-verilog/inc1.v:688: predef 1 1
-verilog/inc1.v:689: predef 2 2
-verilog/inc1.v:690: 
-verilog/inc1.v:691: `line 691 "verilog/inc1.v" 2
+verilog/inc1.v:673: // Verilog-Perl bug1668
+verilog/inc1.v:674:  
+verilog/inc1.v:675: "`NOT_DEFINED_STR"
+verilog/inc1.v:676: 
+verilog/inc1.v:677: //======================================================================
+verilog/inc1.v:678: // IEEE mandated predefines
+verilog/inc1.v:679:   // undefineall should have no effect on these
+verilog/inc1.v:680: predef 0 0
+verilog/inc1.v:681: predef 1 1
+verilog/inc1.v:682: predef 2 2
+verilog/inc1.v:683: predef 3 3
+verilog/inc1.v:684: predef 10 10
+verilog/inc1.v:685: predef 11 11
+verilog/inc1.v:686: predef 20 20
+verilog/inc1.v:687: predef 21 21
+verilog/inc1.v:688: predef 22 22
+verilog/inc1.v:689: predef 23 23
+verilog/inc1.v:690: predef -2 -2
+verilog/inc1.v:691: predef -1 -1
+verilog/inc1.v:692: predef 0 0
+verilog/inc1.v:693: predef 1 1
+verilog/inc1.v:694: predef 2 2
+verilog/inc1.v:695: 
+verilog/inc1.v:696: `line 696 "verilog/inc1.v" 2

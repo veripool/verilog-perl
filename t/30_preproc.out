@@ -884,6 +884,11 @@ verilog/inc1.v:   endgenerate
 verilog/inc1.v: endmodule
 verilog/inc1.v: 
 verilog/inc1.v: //======================================================================
+verilog/inc1.v: // Verilog-Perl bug1668
+verilog/inc1.v:  
+verilog/inc1.v: "`NOT_DEFINED_STR"
+verilog/inc1.v: 
+verilog/inc1.v: //======================================================================
 verilog/inc1.v: // IEEE mandated predefines
 verilog/inc1.v:   // undefineall should have no effect on these
 verilog/inc1.v: predef 0 0

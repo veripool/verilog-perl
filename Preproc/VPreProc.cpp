@@ -1190,8 +1190,8 @@ int VPreProcImp::getStateToken(string& buf) {
 		if (m_off) {
 		    goto next_tok;
 		} else {
-		    buf = string(yyourtext(), yyourleng());
-		    return (VP_TEXT);
+                    unputDefrefString(string("`\032") + name);
+                    goto next_tok;
 		}
 	    }
 	    else if (params=="0") {  // Found, as simple substitution

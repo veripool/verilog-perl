@@ -1171,24 +1171,31 @@ verilog/inc1.v:670: endmodule
 verilog/inc1.v:671: 
 verilog/inc1.v:672: COMMENT: //======================================================================
 verilog/inc1.v:672:  /*CMT*/  
-verilog/inc1.v:673: COMMENT: // IEEE mandated predefines
+verilog/inc1.v:673: COMMENT: // Verilog-Perl bug1668
 verilog/inc1.v:673:  /*CMT*/  
-verilog/inc1.v:674: COMMENT: // undefineall should have no effect on these
-verilog/inc1.v:674:    /*CMT*/  
-verilog/inc1.v:675: predef DS_0 0
-verilog/inc1.v:676: predef DS_1 1
-verilog/inc1.v:677: predef DS_2 2
-verilog/inc1.v:678: predef DS_3 3
-verilog/inc1.v:679: predef DS_10 10
-verilog/inc1.v:680: predef DS_11 11
-verilog/inc1.v:681: predef DS_20 20
-verilog/inc1.v:682: predef DS_21 21
-verilog/inc1.v:683: predef DS_22 22
-verilog/inc1.v:684: predef DS_23 23
-verilog/inc1.v:685: predef DS_-2 -2
-verilog/inc1.v:686: predef DS_-1 -1
-verilog/inc1.v:687: predef DS_0 0
-verilog/inc1.v:688: predef DS_1 1
-verilog/inc1.v:689: predef DS_2 2
-verilog/inc1.v:690: 
-verilog/inc1.v:691: `line 691 "verilog/inc1.v" 2
+verilog/inc1.v:674:  
+verilog/inc1.v:675: DS_"`NOT_DEFINED_STR"
+verilog/inc1.v:676: 
+verilog/inc1.v:677: COMMENT: //======================================================================
+verilog/inc1.v:677:  /*CMT*/  
+verilog/inc1.v:678: COMMENT: // IEEE mandated predefines
+verilog/inc1.v:678:  /*CMT*/  
+verilog/inc1.v:679: COMMENT: // undefineall should have no effect on these
+verilog/inc1.v:679:    /*CMT*/  
+verilog/inc1.v:680: predef DS_0 0
+verilog/inc1.v:681: predef DS_1 1
+verilog/inc1.v:682: predef DS_2 2
+verilog/inc1.v:683: predef DS_3 3
+verilog/inc1.v:684: predef DS_10 10
+verilog/inc1.v:685: predef DS_11 11
+verilog/inc1.v:686: predef DS_20 20
+verilog/inc1.v:687: predef DS_21 21
+verilog/inc1.v:688: predef DS_22 22
+verilog/inc1.v:689: predef DS_23 23
+verilog/inc1.v:690: predef DS_-2 -2
+verilog/inc1.v:691: predef DS_-1 -1
+verilog/inc1.v:692: predef DS_0 0
+verilog/inc1.v:693: predef DS_1 1
+verilog/inc1.v:694: predef DS_2 2
+verilog/inc1.v:695: 
+verilog/inc1.v:696: `line 696 "verilog/inc1.v" 2
