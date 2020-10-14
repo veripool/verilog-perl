@@ -171,6 +171,7 @@ sub def_substitute {
 sub include {
     my ($self,$filename)=@_;
     print "INCLUDE $filename\n" if $self->{debug};
+    $self->{options}->includes($self->filename, $filename);
     $self->open(filename => $filename,
 		open_nonfatal => $self->{include_open_nonfatal},
 		);

@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog-Perl 3.471 devel
 
+***   Add vhier --includes. [Gregory Pierce]
+
 ****  Add error on misused define (#1659). [Topa Tota]
 
 ****  Fix packages as enum base types, Verilator bug 2202. [Driss Hafdi]

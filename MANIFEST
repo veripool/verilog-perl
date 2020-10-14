@@ -137,6 +137,7 @@ t/80_vppreproc_simple.out
 t/85_vhier.t
 t/85_vhier_cells.out
 t/85_vhier_forest.out
+t/85_vhier_includes.out
 t/85_vhier_inpfiles.out
 t/85_vhier_modfiles.out
 t/85_vhier_resolvefiles.out
@@ -172,6 +173,7 @@ verilog/test.v
 verilog/test.vrename
 verilog/v_comments.v
 verilog/v_gate.v
+verilog/v_hier_inc.vh
 verilog/v_hier_noport.v
 verilog/v_hier_sub.v
 verilog/v_hier_subprim.v

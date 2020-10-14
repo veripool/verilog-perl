@@ -34,6 +34,7 @@ my $Opt = new Verilog::Getopt(filename_expansion=>1);
 my $Opt_Cells;
 my $Opt_Modules;
 my $Opt_ModFiles;
+my $Opt_Includes;
 my $Opt_InFiles;
 my $Opt_Missing = 1;
 my $Opt_Missing_Modules;
@@ -58,6 +59,7 @@ if (! GetOptions (
 		  "cells!"	=> \$Opt_Cells,
 		  "module-files!"	=> \$Opt_ModFiles,
 		  "modules!"		=> \$Opt_Modules,
+		  "includes!"		=> \$Opt_Includes,
 		  "input-files!"	=> \$Opt_InFiles,
 		  "resolve-files!"	=> \$Opt_ResolveFiles,
 		  "skiplist=s"		=> \$opt_skiplist,
@@ -196,6 +198,19 @@ sub vhier {
 	    $fh->print("  <file>$filename</file>\n") if $Opt_Xml;
 	}
 	$fh->print(" </input_files>\n") if $Opt_Xml;
+    }
+
+    if ($Opt_Includes) {
+	$fh->print(" <includes>\n") if $Opt_Xml;
+	foreach my $filename (sort keys %{$Opt->includes}) {
+	    $fh->print("  $filename\n") if !$Opt_Xml;
+	    $fh->print("  <file>$filename</file>\n") if $Opt_Xml;
+	    foreach my $incname (@{$Opt->{includes}{$filename}}) {
+		$fh->print("    $incname\n") if !$Opt_Xml;
+		$fh->print("    <inc>$incname</inc>\n") if $Opt_Xml;
+	    }
+	}
+	$fh->print(" </includes>\n") if $Opt_Xml;
     }
 
     if ($Opt_Missing_Modules) {
@@ -482,6 +497,12 @@ Show "ASCII-art" hierarchy tree of all cells (like ps --forest)
 
 Show all input filenames.  Copying all of these files should result in only
 those files needed to represent the entire design.
+
+=item --includes
+
+Show each source filename that includes another filename.  The included
+filename will be as specified in the original source filename, so it may be
+necessary to resolve it into an absolute path for further processing.
 
 =item --instance
 

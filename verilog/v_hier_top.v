@@ -2,7 +2,7 @@
 // This file ONLY is placed into the Public Domain, for any use,
 // without warranty, 2000-2012 by Wilson Snyder.
 
-`define hsub v_hier_sub
+`include "v_hier_inc.vh"
 
 module v_hier_top (/*AUTOARG*/
    // Inputs

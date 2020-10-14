@@ -40,6 +40,7 @@ sub new {
 
     my $self = {defines => {},
 		incdir => ['.', ],
+		includes => {},
 		module_dir => ['.', ],
 		libext => ['.v', ],
 		library => [ ],
@@ -333,6 +334,17 @@ sub write_parameters_file {
     my @opts = $self->get_parameters();
     print $fh join("\n",@opts);
     $fh->close;
+}
+
+sub includes {
+    my $self = shift;
+    if (@_) {
+	my $from_filename = shift;
+	my $inc_filename = shift;
+	$self->{includes}{$from_filename} ||= [];
+	push @{$self->{includes}{$from_filename}}, $inc_filename;
+    }
+    return $self->{includes};
 }
 
 #######################################################################
@@ -755,6 +767,13 @@ undefined variables are not substituted nor cause errors.
 
 Returns reference to list of include directories.  With argument, adds that
 directory.
+
+=item $self->includes
+
+Returns reference to hash of files that included some file, and for each
+hash value a list of files included.  Only relevant after Verilog::Netlist
+processing.  With two arguments, adds an include for the given referencing
+filename to the given include filename.
 
 =item $self->libext
 
