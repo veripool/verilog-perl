@@ -4,6 +4,9 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
+* Verilog-Perl 3.473 devel
+
+
 * Verilog-Perl 3.472 2020-10-18
 
 ***   Add vhier --includes. [Gregory Pierce]
