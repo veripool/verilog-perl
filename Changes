@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog-Perl 3.473 devel
 
+****  Add filenames in vhier --xml cells.
+
 ****  Fix duplicates in vhier --includes. [Gregory Pierce]
 
 

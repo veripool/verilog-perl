@@ -204,11 +204,12 @@ sub vhier {
 	$fh->print(" <includes>\n") if $Opt_Xml;
 	foreach my $filename (sort keys %{$Opt->includes}) {
 	    $fh->print("  $filename\n") if !$Opt_Xml;
-	    $fh->print("  <file>$filename</file>\n") if $Opt_Xml;
+	    $fh->print("  <file name=\"$filename\">\n") if $Opt_Xml;
 	    foreach my $incname (sort keys %{$Opt->{includes}{$filename}}) {
 		$fh->print("    $incname\n") if !$Opt_Xml;
-		$fh->print("    <inc>$incname</inc>\n") if $Opt_Xml;
+		$fh->print("    <inc name=\"$incname\" />\n") if $Opt_Xml;
 	    }
+	    $fh->print("  </file>\n") if $Opt_Xml;
 	}
 	$fh->print(" </includes>\n") if $Opt_Xml;
     }
@@ -347,12 +348,14 @@ sub show_hier {
     my $instance = $parcell ? $parcell->name : $name;
 
     # print the mod instance
-    $Opt_Xml ?
-        $fh->printf("%s<cell name=\"%s\" submodname=\"%s\" hier=\"%s\">\n",
-            $indent, $parcell ? $parcell->name : $name, $name, $hier) :
-            $Opt_Instance ?
-                $fh->printf("%s%s %s\n", $indent, $instance, $name) :
-                $fh->printf("%s%s\n",    $indent,            $name);
+    $fh->printf("%s<cell name=\"%s\" submodname=\"%s\" hier=\"%s\" filename=\"%s\">\n",
+		$indent, ($parcell ? $parcell->name : $name), $name, $hier,
+		$mod->filename)
+        if $Opt_Xml;
+    $fh->printf("%s%s %s\n", $indent, $instance, $name)
+	if !$Opt_Xml && $Opt_Instance;
+    $fh->printf("%s%s\n",    $indent,            $name)
+	if !$Opt_Xml && !$Opt_Instance;
 
     # print the design hierarchy of each cell in mod
     my $i = 0;
