@@ -341,8 +341,7 @@ sub includes {
     if (@_) {
 	my $from_filename = shift;
 	my $inc_filename = shift;
-	$self->{includes}{$from_filename} ||= [];
-	push @{$self->{includes}{$from_filename}}, $inc_filename;
+	$self->{includes}{$from_filename}{$inc_filename} = 1;
     }
     return $self->{includes};
 }

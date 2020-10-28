@@ -205,7 +205,7 @@ sub vhier {
 	foreach my $filename (sort keys %{$Opt->includes}) {
 	    $fh->print("  $filename\n") if !$Opt_Xml;
 	    $fh->print("  <file>$filename</file>\n") if $Opt_Xml;
-	    foreach my $incname (@{$Opt->{includes}{$filename}}) {
+	    foreach my $incname (sort keys %{$Opt->{includes}{$filename}}) {
 		$fh->print("    $incname\n") if !$Opt_Xml;
 		$fh->print("    <inc>$incname</inc>\n") if $Opt_Xml;
 	    }

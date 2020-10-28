@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog-Perl 3.473 devel
 
+****  Fix duplicates in vhier --includes. [Gregory Pierce]
+
 
 * Verilog-Perl 3.472 2020-10-18
 
