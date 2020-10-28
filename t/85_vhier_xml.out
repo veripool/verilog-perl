@@ -26,7 +26,7 @@
  </input_files>
  <includes>
   <file name="verilog/v_hier_top.v">
-    <inc name="v_hier_inc.vh" />
+    <inc name="verilog/v_hier_inc.vh" />
   </file>
  </includes>
  <missing_modules>

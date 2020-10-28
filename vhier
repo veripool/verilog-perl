@@ -137,7 +137,7 @@ sub vhier {
 	$nl->read_libraries();
 	$fh->print(" <resolve_files>\n") if $Opt_Xml;
 	foreach my $file (@files) {
-	    if (my $resolved = $nl->resolve_filename ($file, "all")) {
+	    if (my $resolved = $nl->resolve_filename($file, "all")) {
 		$fh->print( "$resolved\n") if !$Opt_Xml;
 		$fh->print( "  <file>$resolved</file>\n") if $Opt_Xml;
 	    }
@@ -204,10 +204,12 @@ sub vhier {
 	$fh->print(" <includes>\n") if $Opt_Xml;
 	foreach my $filename (sort keys %{$Opt->includes}) {
 	    $fh->print("  $filename\n") if !$Opt_Xml;
-	    $fh->print("  <file name=\"$filename\">\n") if $Opt_Xml;
+	    $fh->printf("  <file name=\"%s\">\n",
+			$Opt->file_path($filename)) if $Opt_Xml;
 	    foreach my $incname (sort keys %{$Opt->{includes}{$filename}}) {
 		$fh->print("    $incname\n") if !$Opt_Xml;
-		$fh->print("    <inc name=\"$incname\" />\n") if $Opt_Xml;
+		$fh->printf("    <inc name=\"%s\" />\n",
+			    $Opt->file_path($incname)) if $Opt_Xml;
 	    }
 	    $fh->print("  </file>\n") if $Opt_Xml;
 	}
@@ -350,7 +352,7 @@ sub show_hier {
     # print the mod instance
     $fh->printf("%s<cell name=\"%s\" submodname=\"%s\" hier=\"%s\" filename=\"%s\">\n",
 		$indent, ($parcell ? $parcell->name : $name), $name, $hier,
-		$mod->filename)
+		$Opt->file_path($mod->filename))
         if $Opt_Xml;
     $fh->printf("%s%s %s\n", $indent, $instance, $name)
 	if !$Opt_Xml && $Opt_Instance;
