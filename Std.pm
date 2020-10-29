@@ -14,7 +14,7 @@ use vars qw($VERSION);
 ######################################################################
 #### Configuration Section
 
-$VERSION = '3.473';
+$VERSION = '3.474';
 
 #######################################################################
 # It's a PITRA to have pure datafiles get installed properly, so we have
