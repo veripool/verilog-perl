@@ -1603,9 +1603,10 @@ variable_dimension<str>:	// ==IEEE: variable_dimension
 		'[' ']'					{ $<fl>$=$<fl>1; $$=""; }
 	//			// IEEE: unpacked_dimension
 	|	anyrange				{ $<fl>$=$<fl>1; $$=$1; }
-	|	'[' constExpr ']'			{ $<fl>$=$<fl>1; $$="["+$2+"]"; }
-	//			// IEEE: associative_dimension
-	|	'[' data_type ']'			{ $<fl>$=$<fl>1; $$="["+$2+"]"; }
+	//			// IEEE: unpacked_dimension (if const_expr)
+	//			// IEEE: associative_dimension (if data_type)
+	//			// Can't tell which until see if expr is data type or not
+	|	'[' exprOrDataType ']'			{ $<fl>$=$<fl>1; $$="["+$2+"]"; }
 	|	yP_BRASTAR ']'				{ $<fl>$=$<fl>1; $$="[*]"; }
 	|	'[' '*' ']'				{ $<fl>$=$<fl>1; $$="[*]"; }
 	//			// IEEE: queue_dimension
