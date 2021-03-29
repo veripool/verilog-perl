@@ -53,15 +53,22 @@
 #define NEWSTRING(text) (string((text)))
 #define SPACED(a,b)	((a)+(((a)=="" || (b)=="")?"":" ")+(b))
 
+#define VARS_PUSH() { GRAMMARP->m_varStack.push_back(GRAMMARP->m_var); }
+#define VARS_POP() { GRAMMARP->m_var = GRAMMARP->m_varStack.back(); GRAMMARP->m_varStack.pop_back(); }
+
 #define VARRESET_LIST(decl)    { GRAMMARP->pinNum(1); VARRESET(); VARDECL(decl); }	// Start of pinlist
 #define VARRESET_NONLIST(decl) { GRAMMARP->pinNum(0); VARRESET(); VARDECL(decl); }	// Not in a pinlist
 #define VARRESET()	 { VARDECL(""); VARIO(""); VARNET(""); VARDTYPE(""); }  // Start of one variable decl
 
 // VARDECL("") indicates inside a port list or IO list and we shouldn't declare the variable
-#define VARDECL(type)	 { GRAMMARP->m_varDecl = (type); }  // genvar, parameter, localparam
-#define VARIO(type)	 { GRAMMARP->m_varIO   = (type); }  // input, output, inout, ref, const ref
-#define VARNET(type)	 { GRAMMARP->m_varNet  = (type); }  // supply*,wire,tri
-#define VARDTYPE(type)	 { GRAMMARP->m_varDType = (type); }  // "signed", "int", etc
+#define VARDECL(type) \
+    { GRAMMARP->m_var.m_decl = (type); }  // genvar, parameter, localparam
+#define VARIO(type) \
+    { GRAMMARP->m_var.m_io = (type); }  // input, output, inout, ref, const ref
+#define VARNET(type) \
+    { GRAMMARP->m_var.m_net = (type); }  // supply*,wire,tri
+#define VARDTYPE(type) \
+    { GRAMMARP->m_var.m_dtype = (type); }  // "signed", "int", etc
 
 #define PINNUMINC()	{ GRAMMARP->pinNumInc(); }
 
@@ -70,18 +77,19 @@
 
 enum net_idx {NI_NETNAME = 0, NI_MSB, NI_LSB};
 
-static void VARDONE(VFileLine* fl, const string& name, const string& array, const string& value) {
-    if (GRAMMARP->m_varIO!="" && GRAMMARP->m_varDecl=="") GRAMMARP->m_varDecl="port";
-    if (GRAMMARP->m_varDecl!="") {
-	PARSEP->varCb(fl, GRAMMARP->m_varDecl, name, PARSEP->symObjofUpward(), GRAMMARP->m_varNet,
-		       GRAMMARP->m_varDType, array, value);
+static void VARDONE(VFileLine * fl, const string& name, const string& array, const string& value) {
+    if (GRAMMARP->m_var.m_io != "" && GRAMMARP->m_var.m_decl == "")
+        GRAMMARP->m_var.m_decl = "port";
+    if (GRAMMARP->m_var.m_decl != "") {
+        PARSEP->varCb(fl, GRAMMARP->m_var.m_decl, name, PARSEP->symObjofUpward(),
+                      GRAMMARP->m_var.m_net, GRAMMARP->m_var.m_dtype, array, value);
     }
-    if (GRAMMARP->m_varIO!="" || GRAMMARP->pinNum()) {
-	PARSEP->portCb(fl, name, PARSEP->symObjofUpward(),
-		       GRAMMARP->m_varIO, GRAMMARP->m_varDType, array, GRAMMARP->pinNum());
+    if (GRAMMARP->m_var.m_io != "" || GRAMMARP->pinNum()) {
+        PARSEP->portCb(fl, name, PARSEP->symObjofUpward(), GRAMMARP->m_var.m_io,
+                       GRAMMARP->m_var.m_dtype, array, GRAMMARP->pinNum());
     }
-    if (GRAMMARP->m_varDType == "type") {
-	PARSEP->syms().replaceInsert(VAstType::TYPE,name);
+    if (GRAMMARP->m_var.m_dtype == "type") {
+        PARSEP->syms().replaceInsert(VAstType::TYPE, name);
     }
 }
 
@@ -89,7 +97,7 @@ static void VARDONETYPEDEF(VFileLine* fl, const string& name, const string& type
     VARRESET(); VARDECL("typedef"); VARDTYPE(type);
     VARDONE(fl,name,array,"");
     // TYPE shouldn't override a more specific node type, as often is forward reference
-    PARSEP->syms().replaceInsert(VAstType::TYPE,name);
+    PARSEP->syms().replaceInsert(VAstType::TYPE, name);
 }
 
 static void parse_net_constants(VFileLine* fl, VParseHashElem nets[][3]) {
@@ -1543,8 +1551,11 @@ struct_union_memberList:	// IEEE: { struct_union_member }
 	;
 
 struct_union_member:		// ==IEEE: struct_union_member
-		random_qualifierE data_type_or_void { VARRESET_NONLIST("member"); VARDTYPE(SPACED($1,$2)); }
-	/*cont*/	list_of_variable_decl_assignments ';'	{ }
+		random_qualifierE data_type_or_void
+			{ VARS_PUSH(); // Structs can be recursive, or under a parameter typs
+			  VARRESET_NONLIST("member"); VARDTYPE(SPACED($1,$2)); }
+	/*cont*/	list_of_variable_decl_assignments ';'
+			{ VARS_POP(); }
 	;
 
 list_of_variable_decl_assignments:	// ==IEEE: list_of_variable_decl_assignments
@@ -1739,12 +1750,12 @@ data_declarationVarFrontClass:	// IEEE: part of data_declaration (for class_prop
 	//			// VARRESET called before this rule
 	//			// yCONST is removed, added to memberQual rules
 	//			// implicit_type expanded into /*empty*/ or "signingE rangeList"
-		yVAR lifetimeE data_type	 { VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_varDType,$3)); }
-	|	yVAR lifetimeE			 { VARDECL("var"); VARDTYPE(GRAMMARP->m_varDType); }
-	|	yVAR lifetimeE signingE rangeList { VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_varDType,SPACED($3,$4))); }
+		yVAR lifetimeE data_type	 { VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_var.m_dtype, $3)); }
+	|	yVAR lifetimeE			 { VARDECL("var"); VARDTYPE(GRAMMARP->m_var.m_dtype); }
+	|	yVAR lifetimeE signingE rangeList { VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_var.m_dtype, SPACED($3, $4))); }
 	//
 	//			// Expanded: "constE lifetimeE data_type"
-	|	/**/		      data_typeVar	{ VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_varDType,$1)); }
+	|	/**/		      data_typeVar	{ VARDECL("var"); VARDTYPE(SPACED(GRAMMARP->m_var.m_dtype, $1)); }
 	//			// lifetime is removed, added to memberQual rules to avoid conflict
 	//			// yCONST is removed, added to memberQual rules to avoid conflict
 	//			// = class_new is in variable_decl_assignment

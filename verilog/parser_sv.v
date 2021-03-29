@@ -417,3 +417,9 @@ endmodule
 module bug868 (ifmp);
    if_bug777.master ifmp;
 endmodule
+
+module bug_param_struct
+  #(int ROWS = 2,
+    type data_t = struct packed { logic [ROWS-1:0] row_id; })
+   (input data_t d);
+endmodule

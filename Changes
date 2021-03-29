@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog-Perl 3.475 devel
 
+****  Fix parameter type = struct. [Nathan Chrisman]
+
 
 * Verilog-Perl 3.474 2020-10-29
 

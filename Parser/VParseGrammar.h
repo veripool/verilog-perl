@@ -54,6 +54,14 @@ struct VParseNet {
 	: m_name(net), m_msb(""), m_lsb("") {}
 };
 
+struct VParseVar {
+    string m_decl;
+    string m_net;
+    string m_io;
+    string m_dtype;
+    string m_range;
+};
+
 //============================================================================
 // We can't use bison's %union as the string type doesn't fit in a union.
 // It's fine to use a struct though!
@@ -74,11 +82,8 @@ class VParseGrammar {
 
 public: // Only for VParseBison
     int		m_pinNum;		///< Pin number being parsed
-    string	m_varDecl;
-    string	m_varNet;
-    string	m_varIO;
-    string	m_varDType;
-    string	m_varRange;
+
+    VParseVar   m_var;
 
     string	m_cellMod;
     bool	m_cellParam;
@@ -93,6 +98,7 @@ public: // Only for VParseBison
 
     deque<VParseGPin>	m_pinStack;
     deque<VParseNet>	m_portStack;
+    deque<VParseVar>	m_varStack;
 
 public: // But for internal use only
     static VParseGrammar* staticGrammarp() { return s_grammarp; }
