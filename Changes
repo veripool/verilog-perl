@@ -4,7 +4,7 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
-* Verilog-Perl 3.475 devel
+* Verilog-Perl 3.476 2021-04-13
 
 ****  Fix parameter type = struct. [Nathan Chrisman]
 
@@ -1468,7 +1468,7 @@ DESCRIPTION: Documentation on change history for this package
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
 
-Copyright 2001-2020 by Wilson Snyder.  This program is free software;
+Copyright 2001-2021 by Wilson Snyder.  This program is free software;
 you can redistribute it and/or modify it under the terms of either the GNU
 Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
