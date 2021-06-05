@@ -6,6 +6,7 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog-Perl 3.477 devel
 
+****  Fix ${ENVVAR} expansion (#1671). [Henry Hsieh]
 
 
 * Verilog-Perl 3.476 2021-04-13

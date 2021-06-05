@@ -386,12 +386,13 @@ sub file_substitute {
     my $self = shift;
     my $filename = shift;
     my $out = $filename;
-    while ($filename =~ /\$([A-Za-z_0-9]+)\b/g
-           || $filename =~ /\$\{[A-Za-z_0-9]+\}\b/g) {
+    while ($filename =~ /\$([A-Za-z_0-9]+)\b/g) {
 	my $var = $1;
-	if (defined $ENV{$var}) {
-	    $out =~ s/\$$var\b/$ENV{$var}/g;
-	}
+	$out =~ s/\$$var\b/$ENV{$var}/g if defined $ENV{$var};
+    }
+    while ($filename =~ /\$\{([A-Za-z_0-9]+)\}/g) {
+	my $var = $1;
+	$out =~ s/\$\{$var\}/$ENV{$var}/g if defined $ENV{$var};
     }
     $out =~ s!^~!$ENV{HOME}/!;
     return $out;
