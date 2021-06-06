@@ -9,7 +9,7 @@ use Pod::Usage;
 use strict;
 use vars qw($Debug $VERSION);
 
-$VERSION = '3.478';
+$VERSION = '3.479';
 
 our $Self;
 
