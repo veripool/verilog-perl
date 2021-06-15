@@ -232,7 +232,7 @@ development on Verilog-Perl, use the sources.
 Option 1: Easiest installation is using the "CPAN" command line that comes
 with Perl.  After configuring CPAN the first time, simply
 
-   cpan install Verilog-Perl
+   cpan install Verilog::Language
    # And see the documentation
    man Verilog-Perl
    # Or, sometimes the capitalization is changed
