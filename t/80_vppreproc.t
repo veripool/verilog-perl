@@ -32,9 +32,9 @@ sub vppreproc {
         ok(-r $out, "vppreproc output from: $cmd");
         ok(files_identical ($out, $checkname), "diff");
     } else {
-        fail ("run command");
-        fail ("no output file created");
-        fail ("no output file to compare");
+        fail("run command");
+        fail("no output file created");
+        fail("no output file to compare");
     }
 }
 
