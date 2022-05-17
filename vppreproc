@@ -259,7 +259,7 @@ Create .d dependency files, similar to "gcc -MMD" behavior.
 
 =item --MP
 
-Create phony dependency targets.
+Create phony dependency targets, similar to "gcc -MP" behavior.
 
 =item --noblank
 
