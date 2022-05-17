@@ -41,8 +41,8 @@ sub vppreproc {
 
 
 # Test -MMD -MP
-vppreproc_d ("t/80_vppreproc_v_hier_top_mmd_mp.d", "-MMD -MP");
-vppreproc_d ("t/80_vppreproc_v_hier_top_mmd.d",    "-MMD");
+vppreproc_d("t/80_vppreproc_v_hier_top_mmd_mp.d", "-MMD -MP");
+vppreproc_d("t/80_vppreproc_v_hier_top_mmd.d", "-MMD");
 vppreproc_d_o();
 
 sub vppreproc_d {
