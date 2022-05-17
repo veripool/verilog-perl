@@ -51,16 +51,16 @@ sub vppreproc_d {
     my $defaultcfg = "verilog/v_hier_top.v verilog/v_sv_intf.v +incdir+verilog";
     my $cmd = "${PERL} ./vppreproc $flags $defaultcfg";
     my $dotd = "verilog/v_hier_top.v.d";
-    if (0 == run_system_no_die ($cmd)) {
+    if (0 == run_system_no_die($cmd)) {
         pass("run command");
         ok(-r $dotd, "vppreproc .d from: $cmd");
         ok(files_identical ($dotd, $checkname), "diff");
     } else {
-        fail ("run command");
-        fail ("no output file created");
-        fail ("no output file to compare");
+        fail("run command");
+        fail("no output file created");
+        fail("no output file to compare");
     }
-    system ("/bin/rm -f verilog/v_hier_top.v.d verilog/v_sv_intf.v.d");
+    system("/bin/rm -f verilog/v_hier_top.v.d verilog/v_sv_intf.v.d");
 }
 
 sub vppreproc_d_o {
