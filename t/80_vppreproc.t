@@ -70,15 +70,15 @@ sub vppreproc_d_o {
     my $cmd = "${PERL} ./vppreproc -MMD -o test_dir/$obasename.vpp $defaultcfg";
     my $dotd = "test_dir/$obasename.d";
     
-    system ("/bin/rm -f $dotd");
-    if (0 == run_system_no_die ($cmd)) {
+    system("/bin/rm -f $dotd");
+    if (0 == run_system_no_die($cmd)) {
         pass("run command");
         ok(-r $dotd, "vppreproc .d from: $cmd");
-        ok(files_identical ($dotd, $checkname), "diff");
+        ok(files_identical($dotd, $checkname), "diff");
     } else {
-        fail ("run command");
-        fail ("no output file created");
-        fail ("no output file to compare");
+        fail("run command");
+        fail("no output file created");
+        fail("no output file to compare");
     }
 }
 
