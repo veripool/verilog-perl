@@ -255,7 +255,7 @@ the end of processing the input file.
 
 =item --MMD
 
-Create .d dependency files.
+Create .d dependency files, similar to "gcc -MMD" behavior.
 
 =item --MP
 
