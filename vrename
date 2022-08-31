@@ -451,7 +451,7 @@ sub verilog_change_sig {
 		$hit = 1 if $filestrg =~ s/$sig_quoted(?=[ \t\n\r])/$magic/g;
 	    } else {  # Unescaped
 		my $sig_quoted = quotemeta $signs;
-		$hit = 1 if $filestrg =~ s/([^a-zA-Z0-9_\$\%\'\\])$sig_quoted(?=[^a-zA-Z0-9_])/$1$magic/g;
+		$hit = 1 if $filestrg =~ s/([^a-zA-Z0-9_\$\'\\])$sig_quoted(?=[^a-zA-Z0-9_])/$1$magic/g;
 		# Consume leading \; either getting removed or part of replacement
 		$hit = 1 if $filestrg =~ s/(\\)$sig_quoted(?=[ \t\n\r])/$magic/g;
 	    }
