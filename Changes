@@ -4,6 +4,9 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
+* Verilog-Perl 3.481 devel
+
+
 * Verilog-Perl 3.480 2022-09-01
 
 ****  Fix vrename ignoring % (#1674). [Wenjun]
