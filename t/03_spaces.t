@@ -15,6 +15,10 @@ plan tests => (1 + (keys %{$manifest}));
 ok(1);
 
 foreach my $filename (sort keys %{$manifest}) {
+    if (!$ENV{VERILATOR_AUTHOR_SITE}) {
+	skip("author only test (harmless)",1);
+	next;
+    }
     if ($filename =~ /README/) {  # May not even exist
 	skip("File doesn't need check (harmless)",1);
 	next;
@@ -28,8 +32,6 @@ foreach my $filename (sort keys %{$manifest}) {
     } elsif ($filename =~ m!\.out!
 	     || $filename =~ m!/gen/!) {
 	skip("File doesn't need check (harmless)",1);
-    } elsif (!$ENV{VERILATOR_AUTHOR_SITE}) {
-	skip("author only test (harmless)",1);
     } else {
 	warn "%Error: $filename: Bad indentation\n";
 	ok(0);
