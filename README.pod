@@ -208,37 +208,39 @@ types, but supports a subset of SystemVerilog.
 
 Although not a parser, a common requested use of Verilog-Perl is to
 automatically make shell modules and interconnect modules.  Verilog-Mode is
-a better solution to this problem, as it results in completely portable
-code; the program (Verilog-Mode) isn't needed for others to update the
-design.  It's also in very common usage, including by many IP providers.
+a project with a better solution to this problem, as it results in
+completely portable code; the program (Verilog-Mode) isn't needed for
+others to update the design.  It's also in very common usage, including by
+many IP providers.
 
 =item slang
 
-SystemVerilog Language Services (slang) L<https://sv-lang.com> provides
-various components for lexing, parsing, type checking, and elaborating
-SystemVerilog code.  It's fast and supports UVM.
+The SystemVerilog Language Services (slang) project L<https://sv-lang.com>
+provides various components for lexing, parsing, type checking, and
+elaborating SystemVerilog code.  It's fast and supports UVM.
 
 =item Surelog
 
-Surelog L<https://github.com/chipsalliance/Surelog> is a SystemVerilog 2017
-Pre-processor, Parser, Elaborator, and UHDM Compiler. It handles UVM and
-provides an IEEE Design/TB C/C++ VPI and Python AST API.
+The Surelog project L<https://github.com/chipsalliance/Surelog> is a
+SystemVerilog 2017 Pre-processor, Parser, Elaborator, and UHDM Compiler. It
+handles UVM and provides an IEEE Design/TB C/C++ VPI and Python AST API.
 
 =item SV-Parser
 
-Sv-parser L<https://github.com/dalance/sv-parser> is a SystemVerilog parser
-library fully compliant with IEEE 1800-2017.  that returns a concrete
-syntax tree.
+The Sv-parser project L<https://github.com/dalance/sv-parser> is a
+SystemVerilog parser library fully compliant with IEEE 1800-2017.  that
+returns a concrete syntax tree.
 
 =item Tree-Sitter-Verilog
 
-Tree-Sitter-Verilog L<https://github.com/tree-sitter/tree-sitter-verilog>
-is a verilog grammar for the JavaScript tree-sitter parser.
+The Tree-Sitter-Verilog project
+L<https://github.com/tree-sitter/tree-sitter-verilog> is a verilog grammar
+for the JavaScript tree-sitter parser.
 
 =item Verible
 
-Verible L<https://github.com/chipsalliance/verible> parses IEEE 1800-2017,
-with the ability to parse un-preprocessed source files.
+The Verible project L<https://github.com/chipsalliance/verible> parses IEEE
+1800-2017, with the ability to parse un-preprocessed source files.
 
 =back
 
