@@ -8,6 +8,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 ****  Fix t/03_spaces.t test for Debian (#1675). [Gregor Herrmann]
 
+****  Fix GCC 11 false free-nonheap-obj warning.
+
 
 * Verilog-Perl 3.480 2022-09-01
 

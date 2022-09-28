@@ -325,6 +325,11 @@ static void NEED_S09(VFileLine*, const string&) {
     //fileline->error((string)"Advanced feature: \""+tokname+"\" is a 1800-2009 construct, but used under --language 1800-2005 or earlier.");
 }
 
+// gcc-11 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=98753
+#if defined(__GNUC__) && __GNUC__ == 11
+#pragma GCC diagnostic ignored "-Wfree-nonheap-object"
+#endif
+
 %}
 
 BISONPRE_VERSION(0.0, 2.999, %pure_parser)
