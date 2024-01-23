@@ -4,6 +4,9 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
+* Verilog-Perl 3.483 devel
+
+
 * Verilog-Perl 3.482 2024-01-22
 
 ***   Support IEEE 1800-2023 language keywords. (No other 2023 support yet.)

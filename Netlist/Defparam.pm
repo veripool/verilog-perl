@@ -11,7 +11,7 @@ use strict;
 @ISA = qw(Verilog::Netlist::Defparam::Struct
 	Verilog::Netlist::Subclass);
 
-$VERSION = '3.482';
+$VERSION = '3.483';
 
 structs('new',
 	'Verilog::Netlist::Defparam::Struct'
