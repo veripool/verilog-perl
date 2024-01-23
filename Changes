@@ -4,7 +4,7 @@ The contributors that suggested a given feature are shown in [].  [by ...]
 indicates the contributor was also the author of the fix; Thanks!
 
 
-* Verilog-Perl 3.481 devel
+* Verilog-Perl 3.482 2024-01-22
 
 ***   Support IEEE 1800-2023 language keywords. (No other 2023 support yet.)
 
@@ -1487,7 +1487,7 @@ DESCRIPTION: Documentation on change history for this package
 
 This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
 
-Copyright 2001-2022 by Wilson Snyder.  This program is free software;
+Copyright 2001-2024 by Wilson Snyder.  This program is free software;
 you can redistribute it and/or modify it under the terms of either the GNU
 Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 

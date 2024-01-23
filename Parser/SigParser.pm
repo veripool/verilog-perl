@@ -14,7 +14,7 @@ use base qw(Verilog::Parser);
 ######################################################################
 #### Configuration Section
 
-$VERSION = '3.481';
+$VERSION = '3.482';
 
 our @_Callback_Names = qw(
   attribute
@@ -526,7 +526,7 @@ Verilog-Perl is part of the L<https://www.veripool.org/> free Verilog EDA
 software tool suite.  The latest version is available from CPAN and from
 L<https://www.veripool.org/verilog-perl>.
 
-Copyright 2000-2022 by Wilson Snyder.  This package is free software; you
+Copyright 2000-2024 by Wilson Snyder.  This package is free software; you
 can redistribute it and/or modify it under the terms of either the GNU
 Lesser General Public License Version 3 or the Perl Artistic License Version 2.0.
 
