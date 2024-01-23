@@ -677,7 +677,7 @@ changing a keyword will probably result in unrunnable code, however,
 occasionally it may be necessary to rename signals which happen to match
 the name of keywords recently added to the language (such as 'bit').
 
-=item --language <1364-1995|1364-2001|1364-2005|1800-2005|1800-2009|1800-2012|1800-2017>
+=item --language <1364-1995|1364-2001|1364-2005|1800-2005|1800-2009|1800-2012|1800-2017|1800-2023>
 
 Set the language standard for the files.  This determines which tokens are
 signals versus keywords, such as the ever-common "do" (data-out signal,

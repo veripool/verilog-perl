@@ -6,6 +6,8 @@ indicates the contributor was also the author of the fix; Thanks!
 
 * Verilog-Perl 3.481 devel
 
+***   Support IEEE 1800-2023 language keywords. (No other 2023 support yet.)
+
 ****  Fix t/03_spaces.t test for Debian (#1675). [Gregor Herrmann]
 
 ****  Fix GCC 11 false free-nonheap-obj warning.

@@ -154,7 +154,7 @@ It understands and implements all preprocessor features of SystemVerilog
 Verilog::Parser is useful when you need to tokenize or write source filters
 (where you need everything including whitespace).  It can take raw files,
 or preprocessed input, and generates callbacks.  It understands all
-SystemVerilog 2017 keywords.
+SystemVerilog 2023 keywords.
 
 =item Abstract Syntax Tree
 
